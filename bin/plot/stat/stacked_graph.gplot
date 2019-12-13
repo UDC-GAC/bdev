@@ -1,0 +1,49 @@
+set terminal postscript eps enhanced solid font 'Arial,24' color
+set datafile missing '-'
+set datafile separator ","
+set output output_file
+load palette_file
+
+
+set style fill solid border -1 
+set boxwidth 1 relative
+set xdata time
+set timefmt "%s"
+
+#set style histogram rowstacked
+#set style data histogram
+set style data boxes 
+set style fill solid 1.0 noborder
+set boxwidth 1.1 relative
+
+set key outside horiz center top
+set key autotitle columnheader noenhanced
+
+set yrange [0:*]
+set xrange ["0":max_x]
+
+set xlabel "Time (min:s)"
+
+if (exists("format_y")) \
+	if(format_y eq 'bytes')	set format y "%.0s %cB"; \
+	else if(format_y eq 'percent') set yrange [0:110]
+
+if (exists("label_y"))	set ylabel label_y noenhanced
+
+if (exists("max_y"))	set yrange [0:max_y]
+
+set grid
+#format_time(col) = ( (int(column(col)) % 5 == 0) ? strftime('%H:%M:%S', strptime('%s', strcol(1))) : "" ) 
+set xtic tic_interval
+
+#acum_val(col,cols) = acum=0; for [c=col:(cols+1)] acum=$c + acum; print 
+col_sum(col)= ( (col==(1)) ? 0 : col_sum(col-1)+column(col))
+#plot input_file \
+#	using 1:($2+$3+$4) ls 1 w boxes, \
+#		"" u 1:($2+$3) ls 2 w boxes, \
+#		"" u 1:2 ls 3 w boxes
+plot for [col=(cols+1):2:-1] input_file \
+	using 1:(col_sum(col)) ls col lw -1 title columnheader(col) #ps 1 pi 10
+
+#replot for [col=(stocked_cols+2):(cols+1)] input_file \
+#	using 1:col ls col lw 2 w lines #ps 1 pi 10

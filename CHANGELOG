@@ -1,0 +1,296 @@
+BDEv Change Log
+-------------------------------------
+This file briefly describes the main changes for each version of
+the Big Data Evaluator (BDEv) software package.
+
+BDEv 3.3 - 2020-01-XX
+---------------------
+	A point release for the BDEv 3.x line
+
+	NEW FEATURES
+		- Updated versions of the following frameworks
+			- Hadoop 2.10.0
+			- Hadoop 3.1.3
+			- Hadoop 3.2.1
+			- Spark 2.3.4
+			- Spark 2.4.4
+			- Flink 1.8.2
+
+		- Support for the Flink 1.9.x line (tested with Flink 1.9.1)
+
+		- Add support for BDWatchdog tool, which allows per-process resource monitoring and JVM profiling
+			- More info at http://bdwatchdog.dec.udc.es
+
+		- BDEv now runs by default in command mode when no framework is selected in solutions.lst
+
+		- Update PAPI library to version 5.7.0
+
+		- Update RAPL power monitoring tool to use PAPI 5.7.0
+
+		- Add support to configure the binary names for Python2 and Python3 (system-default.sh)
+
+		- Fix bug when running Flink in standalone mode
+
+		- Minor bug fixes
+
+
+BDEv 3.2 - 2019-06-06
+---------------------
+	A point release for the BDEv 3.x line
+
+	NEW FEATURES
+		- Updated versions of the following frameworks
+			- Hadoop 2.7.7
+			- Hadoop 2.8.5
+			- Hadoop 2.9.2
+			- Hadoop 3.1.2
+			- Hadoop 3.2.0
+			- RDMA-Hadoop-3 0.9.1
+			- Flame-MR 1.2
+			- Spark 2.3.3
+			- Spark 2.4.3
+			- Flink 1.7.2
+			- Flink 1.8.0
+
+		- Add support to configure handler count for Hadoop NameNode (hdfs-default.sh)
+
+		- Add support to use unsafe based Kryo serializer for Spark (solutions-default.sh)
+
+		- Fix bug when running multiple Executors per worker/node in Spark configuration
+
+		- Minor bug fixes
+
+
+BDEv 3.1 - 2018-05-16
+---------------------
+	A point release for the BDEv 3.x line
+
+	NEW FEATURES
+		- Updated versions of some frameworks
+			- Hadoop 2.7.6
+			- Hadoop 2.8.3
+			- Hadoop 2.9.0
+			- Flame-MR 1.1
+			- RDMA-Hadoop-2 1.3.5
+			- Spark 2.3.0
+			- RDMA-Spark 0.9.5
+			- Flink 1.4.2
+
+		- Support for the Hadoop 3.1.x line (tested with Hadoop 3.1.0)
+
+		- Improved customization of experiments with setup and clean up commands
+
+		- Extended configuration parameters
+		
+
+BDEv 3.0 - 2017-11-07
+--------------------
+	This is a major release which contains a number of significant 
+	enhancements, along with new characteristics previously unreleased.
+
+	NEW FEATURES
+
+		- New monitoring tools
+			- Power monitoring via RAPL
+			- Microarchitecture-level event counting via Oprofile
+
+		- Enhanced framework configuration parameters
+
+		- Support for the Flink 1.3.x line (tested with Flink 1.3.2)
+
+		- Support for the Spark 2.2.x line (tested with Spark 2.2.0)
+
+		- Support for the Flame-MR 1.x line (tested with Flame-MR 1.0)
+
+		- Updated versions of some frameworks
+			- Hadoop 2.7.4
+			- Hadoop 2.8.1
+			- RDMA-Hadoop 1.2.0
+			- RDMA-Spark 0.9.4
+
+		- Updated version of resource monitoring tool to dstat 0.7.3
+
+		- Improved graph generation portability
+
+
+BDEv 2.3 - 2016-11-25
+---------------------
+	A point release for the BDEv 2.x line
+
+	NEW FEATURES
+
+		- Added support for Flame-MR version 0.10.0
+
+		- Added support for the Flink 1.1.x line (tested with version 1.1.3)
+
+		- Added support for the SLURM job scheduler
+
+		- Updated versions of some frameworks
+			- Hadoop 2.6.5
+			- Hadoop 2.7.3
+			- RDMA-Hadoop-2 1.1.0
+			- Spark 1.6.3
+			- Flink 1.0.3
+
+		- Memory settings for mappers and reducers can now be set separately
+
+		- Added configuration variable in etc/core-default.sh to control the 
+		Hadoop parameter "io.file.buffer.size"
+
+		- Virtual and physical memory limits in YARN containers as well as the 
+		ratio between them can now be configured in etc/yarn.default.sh
+
+		- Fix critical bug when running Flink under YARN related with JobManager
+		memory
+
+		- Minor bug fixes
+
+
+BDEv 2.2 - 2016-07-04
+---------------------
+	A point release for the BDEv 2.x line
+
+	NEW FEATURES
+
+		- Add support for multiple Workers/TaskManagers per node in Spark and Flink
+
+		- Enhancements in several Flink workloads
+			- Grep
+			- PageRank (with delta iterations)
+			- Connected Components (with Gelly)
+			- K-Means
+
+		- Enhancements in several Spark workloads
+			- TeraSort
+			- K-Means (with MLlib)
+
+		- Bug fixes
+
+
+BDEv 2.1 - 2016-05-05
+---------------------
+	A point release for the BDEv 2.x line
+
+	NEW FEATURES
+
+		- Allow to start the job history server for Spark-based frameworks
+
+		- Added support for some new frameworks
+			- Hadoop 2.6.4
+			- RDMA-Hadoop-2 0.9.9
+			- Spark 1.6.1
+			- Flink 1.0.2
+
+		- Added support for Mahout 0.11.2 and 0.12.0
+
+		- Added new benchmarks for Spark
+			- PageRank
+			- Connected Components
+			- K-Means
+			- Bayes
+			- Hive SQL queries:
+				- Aggregation
+				- Join
+				- Scan
+
+		- Added new benchmarks for Flink
+			- PageRank
+			- Connected Components
+			- K-Means
+
+		- Multiple bug fixes
+
+
+BDEv 2.0 - 2016-03-02
+---------------------
+	This is a major release which contains a number of significant 
+	enhancements. Starting with this release, the MapReduce Evaluator
+	(MREv) tool has been renamed to Big Data Evaluator (BDEv).
+
+	NEW FEATURES
+
+		- Added support for Flink version 0.10.2 on YARN and standalone modes
+
+		- Added support for RDMA-Spark version 0.9.1 on YARN and standalone modes
+
+		- Added support for Spark on standalone mode
+
+		- Updated versions of some frameworks
+			- Hadoop 2.7.2
+			- RDMA-Hadoop-2 0.9.8
+			- Spark 1.5.2
+			- Spark 1.6.0
+
+		- New data set generation using the HiBench DataGen tool
+
+		- Added new benchmarks for Hadoop-based frameworks
+			- Grep
+			- K-Means
+			- Connected Components
+			- Hive SQL queries:
+				- Aggregation
+				- Join
+				- Scan
+
+		- Added new benchmarks for Spark and Flink
+			- WordCount
+			- Sort
+			- Grep
+			- TeraSort
+
+		- Added new benchmark for DataMPI
+                        - Grep
+
+		- Allow to start the job history server for Hadoop-based frameworks
+
+		- Input datasize for WordCount, Sort and TeraSort can now be different
+
+		- Enhanced configuration of parameters 
+			- Separated configuration files for HDFS, MapReduce and YARN
+			- Solution-specific parameters in a separated file
+			- Many new configuration parameters
+
+		- Support for multiple disks
+
+		- Network interfaces are now optional parameters. If not specified, IPs
+		are determined using the hostfile
+
+		- Updated iLO scripts to version 4.70
+
+		- Allow to configure IP, user name and password for iLO interfaces
+
+		- Automatically download Apache Mahout and Apache Hive on demand
+
+		- Optimized code refactorization and simplified internal configuration
+
+		- Multiple bug fixes
+
+
+MREv 1.1 - 2015-08-10
+---------------------
+	A point release for the MREv 1.x line
+
+	NEW FEATURES
+
+		- Updated versions of some frameworks
+			- Hadoop-2.7.1-GbE
+			- Hadoop-2.7.1-IPoIB
+			- Hadoop-2.7.1-UDA
+			- RDMA-Hadoop-2-0.9.7-GbE
+			- RDMA-Hadoop-2-0.9.7-IPoIB
+			- Spark-1.4.1-YARN-GbE
+			- Spark-1.4.1-YARN-IPoIB
+
+		- Configurable timeout for the workloads
+
+		- User-defined batch commands
+
+		- Separate configuration and log directories for each evaluation
+
+		- Enhanced resource configuration
+
+
+MREv 1.0 - 2014-12-09
+---------------------
+	The first public release of MREv (MREv 1.0)
+

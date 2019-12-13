@@ -1,0 +1,18 @@
+<configuration>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://$master:$fs_port</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>$tmp_dir/hadoop</value>
+  </property>
+  <property>
+    <name>slave.host.name</name>
+    <value>${HADOOPHOSTNAME}</value>
+  </property>
+  <property>
+    <name>io.file.buffer.size</name>
+    <value>$io_file_buffer_size</value>
+  </property>
+</configuration>

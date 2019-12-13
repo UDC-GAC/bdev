@@ -1,0 +1,38 @@
+<!--         RIBCL Sample Script for HP Lights-Out Products          -->
+<!--Copyright (c) 2015 Hewlett-Packard Development Company, L.P.     -->
+
+<!-- Description:  This is a sample XML script to get the power      -->
+<!--               readings from the server in which one of the      -->
+<!--               following is operating:                           -->
+<!--               Integrated Lights-Out 4 (iLO 4)                   -->
+<!--               Integrated Lights-Out 3 (iLO 3)                   -->
+<!--               Integrated Lights-Out 2 (iLO 2)                   -->
+
+<!-- NOTE:  You will need to replace the USER_LOGIN and PASSWORD     -->
+<!--        values with values that are appropriate for your         -->
+<!--        environment.                                             -->
+
+<!--        Use CPQLOCFG.EXE ver 4.20 or greater for iLO2 and        -->
+<!--        HPQLOCFG.EXE ver 1.00 or greater for iLO 3 and iLO 4     -->
+<!--        with this script.                                        -->
+
+<!--        This script was written for iLO 4 firmware version 1.01  -->
+<!--        release.                                                 -->
+
+<!--        See "HP Integrated Lights-Out Management Processor       -->
+<!--        Scripting and Command Line Resource Guide" for more      -->
+<!--        information on scripting and the syntax of the RIBCL     -->
+<!--        XML.                                                     -->
+
+<!--        Firmware support information for this script:            -->
+<!--            iLO 4 - All versions.                                -->
+<!--            iLO 3 - All versions.                                -->
+<!--            iLO 2 - Version 1.20 or later.                       -->
+
+<RIBCL VERSION="2.0">
+   <LOGIN USER_LOGIN="adminname" PASSWORD="password">
+      <SERVER_INFO MODE="read">
+         <GET_POWER_READINGS/>
+      </SERVER_INFO>
+   </LOGIN>
+</RIBCL>

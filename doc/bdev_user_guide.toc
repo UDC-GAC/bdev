@@ -1,0 +1,31 @@
+\contentsline {section}{\numberline {1}Overview}{3}{section.1}% 
+\contentsline {section}{\numberline {2}Citation}{3}{section.2}% 
+\contentsline {section}{\numberline {3}Framework download}{3}{section.3}% 
+\contentsline {section}{\numberline {4}Configuration of the experiments}{3}{section.4}% 
+\contentsline {paragraph}{Environment variables}{4}{section*.3}% 
+\contentsline {paragraph}{hostfile}{4}{section*.4}% 
+\contentsline {paragraph}{bdev-conf.sh}{4}{section*.5}% 
+\contentsline {paragraph}{system-conf.sh}{5}{section*.6}% 
+\contentsline {paragraph}{experiment-conf.sh}{5}{section*.7}% 
+\contentsline {paragraph}{core-conf.sh}{5}{section*.8}% 
+\contentsline {paragraph}{hdfs-conf.sh}{5}{section*.9}% 
+\contentsline {paragraph}{mapred-conf.sh}{5}{section*.10}% 
+\contentsline {paragraph}{yarn-conf.sh}{5}{section*.11}% 
+\contentsline {paragraph}{solutions-conf.sh}{5}{section*.12}% 
+\contentsline {paragraph}{solutions.lst}{5}{section*.13}% 
+\contentsline {paragraph}{benchmarks.lst}{5}{section*.14}% 
+\contentsline {paragraph}{cluster\_sizes.lst}{5}{section*.15}% 
+\contentsline {section}{\numberline {5}Execution}{5}{section.5}% 
+\contentsline {section}{\numberline {6}Evaluation Outcomes}{5}{section.6}% 
+\contentsline {subsection}{\numberline {6.1}Log \& configuration}{6}{subsection.6.1}% 
+\contentsline {subsection}{\numberline {6.2}Performance}{6}{subsection.6.2}% 
+\contentsline {subsection}{\numberline {6.3}Resource utilization}{6}{subsection.6.3}% 
+\contentsline {subsection}{\numberline {6.4}Energy monitoring}{6}{subsection.6.4}% 
+\contentsline {subsection}{\numberline {6.5}Microarchitecture-level metrics}{7}{subsection.6.5}% 
+\contentsline {section}{\numberline {A}About Flink configuration}{9}{appendix.A}% 
+\contentsline {section}{\numberline {B}About batch-queueing schedulers}{9}{appendix.B}% 
+\contentsline {section}{\numberline {C}About Modules Environment}{9}{appendix.C}% 
+\contentsline {section}{\numberline {D}About Hardware Counters}{9}{appendix.D}% 
+\contentsline {section}{\numberline {E}About BDWatchdog}{9}{appendix.E}% 
+\contentsline {section}{\numberline {F}System Requirements}{10}{appendix.F}% 
+\contentsline {section}{\numberline {G}Contact}{10}{appendix.G}% 

@@ -1,0 +1,58 @@
+set terminal postscript eps enhanced solid font 'Arial,18' color
+#set datafile missing '?'
+
+set style fill solid 1 border lt -1
+set boxwidth 1 relative
+set style data histograms 
+set style histogram 
+
+load palette_file
+
+#set output output_file
+
+#set key outside horiz center top
+#set key autotitle columnheader
+
+#set multiplot
+
+#set yrange [0:*]
+#set xrange [minx:maxx]
+#
+#set title benchmark_tag noenhanced
+#
+#
+#set xlabel "Cluster size (#nodes)"
+#set ylabel label_y
+
+bs=0.15 # width of a box
+
+#unset xtics 
+#set grid noxtics front
+#
+#set xtics nomirror format " " offset bs/2
+#
+#do for [ii=1:words(label_xtics)] { set xtics add ( word(label_xtics,ii) ii-1 ) }
+#
+#plot for [col=1:cols] input_file \
+#	u ($0-(bs*cols)/2+bs*col-bs/2):col*3-1:(bs) w boxes ls col fillstyle pattern col,  \
+#	for [col=1:cols] '' u ($0-(bs*cols)/2+bs*col-bs/2):col*3-1:col*3:col*3+1 w yerror notitle lw 2 lc 0 ps 0
+
+#set datafile missing ''
+set noborder
+set noxtics
+set noytics
+set noxlabel
+set noylabel
+set xrange [-10:10]
+set yrange [-10:-9] 
+
+set title "Legend" noenhanced
+
+#set key outside horiz center top
+set key horiz center top
+set key autotitle columnheader noenhanced
+
+set output legend_file
+
+plot for [col=1:cols] input_file \
+	u $0:col:(bs) w boxes ls col fillstyle pattern col

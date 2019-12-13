@@ -1,0 +1,56 @@
+    PEGASUS: Peta-Scale Graph Mining System
+    Authors: U Kang, Duen Horng Chau, and Christos Faloutsos
+
+This software is licensed under Apache License, Version 2.0 (the  "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+Version: 2.0
+Date: Sep 6, 2010
+Main Contact: U Kang(ukang@cs.cmu.edu)
+
+
+
+
+
+PEGASUS is a Peta-scale graph mining system on hadoop, fully written in Java.
+It calculates the degree distribution, PageRank, RWR(Random Walk with Restart) scores, radii/diameter, and connected components of very large graphs with more than billions of nodes and edges.
+The details of PEGASUS can be found in the following paper:
+
+U Kang, Charalampos E. Tsourakakis, and Christos Faloutsos. 
+PEGASUS: A Peta-Scale Graph Mining System - Implementation and Observations. 
+IEEE International Conference On Data Mining 2009, Miami, Florida, USA.
+
+
+If your work uses or refers to PEGASUS, please cite the papers using the following bibtex entries:
+
+@article{PegasusICDM2009,
+title = {PEGASUS: A Peta-Scale Graph Mining System - Implementation and Observations},
+author = { Kang, U and Tsourakakis, C.E and Faloutsos, C.},
+year = {2009},
+journal = {IEEE International Conference On Data Mining},
+}
+
+@article{PegasusKAIS,
+title = {PEGASUS: Mining Peta-Scale Graphs},
+author = { Kang, U and Tsourakakis,C.E and Faloutsos,C.},
+year = {2010},
+journal = {Knowledge and Information Systems},
+}
+
+
+If you use PEGASUS for research or commercial purposes, please let us know
+your institution(company) and whether it's ok to mention it among the users of PEGASUS.
+
+For questions on PEGASUS, please contact <ukang@cs.cmu.edu>.
+
+For installation, running, and rebuilding PEGASUS, see the PEGASUS user's guide PDF file.

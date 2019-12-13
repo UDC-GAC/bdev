@@ -1,0 +1,8 @@
+# sparkbench
+
+Benchmarking suite for Apache Spark
+
+# Compile and build assembled jar
+
+sbt assembly
+
