@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<form class="navbar-form" style="max-width: 600px;">
+		<div class="buttons-div">
+			<button class="btn btn-primary btn-xs" onclick="window.top.removeForm(this.parentNode.parentNode.parentNode);return false;">Remove</button> 
+			<button class="btn btn-primary btn-xs" onclick="submitFlamegraph(this.parentNode.parentNode);return false;">Draw</button>
+		</div><!-- FIX DOM dependent functions !!!! -->
+		<div class="list-group-item times-div">
+			<small>Times</small>
+			<div class="input-append date" id="datetimepicker0">
+				<input name="datetime0" type="text" value="2017/03/29-11:47:00">
+				<span class="add-on">
+					<i data-date-icon="icon-calendar" data-time-icon="icon-time"></i>
+				</span>
+			</div>
+			<div class="input-append date" id="datetimepicker1">
+				<input name="datetime1" type="text" value="2017/03/29-13:52:10">
+				<span class="add-on">
+					<i data-date-icon="icon-calendar" data-time-icon="icon-time"></i>
+				</span>
+			</div>			
+
+			<div>
+				<span>Hostname:</span> <input class="input" name="hostname"	style="" type="text" value="marte0">
+			</div>
+
+
+		</div>
+	
+		<script type="text/javascript">
+		    $('#datetimepicker0').datetimepicker({
+		      format: 'yyyy/MM/dd-hh:mm:ss',
+		      language: 'en'
+		    });
+		    $('#datetimepicker1').datetimepicker({
+		      format: 'yyyy/MM/dd-hh:mm:ss',
+		      language: 'en'
+		    });
+		    $(document).ready(change_datetime_ids);
+		</script>
+	</form>
+</body>
+</html>

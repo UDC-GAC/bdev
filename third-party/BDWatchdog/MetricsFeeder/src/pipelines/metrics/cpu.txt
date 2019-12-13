@@ -1,0 +1,1 @@
+sys.cpu.kernel:6,sys.cpu.user:8,sys.cpu.idle:9,sys.cpu.wait:10

@@ -1,0 +1,12 @@
+<input type="string" class="form-control input-sm metric" value="sum:sys.cpu.user" ondrop="handleDropMetric(event)" ondragover="cancelDragOver()">
+<i class="fa fa-2x fa-remove" onclick="removeThisMetricOrTag(this);return false;" aria-hidden="true"></i>
+<div class="list-group-item list-group-item-warning navbar-left tags-div">
+<!--
+	<small>Tags</small>
+-->
+	<strong style="color:black">TAGS:</strong>
+	<i class="fa fa-2x fa-plus" onclick="addTag(this.parentNode.parentNode);return false;" aria-hidden="true"></i>
+	<ul class="tag-list">
+		<!-- Tags Go Here, see tag.html -->
+	</ul>
+</div>

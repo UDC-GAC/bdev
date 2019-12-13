@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.2" />
+<title>src.daemons.daemon_utils API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.daemons.daemon_utils</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright (c) 2019 Universidade da Coruña
+# Authors:
+#     - Jonatan Enes [main](jonatan.enes@udc.es, jonatan.enes.alvarez@gmail.com)
+#     - Roberto R. Expósito
+#     - Juan Touriño
+#
+# This file is part of the BDWatchdog framework, from
+# now on referred to as BDWatchdog.
+#
+# BDWatchdog is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# BDWatchdog is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with BDWatchdog. If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+
+from __future__ import print_function
+import abc
+import traceback
+from threading import Thread
+import os
+import time
+import configparser
+import errno
+import subprocess
+import sys
+import logging
+
+import requests
+
+
+_base_path = os.path.dirname(os.path.abspath(__file__))
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+class MonitoringDaemon:
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, service_name, logger):
+        self.SERVICE_NAME = service_name
+        self.logger = logger
+        self.stdin_path = &#39;/dev/null&#39;
+        self.stdout_path = os.path.join(_base_path, &#34;logs/&#34; + self.SERVICE_NAME + &#34;.out&#34;)
+        self.stderr_path = os.path.join(_base_path, &#34;logs/&#34; + self.SERVICE_NAME + &#34;.err&#34;)
+        self.pidfile_path = os.path.join(_base_path, &#34;pids/&#34; + self.SERVICE_NAME + &#34;.pid&#34;)
+        self.pidfile_timeout = 5
+        self.pipeline_tries = 0
+        self.MAX_TRIES = 5
+        self.processes_list = []
+        self.dumper_thread = None
+        self.environment = dict()
+        self.is_runnable = None
+        self.not_runnable_message = None
+
+    def reload_pipeline(self, _signo, _stack_frame):
+        self.logger.info(&#34;Going to reload pipeline&#34;)
+        self.destroy_pipeline()
+        self.processes_list = list()
+        self.launch_pipeline()
+
+    def launch_pipeline(self):
+        self.logger.info(&#34;Launching pipeline&#34;)
+        self.processes_list += self.create_pipeline()
+        # Launch thread to log last process output (send to opentsdb of pipeline)
+        thread = Thread(target=self.threaded_read_last_process_output, args=(self.processes_list[-1],))
+        thread.start()
+        self.dumper_thread = thread
+
+    def beat(self):
+        # Serverless Containers
+        from src.StateDatabase import couchdb as couchDB
+        from src.MyUtils import MyUtils as MyUtils
+        self.logger.info(&#34;Starting heartbeat of &#34; + self.SERVICE_NAME)
+        db_handler = couchDB.CouchDBServer()
+        while True:
+            try:
+                MyUtils.beat(db_handler, self.SERVICE_NAME)
+                time.sleep(10)
+            except ValueError:
+                # Service not found:
+                # - maybe it doesn&#39;t exist at all, register it
+                # - it may have been deleted while the daemon was running, re-register it
+                register_service(db_handler, self.SERVICE_NAME)
+            except requests.ConnectionError:
+                # Error connecting to the Couchdb database, ignore as it may be temporary
+                pass
+
+    def launch_heartbeat(self):
+        # Launch the heartbeat thread
+        if &#34;HEARTBEAT_ENABLED&#34; in self.environment and self.environment[&#34;HEARTBEAT_ENABLED&#34;] == &#34;true&#34;:
+            # Launch heartbeat thread
+            heartbeat = Thread(target=self.beat, args=())
+            heartbeat.daemon = True
+            heartbeat.start()
+
+    def initialize_environment(self, config_path, config_keys, default_environment_values):
+        self.environment = self.create_environment(read_config(config_path, config_keys),
+                                                   config_keys,
+                                                   default_environment_values)
+
+
+    @staticmethod
+    def threaded_read_last_process_output(process):
+        for line in process.stdout:
+            print(line.strip())  # Dump to stdout of daemon
+            sys.stdout.flush()
+
+    @staticmethod
+    def create_environment(config_dict, config_keys, default_environment_values):
+        custom_environment = os.environ.copy()
+
+        # FROM CONFIG FILE #
+        for key in config_keys:
+            if key in config_dict.keys():
+                custom_environment[key] = config_dict[key]
+            else:
+                custom_environment[key] = default_environment_values[key]
+
+        return custom_environment
+
+    @staticmethod
+    def good_finish():
+        sys.exit(0)
+
+    @staticmethod
+    def bad_finish():
+        sys.exit(1)
+
+    @staticmethod
+    def create_pipe(cmd, environment, pipe_input, pipe_output):
+        return subprocess.Popen(cmd,
+                                env=environment,
+                                stdin=pipe_input,
+                                stdout=pipe_output
+                                )
+
+    # Terminate all the programs that create the pipeline
+    def destroy_pipeline(self):
+        self.logger.info(&#34;Destroying pipeline&#34;)
+        for process in self.processes_list:
+            try:
+                process.terminate()
+                process.wait()
+                self.logger.info(
+                    &#34;Process &#34; + str(process.pid) + &#34; terminated with exit status &#34; + str(process.returncode))
+            except OSError:
+                # Process may have already exited
+                pass
+
+    def poll_for_exited_processes(self):
+        for process in self.processes_list:
+            process.poll()
+            if process.returncode is not None:
+                return True
+        return False
+
+    def check_if_runnable(self):
+        if not self.is_runnable(self.environment):
+            eprint(self.not_runnable_message)
+
+    def loop(self):
+        try:
+            while True:
+                exited_processes = self.poll_for_exited_processes()
+                if exited_processes:
+                    self.logger.info(&#34;Error in pipeline&#34;)
+                    self.destroy_pipeline()
+                    if self.pipeline_tries &lt; self.MAX_TRIES:
+                        self.pipeline_tries += 1
+                        self.logger.info(&#34;The pipeline was destroyed, re-creating and launching a new one&#34;)
+
+                        self.launch_pipeline()
+
+                    else:
+                        self.logger.info(
+                            &#34;Pipeline failed too many times, (&#34; + str(self.MAX_TRIES) + &#34;), stopping daemon&#34;)
+                        self.bad_finish()
+                time.sleep(5)
+        except(SystemExit, KeyboardInterrupt):
+            self.logger.info(&#34;Exception or signal caught, stopping daemon and destroying the pipeline.&#34;)
+            self.destroy_pipeline()
+            self.good_finish()
+
+    @abc.abstractmethod
+    def create_pipeline(self):
+        &#34;&#34;&#34;Method documentation&#34;&#34;&#34;
+        return []
+
+
+def command_is_runnable(command_as_list):
+    try:
+        subprocess.check_call(command_as_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        eprint(str(e) + &#34; &#34; + str(traceback.format_exc()))
+        return False
+    return True
+
+
+def read_config(config_path, config_keys):
+    config_dict = {}
+    config = configparser.ConfigParser()
+    config.read(os.path.join(_base_path, config_path))
+    for key in config_keys:
+        try:
+            config_dict[key] = config[&#39;DEFAULT&#39;][key]
+        except KeyError:
+            pass  # Key is not configure, take the default value
+    return config_dict
+
+
+def check_path_existance_and_create(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
+
+
+def register_service(db_handler, service_name):
+    service = dict(
+        name=service_name,
+        heartbeat=&#34;&#34;,
+        heartbeat_human=&#34;&#34;,
+        type=&#34;service&#34;
+    )
+    MyUtils.register_service(db_handler, service)
+
+
+def configure_daemon_logs(service_name):
+    logger = logging.getLogger(service_name)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(&#34;%(asctime)s - %(name)s - %(message)s&#34;)
+
+    log_path = os.path.join(_base_path, &#34;logs/&#34;)
+    check_path_existance_and_create(log_path)
+    pids_path = os.path.join(_base_path, &#34;pids/&#34;)
+    check_path_existance_and_create(pids_path)
+
+    handler = logging.FileHandler(os.path.join(log_path, service_name + &#34;.log&#34;))
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return handler, logger</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.daemons.daemon_utils.check_path_existance_and_create"><code class="name flex">
+<span>def <span class="ident">check_path_existance_and_create</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_path_existance_and_create(path):
+    try:
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.command_is_runnable"><code class="name flex">
+<span>def <span class="ident">command_is_runnable</span></span>(<span>command_as_list)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def command_is_runnable(command_as_list):
+    try:
+        subprocess.check_call(command_as_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        eprint(str(e) + &#34; &#34; + str(traceback.format_exc()))
+        return False
+    return True</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.configure_daemon_logs"><code class="name flex">
+<span>def <span class="ident">configure_daemon_logs</span></span>(<span>service_name)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_daemon_logs(service_name):
+    logger = logging.getLogger(service_name)
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter(&#34;%(asctime)s - %(name)s - %(message)s&#34;)
+
+    log_path = os.path.join(_base_path, &#34;logs/&#34;)
+    check_path_existance_and_create(log_path)
+    pids_path = os.path.join(_base_path, &#34;pids/&#34;)
+    check_path_existance_and_create(pids_path)
+
+    handler = logging.FileHandler(os.path.join(log_path, service_name + &#34;.log&#34;))
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return handler, logger</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.eprint"><code class="name flex">
+<span>def <span class="ident">eprint</span></span>(<span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.read_config"><code class="name flex">
+<span>def <span class="ident">read_config</span></span>(<span>config_path, config_keys)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_config(config_path, config_keys):
+    config_dict = {}
+    config = configparser.ConfigParser()
+    config.read(os.path.join(_base_path, config_path))
+    for key in config_keys:
+        try:
+            config_dict[key] = config[&#39;DEFAULT&#39;][key]
+        except KeyError:
+            pass  # Key is not configure, take the default value
+    return config_dict</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.register_service"><code class="name flex">
+<span>def <span class="ident">register_service</span></span>(<span>db_handler, service_name)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_service(db_handler, service_name):
+    service = dict(
+        name=service_name,
+        heartbeat=&#34;&#34;,
+        heartbeat_human=&#34;&#34;,
+        type=&#34;service&#34;
+    )
+    MyUtils.register_service(db_handler, service)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon"><code class="flex name class">
+<span>class <span class="ident">MonitoringDaemon</span></span>
+<span>(</span><span>service_name, logger)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MonitoringDaemon:
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, service_name, logger):
+        self.SERVICE_NAME = service_name
+        self.logger = logger
+        self.stdin_path = &#39;/dev/null&#39;
+        self.stdout_path = os.path.join(_base_path, &#34;logs/&#34; + self.SERVICE_NAME + &#34;.out&#34;)
+        self.stderr_path = os.path.join(_base_path, &#34;logs/&#34; + self.SERVICE_NAME + &#34;.err&#34;)
+        self.pidfile_path = os.path.join(_base_path, &#34;pids/&#34; + self.SERVICE_NAME + &#34;.pid&#34;)
+        self.pidfile_timeout = 5
+        self.pipeline_tries = 0
+        self.MAX_TRIES = 5
+        self.processes_list = []
+        self.dumper_thread = None
+        self.environment = dict()
+        self.is_runnable = None
+        self.not_runnable_message = None
+
+    def reload_pipeline(self, _signo, _stack_frame):
+        self.logger.info(&#34;Going to reload pipeline&#34;)
+        self.destroy_pipeline()
+        self.processes_list = list()
+        self.launch_pipeline()
+
+    def launch_pipeline(self):
+        self.logger.info(&#34;Launching pipeline&#34;)
+        self.processes_list += self.create_pipeline()
+        # Launch thread to log last process output (send to opentsdb of pipeline)
+        thread = Thread(target=self.threaded_read_last_process_output, args=(self.processes_list[-1],))
+        thread.start()
+        self.dumper_thread = thread
+
+    def beat(self):
+        # Serverless Containers
+        from src.StateDatabase import couchdb as couchDB
+        from src.MyUtils import MyUtils as MyUtils
+        self.logger.info(&#34;Starting heartbeat of &#34; + self.SERVICE_NAME)
+        db_handler = couchDB.CouchDBServer()
+        while True:
+            try:
+                MyUtils.beat(db_handler, self.SERVICE_NAME)
+                time.sleep(10)
+            except ValueError:
+                # Service not found:
+                # - maybe it doesn&#39;t exist at all, register it
+                # - it may have been deleted while the daemon was running, re-register it
+                register_service(db_handler, self.SERVICE_NAME)
+            except requests.ConnectionError:
+                # Error connecting to the Couchdb database, ignore as it may be temporary
+                pass
+
+    def launch_heartbeat(self):
+        # Launch the heartbeat thread
+        if &#34;HEARTBEAT_ENABLED&#34; in self.environment and self.environment[&#34;HEARTBEAT_ENABLED&#34;] == &#34;true&#34;:
+            # Launch heartbeat thread
+            heartbeat = Thread(target=self.beat, args=())
+            heartbeat.daemon = True
+            heartbeat.start()
+
+    def initialize_environment(self, config_path, config_keys, default_environment_values):
+        self.environment = self.create_environment(read_config(config_path, config_keys),
+                                                   config_keys,
+                                                   default_environment_values)
+
+
+    @staticmethod
+    def threaded_read_last_process_output(process):
+        for line in process.stdout:
+            print(line.strip())  # Dump to stdout of daemon
+            sys.stdout.flush()
+
+    @staticmethod
+    def create_environment(config_dict, config_keys, default_environment_values):
+        custom_environment = os.environ.copy()
+
+        # FROM CONFIG FILE #
+        for key in config_keys:
+            if key in config_dict.keys():
+                custom_environment[key] = config_dict[key]
+            else:
+                custom_environment[key] = default_environment_values[key]
+
+        return custom_environment
+
+    @staticmethod
+    def good_finish():
+        sys.exit(0)
+
+    @staticmethod
+    def bad_finish():
+        sys.exit(1)
+
+    @staticmethod
+    def create_pipe(cmd, environment, pipe_input, pipe_output):
+        return subprocess.Popen(cmd,
+                                env=environment,
+                                stdin=pipe_input,
+                                stdout=pipe_output
+                                )
+
+    # Terminate all the programs that create the pipeline
+    def destroy_pipeline(self):
+        self.logger.info(&#34;Destroying pipeline&#34;)
+        for process in self.processes_list:
+            try:
+                process.terminate()
+                process.wait()
+                self.logger.info(
+                    &#34;Process &#34; + str(process.pid) + &#34; terminated with exit status &#34; + str(process.returncode))
+            except OSError:
+                # Process may have already exited
+                pass
+
+    def poll_for_exited_processes(self):
+        for process in self.processes_list:
+            process.poll()
+            if process.returncode is not None:
+                return True
+        return False
+
+    def check_if_runnable(self):
+        if not self.is_runnable(self.environment):
+            eprint(self.not_runnable_message)
+
+    def loop(self):
+        try:
+            while True:
+                exited_processes = self.poll_for_exited_processes()
+                if exited_processes:
+                    self.logger.info(&#34;Error in pipeline&#34;)
+                    self.destroy_pipeline()
+                    if self.pipeline_tries &lt; self.MAX_TRIES:
+                        self.pipeline_tries += 1
+                        self.logger.info(&#34;The pipeline was destroyed, re-creating and launching a new one&#34;)
+
+                        self.launch_pipeline()
+
+                    else:
+                        self.logger.info(
+                            &#34;Pipeline failed too many times, (&#34; + str(self.MAX_TRIES) + &#34;), stopping daemon&#34;)
+                        self.bad_finish()
+                time.sleep(5)
+        except(SystemExit, KeyboardInterrupt):
+            self.logger.info(&#34;Exception or signal caught, stopping daemon and destroying the pipeline.&#34;)
+            self.destroy_pipeline()
+            self.good_finish()
+
+    @abc.abstractmethod
+    def create_pipeline(self):
+        &#34;&#34;&#34;Method documentation&#34;&#34;&#34;
+        return []</code></pre>
+</details>
+<h3>Static methods</h3>
+<dl>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.bad_finish"><code class="name flex">
+<span>def <span class="ident">bad_finish</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def bad_finish():
+    sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.create_environment"><code class="name flex">
+<span>def <span class="ident">create_environment</span></span>(<span>config_dict, config_keys, default_environment_values)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def create_environment(config_dict, config_keys, default_environment_values):
+    custom_environment = os.environ.copy()
+
+    # FROM CONFIG FILE #
+    for key in config_keys:
+        if key in config_dict.keys():
+            custom_environment[key] = config_dict[key]
+        else:
+            custom_environment[key] = default_environment_values[key]
+
+    return custom_environment</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.create_pipe"><code class="name flex">
+<span>def <span class="ident">create_pipe</span></span>(<span>cmd, environment, pipe_input, pipe_output)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def create_pipe(cmd, environment, pipe_input, pipe_output):
+    return subprocess.Popen(cmd,
+                            env=environment,
+                            stdin=pipe_input,
+                            stdout=pipe_output
+                            )</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.good_finish"><code class="name flex">
+<span>def <span class="ident">good_finish</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def good_finish():
+    sys.exit(0)</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.threaded_read_last_process_output"><code class="name flex">
+<span>def <span class="ident">threaded_read_last_process_output</span></span>(<span>process)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def threaded_read_last_process_output(process):
+    for line in process.stdout:
+        print(line.strip())  # Dump to stdout of daemon
+        sys.stdout.flush()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.beat"><code class="name flex">
+<span>def <span class="ident">beat</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def beat(self):
+    # Serverless Containers
+    from src.StateDatabase import couchdb as couchDB
+    from src.MyUtils import MyUtils as MyUtils
+    self.logger.info(&#34;Starting heartbeat of &#34; + self.SERVICE_NAME)
+    db_handler = couchDB.CouchDBServer()
+    while True:
+        try:
+            MyUtils.beat(db_handler, self.SERVICE_NAME)
+            time.sleep(10)
+        except ValueError:
+            # Service not found:
+            # - maybe it doesn&#39;t exist at all, register it
+            # - it may have been deleted while the daemon was running, re-register it
+            register_service(db_handler, self.SERVICE_NAME)
+        except requests.ConnectionError:
+            # Error connecting to the Couchdb database, ignore as it may be temporary
+            pass</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.check_if_runnable"><code class="name flex">
+<span>def <span class="ident">check_if_runnable</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_if_runnable(self):
+    if not self.is_runnable(self.environment):
+        eprint(self.not_runnable_message)</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.create_pipeline"><code class="name flex">
+<span>def <span class="ident">create_pipeline</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Method documentation</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abc.abstractmethod
+def create_pipeline(self):
+    &#34;&#34;&#34;Method documentation&#34;&#34;&#34;
+    return []</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.destroy_pipeline"><code class="name flex">
+<span>def <span class="ident">destroy_pipeline</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def destroy_pipeline(self):
+    self.logger.info(&#34;Destroying pipeline&#34;)
+    for process in self.processes_list:
+        try:
+            process.terminate()
+            process.wait()
+            self.logger.info(
+                &#34;Process &#34; + str(process.pid) + &#34; terminated with exit status &#34; + str(process.returncode))
+        except OSError:
+            # Process may have already exited
+            pass</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.initialize_environment"><code class="name flex">
+<span>def <span class="ident">initialize_environment</span></span>(<span>self, config_path, config_keys, default_environment_values)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def initialize_environment(self, config_path, config_keys, default_environment_values):
+    self.environment = self.create_environment(read_config(config_path, config_keys),
+                                               config_keys,
+                                               default_environment_values)</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.launch_heartbeat"><code class="name flex">
+<span>def <span class="ident">launch_heartbeat</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def launch_heartbeat(self):
+    # Launch the heartbeat thread
+    if &#34;HEARTBEAT_ENABLED&#34; in self.environment and self.environment[&#34;HEARTBEAT_ENABLED&#34;] == &#34;true&#34;:
+        # Launch heartbeat thread
+        heartbeat = Thread(target=self.beat, args=())
+        heartbeat.daemon = True
+        heartbeat.start()</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.launch_pipeline"><code class="name flex">
+<span>def <span class="ident">launch_pipeline</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def launch_pipeline(self):
+    self.logger.info(&#34;Launching pipeline&#34;)
+    self.processes_list += self.create_pipeline()
+    # Launch thread to log last process output (send to opentsdb of pipeline)
+    thread = Thread(target=self.threaded_read_last_process_output, args=(self.processes_list[-1],))
+    thread.start()
+    self.dumper_thread = thread</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.loop"><code class="name flex">
+<span>def <span class="ident">loop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loop(self):
+    try:
+        while True:
+            exited_processes = self.poll_for_exited_processes()
+            if exited_processes:
+                self.logger.info(&#34;Error in pipeline&#34;)
+                self.destroy_pipeline()
+                if self.pipeline_tries &lt; self.MAX_TRIES:
+                    self.pipeline_tries += 1
+                    self.logger.info(&#34;The pipeline was destroyed, re-creating and launching a new one&#34;)
+
+                    self.launch_pipeline()
+
+                else:
+                    self.logger.info(
+                        &#34;Pipeline failed too many times, (&#34; + str(self.MAX_TRIES) + &#34;), stopping daemon&#34;)
+                    self.bad_finish()
+            time.sleep(5)
+    except(SystemExit, KeyboardInterrupt):
+        self.logger.info(&#34;Exception or signal caught, stopping daemon and destroying the pipeline.&#34;)
+        self.destroy_pipeline()
+        self.good_finish()</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.poll_for_exited_processes"><code class="name flex">
+<span>def <span class="ident">poll_for_exited_processes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def poll_for_exited_processes(self):
+    for process in self.processes_list:
+        process.poll()
+        if process.returncode is not None:
+            return True
+    return False</code></pre>
+</details>
+</dd>
+<dt id="src.daemons.daemon_utils.MonitoringDaemon.reload_pipeline"><code class="name flex">
+<span>def <span class="ident">reload_pipeline</span></span>(<span>self, _signo, _stack_frame)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def reload_pipeline(self, _signo, _stack_frame):
+    self.logger.info(&#34;Going to reload pipeline&#34;)
+    self.destroy_pipeline()
+    self.processes_list = list()
+    self.launch_pipeline()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<a href="/code/index.html"><img src="https://s3-eu-west-1.amazonaws.com/jonatan.enes.udc/logo_bdwatchdog.png" style="height:100px;"/></a>
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.daemons" href="index.html">src.daemons</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.daemons.daemon_utils.check_path_existance_and_create" href="#src.daemons.daemon_utils.check_path_existance_and_create">check_path_existance_and_create</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.command_is_runnable" href="#src.daemons.daemon_utils.command_is_runnable">command_is_runnable</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.configure_daemon_logs" href="#src.daemons.daemon_utils.configure_daemon_logs">configure_daemon_logs</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.eprint" href="#src.daemons.daemon_utils.eprint">eprint</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.read_config" href="#src.daemons.daemon_utils.read_config">read_config</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.register_service" href="#src.daemons.daemon_utils.register_service">register_service</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.daemons.daemon_utils.MonitoringDaemon" href="#src.daemons.daemon_utils.MonitoringDaemon">MonitoringDaemon</a></code></h4>
+<ul class="">
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.bad_finish" href="#src.daemons.daemon_utils.MonitoringDaemon.bad_finish">bad_finish</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.beat" href="#src.daemons.daemon_utils.MonitoringDaemon.beat">beat</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.check_if_runnable" href="#src.daemons.daemon_utils.MonitoringDaemon.check_if_runnable">check_if_runnable</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.create_environment" href="#src.daemons.daemon_utils.MonitoringDaemon.create_environment">create_environment</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.create_pipe" href="#src.daemons.daemon_utils.MonitoringDaemon.create_pipe">create_pipe</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.create_pipeline" href="#src.daemons.daemon_utils.MonitoringDaemon.create_pipeline">create_pipeline</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.destroy_pipeline" href="#src.daemons.daemon_utils.MonitoringDaemon.destroy_pipeline">destroy_pipeline</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.good_finish" href="#src.daemons.daemon_utils.MonitoringDaemon.good_finish">good_finish</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.initialize_environment" href="#src.daemons.daemon_utils.MonitoringDaemon.initialize_environment">initialize_environment</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.launch_heartbeat" href="#src.daemons.daemon_utils.MonitoringDaemon.launch_heartbeat">launch_heartbeat</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.launch_pipeline" href="#src.daemons.daemon_utils.MonitoringDaemon.launch_pipeline">launch_pipeline</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.loop" href="#src.daemons.daemon_utils.MonitoringDaemon.loop">loop</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.poll_for_exited_processes" href="#src.daemons.daemon_utils.MonitoringDaemon.poll_for_exited_processes">poll_for_exited_processes</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.reload_pipeline" href="#src.daemons.daemon_utils.MonitoringDaemon.reload_pipeline">reload_pipeline</a></code></li>
+<li><code><a title="src.daemons.daemon_utils.MonitoringDaemon.threaded_read_last_process_output" href="#src.daemons.daemon_utils.MonitoringDaemon.threaded_read_last_process_output">threaded_read_last_process_output</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.2</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
