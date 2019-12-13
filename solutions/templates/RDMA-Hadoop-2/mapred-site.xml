@@ -1,0 +1,96 @@
+<configuration>
+  <property>
+    <name>mapreduce.tasktracker.host.name</name>
+    <value>${HADOOPHOSTNAME}</value>
+  </property>
+  <property>
+    <name>mapreduce.cluster.local.dir</name>
+    <value>$mapreduce_local_dir</value>
+  </property>
+
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>$master:10020</value>
+  </property>
+
+  <property>   
+    <name>mapreduce.tasktracker.map.tasks.maximum</name>   
+    <value>$mappers_per_node</value>
+  </property> 
+  <property>   
+   <name>mapreduce.tasktracker.reduce.tasks.maximum</name>   
+   <value>$reducers_per_node</value>
+  </property>
+  <property>   
+    <name>mapreduce.map.memory.mb</name>   
+    <value>$map_memory_mb</value>  
+  </property>
+  <property>   
+    <name>mapreduce.reduce.memory.mb</name>   
+    <value>$reduce_memory_mb</value>  
+  </property>
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value>-Xmx$map_heapsizeM</value>
+  </property>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value>-Xmx$reduce_heapsizeM</value>
+  </property>
+
+  <property>
+    <name>yarn.app.mapreduce.am.command-opts</name>
+    <value>-Xmx$app_master_heapsizeM -Dhadoop.conf.dir=${HADOOP_CONF_DIR}</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.mb</name>
+    <value>$app_master_memory_mb</value>
+  </property>
+
+  <property>   
+    <name>mapreduce.task.io.sort.factor</name>   
+    <value>$io_sort_factor</value>  
+  </property>
+  <property>   
+    <name>mapreduce.task.io.sort.mb</name>   
+    <value>$io_sort_mb</value>  
+  </property>
+  <property>
+    <name>mapreduce.map.sort.spill.percent</name>
+    <value>$io_sort_spill_percent</value>
+  </property>
+  <property>
+    <name>mapreduce.job.reduce.slowstart.completedmaps</name>
+    <value>$reduce_slow_start_completed_maps</value>
+  </property>
+  <property>   
+    <name>mapreduce.reduce.shuffle.parallelcopies</name>   
+    <value>$shuffle_parallelcopies</value>  
+  </property>
+
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+  
+  <property>
+    <name>mapreduce.tasktracker.dns.interface</name>
+    <value>$net_interface</value>
+  </property>
+
+<!-- RDMA-Hadoop specific -->
+
+  <property>
+    <name>yarn.app.mapreduce.am.env</name>
+    <value>LD_LIBRARY_PATH=$hadoop_home/lib/native:${LD_LIBRARY_PATH}</value>
+  </property>
+  <property>
+    <name>mapred.rdma.local.ssd.used</name>
+    <value>$rdma_hadoop_dfs_ssd_used</value>
+  </property>
+  <property>
+    <name>mapred.rdma.disk.shuffle.enabled</name>
+    <value>$rdma_hadoop_disk_shuffle_enabled</value>
+  </property>
+
+</configuration>

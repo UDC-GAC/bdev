@@ -1,0 +1,35 @@
+#!/bin/sh
+export SOL_BENCH_DIR=$SOLUTIONS_BENCH_DIR/Hadoop
+export SOL_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
+export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
+export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs
+export MASTERFILE=$SOL_CONF_DIR/masters
+
+#HADOOP environment variables
+export HADOOP_HOME=$SOLUTION_HOME
+export HADOOP_CONF_DIR=$SOL_CONF_DIR
+export YARN_CONF_DIR=$HADOOP_CONF_DIR
+export PATH=$HADOOP_HOME/bin:$PATH
+
+export HADOOP_MR_VERSION="YARN"
+
+export HADOOP_SERIES=`echo ${HADOOP_HOME##*/} | cut -d '.' -f 1`
+
+if [[ $HADOOP_SERIES == "3" ]]
+then
+	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
+	export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN-3
+	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
+	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
+	export SLAVESFILE=$SOL_CONF_DIR/workers
+	if [[ "$SGE_ENV" == "true" ]]
+	then
+		export HADOOP_SSH_OPTS=" "
+	fi
+else
+	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
+	export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN
+	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN
+	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
+	export SLAVESFILE=$SOL_CONF_DIR/slaves
+fi

@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+
+bin=`dirname "$0"`
+bin=`cd "$bin"; pwd`
+
+#echo "success in start shell"
+. "$bin"/mpi-d-config.sh
+
+if [ -f "${MPI_D_CONF_PATH}/mpi-d-env.sh" ]; then
+  . "${MPI_D_CONF_PATH}/mpi-d-env.sh"
+fi
+
+# some MPI  parameters
+MPI_EXEC=`which mpirun`
+if [ "$?" != "0" ]; then
+  MPI_EXEC=""
+fi
+
+if [ "x$MPI_EXEC" = "x" ]; then
+  echo "Error: MPI_EXEC is not set."
+  exit 1
+fi
+
+MPI_HOME=`dirname $MPI_EXEC`/..
+
+# some Java parameters
+if [ "$JAVA_HOME" != "" ]; then
+  ##echo "run java in $JAVA_HOME"
+  JAVA_HOME=$JAVA_HOME
+fi
+
+if [ "$JAVA_HOME" = "" ]; then
+  echo "Error: JAVA_HOME is not set."
+  exit 1
+fi
+
+JAVA=$JAVA_HOME/bin/java
+
+# CLASSPATH initially contains $MPI_D_CONF_PATH
+CLASSPATH="${MPI_D_CONF_PATH}"
+CLASSPATH=${CLASSPATH}:$JAVA_HOME/lib/tools.jar
+
+# set HADOOP configuration path in CLASSPATH
+if [ -e "$HADOOP_CONF_PATH" ]; then
+  CLASSPATH=${CLASSPATH}:${HADOOP_CONF_PATH}
+fi
+
+# for developers, add mpid classes to CLASSPATH
+if [ -d "$MPI_D_HOME/build/classes" ]; then
+  CLASSPATH=${CLASSPATH}:$MPI_D_HOME/build/classes
+fi
+
+for f in `find  $MPI_D_HOME/lib/ -name "*.jar" `; do
+  [ -e "${f}" ] && CLASSPATH=${CLASSPATH}:$f;
+done
+
+for f in `find  $MPI_D_HOME/lib/3rdparty -name "*.jar" `; do
+  [ -e "${f}" ] && CLASSPATH=${CLASSPATH}:$f;
+done
+
+# add user-specified CLASSPATH last
+if [ "x$MPI_D_CLASSPATH" != "x" ]; then
+  CLASSPATH=${CLASSPATH}:${MPI_D_CLASSPATH}
+fi
+
+# setup 'java.library.path' for native-mpi-d code if necessary
+JAVA_LIBRARY_PATH="/usr/lib/:$MPI_D_HOME/lib/:$MPI_D_HOME/lib/native"
+
+if [  "x$JAVA_LIBRARY_PATH" != "x" ]; then
+  export LD_LIBRARY_PATH=${JAVA_LIBRARY_PATH}:$LD_LIBRARY_PATH
+fi
+LD_LIBRARY_PATH="$MPI_HOME/lib:$LD_LIBRARY_PATH"
+
+if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$JAVA_LIBRARY_PATH"
+fi
+
+if [ "x$MPI_D_HOME" != "x" ]; then
+  MPI_D_OPTS="$MPI_D_OPTS -Dmpid.home=$MPI_D_HOME"
+fi
+
+if [ "x$MPI_D_CONF_PATH" != "x" ]; then
+  MPI_D_OPTS="$MPI_D_OPTS -Dmpid.conf.path=$MPI_D_CONF_PATH"
+fi
+
+if [ "x$MPI_D_HOSTFILE" != "x" ]; then
+  MPI_D_OPTS="$MPI_D_OPTS -Dmpid.hostfile.path=$MPI_D_HOSTFILE"
+fi
+
+MPI_D_LOG_DIR="${MPI_D_LOG_DIR:-$MPI_D_HOME/logs}"
+
+if [ ! -d "$MPI_D_LOG_DIR" ]; then
+  mkdir -p $MPI_D_LOG_DIR
+fi
+
+MPI_D_OPTS="$MPI_D_OPTS -Dmpid.log.dir=$MPI_D_LOG_DIR"
+
+# get the JobID and Process Rank information
+if [ "$1" = "-jobID" ]; then
+  shift
+  MPI_D_LOG_JOBNAME=$1
+  shift
+  if [ "$1" = "-procRank" ]; then
+    shift
+    MPI_D_PROCESS_RANK=$1
+    MPI_D_OPTS="$MPI_D_OPTS -Dmpid.log.filename=${MPI_D_LOG_JOBNAME}/process_${MPI_D_PROCESS_RANK}.log"
+    shift
+  fi
+fi
+
+# set the profiling log file
+if [ "$1" = "-profiling" -a -n "$MPI_D_LOG_JOBNAME" ]; then
+  MPI_D_JOB_LOD_DIR=${MPI_D_LOG_DIR}/${MPI_D_LOG_JOBNAME}
+  shift
+  JAVA_OPTS="$JAVA_OPTS -agentlib:hprof=cpu=samples,heap=sites,force=n,thread=y,verbose=n,file=${MPI_D_JOB_LOD_DIR}/profile_${MPI_D_PROCESS_RANK}.out"
+  if [ ! -d "$MPI_D_JOB_LOD_DIR" ]; then
+    mkdir -p $MPI_D_JOB_LOD_DIR
+  fi
+fi
+
+CLASS=mpid.core.MPI_D_Runner
+
+if [ "$1" = "-process" ]; then
+  # if the process is lanuched by MPI_D_Runner 
+  exec "$JAVA" $JAVA_OPTS $JAVA_HEAP_MAX $MPI_D_OPTS -classpath "$CLASSPATH" $CLASS "$@"
+else
+  exec "$MPI_EXEC" -rmk user -launcher sge "$JAVA" $JAVA_OPTS $JAVA_HEAP_MAX $MPI_D_OPTS -classpath "$CLASSPATH" $CLASS "$@"
+fi

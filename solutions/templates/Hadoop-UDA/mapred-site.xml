@@ -1,0 +1,96 @@
+<configuration>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value>$master:8021</value>
+  </property>  
+  <property>
+    <name>mapred.local.dir</name>
+    <value>$mapreduce_local_dir</value>
+  </property>
+
+  <property>
+    <name>mapreduce.history.server.embedded</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>mapreduce.history.server.http.address</name>
+    <value>$master:51111</value>
+  </property>
+
+  <property>   
+    <name>mapred.tasktracker.map.tasks.maximum</name>   
+    <value>$mappers_per_node</value>    
+  </property> 
+  <property>   
+   <name>mapred.tasktracker.reduce.tasks.maximum</name>   
+   <value>$reducers_per_node</value>    
+  </property> 
+  <property>  
+    <name>mapred.map.child.java.opts</name>   
+    <value>-Xmx$map_heapsizeM</value>  
+  </property>
+  <property>
+    <name>mapred.reduce.child.java.opts</name>
+    <value>-Xmx$reduce_heapsizeM</value>
+  </property>
+
+  <property>   
+    <name>io.sort.factor</name>   
+    <value>$io_sort_factor</value>  
+  </property>
+  <property>   
+    <name>io.sort.mb</name>   
+    <value>$io_sort_mb</value>  
+  </property>
+  <property>   
+    <name>io.sort.spill.percent</name>    
+    <value>$io_sort_spill_percent</value>  
+  </property>
+  <property>
+    <name>io.sort.record.percent</name>   
+    <value>$io_sort_record_percent</value> 
+  </property>
+  <property>   
+    <name>mapred.reduce.parallel.copies</name>   
+    <value>$shuffle_parallelcopies</value>  
+  </property>
+  
+  <property>
+    <name>mapred.tasktracker.dns.interface</name>
+    <value>$net_interface</value>
+  </property>
+
+<!-- UDA specific -->
+
+   <property>
+       <name>mapreduce.shuffle.provider.plugin.classes</name>
+       <value>com.mellanox.hadoop.mapred.UdaShuffleProviderPlugin,org.apache.hadoop.mapred.TaskTracker$DefaultShuffleProvider</value>
+   </property>
+
+   <property>
+       <name>mapreduce.job.reduce.shuffle.consumer.plugin.class</name>
+       <value>com.mellanox.hadoop.mapred.UdaShuffleConsumerPlugin</value>
+   </property>
+
+<!-- UDA Tuning Recommendations-->
+
+   <property>
+       <name>mapred.map.tasks.speculative.execution</name>
+       <value>false</value>
+   </property>
+
+   <property>
+       <name>mapred.reduce.tasks.speculative.execution</name>
+       <value>false</value>
+   </property>
+
+   <property>
+       <name>mapred.reduce.slowstart.completed.maps</name>
+       <value>0.95</value>
+   </property>
+
+   <property>
+       <name>mapred.rdma.developer.mode</name>
+       <value>true</value>
+   </property>
+</configuration>

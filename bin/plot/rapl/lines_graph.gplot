@@ -1,0 +1,38 @@
+set terminal postscript eps enhanced solid font 'Arial,22' color
+set datafile missing '-'
+set datafile separator ","
+set output output_file
+load palette_file
+
+set style fill solid border -1 
+set boxwidth 1 relative
+set xdata time
+set timefmt "%s"
+
+set style data linespoints
+
+
+set key outside horiz center top
+set key autotitle columnheader noenhanced
+
+set yrange [0:*]
+set xrange ["0":max_x]
+
+set xlabel "Time (min:s)"
+
+if (exists("format_y")) \
+	if(format_y eq 'bytes')	set format y "%.0s %cB"; \
+	else if(format_y eq 'percent') set yrange [0:110]
+
+if (exists("label_y"))	set ylabel label_y  noenhanced
+
+if (exists("max_y"))	set yrange [0:max_y]
+
+set grid
+
+set xtic tic_interval
+
+ncol=0
+
+plot for [i=1:words(input_files)] for [col=2:(word(cols,i)+1)] word(input_files,i) \
+	using 1:col ls (ncol=ncol+1) lw 2 

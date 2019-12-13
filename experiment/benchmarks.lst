@@ -1,0 +1,15 @@
+## Benchmarks to run in the evaluation
+
+#testdfsio		# Tests the read and write throughput of HDFS
+wordcount		# Counts the number of times each word appears in the input data set
+#sort			# Sorts the input data set
+#grep			# Counts the matches of a regular expression in the input data set
+#terasort		# Sorts 100B-sized <key,value> tuples
+#pagerank		# Graph algorithm which ranks elements by counting the number and quality of the links to each one
+#connected_components	# Graph algorithm which finds the connected components of a graph
+#bayes			# Performs the Naive Bayesian classification algorithm
+#kmeans			# Clustering algorithm which partitions N observations into K clusters
+#aggregation		# SQL-based query which sums the values from a column
+#join			# SQL-based query which joins two tables
+#scan			# SQL-based query which extracts the rows that match a certain pattern
+#command		# Executes user-defined actions (interactive or batch)

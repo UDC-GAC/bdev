@@ -1,0 +1,57 @@
+<configuration>
+  <property>
+    <name>dfs.datanode.hostname</name>
+    <value>${HADOOPHOSTNAME}</value>
+  </property>
+  <property>
+    <name>dfs.replication</name>
+    <value>$replication_factor</value>
+  </property>
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>$dfs_name_dir</value>
+  </property>
+  <property>
+    <name>dfs.namenode.handler.count</name>
+    <value>$namenode_handler_count</value>
+  </property>
+  <property>
+    <name>dfs.namenode.service.handler.count</name>
+    <value>$namenode_handler_count</value>
+  </property>
+  <property>
+    <name>dfs.datanode.data.dir</name>
+    <value>$dfs_data_dir</value>
+  </property>
+  <property>
+    <name>dfs.namenode.checkpoint.dir</name>
+    <value>$dfs_checkpoint_dir</value>
+  </property>
+  <property>
+    <name>dfs.datanode.dns.interface</name>
+    <value>$net_interface</value>
+  </property>
+  <property>
+    <name>dfs.blocksize</name>
+    <value>$blocksize</value>
+  </property>
+
+<!-- RDMA-Hadoop specific -->
+
+  <property>
+    <name>dfs.master</name>
+    <value>$master</value>
+  </property>
+  <property>
+    <name>dfs.rdma.namenode.list</name>
+    <value>$master</value>
+  </property>
+  <property>
+    <name>dfs.replication.parallel.enabled</name>
+    <value>$rdma_hadoop_dfs_replication_parallel</value>
+  </property>
+  <property>
+    <name>dfs.rdma.memory.percentage</name>
+    <value>$rdma_hadoop_dfs_memory_percentage</value>
+  </property>
+</configuration>

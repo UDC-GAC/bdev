@@ -1,0 +1,78 @@
+<configuration>
+
+  <property>
+    <name>yarn.resourcemanager.scheduler.class</name>
+    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.hostname</name>
+    <value>${YARNHOSTNAME}</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>$master</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>$nodemanager_memory</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>$nodemanager_min_allocation</value>
+  </property>
+  
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>$nodemanager_memory</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.increment-allocation-mb</name>
+    <value>$nodemanager_increment_allocation</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.resource.cpu-vcores</name>
+    <value>$nodemanager_vcores</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.maximum-allocation-vcores</name>
+    <value>$nodemanager_vcores</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.local-dirs</name>
+    <value>$yarn_local_dirs</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.pmem-check-enabled</name>
+    <value>$nodemanager_pmem_check</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>$nodemanager_vmem_check</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.vmem-pmem-ratio</name>
+    <value>$nodemanager_vmem_pmem_ratio</value>
+  </property>
+
+  <property>
+    <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
+    <value>$nodemanager_max_disk_util_percent</value>
+  </property>
+
+</configuration>

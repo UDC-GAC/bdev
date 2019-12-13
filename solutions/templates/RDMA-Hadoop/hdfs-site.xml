@@ -1,0 +1,41 @@
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>$replication_factor</value>
+  </property>
+  <property>
+    <name>dfs.name.dir</name>
+    <value>$dfs_name_dir</value>
+  </property>
+  <property>
+    <name>dfs.data.dir</name>
+    <value>$dfs_data_dir</value>
+  </property>
+  <property>
+    <name>dfs.namenode.handler.count</name>
+    <value>$namenode_handler_count</value>
+  </property>
+  <property>
+    <name>fs.checkpoint.dir</name>
+    <value>$dfs_checkpoint_dir</value>
+  </property>
+  <property>
+    <name>dfs.datanode.dns.interface</name>
+    <value>$net_interface</value>
+  </property>
+  <property>
+    <name>dfs.block.size</name>
+    <value>$blocksize</value>
+  </property>
+
+<!-- RDMA-Hadoop specific -->
+
+  <property>
+    <name>dfs.replication.parallel</name>
+    <value>$rdma_hadoop_dfs_replication_parallel</value>
+  </property>
+  <property>
+    <name>dfs.ssd.used</name>
+    <value>$rdma_hadoop_dfs_ssd_used</value>
+  </property>
+</configuration>

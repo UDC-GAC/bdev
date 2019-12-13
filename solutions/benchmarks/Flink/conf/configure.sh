@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export FLINK_BENCH_JAR_NAME=flinkbench-assembly-1.0.jar
+export FLINK_BENCH_JAR=$SOL_BENCH_DIR/bin/$FLINK_BENCH_JAR_NAME
+export SORT_PARTITIONS=$FLINK_PARALLELISM

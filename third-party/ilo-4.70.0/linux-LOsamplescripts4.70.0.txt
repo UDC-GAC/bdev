@@ -1,0 +1,419 @@
+SOFTPAQ NUMBER:	N/A
+PART NUMBER: 	N/A
+FILE NAME:  	N/A
+TITLE:  	HP Lights-Out XML Scripting Sample for Linux
+VERSION:   	4.70.0
+LANGUAGE:  	English
+CATEGORY:  	Systems Management
+DIVISIONS:  	Systems
+                        
+OPERATING SYSTEMS:  
+		Red Hat Enterprise Linux 7 Server
+   		Red Hat Enterprise Linux 6 Server (x86-64)
+   		Red Hat Enterprise Linux 6 Server (x86)
+   		Red Hat Enterprise Linux 5 Server (x86-64)
+   		Red Hat Enterprise Linux 5 Server (x86)
+   		Red Hat Enterprise Linux 4 (AMD64/EM64T)
+   		Red Hat Enterprise Linux 4 (x86)
+   		SUSE LINUX Enterprise Server 11 (AMD64/EM64T)
+   		SUSE LINUX Enterprise Server 11 (x86)
+   		SUSE LINUX Enterprise Server 10 (AMD64/EM64T)
+   		SUSE LINUX Enterprise Server 10 (x86)
+   		VMware ESX/ESXi 4.1
+   		VMware ESX/ESXi 4.0
+   		VMware ESX/ESXi Server 3.5
+
+SYSTEM CONFIGURATION:  		N/A
+
+PREREQUISITE:  			N/A
+
+EFFECTIVE DATE:			28/09/2015
+
+ELECTRONIC DISTRIBUTION ALLOWED:Yes
+
+SOFTPAQ UTILITY VERSION:  	N/A
+
+SUPERSEDES:   			4.60.0
+
+DESCRIPTION:  
+	This is a set of sample XML script used to manage the configuration of Lights-Out
+      management processors and to control servers in which the following devices are in use:
+                  	Integrated Lights-Out 4
+                  	Integrated Lights-Out 3
+                  	Integrated Lights-Out 2  
+ 
+Note:	
+	Use CPQLOCFG.EXE ver 4.20 or greater (with iLO2), or HPQLOCFG.EXE ver 1.00 or greater (with 1LO3 and iLO4) as well as locfg.pl ver 4.10 or greater with these scripts.
+	Please refer to each script for more detailed support information.
+
+
+           
+	See "HP Integrated Lights-Out Management Processor Scripting and Command Line 
+      Resource Guide" for more information on scripting and the syntax of the RIBCL XML.                                                 
+
+DOCUMENTATION:
+
+	HP Lights-Out User Guides and HP Integrated Lights-Out Management Processor Scripting
+	and Command Line Resource Guide can be found in the Document section of 
+      http://hp.com/go/ilo.
+
+HOW TO USE:
+
+	Unzip/Untar linux-LOsamplescripts4.70.0.tgz to a subdirectory. 
+	This file contains the following scripts:
+
+	Add_Federation_Group.xml - This is a sample XML script to add a Federation group membership and grant associated privileges
+
+	Add_SSO_Rec.xml - Add an HP SIM Single Sign-On (SSO) record to the end of the database. 
+	
+	Add_User.xml - Add a user to the Lights-Out device user database.
+	
+	Administrator_reset_pw.xml- Reset the default administrator account password using HPONCFG.
+	
+	Cert_Request.xml - Request a Certificate Signing Request from Lights-Out device.
+
+	Change_Password.xml - Change the password of an existing Light-Out device user.
+
+	Clear_AHS_Data.xml - Clear the AHS data.	
+
+	Clear_EventLog.xml - Clear the Light-Out device Event Log.
+
+	Clear_IML.xml - Clear the server Integrated Management Log (IML).
+
+	Clear_Power_On_Time.xml - Clear the power-on time counter.
+
+        Computer_Lock_Config.xml - Change the values for Computer Lock settings.
+
+	Delete_Federation_Group.xml - This is a sample XML script to delete a Federation group membership
+	
+	Delete_SSH_Key.xml - This is a sample XML script that deletes existing SSH key.
+
+	Delete_SSO_Rec.xml - Delete an HP SIM Single Sign-On (SSO) record by index.
+
+	Delete_User.xml - Delete a user from the Light-Out device user database.
+
+	Eject_Virtual_Media.xml - Ejects the image of the specified Virtual Media device.
+
+	ERS_AHS_Submit.xml - This is a sample XML script to initiate AHS data submission to IRS.
+
+        ERS_DC_CompleteRegistration.xml - This is a sample XML script to complete the server registration.
+
+        ERS_DC_RegisterDevice.xml - This is a sample XML script to connect ERS to Insight Online and perform the 1st step of server registration.
+
+        ERS_DC_SetWebProxy.xml - This is a sample XML script to modify the Web Proxy information required by ERS to communicate with Insight  Online                                                
+
+	ERS_Disable.xml - This is a sample XML script to disable iLO ERS functionality and un-register the server.
+
+        ERS_Get_Settings.xml - This is a sample XML script to retrieve current ERS settings. 
+
+	ERS_IRS_Enable.xml - This is a sample XML script to connect ERS to Insight Remote Support server (IRS) and register the server.ERS_L2_Collection_Submit.xml - This is a sample XML script to initiate a L2 data collection submission to IRS.
+
+	ERS_Test_Event_Submit.xml - This is a sample XML script to initiate a test service event submission to IRS.
+
+	Factory_Defaults.xml - Sets the Lights-out device to factory default settings.
+
+	Get_2Factor.xml - Obtain the two factor authentication configuration settings.
+
+	Get_AHS_Status.xml - This is a sample XML script to find out if AHS is enabled or disabled.
+
+	Get_All_Languages.xml - This is a sample XML script to read all languages that are supported on iLO.
+
+        Get_All_Licenses.xml - This is a sample XML script to get the license information.
+
+	Get_All_User_Info.xml - Return the configuration details for all users. 
+
+	Get_All_Users.xml - Return a list of all user accounts on Lights-Out device.
+
+	Get_Asset_Tag.xml - This is a sample XML script to get the asset tag.
+
+        Get_Boot_Mode.xml - This is a sample XML script to get the pending boot mode.
+
+        Get_Current_Boot_Mode.xml - This is a sample XML script to get the current boot mode.              
+	
+        Get_Cert_Subject_Info.xml - This is a sample XML script to retrieve iLO 2 certificate subject information.
+
+        Get_Supported_Boot_Mode.xml - This is a sample XML script to get the supported boot mode. 
+
+	Get_Diagport.xml - Return BL p-class diagport settings.
+
+	Get_Directory.xml - Return the current directory configuration of an Lights-Out device.
+
+	get_discovery_services.xml - This is a sample XML script to read location discovery Services data. 
+
+	Get_EmHealth.xml - Return the health information of the server.
+
+	Get_Enc_Bay_IP_Settings.xml - Obtain static IP settings of individual blades in the respective enclosure.
+
+        Get_Encrypt.xml - This is a sample XML script to return current encryption settings
+
+        Get_Federation_Group.xml - This is a sample XML script to retrieve the privileges granted to a specified Federation
+
+        Get_Federation_All_Groups.xml - This is a sample XML script to retrieve a list of all Federation group memberships 
+
+        Get_Federation_All_Groups_Info.xml - This is a sample XML script to retrieve a list of all Federation group memberships and granted privileges
+
+        Get_Federation_Multicast_Options.xml - This is a sample XML script to retrieve the current Federation multicast options. 
+
+        Get_FIPS_Status.xml - Return the status of FIPs mode.
+
+	Get_FW_Version.xml - Return the version and date/time of the Lights-Out device firmware. 
+
+	Get_Global.xml - Return global settings.
+
+	Get_Host_APO.xml - Retrieve server automatic power on and power on delay settings. 
+
+	Get_Host_Data.xml - Retrieve SMBIOS data from Server Information page.
+
+	Get_Host_Power.xml - Return the current power state of the host server.
+
+	Get_Host_Power_Saver.xml - Return the current Power Regulator setting.  	   	
+
+	Get_Host_Pwr_Micro_Ver.xml - Power Micro Firmware revision information of the server.
+
+	Get_Host_Pwr_Reg_Info.xml - Obtain the power regulator state information for supported platforms.
+
+	Get_Hotkey_Config.xml - Retreive the Remote Console hotkeys. 
+
+	Get_iLO_Log.xml - Retrieve the records in the Lights-Out device Event Log. 
+
+	Get_IML.xml - Retrieve the records in the Integrated Management Log. 
+
+	Get_language.xml - This is a sample XML script to get the default language setting and to retrieve the list of installed languages.
+
+	Get_Network.xml - Return network settings.
+
+	Get_OA_Info.xml - Return enclosure data for c-Class Blade Infrastructure.
+
+	Get_One_Time_Boot_Order.xml - This is a sample XML script to retrieve the current State of the One Time Boot.
+
+	Get_Persistent_Boot_Order.xml - This is a sample XML script to retrieve the current State of the Boot Order.
+
+        Get_Persmouse_Status.xml  - Get the persistent mouse and keyboard status.          
+
+	Get_Power_On_Time.xml - Return the number of minutes the server has been powered on and running.
+
+	Get_Power_Readings.xml: Return the power readings from the server.
+
+	Get_PowerCap.xml - Return Power Cap setting.
+
+        Get_Product_name.xml -  This is a sample XML script to get the product name
+
+        Get_Pwreg_Alert_Threshold.xml - Return the current power alert threshold settings.
+
+        Get_Rack_Settings.xml - This is a sample XML script to return enclosure data for c-Class blade infrastructure
+
+	Get_Security_Msg.xml - This is a sample XML script to retrieve the current security text message set in the iLO Login Banner. 
+
+	Get_Server_FQDN.xml - This is a sample XML script to get the host server FQDN
+        
+        Get_Server_Name.xml - Return the host server name.			
+
+	Get_SNMP_IM.xml - Return the current SNMP and Insight Manager security settings.
+
+	Get_SSO_Settings.xml - Retrieve the HP SIM Single Sign-On (SSO) settings.
+
+	Get_Topology.xml - Return BL p-Class rack infrastructure topology.
+
+        Get_TPM_Status.xml - This is a sample XML script to return the status of TPM
+
+	Get_UID_Status.xml - Return the current state of the server's Unit ID (UID) on the host server.
+
+	Get_User.xml - Return the configuration details for a single user.
+
+	Get_VM_Status.xml - Return the status of the specified Virtual Media device.
+	
+	HD_Zone_Defaults.xml - Reset the Hard Drive Zoning to factory defaults for XL servers that support hard drive zoning.
+	
+	HD_Zone_ReadBackplaneInfo.xml - Read the Hard Drive Backplane Information from XL servers that support hard drive zoning.
+
+	HD_Zone_ReadZoneTable.xml - Read the Hard Drive Zoning for XL servers that support hard drive zoning.
+
+	HD_Zone_Write_Zone.xml - Write the Hard Drive Zoning Information to XL servers that support hard drive zoning.
+
+	Hotkey_Config.xml - Change the values for Remote Console hotkeys.
+
+	hponcfg_reformat.xsl - The stylesheet (.xsl) converts the iLO configuration captured using hponcfgcap.xml to a format that can be used to restore the configuration of iLO. 
+
+	hponcfgcap.xml - Capture the current iLO configuration such as Global Settings,Network Settings, Users Information and Directory Settings to a file using HPONCFG. 
+
+	ilo_perl_xml.pdf - Document PERL script usage.
+
+	Import_2Factor_Cert.xml - Import certificates into iLO.
+
+	Import_Cert.xml - Import a signed certificate into a Lights-Out device.
+
+	Import_SSH_Key.xml - Imports SSH key into a Lights-Out device.
+
+	Insert_Virtual_Media.xml - Inserts the Virtual Media image via specified URL.
+
+	License.xml - Add the iLO Advanced Pack license key for a server.
+
+	locfg.pl - Sample PERL script to send XML commands. 
+
+	Lock_Configuration.xml - Enable/disable the datacenter configuration lock.
+
+	Mod_2Factor.xml - Configure two-factor authentication settings.
+
+	Mod_Blade_Rack.xml - Change the BL p-Class blade and rack settings.
+
+	Mod_ConsoleCapture_Port_Settings.xml - This is a sample XML script to disable or enable console capture port for Integrated Lights-Out 2 (iLO 2).                                           
+
+	Mod_DiagPort_Settings.xml - Change the Lights-Out device Diagnostic Port network settings.
+
+	Mod_Directory.xml - Change the directory settings of an Lights-Out device.
+
+	Mod_Enc_Bay_IP_Settings.xml - Modify the static IP settings of individual blades in the respective enclosure.
+
+	Mod_Encrypt_Settings - This is a sample XML script to configure the encryption Settings
+
+	Mod_Federation_Group.xml - This is a sample XML script to modify a Federation group membership and associated privileges      
+
+	Mod_Global_Settings.xml - Change the Lights-Out device Global Settings.
+
+	Mod_Kerberos_Config.xml - To configure kerberos configuration.
+
+	Mod_Network_Settings.xml - Change the Lights-Out device Network Settings.	
+
+	Mod_Schemaless_Directory.xml - Change the schemaless directory settings of an iLO.
+
+	Mod_SNMP_IM_Settings.xml - Change the Lights-Out device SNMP and Insight Manager Settings.
+
+	Mod_SSO_Settings.xml - Configure the HP SIM Single Sign-On (SSO) settings.
+
+	Mod_User.xml  - Change the login id, display name, password and/or privileges for an existing user account on a Lights-Out device.
+
+	Mod_VLAN.xml - Configure virtual LAN settings on a Light-Out device.
+
+	Mod_VM_Port_Settings.xml - This is a sample XML script to configure the virtual media port functionality on iLO.
+
+	Mod_VSP_Flow_Control.xml - Change the VSP SOFTWARE FLOW CONTROL value.
+
+	Profile_Apply.xml - This is a sample XML script to set the Profile Descriptor.
+
+	Profile_Apply_Get_Results.xml - This is a sample XML script to get the results from the Profile_Apply.
+
+	Profile_Desc_Delete.xml - This is a sample XML script to delete the Profile Descriptor.   
+
+	Profile_Desc_Download.xml - This is a sample XML script to write a profile Description, download a specific blob and write the blob to the blobstore.
+
+	Profile_Desc_List.xml -  This is a sample XML script to list all the Profile Descriptors and the data stored in the Profile Descriptor. 
+
+	RBSU_POST_IP.xml - Configure Lights-Out device to display the IP address at POST.
+
+	Reset_RIB.xml - Restart the Lights-Out Management Processor.
+
+	Reset_Server.xml - Immediately power off and back on the host server.
+
+	Set_AHS_Status.xml - This is a sample XML script to enable or disable AHS logging.
+
+	Set_Asset_tag.xml - This is a sample XML script to set the asset tag, asset tag limited to 32 characters.
+
+	Set_Brownout.xml - This is a sample XML script to enable or disable brownout support.
+
+        Set_Boot_Mode.xml - This is a sample XML script to set the pending boot mode.
+
+	Set_CSR_Custom.xml - This is a sample XML script to set certificate signing request settings with custom subject info.
+
+	Set_CSR_Default.xml - This is a sample XML script to set certificate signing request settings to default subject info.   
+	
+	Set_Federation_Multicast_Options.xml - This is a sample XML script to set the Federation multicast options.  	   
+
+	Set_FIPS_Enable.xml - This is a sample XML script to enable FIPs mode.   	   
+
+	Set_Fqdn.xml - To change the iLO SSL self signed certificate fqdn selection.
+
+	Set_Host_APO.xml - Change server automatic power on and power on delay settings.
+
+	Set_Host_Power.xml - Power on/off the host server.
+
+	Set_Host_Power_Saver.xml - Change the Power Regulator setting.
+
+	Set_Language.xml - This is a sample XML script to set the default language on iLO.
+
+	Set_One_Time_Boot_Order.xml - This is a sample XML script to Set One Time Boot Order.
+
+	Set_Persistent_Boot_Order.xml - This is a sample XML script to Set Persistent Boot Order.
+
+        Set_Persmouse_Status.xml - Set the persistent mouse and keyboard.
+
+	Set_PowerCap.xml - Change the Power Cap setting.
+
+	Set_Pwreg_Alert_Threshold.xml - Change the power alert threshold settings.
+
+	Set_Security_Msg.xml - This is a sample XML script to configure a security text message in the iLO Login Banner.
+
+	Set_Server_FQDN - This is a sample XML script to set the host server FQDN
+
+        Set_Server_Name.xml - Set the host server name.
+
+	Set_Virtual_Power_BTN.xml - This is a sample XML script to simulate physical press of the server power button, cold boot and warm boot.uu
+
+	Set_VM_Status.xml - This is a sample XML script to configure the virtual media boot options.
+
+	Shared_Network_Port.xml - Configure Lights-Out device to pass network traffic on the shared host network port on supported platforms.
+
+	UID_Control.xml - Turn on/off the Unit ID (UID) light on the host server.
+
+	Update_Firmware.xml - Flash the Lights-Out device firmware to a new version.
+
+        Update_Language.xml - Script to update the language pack.
+
+	vspconfig.pl - Set the Virtual Serial Port Configuration for Linux.
+
+   	linux-LOsamplescripts4.70.0.txt - this file.
+
+Utilities and documentation may be downloaded from:
+
+   http://www.hp.com/support
+
+   A valid iLO user account and password is required for each
+   XML script when using CPQLOCFG or HPQLOCFG.  The user account must have
+   appropriate lights-out privileges to process the request.
+
+   The locfg.pl script connects to the iLO management processor
+   using a Secure Sockets Layer (SSL) connection.
+
+perl locfg.pl -s {servername|ipaddress}[:port] [-l logfile] -f input_file [-u username -p password] [-ilo2|-ilo3]
+
+ Where:
+        -s servername is the DNS name of target server.
+        -s ipaddress is the IP Address of the target server.
+           If a port is not specified, the port will default to :443.
+                DO NOT USE this switch if launching from System Insight Manager.
+
+        -l logfile is the name of the file to log all output to.
+           A default file with the server name/ipaddress is created
+           if this option is not specified.
+                DO NOT USE this switch if launching from System Insight Manager.
+
+        -f input_file is the filename containing the RIB Commands
+        -u username
+        -p password  Command line user name and password override those
+           which are in the script file.
+           Note: Use -u and -p with caution as command line options are visible on Linux.
+        -ilo2|-ilo3|-ilo4
+           Specifies the type of device on the server. 
+           Note: locfg.pl detects the device automatically if this option is not present.
+
+Using vspconfig.pl
+   This script will modify the following two files:
+		\etc\inittab
+		\etc\securetty
+
+    usage: vspconfig.pl [-h] -t [0|1|2|3] 
+          
+          -h 	: This help message
+          -t	: Specify terminal (ttyS)
+
+     For information about the iLO Virtual Serial Port (VSP),
+     refer to:
+           Integrated Lights-Out Virtual Serial Port 
+           configuration and operation
+     
+     This document can be found on www.hp.com. 
+
+
+Copyright 2015 Hewlett-Packard Development Company, L.P.
+
+Hewlett-Packard and the Hewlett-Packard logo are trademarks of Hewlett-Packard
+Development Company, L.P/ in the U.S. and/or other countries.
