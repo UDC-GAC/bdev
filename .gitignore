@@ -1,0 +1,10 @@
+BDEv_OUT
+solutions/dist
+solutions/benchmarks/Spark/src/sparkbench/project/target
+solutions/benchmarks/Spark/src/sparkbench/project/project/target
+solutions/benchmarks/Spark/src/sparkbench/target
+solutions/benchmarks/Flink/src/flinkbench/project/target
+solutions/benchmarks/Flink/src/flinkbench/project/project/target
+solutions/benchmarks/Flink/src/flinkbench/target
+third-party/mahout*
+third-party/hive*
