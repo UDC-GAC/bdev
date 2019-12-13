@@ -1,1 +1,0 @@
-proc.net.tcp.out.mb:8,proc.net.tcp.out.packets:7,proc.net.tcp.in.mb:10,proc.net.tcp.in.packets:9,proc.net.udp.out.mb:12,proc.net.udp.out.packets:11,proc.net.udp.in.mb:14,proc.net.udp.in.packets:13

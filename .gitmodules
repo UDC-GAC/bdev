@@ -1,0 +1,3 @@
+[submodule "third-party/BDWatchdog"]
+	path = third-party/BDWatchdog
+	url = https://github.com/JonatanEnes/BDWatchdog
