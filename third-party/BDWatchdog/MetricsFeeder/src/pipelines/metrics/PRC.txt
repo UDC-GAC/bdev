@@ -1,1 +1,0 @@
-proc.cpu.user:7,proc.cpu.kernel:8
