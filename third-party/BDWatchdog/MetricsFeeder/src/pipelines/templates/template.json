@@ -1,0 +1,6 @@
+{
+	"metric": "{metric}",
+	"timestamp":"{timestamp}",
+	"value": "{value}",
+	"tags": {tags}
+}

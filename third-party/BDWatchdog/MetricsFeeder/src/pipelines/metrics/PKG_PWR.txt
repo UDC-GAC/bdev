@@ -1,0 +1,1 @@
+sys.cpu.temp:4,sys.cpu.energy:5
