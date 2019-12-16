@@ -1,8 +1,8 @@
 # 1 "papi_fwrappers.c"
 # 1 "<interno>"
-# 1 "<línea-de-órdenes>"
+# 1 "<línea-de-orden>"
 # 1 "/usr/include/stdc-predef.h" 1 3 4
-# 1 "<línea-de-órdenes>" 2
+# 1 "<línea-de-orden>" 2
 # 1 "papi_fwrappers.c"
 # 21 "papi_fwrappers.c"
 #pragma GCC visibility push(default)
@@ -28,10 +28,8 @@
 
 
 
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 1 3 4
-# 216 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 3 4
-
-# 216 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 1 3 4
+# 212 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 3 4
 typedef long unsigned int size_t;
 # 34 "/usr/include/stdio.h" 2 3 4
 
@@ -155,7 +153,7 @@ typedef struct _IO_FILE __FILE;
 # 32 "/usr/include/libio.h" 3 4
 # 1 "/usr/include/_G_config.h" 1 3 4
 # 15 "/usr/include/_G_config.h" 3 4
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 1 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 1 3 4
 # 16 "/usr/include/_G_config.h" 2 3 4
 
 
@@ -189,8 +187,8 @@ typedef struct
 } _G_fpos64_t;
 # 33 "/usr/include/libio.h" 2 3 4
 # 50 "/usr/include/libio.h" 3 4
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stdarg.h" 1 3 4
-# 40 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stdarg.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h" 1 3 4
+# 40 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h" 3 4
 typedef __builtin_va_list __gnuc_va_list;
 # 51 "/usr/include/libio.h" 2 3 4
 # 145 "/usr/include/libio.h" 3 4
@@ -664,7 +662,9 @@ extern int putw (int __w, FILE *__stream);
 
 extern char *fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
      ;
-# 640 "/usr/include/stdio.h" 3 4
+# 638 "/usr/include/stdio.h" 3 4
+extern char *gets (char *__s) __attribute__ ((__deprecated__));
+
 
 # 665 "/usr/include/stdio.h" 3 4
 extern __ssize_t __getdelim (char **__restrict __lineptr,
@@ -868,7 +868,7 @@ extern void __assert (const char *__assertion, const char *__file, int __line)
 
 
 
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 1 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 1 3 4
 # 33 "/usr/include/string.h" 2 3 4
 
 
@@ -1208,7 +1208,7 @@ typedef __clockid_t clockid_t;
 typedef __timer_t timer_t;
 # 133 "/usr/include/sys/types.h" 2 3 4
 # 146 "/usr/include/sys/types.h" 3 4
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 1 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 1 3 4
 # 147 "/usr/include/sys/types.h" 2 3 4
 
 
@@ -1545,17 +1545,17 @@ typedef union
 
 
 # 240 "papi.h" 2
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 1 3 4
-# 34 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 3 4
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/syslimits.h" 1 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 1 3 4
+# 34 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/syslimits.h" 1 3 4
 
 
 
 
 
 
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 1 3 4
-# 194 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 1 3 4
+# 168 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 3 4
 # 1 "/usr/include/limits.h" 1 3 4
 # 144 "/usr/include/limits.h" 3 4
 # 1 "/usr/include/bits/posix1_lim.h" 1 3 4
@@ -1571,13 +1571,11 @@ typedef union
 
 # 1 "/usr/include/bits/posix2_lim.h" 1 3 4
 # 149 "/usr/include/limits.h" 2 3 4
-# 195 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 2 3 4
-# 8 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/syslimits.h" 2 3 4
-# 35 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include-fixed/limits.h" 2 3 4
+# 169 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 2 3 4
+# 8 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/syslimits.h" 2 3 4
+# 35 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/limits.h" 2 3 4
 # 241 "papi.h" 2
 # 1 "papiStdEventDefs.h" 1
-# 51 "papiStdEventDefs.h"
-
 # 51 "papiStdEventDefs.h"
 enum
 {
@@ -1734,8 +1732,6 @@ enum {
 
 
 # 1 "/usr/include/bits/sigset.h" 1 3 4
-# 103 "/usr/include/bits/sigset.h" 3 4
-
 # 103 "/usr/include/bits/sigset.h" 3 4
 extern int __sigismember (const __sigset_t *, int);
 extern int __sigaddset (__sigset_t *, int);
@@ -2306,7 +2302,7 @@ extern int sigreturn (struct sigcontext *__scp) __attribute__ ((__nothrow__ , __
 
 
 
-# 1 "/opt/ohpc/pub/compiler/gcc/8.3.0/lib/gcc/x86_64-pc-linux-gnu/8.3.0/include/stddef.h" 1 3 4
+# 1 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h" 1 3 4
 # 351 "/usr/include/signal.h" 2 3 4
 
 
@@ -2442,9 +2438,7 @@ extern int __libc_current_sigrtmax (void) __attribute__ ((__nothrow__ , __leaf__
 
 # 544 "papi.h" 2
 # 556 "papi.h"
- 
-# 556 "papi.h"
-typedef unsigned long PAPI_thread_id_t;
+ typedef unsigned long PAPI_thread_id_t;
 
 
  typedef struct _papi_all_thr_spec {
@@ -2455,19 +2449,7 @@ typedef unsigned long PAPI_thread_id_t;
 
   typedef void (*PAPI_overflow_handler_t) (int EventSet, void *address,
                                 long long overflow_vector, void *context);
-
-
-
-
-
-
- typedef char *caddr_t;
-
-
-
-
-
-
+# 580 "papi.h"
    typedef struct _papi_sprofil {
       void *pr_base;
       unsigned pr_size;
@@ -3061,11 +3043,7 @@ void papif_get_hardware_info_ ( int *ncpu, int *nnodes, int *totalcpus, int *ven
  const PAPI_hw_info_t *hwinfo;
  int i;
  hwinfo = PAPI_get_hardware_info( );
- if ( hwinfo == 
-# 320 "papi_fwrappers.c" 3 4
-               ((void *)0) 
-# 320 "papi_fwrappers.c"
-                    ) {
+ if ( hwinfo == ((void *)0) ) {
   *ncpu = 0;
   *nnodes = 0;
   *totalcpus = 0;
@@ -3487,11 +3465,7 @@ void papif_flops_ ( float *real_time, float *proc_time, long long *flpops, float
 # 1330 "papi_fwrappers.c"
 void papif_get_clockrate_ ( int *cr )
 {
- *cr = PAPI_get_opt( 14, (PAPI_option_t *) 
-# 1332 "papi_fwrappers.c" 3 4
-                                                       ((void *)0) 
-# 1332 "papi_fwrappers.c"
-                                                            );
+ *cr = PAPI_get_opt( 14, (PAPI_option_t *) ((void *)0) );
 }
 # 1348 "papi_fwrappers.c"
 void papif_get_preload_ ( char *lib_preload_env, int *check, int lib_preload_env_len )
@@ -3542,11 +3516,7 @@ void papif_get_domain_ ( int *eventset, int *domain, int *mode, int *check )
  PAPI_option_t d;
 
  if ( *mode == 4 ) {
-  *domain = PAPI_get_opt( *mode, (PAPI_option_t *) 
-# 1416 "papi_fwrappers.c" 3 4
-                                                  ((void *)0) 
-# 1416 "papi_fwrappers.c"
-                                                       );
+  *domain = PAPI_get_opt( *mode, (PAPI_option_t *) ((void *)0) );
   *check = 0;
  } else if ( *mode == 5 ) {
   d.domain.eventset = *eventset;
