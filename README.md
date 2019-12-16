@@ -2,8 +2,6 @@
 
 [**Big Data Evaluator (BDEv)**](http://bdev.des.udc.es) is a benchmarking tool that allows to evaluate multiple Big Data processing frameworks (e.g., Hadoop, Spark, Flink) using different micro-benchmarks and real-world applications in order to obtain valuable information about their performance, resource utilization, energy efficiency and microarchitectural behaviour.
 
-Further information available at http://bdev.des.udc.es.
-
 ## Citation
 
 If you use **BDEv** in your research, please cite our work using the following reference:
