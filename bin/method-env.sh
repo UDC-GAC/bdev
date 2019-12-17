@@ -66,6 +66,7 @@ export BDWATCHDOG_SRC_DIR=$THIRD_PARTY_DIR/BDWatchdog
 export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
+export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
 # Check if we are under a SGE environment
 if [[ -n "$SGE_ROOT" ]]
