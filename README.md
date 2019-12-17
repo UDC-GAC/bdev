@@ -10,13 +10,13 @@ If you use **BDEv** in your research, please cite our work using the following r
 
 ## Download
 
-To download a specific version of BDEv, which is the preferred approach, you should clone a specific tag from the github repository instead of cloning the master branch. For example, to download version 3.3 you should execute:
+To download a specific version of BDEv, which is the recommended approach, you must clone a specific tag from the github repository instead of cloning the master branch. For example, you can download version 3.3 by executing:
 
 ```
 git clone --branch v3.3 https://github.com/rreye/bdev.git
 ```
 
-If you want to use the [BDWatchdog](http://bdwatchdog.dec.udc.es) framework for monitoring resource usage, which is integrated within BDEv a git submodule, you should use the following command instead:
+If you want to use the [BDWatchdog](http://bdwatchdog.dec.udc.es) framework for monitoring resource usage, which is integrated within BDEv as a git submodule, you should use the following command instead:
 
 ```
 git clone --branch v3.3 --recurse-submodules https://github.com/rreye/bdev.git
