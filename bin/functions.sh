@@ -413,7 +413,7 @@ function write_report(){
 
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
-		m_echo "Generating RAPL summary graphs"
+		m_echo "Generating rapl graphs"
 		if [[ ! -f "$RAPL_PLOT_DIR" ]]
 		then
 			mkdir -p $RAPL_PLOT_DIR
@@ -423,7 +423,7 @@ function write_report(){
 
 	if [[ $ENABLE_OPROFILE == "true" ]]
 	then
-		m_echo "Generating OProfile graphs"
+		m_echo "Generating oprofile graphs"
 		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]
 		then
 			mkdir -p $OPROFILE_PLOT_DIR
@@ -585,7 +585,8 @@ function start_benchmark(){
 	WAIT_SECONDS=""
 	if [[ $ENABLE_ILO == "true" ]]
 	then
-		WAIT_SECONDS=$ILO_WAIT_SECONDS
+		maxmin $ILO_WAIT_SECONDS $WAIT_SECONDS
+		WAIT_SECONDS=$MAX
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then 
@@ -614,23 +615,27 @@ function start_benchmark(){
 		sleep $WAIT_SECONDS
 	fi
 
+	WAIT_SECONDS=""
 	if [[ $ENABLE_ILO == "true" ]]
 	then
-		m_echo "Starting iLO monitors"
+		m_echo "Starting ilo monitors"
 		bash $ILO_HOME/start_ilo_monitor.sh
-		sleep $ILO_SECONDS_INTERVAL
+		maxmin $ILO_SECONDS_INTERVAL $WAIT_SECONDS
+                WAIT_SECONDS=$MAX
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
 		m_echo "Starting dstat monitors"
 		bash $STAT_HOME/start_stat_monitor.sh
-		sleep $STAT_SECONDS_INTERVAL
+		maxmin $STAT_SECONDS_INTERVAL $WAIT_SECONDS
+                WAIT_SECONDS=$MAX
 	fi
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
 		m_echo "Starting rapl monitors"
 		bash $RAPL_HOME/start_rapl_monitor.sh
-		sleep $RAPL_SECONDS_INTERVAL
+		maxmin $RAPL_SECONDS_INTERVAL $WAIT_SECONDS
+                WAIT_SECONDS=$MAX
 	fi
 	if [[ $ENABLE_OPROFILE == "true" ]]
 	then
@@ -655,6 +660,21 @@ function start_benchmark(){
 			m_echo "Starting nethogs daemons"
 			bash $BDWATCHDOG_HOME/start_nethogs_monitor.sh
 		fi
+		maxmin $BDWATCHDOG_SECONDS_INTERVAL $WAIT_SECONDS
+                WAIT_SECONDS=$MAX
+	fi
+
+	if [[ -n "$WAIT_SECONDS" ]]
+	then
+		sleep $WAIT_SECONDS
+	fi
+
+	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
+		### MARK start of workload
+		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+		fi
 	fi
 
 	m_echo "Starting $BENCHMARK"
@@ -666,10 +686,22 @@ export -f start_benchmark
 function end_benchmark(){
 	END_TIME=`timestamp`
 
+	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
+		### MARK end of workload
+		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+		fi
+	fi
+
+	if [[ -n "$WAIT_SECONDS" ]]
+        then
+                sleep $WAIT_SECONDS
+        fi
+
 	if [[ $ENABLE_ILO == "true" ]]
 	then
-		m_echo "Stopping iLO monitors"
-		sleep $ILO_SECONDS_INTERVAL
+		m_echo "Stopping ilo monitors"
 		bash $ILO_HOME/stop_ilo_monitor.sh
 	fi
 	if [[ $ENABLE_OPROFILE == "true" ]]
@@ -680,13 +712,11 @@ function end_benchmark(){
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
 		m_echo "Stopping rapl monitors"
-		sleep $RAPL_SECONDS_INTERVAL
 		bash $RAPL_HOME/stop_rapl_monitor.sh
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
 		m_echo "Stopping dstat monitors"
-		sleep $STAT_SECONDS_INTERVAL
 		bash $STAT_HOME/stop_stat_monitor.sh
 	fi
 
