@@ -28,6 +28,7 @@
 
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
+SPARK_LOCAL_IP=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
 SPARK_LOCAL_DIRS=$spark_local_dirs
