@@ -171,7 +171,7 @@ run_command() {
   fi
 
   spark_rotate_log "$log"
-  echo "starting $command, logging to $log"
+  echo "starting $command on $SPARK_LOCAL_IP, logging to $log"
 
   case "$mode" in
     (class)

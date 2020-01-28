@@ -3,11 +3,9 @@
 $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 
 #Spark
-$COMMON_SRC_DIR/bin/spark-config.sh set
+$COMMON_SRC_DIR/bin/spark-config.sh
 
 $SPARK_HOME/sbin/start-master.sh &
-
-sleep 10
 
 $SPARK_HOME/sbin/start-slaves.sh &
 
@@ -20,4 +18,4 @@ then
 	$SPARK_HOME/sbin/start-history-server.sh &
 fi
 
-sleep 10
+sleep 15
