@@ -40,7 +40,7 @@ fi
 CLASS="org.apache.spark.deploy.worker.Worker"
 
 if [[ $# -lt 1 ]] || [[ "$@" = *--help ]] || [[ "$@" = *-h ]]; then
-  echo "Usage: ./sbin/start-slave.sh [options] <master>"
+  echo "Usage: ./sbin/start-slave.sh <master> [options]"
   pattern="Usage:"
   pattern+="\|Using Spark's default log4j profile:"
   pattern+="\|Registered signal handlers for"
@@ -81,7 +81,7 @@ function start_instance {
   "${SPARK_HOME}/sbin"/spark-daemon.sh start $CLASS $WORKER_NUM \
      --webui-port "$WEBUI_PORT" $PORT_FLAG $PORT_NUM $MASTER "$@"
 }
-
+echo "start-slave.sh on $SPARK_LOCAL_IP using SPARK_CONF_DIR=$SPARK_CONF_DIR"
 if [ "$SPARK_WORKER_INSTANCES" = "" ]; then
   start_instance 1 "$@"
 else
