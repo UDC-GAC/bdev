@@ -89,6 +89,7 @@ fi
 
 export SPARK_SSH_OPTS=""
 export SPARK_SSH_FOREGROUND
+set -- "export" "SPARK_CONF_DIR=${SPARK_CONF_DIR}" ";" "${@}"
 
 for slave in `echo "$HOSTLIST"|sed  "s/#.*$//;/^$/d"`; do
   if [ -n "${SPARK_SSH_FOREGROUND}" ]; then
