@@ -358,6 +358,32 @@ function set_solution()
 		m_echo "Solution set to $SOLUTION: $SOLUTION_HOME"
 	fi
 
+	if [[ "$SOLUTION_NAME" == "Spark" || "$SOLUTION_NAME" == "RDMA-Spark" ]]
+        then
+                if [[ ! -d $SPARK_HADOOP_HOME ]]
+                then
+                        m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
+                fi
+	elif [[ "$SOLUTION_NAME" == "Flink" ]]
+        then
+                if [[ ! -d $FLINK_HADOOP_HOME ]]
+                then
+                        m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
+                fi
+	elif [[ "$SOLUTION_NAME" == "FlameMR" ]]
+        then
+                if [[ ! -d $FLAMEMR_HADOOP_HOME ]]
+                then
+                        m_exit "Hadoop distribution not found at $FLAMEMR_HADOOP_HOME"
+                fi
+	elif [[ "$SOLUTION_NAME" == "DataMPI" ]]
+        then
+                if [[ ! -d $DATAMPI_HADOOP_HOME ]]
+                then
+                        m_exit "Hadoop distribution not found at $DATAMPI_HADOOP_HOME"
+                fi
+	fi
+
 	mkdir -p $SOLUTION_REPORT_DIR
 	unset FINISH
 }
