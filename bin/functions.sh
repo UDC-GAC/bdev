@@ -509,10 +509,12 @@ function begin_report(){
 	else
 		REPORT="$REPORT \t IPoIB interface  \t\t\t Not specified \n"
 	fi
+	REPORT="$REPORT \t Cores per node \t\t\t $CORES_PER_NODE \n"
+	REPORT="$REPORT \t Memory per node (MB) \t\t\t $MEMORY_PER_NODE \n"
 	REPORT="$REPORT \t Master heapsize (MB) \t\t\t $MASTER_HEAPSIZE \n"
 	REPORT="$REPORT \t Slave heapsize (MB)  \t\t\t $SLAVE_HEAPSIZE \n"
-	REPORT="$REPORT \t YARN NodeManager memory (MB)  \t\t $NODEMANAGER_MEMORY \n"
 	REPORT="$REPORT \t YARN NodeManager vcores  \t\t $NODEMANAGER_VCORES \n"
+	REPORT="$REPORT \t YARN NodeManager memory (MB)  \t\t $NODEMANAGER_MEMORY \n"
 	REPORT="$REPORT \t YARN APPMaster memory (MB)  \t\t $APP_MASTER_MEMORY \n"
 	REPORT="$REPORT \t YARN APPMaster heapsize (MB) \t\t $APP_MASTER_HEAPSIZE \n"
 	REPORT="$REPORT \t YARN Container memory (MB) \t\t $CONTAINER_MEMORY \n"
