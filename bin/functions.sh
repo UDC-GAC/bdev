@@ -461,8 +461,8 @@ function write_report(){
 export -f write_report
 
 function begin_report(){
-	REPORT="$METHOD_NAME report file \n"
-	REPORT="$REPORT Start date: $METHOD_START_DATE \n"
+	REPORT="$METHOD_NAME $METHOD_VERSION report \n"
+	REPORT="$REPORT \n Report dir: $REPORT_DIR \n"
 	REPORT="$REPORT \n $METHOD_NAME configuration: \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
@@ -561,7 +561,7 @@ function begin_report(){
 	REPORT="$REPORT \t Flink YARN JobManager heapsize (MB) \t $FLINK_YARN_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink YARN TaskManager memory (MB) \t $FLINK_YARN_TASKMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN TaskManager heapsize (MB) \t $FLINK_YARN_TASKMANAGER_HEAPSIZE \n"
-	REPORT="$REPORT \n $METHOD_NAME results: \n\n"
+	REPORT="$REPORT \n $METHOD_NAME results: \n"
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
