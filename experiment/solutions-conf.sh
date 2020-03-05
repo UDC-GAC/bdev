@@ -1,11 +1,11 @@
 #!/bin/sh
-
-## Configuration parameters of the different frameworks
+#
+### Configuration parameters of the different frameworks
 #
 ##FLAME-MR
 #export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
 #export FLAMEMR_WORKERS_PER_NODE=1 # Number of workers per node
-#export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"`	# Number of cores per Worker
+#export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"` # Number of cores per Worker
 #export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
 #export FLAMEMR_WORKER_MEMORY=`op_int "($NODEMANAGER_MEMORY / $FLAMEMR_WORKERS_PER_NODE) * $FLAMEMR_WORKER_MEMORY_FACTOR"` # Executor heapsize
 #export FLAMEMR_BUFFER_SIZE=1048576 # Memory buffer size
@@ -22,8 +22,8 @@
 #export RDMA_HADOOP_ROCE_ENABLED="false" # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 #export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
 #export RDMA_HADOOP_DFS_REPLICATION_PARALLEL="false" # Enable parallel replication
-#export RDMA_HADOOP_DFS_SSD_USED="false" # Enable SSD-oriented optimizations for HDFS
-#export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true"	# Enable disk-based shuffle
+#export RDMA_HADOOP_DFS_SSD_USED="false"	# Enable SSD-oriented optimizations for HDFS
+#export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 #
 ## Spark (common)
 #export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
@@ -46,10 +46,10 @@
 ## Spark standalone
 #export SPARK_WORKERS_PER_NODE=1 # Number of workers per node (recommended 1 per node)
 #export SPARK_WORKER_CORES=`op_int "$NODEMANAGER_VCORES / $SPARK_WORKERS_PER_NODE"` # Number of cores per Worker
-#export SPARK_WORKER_MEMORY=`op_int "$NODEMANAGER_MEMORY / $SPARK_WORKERS_PER_NODE"` # Amount of memory available to Workers
+#export SPARK_WORKER_MEMORY=`op_int "$NODEMANAGER_MEMORY / $SPARK_WORKERS_PER_NODE"` # Memory available to Workers
 #export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 #export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
-#export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Amount of memory allocated to each Executor
+#export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
 #export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
 #export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
 #
@@ -57,8 +57,8 @@
 #export SPARK_AM_HEAPSIZE=$APP_MASTER_HEAPSIZE # Application Master heapsize
 #export SPARK_YARN_EXECUTORS_PER_NODE=1 # Number of Executors per node
 #export SPARK_YARN_CORES_PER_EXECUTOR=`op_int "$NODEMANAGER_VCORES / $SPARK_YARN_EXECUTORS_PER_NODE"` # Number of cores per Executor
-#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_YARN_CORES_PER_EXECUTOR"` # Amount of memory allocated to each Executor
-#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
+#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_YARN_CORES_PER_EXECUTOR"` # Memory allocated to each Executor
+#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90	# Percentage of the Executor memory allocated to heap
 #export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
 #
 ## RDMA-Spark
@@ -76,13 +76,13 @@
 #
 ## Flink standalone
 #export FLINK_JOBMANAGER_HEAPSIZE=$MASTER_HEAPSIZE # JobManager heapsize
-#export FLINK_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY / $FLINK_TASKMANAGERS_PER_NODE)"` # Amount of memory allocated to each TaskManager
+#export FLINK_TASKMANAGER_MEMORY=`op_int "$NODEMANAGER_MEMORY / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 #export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
 #export FLINK_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 #
 ## Flink on YARN
 #export FLINK_YARN_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE # JobManager heapsize
-#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY / $FLINK_TASKMANAGERS_PER_NODE)"` # Amount of memory allocated to each TaskManager
+#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "$CONTAINER_MEMORY * $FLINK_TASKMANAGER_SLOTS"` # Memory allocated to each TaskManager
 #export FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
 #export FLINK_YARN_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_YARN_TASKMANAGER_MEMORY * $FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 #
@@ -93,10 +93,10 @@
 #
 ## Mellanox UDA library
 #export UDA_VERSION=3.3.2 # UDA library version
-#export UDA_LIB_DIR=$SOLUTIONS_LIB_DIR/uda-$UDA_VERSION	# UDA library directory
+#export UDA_LIB_DIR=$SOLUTIONS_LIB_DIR/uda-$UDA_VERSION # UDA library directory
 #
 ## Apache Mahout
-#export MAHOUT_HEAPSIZE=$MASTER_HEAPSIZE # Heap size for Mahout master process
+#export MAHOUT_HEAPSIZE=$MASTER_HEAPSIZE	# Heap size for Mahout master process
 #export HADOOP_1_MAHOUT_VERSION=0.11.2	# Mahout version for Hadoop 1
 #export HADOOP_2_MAHOUT_VERSION=0.11.2	# Mahout version for Hadoop 2 (YARN)
 #
@@ -104,4 +104,3 @@
 #export HADOOP_1_HIVE_VERSION=1.2.1	# Hive version for Hadoop 1
 #export HADOOP_2_HIVE_VERSION=1.2.1	# Hive version for Hadoop 2 (YARN)
 #export HIVE_TMP_DIR=/hive/tmp		# HDFS directory to store temporary files
-#
