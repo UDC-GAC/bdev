@@ -257,6 +257,7 @@ add_conf_param "nodemanager_pmem_check" $NODEMANAGER_PMEM_CHECK
 add_conf_param "nodemanager_vmem_check" $NODEMANAGER_VMEM_CHECK
 add_conf_param "nodemanager_vmem_pmem_ratio" $NODEMANAGER_VMEM_PMEM_RATIO
 add_conf_param "nodemanager_max_disk_util_percent" $NODEMANAGER_MAX_DISK_UTIL_PERCENT
+add_conf_param "nodemanager_disk_health_checker" $NODEMANAGER_DISK_HEALTH_CHECKER
 
 #UDA
 add_conf_param "uda_lib_dir" $UDA_LIB_DIR

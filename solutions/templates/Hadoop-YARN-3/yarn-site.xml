@@ -71,6 +71,11 @@
   </property>
 
   <property>
+    <name>yarn.nodemanager.disk-health-checker.enable</name>
+    <value>$nodemanager_disk_health_checker</value>
+  </property>
+
+  <property>
     <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
     <value>$nodemanager_max_disk_util_percent</value>
   </property>

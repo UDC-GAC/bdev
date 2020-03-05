@@ -15,4 +15,5 @@ export NODEMANAGER_INCREMENT_ALLOCATION=128	# Container memory allocations are r
 export NODEMANAGER_PMEM_CHECK="true"
 export NODEMANAGER_VMEM_CHECK="false"
 export NODEMANAGER_VMEM_PMEM_RATIO=2.1
-export NODEMANAGER_MAX_DISK_UTIL_PERCENT=90.0
+export NODEMANAGER_DISK_HEALTH_CHECKER=true     # Enable or disable the disk health checker service
+export NODEMANAGER_MAX_DISK_UTIL_PERCENT=95.0	# Maximum percentage of disk space that may be utilized before a disk is marked as unhealthy
