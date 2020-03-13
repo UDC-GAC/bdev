@@ -23,7 +23,6 @@ export IO_SORT_MB=$(( $MAP_HEAPSIZE / 4 ))	# Total amount of buffer memory to us
 export IO_SORT_FACTOR=$(( $IO_SORT_MB / 10 ))	# Number of streams to merge at once while sorting files
 export IO_SORT_RECORD_PERCENT=0.05	# The percentage of io.sort.mb dedicated to tracking record boundaries
 export IO_SORT_SPILL_PERCENT=0.80	# The soft limit in either the buffer or record collection buffers
-export SHUFFLE_PARALLELCOPIES=20 	# Default number of parallel transfers run by reduce during the copy(shuffle) phase
-export REDUCE_SLOW_START_COMPLETED_MAPS=0.05 # Fraction of the number of maps which should be complete before reduces are scheduled
+export SHUFFLE_PARALLELCOPIES=10 	# Number of parallel transfers run by reduce during the copy (shuffle) phase
+export REDUCE_SLOW_START_COMPLETED_MAPS=0.75 # Fraction of the number of maps which should be complete before reduces are scheduled
 export MR_JOBHISTORY_SERVER="true"	# Start the MapReduce JobHistoryServer
-
