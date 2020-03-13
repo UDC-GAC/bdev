@@ -532,6 +532,7 @@ function begin_report(){
 	REPORT="$REPORT \t MapReduce io.sort.factor  \t\t $IO_SORT_FACTOR \n"
 	REPORT="$REPORT \t MapReduce io.sort.spill.percent  \t $IO_SORT_SPILL_PERCENT \n"
 	REPORT="$REPORT \t MapReduce shuffle.parallelcopies \t $SHUFFLE_PARALLELCOPIES \n"
+	REPORT="$REPORT \t MapReduce reduce.start.completedmaps \t $REDUCE_SLOW_START_COMPLETED_MAPS \n"
 	REPORT="$REPORT \t DataMPI task heapsize (MB)   \t\t $DATAMPI_TASK_HEAPSIZE \n"
 	REPORT="$REPORT \t Flame-MR workers per node   \t\t $FLAMEMR_WORKERS_PER_NODE \n"
 	REPORT="$REPORT \t Flame-MR cores per worker   \t\t $FLAMEMR_CORES_PER_WORKER \n"
