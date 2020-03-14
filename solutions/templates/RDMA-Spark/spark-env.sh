@@ -28,6 +28,7 @@
 
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
+SPARK_LOCAL_IP=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
 SPARK_LOCAL_DIRS=$spark_local_dirs
@@ -85,3 +86,4 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 # You might get better performance to enable these options if using native BLAS (see SPARK-21305).
 # - MKL_NUM_THREADS=1        Disable multi-threading of Intel MKL
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
+LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
