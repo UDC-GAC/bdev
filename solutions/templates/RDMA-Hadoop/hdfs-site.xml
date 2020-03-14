@@ -16,6 +16,14 @@
     <value>$namenode_handler_count</value>
   </property>
   <property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>$client_shortcircuit_reads</value>
+  </property>
+  <property>
+    <name>dfs.domain.socket.path</name>
+    <value>$domain_socket_path</value>
+  </property>
+  <property>
     <name>fs.checkpoint.dir</name>
     <value>$dfs_checkpoint_dir</value>
   </property>

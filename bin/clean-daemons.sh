@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sleep 2
+
 for slave in $MASTERNODE $SLAVENODES
 do
 	DAEMON_PIDS=`ssh $slave "${LOAD_JAVA_COMMAND}; jps" | \
@@ -22,4 +24,4 @@ do
 	mkdir -p $TMP_DIR $LOCAL_DIRS"
 done
 
-sleep 2
+sleep 1
