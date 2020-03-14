@@ -86,3 +86,4 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 # You might get better performance to enable these options if using native BLAS (see SPARK-21305).
 # - MKL_NUM_THREADS=1        Disable multi-threading of Intel MKL
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
+LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
