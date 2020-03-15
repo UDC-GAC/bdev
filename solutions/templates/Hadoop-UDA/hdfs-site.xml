@@ -16,6 +16,10 @@
     <value>$namenode_handler_count</value>
   </property>
   <property>
+    <name>dfs.access.time.precision</name>
+    <value>$namenode_accesstime_precision</value>
+  </property>
+  <property>
     <name>dfs.client.read.shortcircuit</name>
     <value>$client_shortcircuit_reads</value>
   </property>
