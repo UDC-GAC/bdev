@@ -521,6 +521,7 @@ function begin_report(){
 	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $BLOCKSIZE \n"
 	REPORT="$REPORT \t HDFS replication factor  \t\t $REPLICATION_FACTOR \n"
 	REPORT="$REPORT \t HDFS NameNode handlers \t\t $NAMENODE_HANDLER_COUNT \n"
+	REPORT="$REPORT \t HDFS NameNode access times \t\t $NAMENODE_ACCESTIME_PRECISION \n"
 	REPORT="$REPORT \t HDFS short-circuit local reads \t $SHORT_CIRCUIT_LOCAL_READS \n"
 	REPORT="$REPORT \t HDFS client domain socket path \t $DOMAIN_SOCKET_PATH \n"
 	REPORT="$REPORT \t Mappers per node  \t\t\t $MAPPERS_PER_NODE \n"
