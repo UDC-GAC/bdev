@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export SPARK_BENCH_JAR_NAME=sparkbench-assembly-1.5.jar
+export SPARK_BENCH_JAR_NAME=sparkbench-assembly-2.0.jar
 export SPARK_BENCH_JAR=$SOL_BENCH_DIR/bin/$SPARK_BENCH_JAR_NAME
 export SORT_PARTITIONS=$(($SPARK_EXECUTORS * $SPARK_CORES_PER_EXECUTOR))
 export SPARK_BENCH_JAR_DELETE="find $SOLUTION_REPORT_DIR -name "$SPARK_BENCH_JAR_NAME" -type f -delete"
