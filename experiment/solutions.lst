@@ -34,10 +34,6 @@ Hadoop-YARN		2.9.2		GbE
 #FlameMR			1.2		IPoIB
 #DataMPI		0.6.0		GbE
 #DataMPI		0.6.0		IPoIB
-#Spark			1.6.3		GbE
-#Spark			1.6.3		IPoIB
-#Spark-YARN		1.6.3		GbE
-#Spark-YARN		1.6.3		IPoIB
 #Spark			2.3.4		GbE
 #Spark			2.3.4		IPoIB
 #Spark-YARN		2.3.4		GbE
@@ -50,10 +46,6 @@ Hadoop-YARN		2.9.2		GbE
 #RDMA-Spark		0.9.5		IPoIB
 #RDMA-Spark-YARN		0.9.5		GbE
 #RDMA-Spark-YARN		0.9.5		IPoIB
-#Flink			1.7.2           GbE
-#Flink			1.7.2           IPoIB
-#Flink-YARN		1.7.2           GbE
-#Flink-YARN		1.7.2           IPoIB
 #Flink			1.8.2           GbE
 #Flink			1.8.2           IPoIB
 #Flink-YARN		1.8.2           GbE
