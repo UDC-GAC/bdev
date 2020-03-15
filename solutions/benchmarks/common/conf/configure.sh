@@ -166,7 +166,7 @@ function prepare_sql_aggregation () {
 	cat <<EOF > ${HIVE_SQL_FILE}
 USE DEFAULT;
 
-CREATE EXTERNAL TABLE uservisits_aggre_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE LOCATION '$INPUT_AGGREGATION/uservisits';
+CREATE EXTERNAL TABLE uservisits_aggre_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_AGGREGATION/uservisits';
 CREATE EXTERNAL TABLE uservisits_aggre (sourceIP STRING,sumAdRevenue DOUBLE) STORED AS SEQUENCEFILE LOCATION '$OUTPUT_AGGREGATION/uservisits_aggre';
 INSERT OVERWRITE TABLE uservisits_aggre SELECT sourceIP, SUM(adRevenue) FROM uservisits_aggre_input GROUP BY sourceIP;
 EOF
@@ -181,8 +181,8 @@ function prepare_sql_join () {
 	cat <<EOF > ${HIVE_SQL_FILE}
 USE DEFAULT;
 
-CREATE EXTERNAL TABLE rankings_join_input (pageURL STRING, pageRank INT, avgDuration INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/rankings';
-CREATE EXTERNAL TABLE uservisits_join_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/uservisits';
+CREATE EXTERNAL TABLE rankings_join_input (pageURL STRING, pageRank INT, avgDuration INT) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/rankings';
+CREATE EXTERNAL TABLE uservisits_join_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/uservisits';
 CREATE EXTERNAL TABLE rankings_uservisits_join (sourceIP STRING, avgPageRank DOUBLE, totalRevenue DOUBLE) STORED AS SEQUENCEFILE LOCATION '$OUTPUT_JOIN/rankings_uservisits_join';
 INSERT OVERWRITE TABLE rankings_uservisits_join SELECT sourceIP, avg(pageRank), sum(adRevenue) as totalRevenue FROM rankings_join_input R JOIN (SELECT sourceIP, destURL, adRevenue FROM uservisits_join_input UV WHERE (datediff(UV.visitDate, '1999-01-01')>=0 AND datediff(UV.visitDate, '2000-01-01')<=0)) NUV ON (R.pageURL = NUV.destURL) group by sourceIP order by totalRevenue DESC;
 EOF
@@ -197,8 +197,8 @@ function prepare_sql_scan () {
 	cat <<EOF > ${HIVE_SQL_FILE}
 USE DEFAULT;
 
-CREATE EXTERNAL TABLE uservisits_scan_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE LOCATION '$INPUT_SCAN/uservisits';
-CREATE EXTERNAL TABLE uservisits_scan (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE LOCATION '$OUTPUT_SCAN/uservisits_scan';
+CREATE EXTERNAL TABLE uservisits_scan_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_SCAN/uservisits';
+CREATE EXTERNAL TABLE uservisits_scan (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$OUTPUT_SCAN/uservisits_scan';
 INSERT OVERWRITE TABLE uservisits_scan SELECT * FROM uservisits_scan_input;
 EOF
 }
