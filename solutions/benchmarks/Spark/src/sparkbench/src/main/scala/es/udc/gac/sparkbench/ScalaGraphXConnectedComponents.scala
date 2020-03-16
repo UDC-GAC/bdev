@@ -32,11 +32,7 @@ object ScalaGraphXConnectedComponents {
     // Load the edges as a graph
     val graph = EnhancedGraphLoader.edgeListRDD(data)
 
-    // Run ConnectedComponents until convergence
-    //val vertices: RDD[(VertexId, VertexId)] = ConnectedComponents.run(graph).vertices
-    
     // Run ConnectedComponents until convergence or maxIterations
-    // Next method is going to be supported in Spark
     val vertices: RDD[(VertexId, VertexId)] = ConnectedComponents.run(graph, maxIterations).vertices
 
     io.save[VertexId, VertexId](save_file, vertices, "Text")

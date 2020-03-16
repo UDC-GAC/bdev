@@ -7,8 +7,6 @@ export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
 export CHMOD="-chmod -R"
-# Next line to be removed when Spark supports iterative ConnCompt
-export CC_MAX_ITERATIONS=1024
 
 if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
 then
