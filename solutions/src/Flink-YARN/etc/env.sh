@@ -18,6 +18,9 @@ export FLINK_LOG_DIR=$SOL_LOG_DIR
 export PATH=$FLINK_HOME/bin:$PATH
 export FLINK_TASKMANAGERS=$(($FLINK_TASKMANAGERS_PER_NODE * $SLAVES_NUMBER))
 export FLINK_PARALLELISM=$(($FLINK_TASKMANAGERS * $FLINK_TASKMANAGER_SLOTS))
+export FLINK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
+export FLINK_SERIES=`echo ${FLINK_MAJOR_VERSION} | cut -d '.' -f 1`
+export FLINK_CONFIG_YAML_FILE=$SOL_CONF_DIR/flink-conf.yaml
 
 #YARN environment variables
 export HADOOP_HOME=$FLINK_HADOOP_HOME
@@ -59,14 +62,34 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 export FINISH_YARN="false"
 export DEPLOY_ARGS="-m yarn-cluster \
 	-yjm $FLINK_YARN_JOBMANAGER_HEAPSIZE \
-	-ytm $FLINK_YARN_TASKMANAGER_HEAPSIZE \
-	-yn $FLINK_TASKMANAGERS \
 	-ys $FLINK_TASKMANAGER_SLOTS"
+
+# Copy config.sh file according to Flink version
+FLINK_CONFIG_SH_FILE=config-${FLINK_MAJOR_VERSION}.sh
+m_echo "Using Flink config.sh file: $FLINK_CONFIG_SH_FILE"
+
+if [[ "$SGE_ENV" == "true" ]]
+then
+        cp -f $SOL_SGE_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+else
+        cp -f $SOL_STD_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+fi
+
+if [[ $FLINK_SERIES == "1" ]]
+then
+        if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
+        then
+                export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_YARN_TASKMANAGER_MEMORY"
+        else
+                export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.heap.size: $FLINK_YARN_TASKMANAGER_HEAPSIZE"
+        fi
+else
+        m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
 add_conf_param "flink_jobmanager_heapsize" $FLINK_YARN_JOBMANAGER_HEAPSIZE
-add_conf_param "flink_taskmanager_heapsize" $FLINK_YARN_TASKMANAGER_HEAPSIZE
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
 add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT

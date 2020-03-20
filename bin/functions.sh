@@ -329,8 +329,8 @@ export -f set_cluster_size
 function set_solution()
 {
 	export SOLUTION
-	SOLUTION_NAME=`echo $SOLUTION | cut -d '_' -f 1`
-	SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
+	export SOLUTION_NAME=`echo $SOLUTION | cut -d '_' -f 1`
+	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
 	export SOLUTION_NET_INTERFACE=`echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}'`
 	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
 
