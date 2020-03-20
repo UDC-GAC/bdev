@@ -295,6 +295,6 @@ add_conf_param "datampi_task_heapsize" $DATAMPI_TASK_HEAPSIZE
 
 #FLINK
 add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
-export FLINK_TASKMANAGER_TMP_DIRS=`add_prefix_sufix "$FLINK_TASKMANAGER_TMP_DIRS" "" "/flink/local"`
-add_conf_param_list "flink_taskmanager_tmp_dirs" "$FLINK_TASKMANAGER_TMP_DIRS" "" ""
+export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
+add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS" "" ""
 
