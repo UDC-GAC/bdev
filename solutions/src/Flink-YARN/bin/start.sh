@@ -9,3 +9,14 @@ for j in `cat ${FLINK_CONF_DIR}/slaves`; do
  	ssh $j "rm -rf ${FLINK_LOCAL_DIRS}/*"
         ssh $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
+
+if [[ $FLINK_HISTORY_SERVER == "true" ]]
+then
+        $HADOOP_EXECUTABLE fs ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
+        $HADOOP_EXECUTABLE fs ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
+
+        #Flink history server
+        $FLINK_HOME/bin/historyserver.sh start
+
+        sleep 5
+fi
