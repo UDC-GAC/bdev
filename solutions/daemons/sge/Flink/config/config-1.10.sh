@@ -330,6 +330,7 @@ export FLINK_OPT_DIR
 ########################################################################################################################
 # ENVIRONMENT VARIABLES
 ########################################################################################################################
+LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
 
 # read JAVA_HOME from config with no default value
 MY_JAVA_HOME=$(readFromConfig ${KEY_ENV_JAVA_HOME} "" "${YAML_CONF}")
