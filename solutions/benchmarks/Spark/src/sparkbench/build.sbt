@@ -1,27 +1,32 @@
 name := "sparkbench"
-
-version := "2.0"
-
+version := "2.2"
+val sparkVersion = "2.2.0"
 scalaVersion := "2.11.12"
 
 libraryDependencies ++= Seq(
-"org.apache.spark" %% "spark-core" % "2.2.0" % "provided",
-"org.apache.spark" %% "spark-graphx" % "2.2.0" % "provided",
-"org.apache.spark" %% "spark-mllib" % "2.2.0" % "provided",
-"org.apache.spark" %% "spark-hive" % "2.2.0" % "provided",
-"org.apache.hadoop" % "hadoop-common" % "2.7.0" % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-client-common" % "2.7.0" % "provided",
+"org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
 "org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0",
-"org.apache.mahout" % "mahout-core" % "0.9",
-"org.apache.mahout" % "mahout-math" % "0.9",
+"org.apache.mahout" % "mahout-mr" % "0.11.2",
 "com.github.scopt" %% "scopt" % "3.7.1"
 )
+
+assemblyShadeRules in assembly := Seq(
+  ShadeRule.rename("com.github.scopt.**" -> "shadeSCOPT.@1").inAll
+)
+
+assemblyJarName in assembly := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
+
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
 assemblyMergeStrategy in assembly := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
   case PathList("javax", "inject", xs @ _*) => MergeStrategy.last
   case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
   case PathList("javax", "activation", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "xml", xs @ _*) => MergeStrategy.last
   case PathList("org", "apache", xs @ _*) => MergeStrategy.last
   case PathList("com", "google", xs @ _*) => MergeStrategy.last
   case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last

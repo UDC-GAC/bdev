@@ -1,20 +1,22 @@
 name := "flinkbench"
-
 version := "1.8"
-
-scalaVersion := "2.11.8"
+val flinkVersion = "1.8.0"
+crossScalaVersions := Seq("2.11.12", "2.12.10")
 
 libraryDependencies ++= Seq(
-"org.apache.flink" %% "flink-scala" % "1.8.0" % "provided",
-"org.apache.flink" %% "flink-hadoop-compatibility" % "1.8.0" % "provided",
-"org.apache.flink" %% "flink-gelly-scala" % "1.8.0",
-"org.apache.flink" %% "flink-gelly-examples" % "1.8.0",
-"org.apache.hadoop" % "hadoop-common" % "2.7.0" % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-client-common" % "2.7.0" % "provided",
-"org.apache.mahout" % "mahout-core" % "0.9",
-"org.apache.mahout" % "mahout-math" % "0.9",
-"com.google.guava" % "guava" % "16.0"
+"org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
+"org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
+"org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
+"org.apache.mahout" % "mahout-mr" % "0.11.2"
 )
+
+assemblyShadeRules in assembly := Seq(
+  ShadeRule.rename("org.apache.commons.cli.**" -> "shadeApacheCommonsCLI.@1").inAll
+)
+
+assemblyJarName in assembly := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
+
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
 assemblyMergeStrategy in assembly := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
