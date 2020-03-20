@@ -12,4 +12,15 @@ done
 
 $FLINK_HOME/bin/start-cluster.sh
 
+if [[ $FLINK_HISTORY_SERVER == "true" ]]
+then
+        $HADOOP_EXECUTABLE fs ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
+        $HADOOP_EXECUTABLE fs ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
+
+        #Flink history server
+        $FLINK_HOME/bin/historyserver.sh start
+
+        sleep 1
+fi
+
 sleep 15

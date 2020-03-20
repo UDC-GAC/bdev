@@ -51,6 +51,7 @@ export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_LOG_DIR=$sol_log_dir
 export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
 export HADOOP_COMMON_HOME=$hadoop_home
+export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 export HADOOP_HEAPSIZE_MAX=$slave_heapsize
 
