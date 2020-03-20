@@ -1,6 +1,7 @@
 BDEv_OUT
-doc
 solutions/dist
+solutions/benchmarks/Spark/bin/*.jar
+solutions/benchmarks/Flink/bin/*.jar
 solutions/benchmarks/Spark/src/sparkbench/project/target
 solutions/benchmarks/Spark/src/sparkbench/project/project/target
 solutions/benchmarks/Spark/src/sparkbench/target
