@@ -31,10 +31,10 @@ export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_HEAPSIZE_FACTOR=0.90 # Percentage of the driver memory allocated to heap
 export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_HEAPSIZE_FACTOR"` # Driver heapsize
-export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Executor temporary directories
+export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
 export SPARK_HISTORY_SERVER="false" # Start the Spark HistoryServer
 export SPARK_HISTORY_SERVER_DIR=spark/history # HDFS realtive path to store application event logs
-export SPARK_NETWORK_TIMEOUT="200s" # Spark timeout for network communications (in seconds)
+export SPARK_NETWORK_TIMEOUT="120" # Spark timeout for network communications (in seconds)
 export SPARK_SHUFFLE_COMPRESS="true" # Compress map output files
 export SPARK_SHUFFLE_SPILL_COMPRESS="true" # Compress data spilled during shuffles
 export SPARK_BROADCAST_COMPRESS="true" # Compress broadcast variables before sending them
@@ -68,11 +68,12 @@ export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 
 # Flink (common)
 export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
+export FLINK_SCALA_VERSION=2.11	# Scala version used by your Flink distribution
+export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-export FLINK_TASKMANAGER_TMP_DIRS=$LOCAL_DIRS # TaskManager temporary directories
 export FLINK_TASKMANAGER_PREALLOCATE_MEMORY="false" # TaskManager preallocate memory
-export FLINK_NETWORK_TIMEOUT="200" # Flink timeout for network communications (in seconds)
+export FLINK_NETWORK_TIMEOUT="120" # Flink timeout for network communications (in seconds)
 
 # Flink standalone
 export FLINK_JOBMANAGER_HEAPSIZE=$MASTER_HEAPSIZE # JobManager heapsize
