@@ -39,6 +39,7 @@ SPARK_LOCAL_DIRS=$spark_local_dirs
 # - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
 HADOOP_CONF_DIR=$hadoop_conf_dir
 # - YARN_CONF_DIR, to point Spark towards YARN configuration files when you use YARN
+YARN_CONF_DIR=$hadoop_conf_dir
 # - SPARK_EXECUTOR_INSTANCES, Number of workers to start (Default: 2)
 SPARK_EXECUTOR_INSTANCES=$spark_executor_instances
 # - SPARK_EXECUTOR_CORES, Number of cores for the executors (Default: 1).

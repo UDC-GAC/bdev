@@ -13,6 +13,7 @@ $load_java_command
 export HADOOP_CONF_DIR=$sol_conf_dir
 export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
+export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 # Extra Java CLASSPATH elements.  Optional.
 # export HADOOP_CLASSPATH=

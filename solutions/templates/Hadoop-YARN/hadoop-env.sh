@@ -32,6 +32,7 @@ export HADOOP_CONF_DIR=$sol_conf_dir
 export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_DN_LOG_DIR=$sol_log_dir
 export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
+export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes
 # that bind to privileged ports to provide authentication of data transfer
