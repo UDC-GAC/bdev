@@ -89,6 +89,7 @@ object ScalaMLlibDenseKMeans {
       .setEpsilon(params.convergenceDelta)
       .setMaxIterations(params.numIterations)
       .setInitialModel(initModel)
+      .setSeed(1L)
       .run(samples)
 
     val result = samples.map(p => (model.predict(p), p))

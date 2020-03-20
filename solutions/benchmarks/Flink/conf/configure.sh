@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export FLINK_BENCH_JAR_NAME=flinkbench-assembly-1.8.jar
+export FLINK_BENCH_JAR_NAME=flinkbench-1.8_${FLINK_SCALA_VERSION}.jar
 export FLINK_BENCH_JAR=$SOL_BENCH_DIR/bin/$FLINK_BENCH_JAR_NAME
 export SORT_PARTITIONS=$FLINK_PARALLELISM
 

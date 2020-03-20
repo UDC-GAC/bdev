@@ -60,8 +60,7 @@ class IOCommon(val env: ExecutionEnvironment) {
 
     val hadoopOutputFormat = new HadoopOutputFormat[Text, Text](of, jobContext)
 
-    val textData = data
-      .map(x => (new Text(x._1.toString), new Text(x._2.toString)))
+    val textData = data.map { x: (T1,T2) => (new Text(x._1.toString), new Text(x._2.toString)) }
 
     textData.output(hadoopOutputFormat)
   }

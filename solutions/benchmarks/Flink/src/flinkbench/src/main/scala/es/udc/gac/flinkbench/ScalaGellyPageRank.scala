@@ -3,7 +3,7 @@ package es.udc.gac.flinkbench
 import org.apache.flink.api.scala._
 import org.apache.flink.api.java.{DataSet => JavaDataSet}
 import org.apache.flink.graph.scala._
-import org.apache.flink.graph.examples.PageRank
+import es.udc.gac.flinkbench.pagerank.PageRank
 import org.apache.flink.graph.scala.Graph
 import org.apache.flink.graph.GraphAlgorithm
 import org.apache.flink.graph.Edge

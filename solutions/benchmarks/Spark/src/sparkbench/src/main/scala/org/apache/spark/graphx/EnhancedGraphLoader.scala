@@ -19,7 +19,6 @@ package org.apache.spark.graphx
 
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.SparkContext
-import org.apache.spark.internal.Logging
 import org.apache.spark.graphx.impl.{ EdgePartitionBuilder, GraphImpl }
 import org.apache.spark.rdd._
 import org.apache.spark.graphx._
@@ -27,7 +26,7 @@ import org.apache.spark.graphx._
 /**
  * Provides utilities for loading [[Graph]]s from files.
  */
-object EnhancedGraphLoader extends Logging {
+object EnhancedGraphLoader {
 	/**
 	 * Loads a graph from an edge list formatted file where each line contains two integers: a source
 	 * id and a target id. Skips lines that begin with `#`.
@@ -93,7 +92,7 @@ object EnhancedGraphLoader extends Logging {
 				}.persist(edgeStorageLevel).setName("GraphLoader.edgeListFile - edges (%s)".format(path))
 						edges.count()
 
-						logInfo("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
+						println("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
 
 						GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel,
 						vertexStorageLevel = vertexStorageLevel)
