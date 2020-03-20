@@ -1,11 +1,18 @@
 #!/bin/sh
 
 export SORT_PARTITIONS=$(($SPARK_EXECUTORS * $SPARK_CORES_PER_EXECUTOR))
-export SPARK_BENCH_JAR_NAME=sparkbench-assembly-2.0.jar
+export SPARK_BENCH_JAR_NAME=sparkbench-2.2_${SPARK_SCALA_VERSION}.jar
+
+if [[ $SPARK_SERIES == "1" ]]
+then
+	export SPARK_BENCH_JAR_NAME=sparkbench-1.6_${SPARK_SCALA_VERSION}.jar
+	# Spark GraphX 1.x does not support iterative ConnCompt
+	export CC_MAX_ITERATIONS=1024
+fi
 
 if [[ $SPARK_SERIES == "3" ]]
 then
-	export SPARK_BENCH_JAR_NAME=sparkbench-assembly-3.0.jar
+	export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
 fi
 
 export SPARK_BENCH_JAR=$SOL_BENCH_DIR/bin/$SPARK_BENCH_JAR_NAME
