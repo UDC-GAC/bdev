@@ -30,14 +30,14 @@ if [ "$JAVA_HOME" != "" ]; then
 fi
 
 $load_java_command
-  
+ 
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
   exit 1
 fi
 
 JAVA=$JAVA_HOME/bin/java
-JAVA_HEAP_MAX=-Xmx1000M
+JAVA_HEAP_MAX=-Xmx1000m 
 
 # For setting YARN specific HEAP sizes please use this
 # Parameter and set appropriately
@@ -87,7 +87,7 @@ export YARN_NODEMANAGER_HEAPSIZE=$slave_heapsize
 # Specify the JVM options to be used when starting the NodeManager.
 # These options will be appended to the options specified as YARN_OPTS
 # and therefore may override any similar flags set in YARN_OPTS
-#export YARN_NODEMANAGER_OPTS=-Xmx3G
+#export YARN_NODEMANAGER_OPTS=
 
 # so that filenames w/ spaces are handled correctly in loops below
 IFS=
@@ -110,7 +110,8 @@ fi
 unset IFS
 
 export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
+export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
+
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"
@@ -125,6 +126,14 @@ if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
 fi  
 YARN_OPTS="$YARN_OPTS -Dyarn.policy.file=$YARN_POLICYFILE"
 
-YARN_OPTS="$YARN_OPTS  -Djava.io.tmpdir=$tmp_dir "
+###
+# Router specific parameters
+###
 
-export YARN_OPTS
+# Specify the JVM options to be used when starting the Router.
+# These options will be appended to the options specified as HADOOP_OPTS
+# and therefore may override any similar flags set in HADOOP_OPTS
+#
+# See ResourceManager for some examples
+#
+#export YARN_ROUTER_OPTS=

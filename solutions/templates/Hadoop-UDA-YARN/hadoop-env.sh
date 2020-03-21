@@ -1,5 +1,3 @@
-# Copyright 2011 The Apache Software Foundation
-# 
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -24,15 +22,13 @@
 # remote nodes.
 
 # The java implementation to use.
-#export JAVA_HOME=${JAVA_HOME} 
+export JAVA_HOME=${JAVA_HOME}
 
 $load_java_command
 
 export HADOOP_CONF_DIR=$sol_conf_dir
 export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_DN_LOG_DIR=$sol_log_dir
-export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
-export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes
 # that bind to privileged ports to provide authentication of data transfer
@@ -55,36 +51,37 @@ done
 export HADOOP_HEAPSIZE=$slave_heapsize
 #export HADOOP_NAMENODE_INIT_HEAPSIZE=""
 
-# Extra Java runtime options.  Empty by default.
-#export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true"
+# Enable extra debugging of Hadoop's JAAS binding, used to set up
+# Kerberos security.
+# export HADOOP_JAAS_DEBUG=true
 
-export HADOOP_OPTS="$HADOOP_OPTS -Djava.io.tmpdir=$tmp_dir"
+# Extra Java runtime options.  Empty by default.
+# For Kerberos debugging, an extended option set logs more invormation
+# export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Dsun.security.krb5.debug=true -Dsun.security.spnego.debug"
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir"
 
 # Command specific options appended to HADOOP_OPTS when specified
-#export HADOOP_NAMENODE_OPTS="-Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_NAMENODE_OPTS"
-#export HADOOP_DATANODE_OPTS="-Dhadoop.security.logger=ERROR,RFAS $HADOOP_DATANODE_OPTS"
+export HADOOP_NAMENODE_OPTS="-Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_NAMENODE_OPTS"
+export HADOOP_DATANODE_OPTS="-Dhadoop.security.logger=ERROR,RFAS $HADOOP_DATANODE_OPTS"
 
-#export HADOOP_SECONDARYNAMENODE_OPTS="-Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_SECONDARYNAMENODE_OPTS"
+export HADOOP_SECONDARYNAMENODE_OPTS="-Dhadoop.security.logger=${HADOOP_SECURITY_LOGGER:-INFO,RFAS} -Dhdfs.audit.logger=${HDFS_AUDIT_LOGGER:-INFO,NullAppender} $HADOOP_SECONDARYNAMENODE_OPTS"
 
 export HADOOP_NFS3_OPTS="$HADOOP_NFS3_OPTS"
 export HADOOP_PORTMAP_OPTS="-Xmx512m $HADOOP_PORTMAP_OPTS"
 
-export HADOOP_NAMENODE_HEAPSIZE=$master_heapsize
-export HADOOP_DATANODE_HEAPSIZE=$slave_heapsize
-
-if [ "$HADOOP_NAMENODE_HEAPSIZE" != "" ]; then
-  export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
-fi
-
-if [ "$HADOOP_DATANODE_HEAPSIZE" != "" ]; then
-  export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
-fi
-
 # The following applies to multiple commands (fs, dfs, fsck, distcp etc)
-export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"
+export HADOOP_CLIENT_OPTS="$HADOOP_CLIENT_OPTS"
+# set heap args when HADOOP_HEAPSIZE is empty
+if [ "$HADOOP_HEAPSIZE" = "" ]; then
+  export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"
+fi
 #HADOOP_JAVA_PLATFORM_OPTS="-XX:-UsePerfData $HADOOP_JAVA_PLATFORM_OPTS"
 
-# On secure datanodes, user to run the datanode as after dropping privileges
+# On secure datanodes, user to run the datanode as after dropping privileges.
+# This **MUST** be uncommented to enable secure HDFS if using privileged ports
+# to provide authentication of data transfer protocol.  This **MUST NOT** be
+# defined if SASL is configured for authentication of data transfer protocol
+# using non-privileged ports.
 export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 
 # Where log files are stored.  $HADOOP_HOME/logs by default.
@@ -103,6 +100,15 @@ export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 # export HADOOP_MOVER_OPTS=""
 
 ###
+# Router-based HDFS Federation specific parameters
+# Specify the JVM options to be used when starting the RBF Routers.
+# These options will be appended to the options specified as HADOOP_OPTS
+# and therefore may override any similar flags set in HADOOP_OPTS
+#
+# export HADOOP_DFSROUTER_OPTS=""
+###
+
+###
 # Advanced Users Only!
 ###
 
@@ -110,14 +116,14 @@ export HADOOP_SECURE_DN_USER=${HADOOP_SECURE_DN_USER}
 # NOTE: this should be set to a directory that can only be written to by 
 #       the user that will run the hadoop daemons.  Otherwise there is the
 #       potential for a symlink attack.
-#export HADOOP_PID_DIR=${HADOOP_PID_DIR}
+export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
 export HADOOP_SECURE_DN_PID_DIR=${HADOOP_PID_DIR}
 
 # A string representing this instance of hadoop. $USER by default.
 export HADOOP_IDENT_STRING=$USER
 
 export HADOOP_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export HADOOP_OPTS="${HADOOP_OPTS} -Djava.net.preferIPv4Stack=true -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"
+export HADOOP_OPTS="${HADOOP_OPTS} -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"
 
 #UDA
 export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$uda_lib_dir/uda-hadoop-2.x.jar
