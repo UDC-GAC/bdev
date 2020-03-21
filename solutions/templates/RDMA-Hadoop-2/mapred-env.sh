@@ -15,13 +15,16 @@
 
 # export JAVA_HOME=/home/y/libexec/jdk1.6.0/
 
+# when HADOOP_JOB_HISTORYSERVER_HEAPSIZE is not defined, set it.
+#if [ "$HADOOP_JOB_HISTORYSERVER_HEAPSIZE" = "" ];then
 export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$slave_heapsize
+#fi
 
 export HADOOP_MAPRED_ROOT_LOGGER=INFO,RFA
 
 #export HADOOP_JOB_HISTORYSERVER_OPTS=
 export HADOOP_MAPRED_LOG_DIR=$sol_log_dir # Where log files are stored.  $HADOOP_MAPRED_HOME/logs by default.
 #export HADOOP_JHS_LOGGER=INFO,RFA # Hadoop JobSummary logger.
-#export HADOOP_MAPRED_PID_DIR= # The pid files are stored. /tmp by default.
+export HADOOP_MAPRED_PID_DIR=$tmp_dir/hadoop/pid # The pid files are stored. /tmp by default.
 #export HADOOP_MAPRED_IDENT_STRING= #A string representing this instance of hadoop. $USER by default
 #export HADOOP_MAPRED_NICENESS= #The scheduling priority for daemons. Defaults to 0.
