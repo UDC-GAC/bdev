@@ -29,20 +29,12 @@ export YARN_CONF_DIR=$sol_conf_dir
 export YARN_LOG_DIR=$sol_log_dir
 export YARN_PID_DIR=$tmp_dir/yarn/pid
 
-
 $load_java_command
-  
 
 export YARN_RESOURCEMANAGER_HEAPSIZE=$master_heapsize
-
 export YARN_NODEMANAGER_HEAPSIZE=$slave_heapsize
-
 export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
-
-YARN_OPTS="$YARN_OPTS  -Djava.io.tmpdir=$tmp_dir "
-
-export YARN_OPTS
+export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
 
 ###
 # Resource Manager specific parameters
@@ -185,3 +177,4 @@ export YARN_OPTS
 ###
 # Directory containing service examples
 # export YARN_SERVICE_EXAMPLES_DIR = $HADOOP_YARN_HOME/share/hadoop/yarn/yarn-service-examples
+# export YARN_CONTAINER_RUNTIME_DOCKER_RUN_OVERRIDE_DISABLE=true

@@ -511,7 +511,7 @@ function hadoop_deprecate_envvar
   local newval=${!newvar}
 
   if [[ -n "${oldval}" ]]; then
-    hadoop_error "WARNING: ${oldvar} has been replaced by ${newvar}. Using value of ${oldvar}."
+    #hadoop_error "WARNING: ${oldvar} has been replaced by ${newvar}. Using value of ${oldvar}."
     # shellcheck disable=SC2086
     eval ${newvar}=\"${oldval}\"
 
@@ -548,7 +548,7 @@ function hadoop_mkdir
   local dir=$1
 
   if [[ ! -w "${dir}" ]] && [[ ! -d "${dir}" ]]; then
-    hadoop_error "WARNING: ${dir} does not exist. Creating."
+    #hadoop_error "WARNING: ${dir} does not exist. Creating."
     if ! mkdir -p "${dir}"; then
       hadoop_error "ERROR: Unable to create ${dir}. Aborting."
       exit 1
@@ -618,7 +618,7 @@ function hadoop_bootstrap
   export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
 
   # defaults
-  export HADOOP_OPTS=${HADOOP_OPTS:-"-Djava.net.preferIPv4Stack=true"}
+  #export HADOOP_OPTS=${HADOOP_OPTS:-"-Djava.net.preferIPv4Stack=true"}
   hadoop_debug "Initial HADOOP_OPTS=${HADOOP_OPTS}"
 }
 
