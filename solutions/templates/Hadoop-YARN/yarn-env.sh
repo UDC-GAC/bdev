@@ -112,7 +112,6 @@ unset IFS
 export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
 export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
 
-
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.file=$YARN_LOGFILE"
