@@ -22,7 +22,7 @@ If you want to use the [BDWatchdog](http://bdwatchdog.dec.udc.es) framework for 
 git clone --branch v3.3 --recurse-submodules https://github.com/rreye/bdev.git
 ```
 
-Further information about BDEv usage and configuration is provided in the user's guide available to download at http://bdev.des.udc.es.
+Further information about BDEv usage and configuration is provided in the [user's guide](http://bdev.des.udc.es/doc/bdev-user-guide.pdf) available to download at http://bdev.des.udc.es.
 
 ## Authors
 
