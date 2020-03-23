@@ -24,7 +24,7 @@ export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 # Extra Java runtime options.  Empty by default.
 # export HADOOP_OPTS=-server
 
-export HADOOP_OPTS="$HADOOP_OPTS -Djava.io.tmpdir=$tmp_dir"
+export HADOOP_OPTS="-Djava.io.tmpdir=$tmp_dir"
 
 # Command specific options appended to HADOOP_OPTS when specified
 #export HADOOP_NAMENODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_NAMENODE_OPTS"
@@ -38,10 +38,12 @@ export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
 export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
 export HADOOP_JOBTRACKER_HEAPSIZE=$jobtracker_d_heapsize
 export HADOOP_TASKTRACKER_HEAPSIZE=$tasktracker_d_heapsize
+export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$mr_jobhistory_d_heapsize
 export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 export HADOOP_JOBTRACKER_OPTS="-Xmx""${HADOOP_JOBTRACKER_HEAPSIZE}""m"
 export HADOOP_TASKTRACKER_OPTS="-Xmx""${HADOOP_TASKTRACKER_HEAPSIZE}""m"
+export HADOOP_JOB_HISTORYSERVER_OPTS="-Xmx""${HADOOP_JOB_HISTORYSERVER_HEAPSIZE}""m"
 
 # The following applies to multiple commands (fs, dfs, fsck, distcp etc)
 # export HADOOP_CLIENT_OPTS

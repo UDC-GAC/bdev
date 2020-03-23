@@ -28,5 +28,5 @@ export IO_SORT_RECORD_PERCENT=0.05	# The percentage of io.sort.mb dedicated to t
 export IO_SORT_SPILL_PERCENT=0.80	# The soft limit in either the buffer or record collection buffers
 export SHUFFLE_PARALLELCOPIES=10 	# Number of parallel transfers run by reduce during the copy (shuffle) phase
 export REDUCE_SLOW_START_COMPLETED_MAPS=0.75	# Fraction of the number of maps which should be complete before reduces are scheduled
-export MR_JOBHISTORY_SERVER="true"		# Start the MapReduce JobHistoryServer
+export MR_JOBHISTORY_SERVER=false		# Start the MapReduce JobHistoryServer
 export MR_JOBHISTORY_SERVER_D_HEAPSIZE=1024	# HistoryServer daemon heapsize (MB)

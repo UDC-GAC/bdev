@@ -58,7 +58,8 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 
 #Deploy mode
 export FINISH_YARN="false"
-export DEPLOY_ARGS="--master yarn --deploy-mode client"
+export DEPLOY_ARGS="--master yarn --deploy-mode client \
+	--conf spark.hadoop.yarn.timeline-service.enabled=false"
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
 add_conf_param "spark_log_dir" $SPARK_LOG_DIR
