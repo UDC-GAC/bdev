@@ -52,17 +52,10 @@ export HADOOP_SECURE_LOG_DIR=$sol_log_dir
 export HADOOP_PID_DIR=$tmp_dir/hadoop/pid
 export HADOOP_COMMON_HOME=$hadoop_home
 export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
-export HADOOP_HEAPSIZE_MAX=$slave_heapsize
-export HADOOP_NAMENODE_HEAPSIZE=$master_heapsize
-export HADOOP_DATANODE_HEAPSIZE=$slave_heapsize
-
-if [ "$HADOOP_NAMENODE_HEAPSIZE" != "" ]; then
-  export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
-fi
-
-if [ "$HADOOP_DATANODE_HEAPSIZE" != "" ]; then
-  export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
-fi
+export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
+export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
+export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
+export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 
 export HADOOP_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
 export HADOOP_OPTS="${HADOOP_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"

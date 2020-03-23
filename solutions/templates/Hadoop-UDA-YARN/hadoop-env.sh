@@ -29,6 +29,10 @@ $load_java_command
 export HADOOP_CONF_DIR=$sol_conf_dir
 export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_DN_LOG_DIR=$sol_log_dir
+export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
+export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
+export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
+export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes
 # that bind to privileged ports to provide authentication of data transfer
@@ -48,7 +52,7 @@ for f in $HADOOP_HOME/contrib/capacity-scheduler/*.jar; do
 done
 
 # The maximum amount of heap to use, in MB. Default is 1000.
-export HADOOP_HEAPSIZE=$slave_heapsize
+#export HADOOP_HEAPSIZE=
 #export HADOOP_NAMENODE_INIT_HEAPSIZE=""
 
 # Enable extra debugging of Hadoop's JAAS binding, used to set up

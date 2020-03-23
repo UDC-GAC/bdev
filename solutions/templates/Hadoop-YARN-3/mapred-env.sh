@@ -44,7 +44,7 @@
 # Java property: hadoop.root.logger
 #export HADOOP_JHS_LOGGER=INFO,RFA
 
-export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$slave_heapsize
+export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$mr_jobhistory_d_heapsize
 export HADOOP_LOG_DIR=$sol_log_dir # Where log files are stored.  $HADOOP_LOG_DIR/logs by default.
 export HADOOP_MAPRED_HOME=$hadoop_home
 export HADOOP_MAPRED_PID_DIR=$tmp_dir/hadoop/pid

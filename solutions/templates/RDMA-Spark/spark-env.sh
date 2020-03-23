@@ -39,6 +39,7 @@ SPARK_LOCAL_DIRS=$spark_local_dirs
 # - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
 HADOOP_CONF_DIR=$hadoop_conf_dir
 # - YARN_CONF_DIR, to point Spark towards YARN configuration files when you use YARN
+YARN_CONF_DIR=$hadoop_conf_dir
 # - SPARK_EXECUTOR_INSTANCES, Number of workers to start (Default: 2)
 SPARK_EXECUTOR_INSTANCES=$spark_executor_instances
 # - SPARK_EXECUTOR_CORES, Number of cores for the executors (Default: 1).
@@ -65,7 +66,7 @@ SPARK_WORKER_INSTANCES=$spark_workers_per_node
 SPARK_WORKER_DIR=$spark_worker_dir
 # - SPARK_WORKER_OPTS, to set config properties only for the worker (e.g. "-Dx=y")
 # - SPARK_DAEMON_MEMORY, to allocate to the master, worker and history server themselves (default: 1g).
-SPARK_DAEMON_MEMORY=$slave_heapsizeM
+SPARK_DAEMON_MEMORY=$spark_daemon_memoryM
 # - SPARK_HISTORY_OPTS, to set config properties only for the history server (e.g. "-Dx=y")
 # - SPARK_SHUFFLE_OPTS, to set config properties only for the external shuffle service (e.g. "-Dx=y")
 # - SPARK_DAEMON_JAVA_OPTS, to set config properties for all daemons (e.g. "-Dx=y")

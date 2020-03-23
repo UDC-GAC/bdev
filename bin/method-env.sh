@@ -219,8 +219,6 @@ fi
 ini_conf_params
 add_conf_param "method_home" $METHOD_HOME
 add_conf_param "method_bin_dir" $METHOD_BIN_DIR
-add_conf_param "master_heapsize" $MASTER_HEAPSIZE
-add_conf_param "slave_heapsize" $SLAVE_HEAPSIZE
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
@@ -233,8 +231,13 @@ add_conf_param "map_heapsize" $MAP_HEAPSIZE
 add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
 add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
+add_conf_param "jobtracker_d_heapsize" $JOBTRACKER_D_HEAPSIZE
+add_conf_param "tasktracker_d_heapsize" $TASKTRACKER_D_HEAPSIZE
+add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
 add_conf_param "replication_factor" $REPLICATION_FACTOR
+add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
+add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
@@ -252,6 +255,8 @@ add_conf_param_list "dfs_data_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/dat
 add_conf_param_list "dfs_checkpoint_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/namesecondary"`"
 add_conf_param_list "mapreduce_local_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/mapred/local"`"
 add_conf_param_list "yarn_local_dirs" "`add_prefix_sufix "$LOCAL_DIRS" "" "/yarn/local"`"
+add_conf_param "resourcemanager_d_heapsize" $RESOURCEMANAGER_D_HEAPSIZE
+add_conf_param "nodemanager_d_heapsize" $NODEMANAGER_D_HEAPSIZE
 add_conf_param "nodemanager_min_allocation" $NODEMANAGER_MIN_ALLOCATION
 add_conf_param "nodemanager_memory" $NODEMANAGER_MEMORY
 add_conf_param "nodemanager_vcores" $NODEMANAGER_VCORES
@@ -274,7 +279,8 @@ add_conf_param "rdma_hadoop_dfs_ssd_used" $RDMA_HADOOP_DFS_SSD_USED
 add_conf_param "rdma_hadoop_disk_shuffle_enabled" $RDMA_HADOOP_DISK_SHUFFLE_ENABLED
 
 #SPARK
-add_conf_param "spark_am_memory" $SPARK_AM_HEAPSIZE
+add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
+add_conf_param "spark_yarn_am_memory" $SPARK_YARN_AM_HEAPSIZE
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
 add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES

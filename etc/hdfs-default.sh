@@ -1,7 +1,9 @@
 #!/bin/sh
 
-## Configuration parameters corresponding with the hdfs-site.xml file of Hadoop configuration
+## Configuration parameters for Hadoop HDFS
 
+export NAMENODE_D_HEAPSIZE=1024		# NameNode daemon heapsize (MB)
+export DATANODE_D_HEAPSIZE=1024		# DataNode daemon heapsize (MB)
 export BLOCKSIZE=$((128*1024*1024)) 	# HDFS block size (Bytes)
 export REPLICATION_FACTOR=3		# Number of block replications
 export NAMENODE_HANDLER_COUNT=50	# Number of NameNode RPC server threads: ln(#DataNodes)*20 (eg, 50 threads for 12 DataNodes)
