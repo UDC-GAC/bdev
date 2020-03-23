@@ -77,4 +77,3 @@ export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of th
 #export JOIN_TIMEOUT="0"
 #export SCAN_TIMEOUT="0"
 #export COMMAND_TIMEOUT="0"
-
