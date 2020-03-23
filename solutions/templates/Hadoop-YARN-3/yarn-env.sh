@@ -33,8 +33,9 @@ $load_java_command
 
 export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 export YARN_NODEMANAGER_HEAPSIZE=$nodemanager_d_heapsize
+export YARN_TIMELINE_HEAPSIZE=$yarn_timeline_d_heapsize
 export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
+export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
 
 ###
 # Resource Manager specific parameters

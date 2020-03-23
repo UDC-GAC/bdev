@@ -6,7 +6,7 @@ for slave in $MASTERNODE $SLAVENODES
 do
 	DAEMON_PIDS=`ssh $slave "${LOAD_JAVA_COMMAND}; jps" | \
 		egrep \
-		"NameNode|DataNode|ResourceManager|NodeManager|JobTracker|TaskTracker|JobHistoryServer|RunJar|Child|MRAppMaster|YarnChild|MPI_D_Runner|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner" \
+		"NameNode|DataNode|ResourceManager|NodeManager|JobTracker|TaskTracker|JobHistoryServer|ApplicationHistoryServer|RunJar|Child|MRAppMaster|YarnChild|MPI_D_Runner|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner" \
 		| cut -f 1 -d " "`
 	DAEMON_PIDS=`echo $DAEMON_PIDS`
 	ssh $slave "

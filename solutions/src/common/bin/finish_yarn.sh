@@ -11,6 +11,13 @@ m_echo "Finishing ResourceManager:" $MASTERNODE
 ssh $MASTERNODE 'for p in $(jps | grep ResourceManager | tr -s " " | cut -d " " -f 1);
         do echo $p; kill -9 $p; done' >& /dev/null
 
+if [[ $TIMELINE_SERVER == "true" ]]
+then
+	m_echo "Finishing ApplicationHistoryServer:" $MASTERNODE
+	ssh $MASTERNODE 'for p in $(jps | grep ApplicationHistoryServer | tr -s " " | cut -d " " -f 1);
+        	do echo $p; kill -9 $p; done' >& /dev/null
+fi
+
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]
 then
 	m_echo "Finishing JobHistoryServer:" $MASTERNODE
