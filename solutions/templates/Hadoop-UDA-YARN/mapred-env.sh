@@ -17,7 +17,7 @@
 
 # when HADOOP_JOB_HISTORYSERVER_HEAPSIZE is not defined, set it.
 #if [ "$HADOOP_JOB_HISTORYSERVER_HEAPSIZE" = "" ];then
-export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$slave_heapsize
+export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$mr_jobhistory_d_heapsize
 #fi
 
 export HADOOP_MAPRED_ROOT_LOGGER=INFO,RFA

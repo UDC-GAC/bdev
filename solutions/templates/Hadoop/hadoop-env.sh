@@ -19,7 +19,7 @@ export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 # export HADOOP_CLASSPATH=
 
 # The maximum amount of heap to use, in MB. Default is 1000.
-export HADOOP_HEAPSIZE=$slave_heapsize
+# export HADOOP_HEAPSIZE=1000
 
 # Extra Java runtime options.  Empty by default.
 # export HADOOP_OPTS=-server
@@ -34,26 +34,14 @@ export HADOOP_OPTS="$HADOOP_OPTS -Djava.io.tmpdir=$tmp_dir"
 #export HADOOP_JOBTRACKER_OPTS="-Dcom.sun.management.jmxremote $HADOOP_JOBTRACKER_OPTS"
 # export HADOOP_TASKTRACKER_OPTS=
 
-export HADOOP_NAMENODE_HEAPSIZE=$master_heapsize
-export HADOOP_DATANODE_HEAPSIZE=$slave_heapsize
-export HADOOP_JOBTRACKER_HEAPSIZE=$master_heapsize
-export HADOOP_TASKTRACKER_HEAPSIZE=$slave_heapsize
-
-if [ "$HADOOP_NAMENODE_HEAPSIZE" != "" ]; then
-  export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
-fi
-
-if [ "$HADOOP_DATANODE_HEAPSIZE" != "" ]; then
-  export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
-fi
-
-if [ "$HADOOP_JOBTRACKER_HEAPSIZE" != "" ]; then
-  export HADOOP_JOBTRACKER_OPTS="-Xmx""${HADOOP_JOBTRACKER_HEAPSIZE}""m"
-fi
-
-if [ "$HADOOP_TASKTRACKER_HEAPSIZE" != "" ]; then
-  export HADOOP_TASKTRACKER_OPTS="-Xmx""${HADOOP_TASKTRACKER_HEAPSIZE}""m"
-fi
+export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
+export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
+export HADOOP_JOBTRACKER_HEAPSIZE=$jobtracker_d_heapsize
+export HADOOP_TASKTRACKER_HEAPSIZE=$tasktracker_d_heapsize
+export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
+export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
+export HADOOP_JOBTRACKER_OPTS="-Xmx""${HADOOP_JOBTRACKER_HEAPSIZE}""m"
+export HADOOP_TASKTRACKER_OPTS="-Xmx""${HADOOP_TASKTRACKER_HEAPSIZE}""m"
 
 # The following applies to multiple commands (fs, dfs, fsck, distcp etc)
 # export HADOOP_CLIENT_OPTS

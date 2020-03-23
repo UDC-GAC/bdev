@@ -57,7 +57,7 @@ fi
 # and/or YARN_RESOURCEMANAGER_OPTS.
 # If not specified, the default value will be picked from either YARN_HEAPMAX
 # or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
-export YARN_RESOURCEMANAGER_HEAPSIZE=$master_heapsize
+export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 
 # Specify the max Heapsize for the timeline server using a numerical value
 # in the scale of MB. For example, to specify an jvm option of -Xmx1000m, set
@@ -82,7 +82,7 @@ export YARN_RESOURCEMANAGER_HEAPSIZE=$master_heapsize
 # and/or YARN_NODEMANAGER_OPTS.
 # If not specified, the default value will be picked from either YARN_HEAPMAX
 # or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
-export YARN_NODEMANAGER_HEAPSIZE=$slave_heapsize
+export YARN_NODEMANAGER_HEAPSIZE=$nodemanager_d_heapsize
 
 # Specify the JVM options to be used when starting the NodeManager.
 # These options will be appended to the options specified as YARN_OPTS

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-## Configuration parameters regarding BDEv behaviour
+## Configuration parameters for BDEv
 
 export ENABLE_PLOT="false"	# Enable plot generation
 export ENABLE_STAT="false"	# Enable built-in resource monitoring using dstat
