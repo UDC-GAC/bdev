@@ -5,7 +5,7 @@
 #export TMP_DIR=/tmp/$USER/$METHOD_NAME 	# Directory used to store temporary files in each node
 #export LOCAL_DIRS="" 		# List of directories used to store local data in each node
 #export GBE_INTERFACE=eth0 	# GbE interface to use in the nodes
-#export IPOIB_INTERFACE=ib 	# IPoIB interface to use in the nodes
+#export IPOIB_INTERFACE=ib0 	# IPoIB interface to use in the nodes
 #export CPUS_PER_NODE=`grep "^physical id" /proc/cpuinfo | sort -u | wc -l`	# CPUs per node
 #export CORES_PER_CPU=`grep "^core id" /proc/cpuinfo | sort -u | wc -l`	# Cores per CPU
 #export CORES_PER_NODE=$(( $CPUS_PER_NODE * $CORES_PER_CPU ))	# Cores per node
