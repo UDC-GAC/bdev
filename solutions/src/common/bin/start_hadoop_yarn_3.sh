@@ -18,6 +18,12 @@ do
 	ssh $slave "$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start nodemanager" &
 done
 
+if [[ $TIMELINE_SERVER == "true" ]]
+then
+        #YARN Timeline server
+        ssh $MASTERNODE "$HADOOP_HOME/bin/yarn --config $HADOOP_CONF_DIR --daemon start timelineserver" &
+fi
+
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]
 then
 	#MapReduce history server

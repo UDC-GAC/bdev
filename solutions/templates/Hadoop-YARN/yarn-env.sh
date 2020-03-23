@@ -66,7 +66,7 @@ export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 # and/or YARN_TIMELINESERVER_OPTS.
 # If not specified, the default value will be picked from either YARN_HEAPMAX
 # or JAVA_HEAP_MAX with YARN_HEAPMAX as the preferred option of the two.
-#export YARN_TIMELINESERVER_HEAPSIZE=1000
+export YARN_TIMELINESERVER_HEAPSIZE=$yarn_timeline_d_heapsize
 
 # Specify the JVM options to be used when starting the ResourceManager.
 # These options will be appended to the options specified as YARN_OPTS
@@ -110,7 +110,7 @@ fi
 unset IFS
 
 export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export YARN_OPTS="${YARN_OPTS} -Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
+export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_IP_ADDRESS}"
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"

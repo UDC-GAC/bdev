@@ -11,6 +11,12 @@ $HADOOP_HOME/sbin/hadoop-daemons.sh --config $HADOOP_CONF_DIR --script hdfs star
 ssh $MASTERNODE "$HADOOP_HOME/sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start resourcemanager" &
 $HADOOP_HOME/sbin/yarn-daemons.sh --config $HADOOP_CONF_DIR start nodemanager &
 
+if [[ $TIMELINE_SERVER == "true" ]]
+then
+        #YARN Timeline server
+	ssh $MASTERNODE "$HADOOP_HOME/sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start timelineserver" &
+fi
+
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]
 then
 	#MapReduce history server

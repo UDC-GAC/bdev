@@ -255,6 +255,8 @@ add_conf_param_list "dfs_data_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/dat
 add_conf_param_list "dfs_checkpoint_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/namesecondary"`"
 add_conf_param_list "mapreduce_local_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/mapred/local"`"
 add_conf_param_list "yarn_local_dirs" "`add_prefix_sufix "$LOCAL_DIRS" "" "/yarn/local"`"
+add_conf_param "yarn_timeline_server"	$TIMELINE_SERVER
+add_conf_param "yarn_timeline_d_heapsize" $TIMELINE_SERVER_D_HEAPSIZE
 add_conf_param "resourcemanager_d_heapsize" $RESOURCEMANAGER_D_HEAPSIZE
 add_conf_param "nodemanager_d_heapsize" $NODEMANAGER_D_HEAPSIZE
 add_conf_param "nodemanager_min_allocation" $NODEMANAGER_MIN_ALLOCATION

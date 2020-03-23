@@ -9,40 +9,40 @@ export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_
 export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
 export FLAMEMR_WORKER_MEMORY=`op_int "($NODEMANAGER_MEMORY / $FLAMEMR_WORKERS_PER_NODE) * $FLAMEMR_WORKER_MEMORY_FACTOR"` # Worker heapsize
 export FLAMEMR_BUFFER_SIZE=1048576 # Memory buffer size
-export FLAMEMR_DEBUG_MODE="false" # Debug mode 
-export FLAMEMR_ITERATIVE_MODE="false" # Iterative mode (caches intermediate results)
-export FLAMEMR_ITERATIVE_CACHE_INPUT="false" # Include input caching in iterative mode
-export FLAMEMR_MERGE_OUTPUTS="1" # Number of merge outputs pipelined to the reduce phase
-export FLAMEMR_LOAD_BALANCING_MODE="false" # Split large reduce partitions to avoid workload unbalance
-export FLAMEMR_LOAD_BALANCING_THRESHOLD="0" # Maximum partition size
+export FLAMEMR_DEBUG_MODE=false # Debug mode 
+export FLAMEMR_ITERATIVE_MODE=false # Iterative mode (caches intermediate results)
+export FLAMEMR_ITERATIVE_CACHE_INPUT=false # Include input caching in iterative mode
+export FLAMEMR_MERGE_OUTPUTS=1 # Number of merge outputs pipelined to the reduce phase
+export FLAMEMR_LOAD_BALANCING_MODE=false # Split large reduce partitions to avoid workload unbalance
+export FLAMEMR_LOAD_BALANCING_THRESHOLD=0 # Maximum partition size
 export FLAMEMR_ADDITIONAL_CONFIGURATION="" # Additional Flame-MR configuration
 
 # RDMA-Hadoop/RDMA-Hadoop-2/RDMA-Hadoop-3
-export RDMA_HADOOP_IB_ENABLED="true" # Enable RDMA connections through InfiniBand (IB)
-export RDMA_HADOOP_ROCE_ENABLED="false" # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
+export RDMA_HADOOP_IB_ENABLED=true # Enable RDMA connections through InfiniBand (IB)
+export RDMA_HADOOP_ROCE_ENABLED=false # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
-export RDMA_HADOOP_DFS_REPLICATION_PARALLEL="false" # Enable parallel replication
-export RDMA_HADOOP_DFS_SSD_USED="false"	# Enable SSD-oriented optimizations for HDFS
+export RDMA_HADOOP_DFS_REPLICATION_PARALLEL=false # Enable parallel replication
+export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations for HDFS
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
+export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.2.1
 export SPARK_SCALA_VERSION=2.11	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_HEAPSIZE_FACTOR=0.90 # Percentage of the driver memory allocated to heap
 export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_HEAPSIZE_FACTOR"` # Driver heapsize
 export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
-export SPARK_HISTORY_SERVER="false" # Start the Spark HistoryServer
+export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
 export SPARK_HISTORY_SERVER_DIR=/spark/history # HDFS path to store application event logs
-export SPARK_NETWORK_TIMEOUT="120" # Spark timeout for network communications (in seconds)
-export SPARK_SHUFFLE_COMPRESS="true" # Compress map output files
-export SPARK_SHUFFLE_SPILL_COMPRESS="true" # Compress data spilled during shuffles
-export SPARK_BROADCAST_COMPRESS="true" # Compress broadcast variables before sending them
-export SPARK_RDD_COMPRESS="false" # Compress serialized RDD partitions (e.g. for StorageLevel.MEMORY_ONLY_SER)
-export SPARK_COMPRESSION_CODEC="lz4" # Codecs: lz4, lzf and snappy. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
-export SPARK_SERIALIZER="KryoSerializer" # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
-export SPARK_KRYO_UNSAFE="true" # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
+export SPARK_NETWORK_TIMEOUT=120 # Spark timeout for network communications (in seconds)
+export SPARK_SHUFFLE_COMPRESS=true # Compress map output files
+export SPARK_SHUFFLE_SPILL_COMPRESS=true # Compress data spilled during shuffles
+export SPARK_BROADCAST_COMPRESS=true # Compress broadcast variables before sending them
+export SPARK_RDD_COMPRESS=false # Compress serialized RDD partitions (e.g. for StorageLevel.MEMORY_ONLY_SER)
+export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf and snappy. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
+export SPARK_SERIALIZER=KryoSerializer # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
+export SPARK_KRYO_UNSAFE=true # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
 
 # Spark standalone
 export SPARK_DAEMON_MEMORY=1024	# Memory to allocate to the Master, Worker and HistoryServer daemons
@@ -65,20 +65,20 @@ export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90	# Percentage of the Executor mem
 export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
 
 # RDMA-Spark
-export RDMA_SPARK_IB_ENABLED="true"		# Enable RDMA connections through InfiniBand (IB)
-export RDMA_SPARK_ROCE_ENABLED="false"		# Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
+export RDMA_SPARK_IB_ENABLED=true		# Enable RDMA connections through InfiniBand (IB)
+export RDMA_SPARK_ROCE_ENABLED=false		# Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 
 # Flink (common)
 export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
 export FLINK_SCALA_VERSION=2.11	# Scala version used by your Flink distribution
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
-export FLINK_HISTORY_SERVER="false" # Start the Flink HistoryServer
+export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-export FLINK_TASKMANAGER_PREALLOCATE_MEMORY="false" # TaskManager preallocate memory
-export FLINK_NETWORK_TIMEOUT="120" # Flink timeout for network communications (in seconds)
+export FLINK_TASKMANAGER_PREALLOCATE_MEMORY=false # TaskManager preallocate memory
+export FLINK_NETWORK_TIMEOUT=120 # Flink timeout for network communications (in seconds)
 
 # Flink standalone
 export FLINK_JOBMANAGER_HEAPSIZE=1024	# JobManager heapsize
