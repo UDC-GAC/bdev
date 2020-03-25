@@ -1,7 +1,46 @@
-BDEv Change Log
+BDEv Changelog
 -------------------------------------
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
+
+BDEv 3.4 - 2020-03-25
+---------------------
+	A point release for the BDEv 3.x line
+
+	NEW FEATURES
+		- Updated versions of the following frameworks
+			- Spark 2.4.5
+			- Flink 1.8.3
+			- Flink 1.9.2
+
+		- Support for Flink 1.10.x line
+
+		- Allow to start the job history server for Flink
+
+		- Simplified and improved cluster deployments for Spark & Flink
+
+		- Add support to configure the YARN Timeline server (yarn-default.sh)
+
+		- Add support to configure the disk health checker service for YARN (yarn-default.sh)
+		
+		- Add support to configure last access time precision for HDFS (hdfs-default.sh)
+
+		- Add support to enable short-circuit local reads for HDFS (hdfs-default.sh)
+
+		- Memory settings for some daemons (eg, DataNode) can now be set individually
+
+		- Fix SQL and ConnComp workloads for Spark
+
+		- Spark & Flink benchmarking suites are now downloaded on demand (removed from git repo)
+
+		- Scala version for Spark & Flink can be set in solutions-default.sh (2.11 by default)
+
+ 		- Set LD_LIBRARY_PATH in Spark & Flink to include the path to Hadoop native libraries
+
+		- Hadoop existence is checked when deployed together with other frameworks
+
+		- Minor bug fixes
+
 
 BDEv 3.3 - 2019-12-17
 ---------------------
