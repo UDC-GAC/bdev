@@ -26,13 +26,13 @@ export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations for HD
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.2.1
+export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
 export SPARK_SCALA_VERSION=2.11	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_HEAPSIZE_FACTOR=0.90 # Percentage of the driver memory allocated to heap
 export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_HEAPSIZE_FACTOR"` # Driver heapsize
-export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
+export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
 export SPARK_HISTORY_SERVER_DIR=/spark/history # HDFS path to store application event logs
 export SPARK_NETWORK_TIMEOUT=120 # Spark timeout for network communications (in seconds)
@@ -72,7 +72,7 @@ export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 # Flink (common)
 export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.9.2
 export FLINK_SCALA_VERSION=2.11	# Scala version used by your Flink distribution
-export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Local temporary directories on each node
+export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
@@ -99,7 +99,7 @@ export DATAMPI_TASK_HEAPSIZE_FACTOR=0.90 # Percentage of the task memory allocat
 export DATAMPI_TASK_HEAPSIZE=`op_int "$NODEMANAGER_MEMORY * $DATAMPI_TASK_HEAPSIZE_FACTOR"` # Task heapsize
 
 # Mellanox UDA library
-export UDA_VERSION=3.3.2 # UDA library version
+export UDA_VERSION=3.4.1 # UDA library version
 export UDA_LIB_DIR=$SOLUTIONS_LIB_DIR/uda-$UDA_VERSION # UDA library directory
 
 # Apache Mahout

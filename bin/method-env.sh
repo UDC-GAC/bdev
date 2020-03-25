@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.4-dev
+export METHOD_VERSION=3.4
 
 if [[ -z $METHOD_HOME ]]
 then
@@ -119,6 +119,8 @@ export SOLUTIONS=`read_solutions $EXP_DIR/solutions.lst`
 if [[ -z "$LOCAL_DIRS" ]]
 then
 	export LOCAL_DIRS=${TMP_DIR}
+else
+	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
 fi
 
 . $METHOD_CONF_DIR/core-default.sh
@@ -288,8 +290,9 @@ add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
+export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
 export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
-add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS" "" ""
+add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
 
@@ -303,7 +306,8 @@ add_conf_param "datampi_task_heapsize" $DATAMPI_TASK_HEAPSIZE
 
 #FLINK
 add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
+export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
-add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS" "" ""
+add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 
