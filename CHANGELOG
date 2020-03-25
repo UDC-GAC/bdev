@@ -3,6 +3,19 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
+BDEv 3.5 - 2020-XX-XX
+---------------------
+	A point release for the BDEv 3.x line
+
+	NEW FEATURES
+		- Updated versions of the following frameworks
+			- Flink 1.9.2
+
+		- Support for Spark 3.x line
+
+		- Minor bug fixes
+
+
 BDEv 3.4 - 2020-03-25
 ---------------------
 	A point release for the BDEv 3.x line
