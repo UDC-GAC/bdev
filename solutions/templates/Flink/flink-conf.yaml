@@ -30,6 +30,7 @@ io.tmp.dirs: $flink_local_dirs
 akka.ask.timeout: $flink_network_timeout s
 akka.client.timeout: $flink_network_timeout s
 fs.hdfs.hadoopconf: $hadoop_conf_dir
+fs.output.always-create-directory: true
 env.hadoop.conf.dir: $hadoop_conf_dir
 env.yarn.conf.dir: $hadoop_conf_dir
 env.java.opts: -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native
