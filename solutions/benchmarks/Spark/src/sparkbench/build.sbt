@@ -1,7 +1,7 @@
 name := "sparkbench"
-version := "2.2"
-val sparkVersion = "2.2.0"
-scalaVersion := "2.11.12"
+version := "3.0"
+val sparkVersion = "3.0.0"
+scalaVersion := "2.12.10"
 
 libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
