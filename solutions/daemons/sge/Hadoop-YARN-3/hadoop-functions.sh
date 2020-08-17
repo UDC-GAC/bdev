@@ -585,7 +585,7 @@ function hadoop_bootstrap
 
   #
   # short-cuts. vendors may redefine these as well, preferably
-  # in hadoop-layouts.sh
+  # in hadoop-layout.sh
   #
   HADOOP_COMMON_DIR=${HADOOP_COMMON_DIR:-"share/hadoop/common"}
   HADOOP_COMMON_LIB_JARS_DIR=${HADOOP_COMMON_LIB_JARS_DIR:-"share/hadoop/common/lib"}
@@ -596,6 +596,12 @@ function hadoop_bootstrap
   YARN_LIB_JARS_DIR=${YARN_LIB_JARS_DIR:-"share/hadoop/yarn/lib"}
   MAPRED_DIR=${MAPRED_DIR:-"share/hadoop/mapreduce"}
   MAPRED_LIB_JARS_DIR=${MAPRED_LIB_JARS_DIR:-"share/hadoop/mapreduce/lib"}
+  HDDS_DIR=${HDDS_DIR:-"share/hadoop/hdds"}
+  HDDS_LIB_JARS_DIR=${HDDS_LIB_JARS_DIR:-"share/hadoop/hdds/lib"}
+  OZONE_DIR=${OZONE_DIR:-"share/hadoop/ozone"}
+  OZONE_LIB_JARS_DIR=${OZONE_LIB_JARS_DIR:-"share/hadoop/ozone/lib"}
+  OZONEFS_DIR=${OZONEFS_DIR:-"share/hadoop/ozonefs"}
+
   HADOOP_TOOLS_HOME=${HADOOP_TOOLS_HOME:-${HADOOP_HOME}}
   HADOOP_TOOLS_DIR=${HADOOP_TOOLS_DIR:-"share/hadoop/tools"}
   HADOOP_TOOLS_LIB_JARS_DIR=${HADOOP_TOOLS_LIB_JARS_DIR:-"${HADOOP_TOOLS_DIR}/lib"}
@@ -1057,7 +1063,6 @@ function hadoop_connect_to_hosts_without_pdsh
     # fi
     # shellcheck disable=SC2086
     hadoop_actual_ssh "${workers[$i]}" ${params} #&
-    #disown
   done
   #wait
 }
@@ -1727,11 +1732,16 @@ function hadoop_status_daemon
   shift
 
   local pid
+  local pspid
 
   if [[ -f "${pidfile}" ]]; then
     pid=$(cat "${pidfile}")
-    if ps -p "${pid}" > /dev/null 2>&1; then
-      return 0
+    if pspid=$(ps -o args= -p"${pid}" 2>/dev/null); then
+      # this is to check that the running process we found is actually the same
+      # daemon that we're interested in
+      if [[ ${pspid} =~ -Dproc_${daemonname} ]]; then
+        return 0
+      fi
     fi
     return 1
   fi
@@ -1912,6 +1922,22 @@ function hadoop_start_secure_daemon
     exit 1
   fi
 
+  if [[ -z "${HADOOP_DAEMON_JSVC_EXTRA_OPTS}" ]]; then
+    # If HADOOP_DAEMON_JSVC_EXTRA_OPTS is not set
+    if ${jsvc} -help | grep -q "\-cwd"; then
+      # Check if jsvc -help has entry for option -cwd
+      hadoop_debug "Your jsvc supports -cwd option." \
+        "Adding option '-cwd .'. See HADOOP-16276 for details."
+      HADOOP_DAEMON_JSVC_EXTRA_OPTS="-cwd ."
+    else
+      hadoop_debug "Your jsvc doesn't support -cwd option." \
+        "No need to add option '-cwd .'. See HADOOP-16276 for details."
+    fi
+  else
+    hadoop_debug "HADOOP_DAEMON_JSVC_EXTRA_OPTS is set." \
+      "Ignoring jsvc -cwd option detection and addition."
+  fi
+
   # note that shellcheck will throw a
   # bogus for-our-use-case 2086 here.
   # it doesn't properly support multi-line situations
@@ -2034,6 +2060,35 @@ function hadoop_start_secure_daemon_wrapper
   return 0
 }
 
+## @description  Wait till process dies or till timeout
+## @audience     private
+## @stability    evolving
+## @param        pid
+## @param        timeout
+function wait_process_to_die_or_timeout
+{
+  local pid=$1
+  local timeout=$2
+
+  # Normalize timeout
+  # Round up or down
+  timeout=$(printf "%.0f\n" "${timeout}")
+  if [[ ${timeout} -lt 1  ]]; then
+    # minimum 1 second
+    timeout=1
+  fi
+
+  # Wait to see if it's still alive
+  for (( i=0; i < "${timeout}"; i++ ))
+  do
+    if kill -0 "${pid}" > /dev/null 2>&1; then
+      sleep 1
+    else
+      break
+    fi
+  done
+}
+
 ## @description  Stop the non-privileged `command` daemon with that
 ## @description  that is running at `pidfile`.
 ## @audience     public
@@ -2054,11 +2109,14 @@ function hadoop_stop_daemon
     pid=$(cat "$pidfile")
 
     kill "${pid}" >/dev/null 2>&1
-    sleep "${HADOOP_STOP_TIMEOUT}"
+
+    wait_process_to_die_or_timeout "${pid}" "${HADOOP_STOP_TIMEOUT}"
+
     if kill -0 "${pid}" > /dev/null 2>&1; then
       hadoop_error "WARNING: ${cmd} did not stop gracefully after ${HADOOP_STOP_TIMEOUT} seconds: Trying to kill with kill -9"
       kill -9 "${pid}" >/dev/null 2>&1
     fi
+    wait_process_to_die_or_timeout "${pid}" "${HADOOP_STOP_TIMEOUT}"
     if ps -p "${pid}" > /dev/null 2>&1; then
       hadoop_error "ERROR: Unable to kill ${pid}"
     else
@@ -2325,6 +2383,10 @@ function hadoop_verify_user_perm
   declare command=$2
   declare uvar
 
+  if [[ ${command} =~ \. ]]; then
+    return 1
+  fi
+
   uvar=$(hadoop_build_custom_subcmd_var "${program}" "${command}" USER)
 
   if [[ -n ${!uvar} ]]; then
@@ -2353,6 +2415,10 @@ function hadoop_need_reexec
   # we've already been re-execed, bail
 
   if [[ "${HADOOP_REEXECED_CMD}" = true ]]; then
+    return 1
+  fi
+
+  if [[ ${command} =~ \. ]]; then
     return 1
   fi
 
@@ -2389,6 +2455,10 @@ function hadoop_subcommand_opts
   declare ucommand
 
   if [[ -z "${program}" || -z "${command}" ]]; then
+    return 1
+  fi
+
+  if [[ ${command} =~ \. ]]; then
     return 1
   fi
 
@@ -2479,7 +2549,7 @@ function hadoop_do_classpath_subcommand
   fi
 }
 
-## @description  generic shell script opton parser.  sets
+## @description  generic shell script option parser.  sets
 ## @description  HADOOP_PARSE_COUNTER to set number the
 ## @description  caller should shift
 ## @audience     private
