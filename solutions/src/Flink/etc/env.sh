@@ -8,7 +8,7 @@ export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/flink
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs/flink
 export MASTERFILE=$SOL_CONF_DIR/masters
-export SLAVESFILE=$SOL_CONF_DIR/slaves
+export SLAVESFILE=$SOL_CONF_DIR/workers
 
 #FLINK
 export FLINK_HOME=$SOLUTION_HOME
@@ -79,11 +79,20 @@ fi
 
 if [[ $FLINK_SERIES == "1" ]]
 then
+	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_MEMORY"
+	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_MEMORY"
+
 	if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
 	then
-		export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_MEMORY"
+		export SLAVESFILE=$SOL_CONF_DIR/slaves
+		export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_JOBMANAGER_HEAPSIZE"
 	else
-		export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.heap.size: $FLINK_TASKMANAGER_HEAPSIZE"
+		if [[ $FLINK_MAJOR_VERSION == "1.9" ]]
+		then
+			export SLAVESFILE=$SOL_CONF_DIR/slaves
+			export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_JOBMANAGER_HEAPSIZE"
+			export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.heap.size: $FLINK_TASKMANAGER_HEAPSIZE"
+		fi
 	fi
 else
 	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
@@ -91,7 +100,6 @@ fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
-add_conf_param "flink_jobmanager_heapsize" $FLINK_JOBMANAGER_HEAPSIZE
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
 add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT

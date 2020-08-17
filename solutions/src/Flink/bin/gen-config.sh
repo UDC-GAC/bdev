@@ -2,7 +2,8 @@
 m_echo "Flink configuration"
 bash $OLD_GEN_CONFIG_SCRIPT
 
-# Add here memory configuration for Taskmanagers
+# Add here memory configuration for JobManager and Taskmanagers
+echo "${FLINK_JOBMANAGER_MEMORY_PARAM}m" >> $FLINK_CONFIG_YAML_FILE
 echo "${FLINK_TASKMANAGER_MEMORY_PARAM}m" >> $FLINK_CONFIG_YAML_FILE
 
 if [[ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]]

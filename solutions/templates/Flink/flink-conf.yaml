@@ -18,7 +18,6 @@
 
 jobmanager.rpc.address: $master
 jobmanager.rpc.port: 6123
-jobmanager.heap.size: $flink_jobmanager_heapsizem
 jobmanager.execution.failover-strategy: region
 jobmanager.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
 historyserver.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
