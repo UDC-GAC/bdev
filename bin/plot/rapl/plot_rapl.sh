@@ -15,33 +15,24 @@ unset ENERGY_PACKAGE_FILES
 unset ENERGY_DRAM_FILES
 unset ENERGY_PP0_FILES
 unset ENERGY_PP1_FILES
+unset ENERGY_UNCORE_FILES
 
 unset POWER_PACKAGE_FILES
 unset POWER_DRAM_FILES
 unset POWER_PP0_FILES
 unset POWER_PP1_FILES
-
+unset POWER_UNCORE_FILES
 
 for RAPLNODEDIR in $RAPLNODEDIRS
 do
-	YLABEL="Energy cnt"
-	YFORMAT=""
-	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_cnt_package
-	plot_dat_file_lines
-	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_cnt_dram
-	plot_dat_file_lines
-	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_cnt_pp0
-	plot_dat_file_lines
-	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_cnt_pp1
-	plot_dat_file_lines
-	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_cnt
-	plot_dat_file_lines
-
 	YLABEL="Energy (J)"
 	YFORMAT=""
 	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_joules_package
 	plot_dat_file_lines
 	ENERGY_PACKAGE_FILES="$ENERGY_PACKAGE_FILES $DAT_FILES"
+	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_joules_uncore_package
+	plot_dat_file_lines
+	ENERGY_UNCORE_FILES="$ENERGY_UNCORE_FILES $DAT_FILES"
 	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_joules_dram
 	plot_dat_file_lines
 	ENERGY_DRAM_FILES="$ENERGY_DRAM_FILES $DAT_FILES"
@@ -59,6 +50,9 @@ do
 	FILE_PREFIX=${RAPLNODEDIR}/rapl_power_package
 	plot_dat_file_lines
 	POWER_PACKAGE_FILES="$POWER_PACKAGE_FILES $DAT_FILES"
+	FILE_PREFIX=${RAPLNODEDIR}/rapl_power_uncore_package
+	plot_dat_file_lines
+	POWER_UNCORE_FILES="$POWER_UNCORE_FILES $DAT_FILES"
 	FILE_PREFIX=${RAPLNODEDIR}/rapl_power_dram
 	plot_dat_file_lines
 	POWER_DRAM_FILES="$POWER_DRAM_FILES $DAT_FILES"
@@ -84,6 +78,12 @@ INPUT_DAT_FILES=$ENERGY_PACKAGE_FILES
 FILE_PREFIX=$RAPL_AVG_DIR/rapl_energy_joules_package
 OUTPUT_TOT_SUM_FILE=${FILE_PREFIX}_total
 TOTAL_PACKAGE_ENERGY_FILE=$OUTPUT_TOT_SUM_FILE
+sum_dat_file
+plot_dat_file_lines
+INPUT_DAT_FILES=$ENERGY_UNCORE_FILES
+FILE_PREFIX=$RAPL_AVG_DIR/rapl_energy_joules_uncore_package
+OUTPUT_TOT_SUM_FILE=${FILE_PREFIX}_total
+TOTAL_UNCORE_ENERGY_FILE=$OUTPUT_TOT_SUM_FILE
 sum_dat_file
 plot_dat_file_lines
 INPUT_DAT_FILES=$ENERGY_DRAM_FILES
@@ -122,6 +122,10 @@ YLABEL="Power (W)"
 YFORMAT=""
 INPUT_DAT_FILES=$POWER_PACKAGE_FILES
 FILE_PREFIX=${RAPL_AVG_DIR}/rapl_power_package
+avg_dat_file
+plot_dat_file_lines
+INPUT_DAT_FILES=$POWER_UNCORE_FILES
+FILE_PREFIX=${RAPL_AVG_DIR}/rapl_power_uncore_package
 avg_dat_file
 plot_dat_file_lines
 INPUT_DAT_FILES=$POWER_DRAM_FILES
