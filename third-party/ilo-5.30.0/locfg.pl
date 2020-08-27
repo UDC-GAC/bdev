@@ -2,12 +2,12 @@
 
 ###########################################################################
 ##
-## Simplified perl version of HPQLOCFG
-## Version 4.70
+## Simplified PERL version of HPQLOCFG
+## Version 5.30
 ##
-## (C) Copyright 2015 Hewlett Packard Development Company, L.P.
+## Copyright 2003,2020 Hewlett Packard Enterprise Development LP
 ##
-## To use this program, you may need to install the following Perl modules
+## To use this program, you may need to install the following PERL modules
 ##       Net::SSLeay
 ##       IO::Socket::SSL
 ##       Term::ReadKey
@@ -15,7 +15,7 @@
 ##
 ## You may use and modify this program to suit your needs.
 ##
-## Perl version 5.14.0 or later is required for "getaddrinfo" support.
+## PERL version 5.14.0 or later is required for "getaddrinfo" support.
 ##
 ###########################################################################
 
@@ -41,7 +41,7 @@ $Net::SSLeay::slowly = 5; # Add sleep so broken servers can keep up
 ###########################################################################
 
 
-use constant VERSION => "4.70";     #program version, sent with HTTP headers
+use constant VERSION => "5.30";     #program version, sent with HTTP headers
 use constant RETRY_TIMEOUT => 20;   #retry up to 20s if RIBCL parse is busy
 use constant RETRY_DELAY => 2;      #delay 2s between the retries
 
@@ -84,7 +84,8 @@ my $r = GetOptions("server|s=s" => \$server,
                    "help|?" => \$help,
                    "ilo2" => \$ilo2,
                    "ilo3" => \$ilo3,
-                   "ilo4" => \$ilo3
+                   "ilo4" => \$ilo3,
+                   "ilo5" => \$ilo3
                    );
 
 #print "GetOptions returns = $r\n";
@@ -102,38 +103,33 @@ if ($interactive) {
     $OSType= "$Config{osname}\n";
     print "Enter the username: ";
     chomp ($uname = <STDIN>);
-	
+    
     print "Enter the password: ";
     #$pword = prompt "enter password: ", -echo=>"*";
     chomp($pword);
-	
+    
     if($OSType="MSWin32")
     {
         use Term::ReadKey;
-	ReadMode('noecho');                #turn echo off, need Term::ReadKey
+    ReadMode('noecho');                #turn echo off, need Term::ReadKey
     }
     else
     {
         system("stty -echo") ;            #turn echo off, for UNIX only
     }   
     chomp ($pword = <STDIN>);
-	
+    
     print ("\r\n");
     if($OSType="MSWin32")
     {
         use Term::ReadKey;
-	ReadMode('normal');				 #turn echo off, need Term::ReadKey
+    ReadMode('normal');              #turn echo off, need Term::ReadKey
     }
     else
     {
         system("stty echo");               #turn echo on, for UNIX only
     } 
         #turn echo on
-}
-
-# Username and Password must be entered together
-if( ($uname && !($pword)) || (!($uname) && $pword) ) {
-    usage_err();
 }
 
 if ($ilo2 && $ilo3) {
@@ -239,12 +235,12 @@ my $localhost = hostname() || 'localhost';
 print "\n----- Localhost name is \"$localhost\".\n" if ($verbose);
 
 #--------------------------------------------------------------------------
-# Detect iLO version (iLO2 or iLO3 (iLO4 is same as iLO3)) if not specified
+# Detect iLO version (iLO2 or iLO3 (iLO4 and iLO5 is same as iLO3)) if not specified
 #--------------------------------------------------------------------------
 
 if (!$ilo2 && !$ilo3) {
     my ($sec,$min,$hour) = localtime(time);
-    print "\n----- Start detecting iLO2/iLO3/iLO4 at $hour:$min:$sec\n" if ($verbose);
+    print "\n----- Start detecting iLO at $hour:$min:$sec\n" if ($verbose);
 
     @res = getaddrinfo($server,$port,AF_UNSPEC,SOCK_STREAM);
     while (scalar(@res) >= 5){
@@ -273,7 +269,7 @@ if (!$ilo2 && !$ilo3) {
     print $socket "<RIBCL VERSION=\"2.0\"></RIBCL>\r\n"; # Used by Content-length
     $ln=<$socket>;    # Read first line of response
     if ($ln =~ m/HTTP.1.1 200 OK/) {
-        print "\n----- Found iLO3 or iLO4\n" if ($verbose);
+        print "\n----- Found iLO3 or iLO4 or iLO5\n" if ($verbose);
         $ilo3 = 1;                                  # It is iLO 3
     }
     else {
@@ -285,7 +281,7 @@ if (!$ilo2 && !$ilo3) {
     $socket->close();
 
     ($sec,$min,$hour) = localtime(time);
-    print "\n----- Finish detecting iLO2/iLO3/iLO4 at $hour:$min:$sec\n" if ($verbose);
+    print "\n----- Finish detecting iLO at $hour:$min:$sec\n" if ($verbose);
 }
 
 #--------------------------------------------------------------------------
@@ -327,7 +323,7 @@ if ($ilo2) {
         $ln =~ s/\r|\n//g;
 
         # Find LOGIN tag.
-        if ((($ln =~ /<[ \t]*LOGIN[ \t]/) || ($ln =~ /<[ \t]*LOGIN$/)) && ($pword) && ($uname)) {
+        if ((($ln =~ /<[ \t]*LOGIN[ \t]/) || ($ln =~ /<[ \t]*LOGIN$/)) && ($pword ne "") && ($uname ne "")) {
 
             while( !($ln =~ m/\>/i) ) { #seek the end of LOGIN tag
               $ln = <IN>;
@@ -347,8 +343,8 @@ if ($ilo2) {
             if ($ln =~ m/IMAGE_LOCATION=\"(.*)\"/i) {
                 $firmware = $1;
                 open(FW, "<$firmware") || die "ERROR: Can't open $firmware\n\n";
-				#Binary files need to treated differently than text files on some operating systems (eg, Windows). 
-				binmode FW;
+                #Binary files need to treated differently than text files on some operating systems (eg, Windows). 
+                binmode FW;
                 $firmwarelen = (stat(FW))[7];
                 print $socket "\r\n<UPDATE_RIB_FIRMWARE IMAGE_LOCATION=\"$firmware\" IMAGE_LENGTH=\"$firmwarelen\"/>\r\n";
                 print "\r\n<UPDATE_RIB_FIRMWARE IMAGE_LOCATION=\"$firmware\" IMAGE_LENGTH=\"$firmwarelen\"/>\r\n" if ($verbose);
@@ -389,10 +385,10 @@ if ($ilo2) {
 }#end of iLO 2
 
 #--------------------------------------------------------------------------
-# iLO 3 or iLO 4
+# iLO3/iLO4/iLO5
 #--------------------------------------------------------------------------
 
-print "\n----- Connected to iLO 3 or iLO 4\n\n" if ($verbose);
+print "\n----- Connected to iLO3/iLO4/iLO5\n\n" if ($verbose);
 
 my $updateribfwcmd = 0;
 my $boundary;
@@ -442,11 +438,7 @@ if ($updateribfwcmd) { # it's a firmware update
     my $sentbytes = 0;
     #$sentblocksize = 1024*1024;
     my $sentblocksize = 4*1024;
-    if ($firmwarelen > (15*1024*1024)) {
-        printf "\nStart sending iLO 4 firmware (size: $firmwarelen bytes).\n";
-    } else {
-       printf "\nStart sending firmware (size: $firmwarelen bytes).\n";
-    }
+    printf "\nStart sending firmware (size: $firmwarelen bytes).\n";
     while ($sentbytes < $firmwarelen) {
        if (($firmwarelen - $sentbytes) >= $sentblocksize) {
            send_to_client(1, substr($firmwarebuf, $sentbytes, $sentblocksize));
@@ -585,7 +577,7 @@ sub usage
     print "    -i                 entering username and password interactively\n";
     print "    -u username        username\n";
     print "    -p password        password\n";
-    print "    -ilo2|-ilo3|-ilo4  target is iLO 2, iLO 3 or iLO 4\n";
+    print "    -ilo3|-ilo4|-ilo5  target is iLO 3, iLO 4 or iLO 5\n";
     print "\n  Note: Use -u and -p with caution as command line options are\n";
     print "        visible on Linux. The '-i' option is for entering the\n";
     print "        username and password interactively.\n";
@@ -604,7 +596,7 @@ sub usage_err
 sub usage_err1
 {
     print "Note:\n";
-    print "  Both -ilo2, -ilo3 and -ilo4 can not be specified at same time.\n";
+    print "  -ilo3, -ilo4 and ilo5 can not be specified at same time.\n";
     exit 1;
 }
 
@@ -628,7 +620,7 @@ sub send_or_calculate    # used for iLO 3 and iLO 4 only
     $ln =~ s/\r|\n//g;   # Chomp off any EOL characters
 
     # Find LOGIN tag.
-    if ((($ln =~ /<[ \t]*LOGIN[ \t]/) || ($ln =~ /<[ \t]*LOGIN$/)) && ($pword) && ($uname)) {
+    if ((($ln =~ /<[ \t]*LOGIN[ \t]/) || ($ln =~ /<[ \t]*LOGIN$/)) && ($uname ne "")) {
        while( !($ln =~ m/\>/i) ) {
           $ln = <IN>;
        }
@@ -757,6 +749,8 @@ sub read_chunked_reply    # used for iLO 3 and iLO 4 only
   my $isSizeOfChunk=1;
   my $chunkSize;
   my $cache = 1;
+  my $endResponse = 0;
+  my $script_success = 0;
 
   $response = "";
   $RIBCLbusy = 0;
@@ -785,19 +779,14 @@ sub read_chunked_reply    # used for iLO 3 and iLO 4 only
             next;
         }
         if ($chunkSize == 0) {           #End of responses; Empty responses
-			#Author: Suhas MG
-			#Mail-id: suhas.mg@hp.com
-			#QXCR1001395549:  Ind:Set script succeeds for READ mode with Locfg while fails for other utilities  
-			#Replacing eq with == (eq is for comparing strings and == is for comparing numbers)
-			#QXCR1001387866:  Ind:Locfg-Script failed displayed at the end while running cert_request.xml
-			#Updated the error code checks to match HPQLOCFG
-			if (($retstat eq "0000") || ($retstat eq "003C") || ($retstat eq "0088")) {
-				print "...Script Succeeded...\n";
-			}
-			else  {			
-				print "...Script Failed...\n";
-			}
-	        print "----- read_chunked_reply: reach end of responses.\n" if ($verbose);
+            #Updated the error code checks to match HPQLOCFG
+            if (($retstat eq "0000") || ($retstat eq "003C") || ($retstat eq "0088") || ($retstat == 0) ) {
+                $script_success = 1;
+            }
+            else {
+               $script_success = 0;
+            }
+            $endResponse = 1;
             last;
         }
         if ($chunkSize == length($ln)) {
@@ -826,6 +815,10 @@ sub read_chunked_reply    # used for iLO 3 and iLO 4 only
                 $response = "";
             }
         }
+        #Get error code in the RIBCL response.
+        if ($ln =~ m/STATUS="0x/i) {
+                $retstat = substr($ln,index($ln,"x")+1,4);
+            }
         if ($cache) {
             # This isn't really required, but it makes the output look nicer
             $ln =~ s/<\/RIBCL>/<\/RIBCL>\n/g;
@@ -835,9 +828,6 @@ sub read_chunked_reply    # used for iLO 3 and iLO 4 only
             # This isn't really required, but it makes the output look nicer
             $ln =~ s/<\/RIBCL>/<\/RIBCL>\n/g;
             print $ln;
-			if ($ln =~ m/STATUS="0x/i) {             
-				$retstat = substr($ln,index($ln,"x")+1,4); 
-			}
         }
     }
   }
@@ -847,7 +837,19 @@ sub read_chunked_reply    # used for iLO 3 and iLO 4 only
       print $response;
       $response = "";
   }
-
+  #Print srcipt execution status.
+  if ($endResponse)
+  {
+    if ($script_success)
+    {
+      print "...Script Succeeded...\n";
+    }
+    else
+    {
+      print "...Script Failed...\n";
+    }
+    print "----- read_chunked_reply: reach end of responses.\n" if ($verbose);
+}
   if ($socket->error()) {
      print "Error: connection error " . $socket->error() . "\n";
   }
