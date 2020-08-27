@@ -57,6 +57,12 @@ do
 		# Starting workload
 		m_echo "Running ${BENCHMARK}, reporting to ${BENCHMARK_OUTPUT_DIR}"
 
+		if [[ $BENCHMARK_WAIT_SECONDS -gt 0 ]]
+		then
+			m_echo "Waiting $BENCHMARK_WAIT_SECONDS seconds"
+			sleep $BENCHMARK_WAIT_SECONDS
+		fi
+
 		if [[ -f ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]
 		then
 			. ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh

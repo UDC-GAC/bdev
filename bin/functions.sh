@@ -75,8 +75,8 @@ export -f m_start_message
 
 function m_stop_message()
 {
-	m_echo "Evaluation finished"
-	m_echo "Report summary can be found at $REPORT_FILE"
+	m_echo "$METHOD_NAME v$METHOD_VERSION finished"
+	m_echo "Report summary stored at $REPORT_FILE"
 }
 
 export -f m_stop_message
@@ -461,9 +461,10 @@ function write_report(){
 export -f write_report
 
 function begin_report(){
-	REPORT="$METHOD_NAME $METHOD_VERSION report \n"
-	REPORT="$REPORT \n Report dir: $REPORT_DIR \n"
-	REPORT="$REPORT \n $METHOD_NAME configuration: \n"
+	REPORT="$METHOD_NAME v$METHOD_VERSION report \n"
+	REPORT="$REPORT \n Report directory: \n"
+	REPORT="$REPORT \t $REPORT_DIR \n"
+	REPORT="$REPORT \n Configuration: \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
@@ -574,7 +575,7 @@ function begin_report(){
 	REPORT="$REPORT \t Flink YARN JobManager heapsize (MB) \t $FLINK_YARN_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink YARN TaskManager memory (MB) \t $FLINK_YARN_TASKMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN TaskManager heapsize (MB) \t $FLINK_YARN_TASKMANAGER_HEAPSIZE \n"
-	REPORT="$REPORT \n $METHOD_NAME results: \n"
+	REPORT="$REPORT \n Benchmarks: \n"
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
@@ -623,65 +624,32 @@ function start_benchmark(){
 		bash -c "$BENCHMARK_SETUP"
 	fi
 
-	WAIT_SECONDS=""
-	if [[ $ENABLE_ILO == "true" ]]
-	then
-		maxmin $ILO_WAIT_SECONDS $WAIT_SECONDS
-		WAIT_SECONDS=$MAX
-	fi
-	if [[ $ENABLE_STAT == "true" ]]
-	then 
-		maxmin $STAT_WAIT_SECONDS $WAIT_SECONDS
-		WAIT_SECONDS=$MAX
-	fi
-	if [[ $ENABLE_RAPL == "true" ]]
-	then 
-		maxmin $RAPL_WAIT_SECONDS $WAIT_SECONDS
-		WAIT_SECONDS=$MAX
-	fi
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then 
-		maxmin $OPROFILE_WAIT_SECONDS $WAIT_SECONDS
-		WAIT_SECONDS=$MAX
-	fi
-	if [[ $ENABLE_BDWATCHDOG == "true" ]]
-        then
-		maxmin $BDWATCHDOG_WAIT_SECONDS $WAIT_SECONDS
-                WAIT_SECONDS=$MAX
-	fi
+	WAIT_SECONDS=0
+	START_TOTAL_TIME=`timestamp`
 
-	if [[ -n "$WAIT_SECONDS" ]]
-	then
-		m_echo "Waiting $WAIT_SECONDS seconds"
-		sleep $WAIT_SECONDS
-	fi
-
-	WAIT_SECONDS=""
 	if [[ $ENABLE_ILO == "true" ]]
 	then
 		m_echo "Starting ilo monitors"
 		bash $ILO_HOME/start_ilo_monitor.sh
-		maxmin $ILO_SECONDS_INTERVAL $WAIT_SECONDS
-                WAIT_SECONDS=$MAX
+		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
 		m_echo "Starting dstat monitors"
 		bash $STAT_HOME/start_stat_monitor.sh
-		maxmin $STAT_SECONDS_INTERVAL $WAIT_SECONDS
-                WAIT_SECONDS=$MAX
+		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
 		m_echo "Starting rapl monitors"
 		bash $RAPL_HOME/start_rapl_monitor.sh
-		maxmin $RAPL_SECONDS_INTERVAL $WAIT_SECONDS
-                WAIT_SECONDS=$MAX
+		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
 	if [[ $ENABLE_OPROFILE == "true" ]]
 	then
 		m_echo "Starting oprofile monitors"
 		bash $OPROFILE_HOME/start_oprofile_monitor.sh
+		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
         if [[ $ENABLE_BDWATCHDOG == "true" ]]
         then
@@ -701,12 +669,12 @@ function start_benchmark(){
 			m_echo "Starting nethogs daemons"
 			bash $BDWATCHDOG_HOME/start_nethogs_monitor.sh
 		fi
-		maxmin $BDWATCHDOG_SECONDS_INTERVAL $WAIT_SECONDS
-                WAIT_SECONDS=$MAX
+		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
 
-	if [[ -n "$WAIT_SECONDS" ]]
+	if [[ $WAIT_SECONDS -gt 0 ]]
 	then
+		m_echo "Waiting $WAIT_SECONDS seconds"
 		sleep $WAIT_SECONDS
 	fi
 
@@ -735,8 +703,11 @@ function end_benchmark(){
 		fi
 	fi
 
-	if [[ -n "$WAIT_SECONDS" ]]
+	m_echo "Finished $BENCHMARK"
+
+	if [[ $WAIT_SECONDS -gt 0 ]]
         then
+		m_echo "Waiting $WAIT_SECONDS seconds"
                 sleep $WAIT_SECONDS
         fi
 
@@ -781,13 +752,15 @@ function end_benchmark(){
 		fi
 	fi
 
+	END_TOTAL_TIME=`timestamp`
+
 	if [[ $ELAPSED_TIME == "TIMEOUT" ]]
 	then
 		m_err "TIMEOUT"
 	else
 		export ELAPSED_TIME=`op "($END_TIME - $START_TIME) / 1000"`
+		export ELAPSED_TOTAL_TIME=`op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000"`
 	fi
-	m_echo "Finished $BENCHMARK"
 
 	if [[ -n "$BENCHMARK_CLEANUP" ]]
 	then
@@ -863,7 +836,8 @@ function save_elapsed_time()
 			m_err "${BENCHMARK} timed out"
 			FINISH="true"
 		else
-			m_echo "Runtime: $ELAPSED_TIME s"
+			m_echo "Workload runtime: $ELAPSED_TIME seconds"
+			m_echo "Total runtime: $ELAPSED_TOTAL_TIME seconds"
 		fi
 
 	fi
