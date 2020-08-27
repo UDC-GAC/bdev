@@ -605,8 +605,8 @@ function begin_report(){
 
         	file=`basename ${ILO_POWER_SCRIPT_TEMPLATE}`
 	        ilo_script_content="$(cat ${ILO_POWER_SCRIPT_TEMPLATE})"
-        	ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/adminname/ilo_user/g")
-	        ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/password/..ilo_user../g")
+        	ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/adminname/$ILO_USERNAME/g")
+	        ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/password/$ILO_PASSWD/g")
         	echo "${ilo_script_content}" > ${ILO_DIR}/${file}
 	        export ILO_POWER_SCRIPT=${ILO_DIR}/${file}
 	fi
