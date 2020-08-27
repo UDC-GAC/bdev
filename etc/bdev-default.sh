@@ -7,7 +7,7 @@ export ENABLE_STAT=false	# Enable built-in resource monitoring using dstat
 export ENABLE_ILO=false		# Enable HPE iLO power monitoring
 export ENABLE_RAPL=false	# Enable RAPL power monitoring
 export ENABLE_OPROFILE=false	# Enable Oprofile event counting
-export ENABLE_BDWATCHDOGfalse	# Enable resource monitoring through BDWatchdog
+export ENABLE_BDWATCHDOG=false	# Enable resource monitoring through BDWatchdog
 export DEFAULT_TIMEOUT=86400	# Default workload timeout
 export OUT_DIR=$PWD/${METHOD_NAME}_OUT	# Default report output directory
 
