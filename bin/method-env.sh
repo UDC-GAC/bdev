@@ -152,7 +152,7 @@ then
         mkdir -p $REPORT_DIR
 fi
 
-m_echo "Running $METHOD_NAME version $METHOD_VERSION"
+m_echo "Running $METHOD_NAME v$METHOD_VERSION"
 
 # Check modules environment
 if [[ "$ENABLE_MODULES" == "true" ]]
