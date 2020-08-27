@@ -2,7 +2,6 @@
 
 if [[ -z $METHOD_COMMAND ]]
 then
-
 	m_echo "Entering interactive mode"
 
 	start_benchmark
