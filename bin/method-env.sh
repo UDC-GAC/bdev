@@ -49,8 +49,8 @@ export PLOT_HOME=$METHOD_BIN_DIR/plot
 #STAT
 export STAT_HOME=$METHOD_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
-export DSTAT_HOME=$THIRD_PARTY_DIR/dstat-0.7.3
-export DSTAT=$DSTAT_HOME/dstat
+export DSTAT_HOME=$THIRD_PARTY_DIR/dool-0.9.9
+export DSTAT=$DSTAT_HOME/dool
 
 #RAPL
 export RAPL_HOME=$METHOD_BIN_DIR/rapl

@@ -3,7 +3,7 @@
 ### Configuration parameters for BDEv
 #
 #export ENABLE_PLOT=false	# Enable plot generation
-#export ENABLE_STAT=false	# Enable built-in resource monitoring using dstat
+#export ENABLE_STAT=false	# Enable built-in resource monitoring using dstat/dool
 #export ENABLE_ILO=false		# Enable HPE iLO power monitoring
 #export ENABLE_RAPL=false	# Enable RAPL power monitoring
 #export ENABLE_OPROFILE=false	# Enable Oprofile event counting

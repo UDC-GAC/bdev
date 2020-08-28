@@ -2,5 +2,5 @@
 
 for SLAVE in $SLAVENODES $MASTERNODE
 do
-	ssh $SLAVE "killall -q ${PYTHON2_BIN}"
+	ssh $SLAVE "pkill -f ${DSTAT}"
 done
