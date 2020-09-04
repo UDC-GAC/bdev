@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.5-dev
+export METHOD_VERSION=3.5
 
 if [[ -z $METHOD_HOME ]]
 then
