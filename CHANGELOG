@@ -3,15 +3,31 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.5 - 2020-XX-XX
+BDEv 3.5 - 2020-09-04
 ---------------------
 	A point release for the BDEv 3.x line
 
 	NEW FEATURES
 		- Updated versions of the following frameworks
-			- Flink 1.9.2
+			- Spark 2.4.6
+			- Flink 1.9.3
+			- Flink 1.10.2
 
-		- Support for Spark 3.x line
+		- Support for the Hadoop 3.3.x line
+
+		- Support for the Spark 3.x line
+
+		- Support for the Flink 1.11.x line
+
+		- Update resource monitoring tool to dool v0.9.9, a Python 3 compatible clone of dstat
+
+		- Update RAPL-based power monitoring tool to use PAPI v6.0.0
+
+		- Update iLO scripts to version 5.30
+
+		- RAPL-based monitoring tool now can report readings for uncore devices if PP0 is available
+
+		- Fix bug when setting iLO credentials
 
 		- Minor bug fixes
 
