@@ -15,7 +15,7 @@ BDEv 3.5 - 2020-09-04
 
 		- Support for the Hadoop 3.3.x line
 
-		- Support for the Spark 3.x line
+		- Support for the Spark 3.0.x line
 
 		- Support for the Flink 1.11.x line
 
