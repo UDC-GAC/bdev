@@ -175,6 +175,12 @@ else
                 fi
                 export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
                 export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
+
+		JPS=$(which jps 2> /dev/null)
+                if [[ "x$JPS" == "x" ]]
+                then
+                        m_exit "Missing jps command"
+                fi
         fi
         if [[ -z $LOAD_MPI_COMMAND ]]
         then

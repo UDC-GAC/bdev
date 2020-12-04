@@ -498,6 +498,7 @@ function begin_report(){
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
 	if [[ -n $GBE_INTERFACE ]]
 	then
 		REPORT="$REPORT \t GbE interface  \t\t\t $GBE_INTERFACE \n"
