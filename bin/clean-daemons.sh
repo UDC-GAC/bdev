@@ -10,10 +10,6 @@ do
 		| cut -f 1 -d " "`
 	
 	DAEMON_PIDS=`echo $DAEMON_PIDS`
-	if [[ \"x$DAEMON_PIDS\" != \"x\" ]];
-	then
-		m_echo "$slave: PIDs $DAEMON_PIDS"
-	fi
 	
 	ssh $slave "
 	if [[ \"x$DAEMON_PIDS\" != \"x\" ]];
