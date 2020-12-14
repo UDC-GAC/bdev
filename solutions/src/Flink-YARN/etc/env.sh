@@ -77,6 +77,11 @@ fi
 
 if [[ $FLINK_SERIES == "1" ]]
 then
+	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
+	then
+		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+	fi
+
         export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.process.size: $FLINK_YARN_JOBMANAGER_MEMORY"
         export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_YARN_TASKMANAGER_MEMORY"
 
@@ -84,13 +89,6 @@ then
         then
                 export SLAVESFILE=$SOL_CONF_DIR/slaves
                 export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_YARN_JOBMANAGER_HEAPSIZE"
-        else
-		if [[ $FLINK_MAJOR_VERSION == "1.9" ]]
-		then
-                	export SLAVESFILE=$SOL_CONF_DIR/slaves
-	                export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_YARN_JOBMANAGER_HEAPSIZE"
-        	        export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.heap.size: $FLINK_YARN_TASKMANAGER_HEAPSIZE"
-        	fi
 	fi
 else
         m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"

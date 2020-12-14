@@ -8,7 +8,7 @@ export -f get_date
 
 function m_echo() {
 	get_date
-	echo -e "\e[48;5;22m[${METHOD_NAME} $DATE INFO]\e[0m $@" 
+	echo -e "\e[48;5;2m[${METHOD_NAME} $DATE INFO]\e[0m $@" 
 	echo "$DATE > $@" >> $REPORT_LOG
 }
 
@@ -16,11 +16,20 @@ export -f m_echo
 
 function m_err() {
 	get_date
-	echo -e "\e[48;5;124m[${METHOD_NAME} $DATE ERR ]\e[0m $@" >&2
+	echo -e "\e[48;5;1m[${METHOD_NAME} $DATE ERR ]\e[0m $@" >&2
 	echo "$DATE ! $@" >> $REPORT_LOG
 }
 
 export -f m_err
+
+function m_warn() {
+	get_date
+	echo -e "\e[48;5;208m[${METHOD_NAME} $DATE WARN]\e[0m $@"
+	echo "$DATE ! $@" >> $REPORT_LOG
+}
+
+export -f m_err
+
 
 function m_exit() {
 	m_err $@
@@ -233,8 +242,8 @@ function get_nodes_by_name()
         for NODE in $NODES
         do
 		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
-		NODE_IP=`echo $OUT | cut -d " " -f 1`
-		NODE_NAME=`echo $OUT | cut -d " " -f 2`
+		NODE_IP=`echo $OUT | awk '{print $1}'`
+		NODE_NAME=`echo $OUT | awk '{print $2}'`
 		IP_NODES="${IP_NODES} ${NODE_IP}"
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
@@ -252,7 +261,7 @@ function get_nodes_by_interface()
 	touch $NODE_FILE
 	for NODE in $NODES
 	do
-		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | cut -d ' ' -f 6 | cut -d '/' -f 1 | head -n 1`
+		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
 		INTERFACE_NODES="${INTERFACE_NODES} ${INTERFACE_IP}"
 		echo "$NODE $INTERFACE_IP" >> $NODE_FILE
 	done
@@ -795,7 +804,7 @@ function run_command_timeout()
 {
 	CMD="/bin/sh -c \"$*\""
 
-	expect -c \
+	$EXPECT -c \
 	"set echo -noecho; set timeout $TIMEOUT; spawn -noecho $CMD; expect timeout { exit 1 } eof { exit 0 }"
 
 	if [[ $? == 1 ]] ; then ELAPSED_TIME="TIMEOUT" ; fi

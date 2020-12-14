@@ -176,7 +176,7 @@ else
                 export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
                 export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
 
-		JPS=$(which jps 2> /dev/null)
+		export JPS=$(which jps 2> /dev/null)
                 if [[ "x$JPS" == "x" ]]
                 then
                         m_exit "Missing jps command"
@@ -199,6 +199,13 @@ else
                         export LOAD_MPI_COMMAND="export MPI_HOME=$MPI_HOME"
                 fi
         fi
+fi
+
+# Check expect command
+export EXPECT=$(which expect 2> /dev/null)
+if [[ "x$EXPECT" == "x" ]]
+then
+	m_warn "Missing expect command (needed when using timeouts)"
 fi
 
 # Define variables for BDWatchdog binary daemons
