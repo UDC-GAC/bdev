@@ -66,17 +66,6 @@ export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
 export FINISH_YARN="true"
 export DEPLOY_ARGS="-p ${FLINK_PARALLELISM}"
 
-# Copy config.sh file according to Flink version
-FLINK_CONFIG_SH_FILE=config-${FLINK_MAJOR_VERSION}.sh
-m_echo "Using Flink config.sh file: $FLINK_CONFIG_SH_FILE"
-
-if [[ "$SGE_ENV" == "true" ]]
-then
-	cp -f $SOL_SGE_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
-else
-	cp -f $SOL_STD_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
-fi
-
 if [[ $FLINK_SERIES == "1" ]]
 then
 	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
@@ -94,6 +83,17 @@ then
 	fi
 else
 	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+fi
+
+# Copy config.sh file according to Flink version
+FLINK_CONFIG_SH_FILE=config-${FLINK_MAJOR_VERSION}.sh
+m_echo "Using Flink config.sh file: $FLINK_CONFIG_SH_FILE"
+
+if [[ "$SGE_ENV" == "true" ]]
+then
+	cp -f $SOL_SGE_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+else
+	cp -f $SOL_STD_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
 fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
