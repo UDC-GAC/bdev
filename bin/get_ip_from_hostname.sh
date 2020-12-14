@@ -12,16 +12,16 @@ NAME=`echo $HOSTNAME | cut -d "." -f 1`
 
 while read i
 do
-	NODE=`echo $i | cut -d " " -f 1 | cut -d "." -f 1`
+	NODE=`echo $i | awk '{print $1}' | cut -d "." -f 1`
         if [[ $NODE == "localhost" ]]
         then
           echo "127.0.0.1"
           break
         fi
         
-        IP=`echo $i | cut -d " " -f 2`
         if [[ $NODE == $NAME ]]
         then
+        	IP=`echo $i | cut -d " " -f 2`
         	echo $IP
                 break
         fi
