@@ -434,7 +434,8 @@ function end_solution(){
 export -f end_solution
 
 function write_report(){
-	printf " %-5s \t %-25s \t %-20s \t %-10s\n" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf "\n" >> $REPORT_FILE
 
 	if [[ $ENABLE_PLOT == "true" ]]
 	then
