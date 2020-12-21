@@ -38,38 +38,6 @@ function m_exit() {
 
 export -f m_exit
 
-function print_workload_conf()
-{
-	m_echo "TestDFSIO num of files: $DFSIO_N_FILES"
-	m_echo "TestDFSIO file size (MB): $DFSIO_FILE_SIZE"
-	m_echo "WordCount datasize (B): $WORDCOUNT_DATASIZE"
-	m_echo "Sort datasize (B): $SORT_DATASIZE"
-	m_echo "TeraSort datasize (B): $TERASORT_DATASIZE"
-	m_echo "Grep datasize (B): $GREP_DATASIZE"
-	m_echo "PageRank pages: $PAGERANK_PAGES"
-	m_echo "PageRank iterations: $PAGERANK_MAX_ITERATIONS"
-	m_echo "ConCmpt pages: $CC_PAGES"
-	m_echo "ConCmpt iterations: $CC_MAX_ITERATIONS"
-	m_echo "KMeans num of clusters: $KMEANS_NUM_OF_CLUSTERS"
-	m_echo "KMeans dimensions: $KMEANS_DIMENSIONS"
-	m_echo "KMeans num of samples: $KMEANS_NUM_OF_SAMPLES"
-	m_echo "KMeans samples per file: $KMEANS_SAMPLES_PER_INPUTFILE"
-	m_echo "KMeans convergence delta: $KMEANS_CONVERGENCE_DELTA"
-	m_echo "KMeans iterations: $KMEANS_MAX_ITERATIONS"
-	m_echo "Bayes pages: $BAYES_PAGES"
-	m_echo "Bayes clasess: $BAYES_CLASSES"
-	m_echo "Bayes ngrams: $BAYES_NGRAMS"
-	m_echo "Aggregations pages: $AGGREGATION_PAGES"
-	m_echo "Aggregations uservisits: $AGGREGATION_USERVISITS"
-	m_echo "Join pages: $JOIN_PAGES"
-	m_echo "Join uservisits: $JOIN_USERVISITS"
-	m_echo "Scan pages: $SCAN_PAGES"
-	m_echo "Scan uservisits: $SCAN_USERVISITS"
-}
-
-export -f print_workload_conf
-
-
 function m_start_message()
 {
 	m_echo "Reporting to $REPORT_DIR"
@@ -77,7 +45,6 @@ function m_start_message()
 	m_echo "Benchmarks: $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Solutions: $SOLUTIONS"
-	print_workload_conf	
 }
 
 export -f m_start_message
