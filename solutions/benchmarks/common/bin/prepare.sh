@@ -3,14 +3,13 @@
 if [[ $GEN_WORDCOUNT == "true" ]]
 then
 	m_echo "Generating Wordcount data: ${WORDCOUNT_DATASIZE} bytes"
-	${HADOOP_EXECUTABLE} jar $HADOOP_EXAMPLES_JAR randomtextwriter \
-		-D $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
-		-D $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER \
-		-D $CONFIG_RANDOMTEXTWRITER_TOTALBYTES=$WORDCOUNT_DATASIZE \
-		-D $CONFIG_RANDOMTEXTWRITER_BYTESPERMAP=$((${WORDCOUNT_DATASIZE} / ${MAPPERS_NUMBER})) \
-		-D $CONFIG_RANDOMTEXTWRITER_MAPSPERHOST=$MAPPERS_PER_NODE \
-		-outFormat ${EXAMPLES_OUTPUT_FORMAT} \
-		$INPUT_WORDCOUNT
+	OPTIONS="-t randomtext \
+		-n ${INPUT_WORDCOUNT} \
+		-m ${MAPPERS_NUMBER} \
+		-p ${WORDCOUNT_DATASIZE} \
+		-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
+
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_SORT == "true" ]]
@@ -21,14 +20,13 @@ then
 		export INPUT_SORT=$INPUT_WORDCOUNT
 	else
 		m_echo "Generating Sort data: ${SORT_DATASIZE} bytes"
-		${HADOOP_EXECUTABLE} jar $HADOOP_EXAMPLES_JAR randomtextwriter \
-			-D $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
-			-D $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER \
-			-D $CONFIG_RANDOMTEXTWRITER_TOTALBYTES=$SORT_DATASIZE \
-			-D $CONFIG_RANDOMTEXTWRITER_BYTESPERMAP=$((${SORT_DATASIZE} / ${MAPPERS_NUMBER})) \
-			-D $CONFIG_RANDOMTEXTWRITER_MAPSPERHOST=$MAPPERS_PER_NODE \
-			-outFormat ${EXAMPLES_OUTPUT_FORMAT} \
-			$INPUT_SORT
+		OPTIONS="-t randomtext \
+			-n ${INPUT_SORT} \
+			-m ${MAPPERS_NUMBER} \
+			-p ${SORT_DATASIZE} \
+			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
+
+		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	fi
 fi
 
@@ -44,24 +42,25 @@ then
 		export INPUT_GREP=$INPUT_SORT
 	else			
 		m_echo "Generating Grep data: ${GREP_DATASIZE} bytes"
-		${HADOOP_EXECUTABLE} jar $HADOOP_EXAMPLES_JAR randomtextwriter \
-			-D $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
-			-D $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER \
-			-D $CONFIG_RANDOMTEXTWRITER_TOTALBYTES=$GREP_DATASIZE \
-			-D $CONFIG_RANDOMTEXTWRITER_BYTESPERMAP=$((${GREP_DATASIZE} / ${MAPPERS_NUMBER})) \
-			-D $CONFIG_RANDOMTEXTWRITER_MAPSPERHOST=$MAPPERS_PER_NODE \
-			-outFormat ${EXAMPLES_OUTPUT_FORMAT} \
-			$INPUT_GREP
+		OPTIONS="-t randomtext \
+			-n ${INPUT_GREP} \
+			-m ${MAPPERS_NUMBER} \
+			-p ${GREP_DATASIZE} \
+			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
+
+		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	fi
 fi
 	
 if [[ $GEN_TERASORT == "true" ]]
 then
 	m_echo "Generating Terasort data: ${TERASORT_DATASIZE} bytes"
-	${HADOOP_EXECUTABLE} jar $HADOOP_EXAMPLES_JAR teragen \
-		-D $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
-		-D $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER \
-		$TERASORT_ROWS_NUMBER $INPUT_TERASORT
+	OPTIONS="-t teragen \
+		-n ${INPUT_TERASORT} \
+		-m ${MAPPERS_NUMBER} \
+		-p ${TERASORT_ROWS_NUMBER}"
+
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_PAGERANK == "true" ]]
@@ -75,7 +74,7 @@ then
 		-pbalance -pbalance \
 		-o text"
 
-	${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_CC == "true" ]]
@@ -94,14 +93,15 @@ then
 			-pbalance -pbalance \
 			-o text"
 
-		${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}
+		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     fi
 fi
 
 if [[ $GEN_KMEANS == "true" ]]
 then
 	m_echo "Generating KMeans data: ${KMEANS_NUM_OF_CLUSTERS} clusters, ${KMEANS_DIMENSIONS} dimensions, ${KMEANS_NUM_OF_SAMPLES} samples"
-	OPTIONS="-compress false \
+	OPTIONS="-t kmeans \
+		-compress false \
 		-sampleDir ${INPUT_KMEANS}/samples \
 		-clusterDir ${INPUT_KMEANS}/cluster \
 		-numClusters ${KMEANS_NUM_OF_CLUSTERS} \
@@ -109,10 +109,7 @@ then
 		-samplesPerFile ${KMEANS_SAMPLES_PER_INPUTFILE} \
 		-sampleDimension ${KMEANS_DIMENSIONS}"
 
-	${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR \
-		org.apache.mahout.clustering.kmeans.GenKMeansDataset \
-		-D hadoop.job.history.user.location=${INPUT_KMEANS}/samples \
-		${OPTIONS}
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_BAYES == "true" ]]
@@ -123,10 +120,10 @@ then
 		-m ${MAPPERS_NUMBER} \
 		-r ${REDUCERS_NUMBER} \
 		-p ${BAYES_PAGES} \
-		-class ${BAYES_CLASSES} \
+		-g ${BAYES_CLASSES} \
 		-o sequence"
 
-	${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}	
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}	
 fi
 
 if [[ $GEN_AGGREGATION == "true" ]]
@@ -140,7 +137,7 @@ then
 		-v ${AGGREGATION_USERVISITS} \
 		-o sequence"
 
-	${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_JOIN == "true" ]]
@@ -161,7 +158,7 @@ then
 			-v ${JOIN_USERVISITS} \
 			-o sequence"
 		
-		${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}
+		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	fi
 fi
 
@@ -189,7 +186,7 @@ then
 			-v ${SCAN_USERVISITS} \
 			-o sequence"
 
-		${HADOOP_EXECUTABLE} jar $HIBENCH_DATAGEN_JAR HiBench.DataGen ${OPTIONS}
+		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	fi
 fi
 
