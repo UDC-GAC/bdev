@@ -38,7 +38,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		export EXPERIMENTS_POST_ENDPOINT=$BDWATCHDOG_EXPERIMENTS_POST_ENDPOINT
 
 	### MARK start of experiments
-		MY_DATE=`date '+%y-%m-%d-%H:%M'`
+		MY_DATE=`date '+%d-%m-%Y-%H:%M'`
 		MY_SOLUTION=`echo $SOLUTION | cut -d"-" -f1`
 		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
 		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \

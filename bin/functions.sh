@@ -1,7 +1,7 @@
 #!/bin/sh
 
 function get_date {
-	DATE=`date '+%y/%m/%d %H:%M:%S'`
+	DATE=`date '+%d/%m/%Y %H:%M:%S'`
 }
 
 export -f get_date
