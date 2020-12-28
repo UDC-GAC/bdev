@@ -11,7 +11,7 @@ fi
 
 export METHOD_CONF_DIR=$METHOD_HOME/etc
 export METHOD_BIN_DIR=$METHOD_HOME/bin
-export METHOD_START_DATE=`date +"%m_%d_%H-%M-%S-%N"`
+export METHOD_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 
 # Load bash functions
 . $METHOD_BIN_DIR/functions.sh
