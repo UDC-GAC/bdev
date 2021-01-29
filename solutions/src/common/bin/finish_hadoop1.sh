@@ -1,6 +1,7 @@
 #!/bin/bash
 
-for slave in $SLAVENODES
+SLAVES=`cat $SLAVESFILE`
+for slave in $SLAVES
 do
 	m_echo "Finishing TaskTracker:" $slave
 	ssh $slave "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS TaskTracker"

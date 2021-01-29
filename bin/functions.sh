@@ -262,6 +262,8 @@ function set_network_configuration()
 				load_nodes ${IP_COMPUTE_NODES}
 				FILE=$NODE_FILE
 			fi	
+		else
+			m_exit "Invalid network interface: $SOLUTION_NET_INTERFACE (revise network settings)"
 		fi
 	fi
 
