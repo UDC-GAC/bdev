@@ -82,3 +82,4 @@ add_conf_param "spark_rdd_compress" $SPARK_RDD_COMPRESS
 add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
 add_conf_param "spark_serializer" $SPARK_SERIALIZER
 add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
+add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
