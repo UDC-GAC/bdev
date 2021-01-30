@@ -26,4 +26,3 @@ do
 	mkdir -p $TMP_DIR $LOCAL_DIRS"
 done
 
-sleep 1
