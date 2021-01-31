@@ -303,6 +303,8 @@ add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
+add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
+add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
 export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
 export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
 add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
