@@ -17,6 +17,7 @@
 ################################################################################
 
 jobmanager.rpc.address: $master
+rest.address: $master
 jobmanager.rpc.port: 6123
 jobmanager.execution.failover-strategy: region
 jobmanager.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
@@ -28,6 +29,8 @@ parallelism.default: $flink_default_parallelism
 io.tmp.dirs: $flink_local_dirs
 akka.ask.timeout: $flink_network_timeout s
 akka.client.timeout: $flink_network_timeout s
+akka.tcp.timeout: $flink_network_timeout s
+akka.framesize: $flink_akka_framesize
 fs.hdfs.hadoopconf: $hadoop_conf_dir
 fs.output.always-create-directory: true
 env.hadoop.conf.dir: $hadoop_conf_dir
