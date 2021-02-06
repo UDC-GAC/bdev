@@ -320,7 +320,7 @@ add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
 add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
-add_conf_param "spark_sql_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
+add_conf_param "spark_aqe_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
 add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
 
 #RDMA-SPARK
