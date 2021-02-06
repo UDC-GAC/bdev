@@ -73,8 +73,8 @@ then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
 	
-	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_MEMORY"
-	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_MEMORY"
+	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_HEAPSIZE"
+	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_HEAPSIZE"
 
 	if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
 	then
@@ -98,6 +98,5 @@ fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
-add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
-add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
+
