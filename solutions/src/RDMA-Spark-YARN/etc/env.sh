@@ -64,19 +64,14 @@ export DEPLOY_ARGS="--master yarn --deploy-mode client \
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
 add_conf_param "spark_log_dir" $SPARK_LOG_DIR
+add_conf_param "spark_worker_dir" $SPARK_WORKER_DIR
 add_conf_param "spark_executor_instances" $SPARK_EXECUTORS
+add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
+add_conf_param "spark_sql_shuffle_partitions" $SPARK_DEFAULT_PARALLELISM
+
 add_conf_param "spark_executor_memory" $SPARK_YARN_EXECUTOR_HEAPSIZE
 add_conf_param "spark_yarn_executor_memory" $SPARK_YARN_EXECUTOR_HEAPSIZE
 add_conf_param "spark_executor_cores" $SPARK_YARN_CORES_PER_EXECUTOR
-add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
-add_conf_param "spark_worker_dir" $SPARK_WORKER_DIR
-add_conf_param "spark_network_timeout" $SPARK_NETWORK_TIMEOUT
+
 add_conf_param "spark_extra_library_path" $SPARK_EXTRA_LIBRARY_PATH
-add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
-add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
-add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
-add_conf_param "spark_rdd_compress" $SPARK_RDD_COMPRESS
-add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
-add_conf_param "spark_serializer" $SPARK_SERIALIZER
-add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
-add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
+

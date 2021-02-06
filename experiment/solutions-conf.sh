@@ -45,7 +45,10 @@
 #export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf and snappy. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
 #export SPARK_SERIALIZER=KryoSerializer # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
 #export SPARK_KRYO_UNSAFE=true # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
-#export SPARK_KRYO_BUFFER_MAX=64 # Maximum allowable size of Kryo serialization buffer. It must be less than 2048 MiB
+#export SPARK_KRYO_BUFFER_MAX=64 # Maximum allowable size in MiB of Kryo serialization buffer. It must be less than 2048 MiB
+#export SPARK_SQL_AQE=false # Enable Adaptive Query Execution (AQE), the optimization technique in Spark SQL to choose the most efficient query execution plan
+#export SPARK_AQE_COALESCE_PARTITIONS=true # Coalesce contiguous shuffle partitions according to SPARK_AQE_PARTITION_SIZE, to avoid too many small tasks
+#export SPARK_AQE_PARTITION_SIZE=$((64*1024*1024)) # The advisory size in bytes of the shuffle partition during adaptive optimization
 #
 ## Spark standalone
 #export SPARK_DAEMON_MEMORY=1024	# Memory to allocate to the Master, Worker and HistoryServer daemons
@@ -56,7 +59,7 @@
 #export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 #export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
 #export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
-#export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
+#export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.95 # Percentage of the Executor memory allocated to heap
 #export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
 #
 ## Spark on YARN (client mode)
@@ -87,9 +90,9 @@
 ## Flink standalone
 #export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY       # Memory allocated to the JobManager
 #export FLINK_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE   # JobManager heapsize
-#export FLINK_MEMORY_RESERVED=`op_int "$FLINK_JOBMANAGER_HEAPSIZE + $DATANODE_D_HEAPSIZE"` # Memory reserved to other services
+#export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE # Memory reserved to other services
 #export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-#export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
+#export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.95 # Percentage of the TaskManager memory allocated to heap
 #export FLINK_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 #
 ## Flink on YARN

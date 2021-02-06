@@ -303,6 +303,15 @@ add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
+add_conf_param "spark_network_timeout" $SPARK_NETWORK_TIMEOUT
+add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
+add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
+add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
+add_conf_param "spark_rdd_compress" $SPARK_RDD_COMPRESS
+add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
+add_conf_param "spark_serializer" $SPARK_SERIALIZER
+add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
+add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
 add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
 add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
 export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
@@ -310,6 +319,9 @@ export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
 add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
+add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
+add_conf_param "spark_sql_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
+add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
 
 #RDMA-SPARK
 add_conf_param "rdma_spark_ib_enabled" $RDMA_SPARK_IB_ENABLED
@@ -325,4 +337,7 @@ export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
+add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
+add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
+
