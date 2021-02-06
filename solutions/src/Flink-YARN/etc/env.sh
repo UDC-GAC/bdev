@@ -77,7 +77,7 @@ then
         if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
         then
                 export SLAVESFILE=$SOL_CONF_DIR/slaves
-                export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_YARN_JOBMANAGER_HEAPSIZE"
+                export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_YARN_JOBMANAGER_MEMORY"
 	fi
 else
         m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
@@ -96,6 +96,5 @@ fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
-add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
-add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
+
