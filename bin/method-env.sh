@@ -340,4 +340,4 @@ add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
-
+add_conf_param "flink_rest_client_max_content_length" $FLINK_REST_CLIENT_MAX_CONTENT_LENGTH

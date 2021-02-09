@@ -18,6 +18,7 @@
 
 jobmanager.rpc.address: $master
 rest.address: $master
+rest.client.max-content-length: $flink_rest_client_max_content_length
 jobmanager.rpc.port: 6123
 jobmanager.execution.failover-strategy: region
 jobmanager.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
