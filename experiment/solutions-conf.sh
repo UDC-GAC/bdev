@@ -86,6 +86,7 @@
 #export FLINK_TASKMANAGER_PREALLOCATE_MEMORY=false # TaskManager preallocate memory
 #export FLINK_NETWORK_TIMEOUT=120 # Flink timeout for network communications (in seconds)
 #export FLINK_AKKA_FRAMESIZE="209715200b" # Maximum size of messages which are sent between JobManager and TaskManagers (it requires a size-unit specifier)
+#export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 #
 ## Flink standalone
 #export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY       # Memory allocated to the JobManager
