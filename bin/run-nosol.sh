@@ -35,6 +35,11 @@ do
 		# Starting workload
 		m_echo "Running ${BENCHMARK}, reporting to ${BENCHMARK_OUTPUT_DIR}"
 
+		START_TOTAL_TIME=0
+		END_TOTAL_TIME=0
+		START_TIME=0
+		END_TIME=0
+
                 if [[ $BENCHMARK_WAIT_SECONDS -gt 0 ]]
                 then
                         m_echo "Waiting $BENCHMARK_WAIT_SECONDS seconds"
