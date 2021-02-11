@@ -192,10 +192,10 @@ fi
 
 if [[ $GEN_COMMAND == "true" ]]
 then
-	if [[ -n "$METHOD_PREPARE_COMMAND" ]]
+	if [[ -n "$PREPARE_COMMAND" ]]
 	then
-		m_echo "Preparing Command benchmark: $METHOD_PREPARE_COMMAND"
+		m_echo "Preparing Command benchmark: $PREPARE_COMMAND"
 	
-		bash -c "$METHOD_PREPARE_COMMAND"
+		bash -c "$PREPARE_COMMAND"
 	fi
 fi
