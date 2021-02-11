@@ -45,6 +45,7 @@ function m_start_message()
 	m_echo "Benchmarks: $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Solutions: $SOLUTIONS"
+	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
 export -f m_start_message
@@ -477,6 +478,7 @@ function begin_report(){
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
 	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
 	if [[ -n $GBE_INTERFACE ]]
 	then
@@ -605,7 +607,8 @@ function start_benchmark(){
 	fi
 
 	WAIT_SECONDS=0
-	START_TOTAL_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	START_TOTAL_TIME=$(($START_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_ILO == "true" ]]
 	then
@@ -667,13 +670,15 @@ function start_benchmark(){
 	fi
 
 	m_echo "Starting $BENCHMARK"
-	START_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	START_TIME=$(($START_TIME+$CURRENT_TIME))
 }
 
 export -f start_benchmark
 
 function end_benchmark(){
-	END_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	END_TIME=$(($END_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
@@ -732,7 +737,8 @@ function end_benchmark(){
 		fi
 	fi
 
-	END_TOTAL_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	END_TOTAL_TIME=$(($END_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ELAPSED_TIME == "TIMEOUT" ]]
 	then

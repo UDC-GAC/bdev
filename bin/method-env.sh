@@ -205,7 +205,7 @@ fi
 export EXPECT=$(which expect 2> /dev/null)
 if [[ "x$EXPECT" == "x" ]]
 then
-	m_warn "Missing expect command (needed when using timeouts)"
+	m_warn "Missing expect command (required when using timeouts)"
 fi
 
 # Define variables for BDWatchdog binary daemons
