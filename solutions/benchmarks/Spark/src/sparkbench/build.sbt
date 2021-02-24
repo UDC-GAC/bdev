@@ -8,7 +8,7 @@ libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0",
+"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0" % "provided",
 "org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
