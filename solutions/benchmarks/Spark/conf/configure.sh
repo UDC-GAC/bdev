@@ -15,14 +15,14 @@ then
 	export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
 fi
 
-export SPARK_BENCH_DIR=$SOL_BENCH_DIR/bin/
+export SPARK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export SPARK_BENCH_JAR=$SPARK_BENCH_DIR/$SPARK_BENCH_JAR_NAME
 export SPARK_BENCH_JAR_DELETE="find $SOLUTION_REPORT_DIR -name "$SPARK_BENCH_JAR_NAME" -type f -delete"
 
 if [[ ! -f $SPARK_BENCH_JAR ]]
 then
 	# Download sparkbench jar file
-	URL="http://bdev.des.udc.es/dist/sparkbench
+	URL=http://bdev.des.udc.es/dist/sparkbench
 	m_echo "Downloading $SPARK_BENCH_JAR_NAME from $URL"
 
         wget -q -O $SPARK_BENCH_JAR $URL/$SPARK_BENCH_JAR_NAME
