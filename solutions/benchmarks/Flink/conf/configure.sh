@@ -15,6 +15,7 @@ then
 
         if [[ $? != 0 ]]
         then
+		rm $FLINK_BENCH_JAR >& /dev/null
                 m_exit "Error when downloading $FLINK_BENCH_JAR_NAME"
         fi
 else
