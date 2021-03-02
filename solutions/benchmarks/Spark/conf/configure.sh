@@ -29,6 +29,7 @@ then
 
         if [[ $? != 0 ]]
         then
+		rm $SPARK_BENCH_JAR >& /dev/null
 		m_exit "Error when downloading $SPARK_BENCH_JAR_NAME"
         fi
 else
