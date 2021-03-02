@@ -33,6 +33,10 @@ export -f m_err
 
 function m_exit() {
 	m_err $@
+
+	if [ ! -z ${SOLUTION_DIR+x} ]; then
+		. $SOLUTION_DIR/bin/finish.sh
+	fi
 	exit -1
 }
 
