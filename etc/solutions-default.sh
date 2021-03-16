@@ -83,7 +83,6 @@ export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-export FLINK_TASKMANAGER_PREALLOCATE_MEMORY=false # TaskManager preallocate memory
 export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network nemory size for TaskExecutors (it requires a size-unit specifier)
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network nemory size for TaskExecutors (it requires a size-unit specifier)
