@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.dataset
 
 import org.apache.hadoop.io.LongWritable
 import org.apache.log4j.{ Level, Logger }
@@ -12,6 +12,9 @@ import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark.broadcast.Broadcast
 import scopt.OptionParser
 import org.apache.spark.SparkContext._
+import es.udc.gac.sparkbench.IOCommon
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
 
 object ScalaNaiveDenseKMeans {
 
@@ -54,22 +57,20 @@ object ScalaNaiveDenseKMeans {
   }
 
   def run(params: Params) {
-    val conf = new SparkConf().setAppName("SparkBench ScalaNaiveDenseKMeans")
-    val sc = new SparkContext(conf)
-    val io = new IOCommon(sc)
+    //val conf = new SparkConf().setAppName("SparkBench ScalaNaiveDenseKMeans")
+    System.out.println("Estoy cargando este codigo :)");
 
-    val data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
-    val centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
+    val session = SparkSession.builder().appName("SparkBench ScalaNaiveDenseKMeans").getOrCreate()
+    System.out.println("Creado!");
+    val sc = session.sparkContext
+    System.out.println("Sigo vivo!");
+    import session.implicits._
+    val io = new IOCommon()
 
-    val samples = data.map {
-      case (k, v) =>
-        var vector: Array[Double] = new Array[Double](v.get().size)
-        for (i <- 0 until v.get().size)
-          vector(i) = v.get().get(i)
-        new Point(vector)
-    }.cache()
-
-    val initCenters = centers.map {
+    val raw_data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
+    val raw_centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
+    System.out.println("Incluso cargue los datos");
+    val raw_initCenters = raw_centers.map {
       case (k, v) =>
         val center = v.getCenter()
         var vector: Array[Double] = new Array[Double](center.size)
@@ -77,6 +78,17 @@ object ScalaNaiveDenseKMeans {
           vector(i) = center.get(i)
         new Centroid(v.getId(), vector)
     }
+    val raw_samples = raw_data.map {
+      case (k, v) =>
+        var vector: Array[Double] = new Array[Double](v.get().size)
+        for (i <- 0 until v.get().size)
+          vector(i) = v.get().get(i)
+        new Point(vector)
+    }.cache()
+    
+    val samples = raw_samples.toDS()
+    val initCenters = raw_initCenters.toDS()
+
 
     val numSamples = samples.count()
     val k = initCenters.count()
@@ -100,20 +112,29 @@ object ScalaNaiveDenseKMeans {
       println("Iteration " + i)
 
       val broadcasted_centroids = sc.broadcast(currentCentroids.collect())
+
       val newCentroids = samples
-        .map(p => selectNearestCenterOpt(p, broadcasted_centroids))
-        .foldByKey((new Point(new Array[Double](n_dimensions)), 0L)) { (p1, p2) => (p1._1.add(p2._1), p1._2 + p2._2) }
-        .map { case (k, v) => new Centroid(k, v._1.div(v._2)) }
+        .map(p => selectNearestCenterOpt(p, broadcasted_centroids)).as[(Int, (Point, Long))]
+        .groupByKey(_._1).reduceGroups((a,b) => (a._1,(a._2._1.add(b._2._1), a._2._2 + b._2._2)))
+        .map { case (k, v) => new Centroid(k, v._2._1.div(v._2._2)) }
 
-      val changed = currentCentroids.map(c => (c.id, c))
-        .join(newCentroids.map(c => (c.id, c))).values.filter {
-          case (centroid, newCentroid) =>
-            centroid.squaredDistance(newCentroid) > converge_delta
-        }
+      // val changed = currentCentroids.map(c => (c.id, c))
+      //   .join(newCentroids.map(c => (c.id, c))).values.filter {
+      //     case (centroid, newCentroid) =>
+      //       centroid.squaredDistance(newCentroid) > converge_delta
+      //   }
 
+      val changed = currentCentroids.map(c => (c.id, c)).as("current")
+        .join(newCentroids.map(c => (c.id, c)).as("new"))
+        .select($"current._2".as("current"), $"new._2".as("new")).as[(Centroid, Centroid)]
+        .filter((value: (Centroid, Centroid)) =>
+            value._1.squaredDistance(value._2) > converge_delta
+        )
+      
+      
       currentCentroids = newCentroids
 
-      if (changed.isEmpty()) {
+      if (changed.isEmpty) {
         println("KMeans converged")
         finished = true
       }
@@ -125,7 +146,7 @@ object ScalaNaiveDenseKMeans {
     val clusteredPoints =
       samples.map(p => selectNearestCenter(p, broadcasted_centroids))
 
-    io.save(params.output, clusteredPoints, "Text")
+    io.save(params.output, clusteredPoints.rdd, sc, "Text")
     //sc.stop()
   }
 

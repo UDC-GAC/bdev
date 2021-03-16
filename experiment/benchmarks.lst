@@ -2,13 +2,18 @@
 
 #testdfsio		# Tests the read and write throughput of HDFS
 wordcount		# Counts the number of times each word appears in the input data set
+#wordcount_dataset   # Dataset-based alternative of the wordcount benchmark
 #sort			# Sorts the input data set
 #grep			# Counts the matches of a regular expression in the input data set
+#grep_dataset        # Dataset-based alternative of the grep benchmark
 #terasort		# Sorts 100B-sized <key,value> tuples
+#terasort_dataset    # Dataset-based alternative of the terasort benchmark
 #pagerank		# Graph algorithm which ranks elements by counting the number and quality of the links to each one
+#pagerank_dataset    # Dataset-based alternative of the pagerank benchmark
 #connected_components	# Graph algorithm which finds the connected components of a graph
 #bayes			# Performs the Naive Bayesian classification algorithm
 #kmeans			# Clustering algorithm which partitions N observations into K clusters
+#kmeans_dataset      # Dataset-based alternative of the kmeans benchmark
 #aggregation		# SQL-based query which sums the values from a column
 #join			# SQL-based query which joins two tables
 #scan			# SQL-based query which extracts the rows that match a certain pattern

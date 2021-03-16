@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.hadoop.examples.terasort.{TeraInputFormat,TeraOutputFormat}
 import org.apache.hadoop.io.Text

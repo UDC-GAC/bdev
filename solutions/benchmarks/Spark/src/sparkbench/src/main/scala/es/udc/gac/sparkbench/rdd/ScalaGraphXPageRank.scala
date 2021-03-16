@@ -1,10 +1,11 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark._
 import org.apache.spark.rdd._
 import org.apache.spark.graphx._
 import org.apache.spark.graphx.lib._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaGraphXPageRank {
 
@@ -25,8 +26,8 @@ object ScalaGraphXPageRank {
     val converge_threshold = (1.0 / number_nodes) / 10
     val mixing_c = 0.85f
 
-    val io = new IOCommon(sc)
-    val data = io.load(filename, "KeyValueText")
+    val io = new IOCommon()
+    val data = io.load(filename, sc, "KeyValueText")
 
     // Load the edges as a graph
     val graph = EnhancedGraphLoader.edgeListRDD(data)
@@ -34,7 +35,7 @@ object ScalaGraphXPageRank {
     // Run PageRank until convergence
     val ranks: RDD[(VertexId, Double)] = PageRank.runUntilConvergence(graph, converge_threshold, 1 - mixing_c).vertices
 
-    io.save[VertexId, Double](save_file, ranks, "Text")
+    io.save[VertexId, Double](save_file, ranks, sc, "Text")
     //sc.stop()
   }
 }

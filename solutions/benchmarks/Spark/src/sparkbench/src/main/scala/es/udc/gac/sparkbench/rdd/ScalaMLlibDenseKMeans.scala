@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.hadoop.io.LongWritable
 import org.apache.log4j.{ Level, Logger }
@@ -11,6 +11,7 @@ import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.{ SparkConf, SparkContext }
 import scopt.OptionParser
 import org.apache.spark.SparkContext._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaMLlibDenseKMeans {
 
@@ -55,7 +56,7 @@ object ScalaMLlibDenseKMeans {
   def run(params: Params) {
     val conf = new SparkConf().setAppName("SparkBench ScalaMLlibDenseKMeans")
     val sc = new SparkContext(conf)
-    val io = new IOCommon(sc)
+    val io = new IOCommon()
 
     val data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
     val centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
@@ -94,7 +95,7 @@ object ScalaMLlibDenseKMeans {
 
     val result = samples.map(p => (model.predict(p), p))
 
-    io.save(params.output, result, "Text")
+    io.save(params.output, result, sc, "Text")
     //sc.stop()
   }
 }

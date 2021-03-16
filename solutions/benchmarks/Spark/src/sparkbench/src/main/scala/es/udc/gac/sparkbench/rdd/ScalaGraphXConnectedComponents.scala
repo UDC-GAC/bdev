@@ -1,10 +1,11 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark._
 import org.apache.spark.rdd._
 import org.apache.spark.graphx._
 import org.apache.spark.graphx.lib._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaGraphXConnectedComponents {
 
@@ -26,8 +27,8 @@ object ScalaGraphXConnectedComponents {
     if (maxIterations > 2048)
       maxIterations = 2048
 
-    val io = new IOCommon(sc)
-    val data = io.load(filename, "KeyValueText")
+    val io = new IOCommon()
+    val data = io.load(filename, sc, "KeyValueText")
 
     // Load the edges as a graph
     val graph = EnhancedGraphLoader.edgeListRDD(data)
@@ -38,7 +39,7 @@ object ScalaGraphXConnectedComponents {
     // Run ConnectedComponents until convergence or maxIterations (Spark >= 2.x)
     val vertices: RDD[(VertexId, VertexId)] = ConnectedComponents.run(graph, maxIterations).vertices
 
-    io.save[VertexId, VertexId](save_file, vertices, "Text")
+    io.save[VertexId, VertexId](save_file, vertices, sc, "Text")
     //sc.stop()
   }
 }

@@ -1,8 +1,9 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark._
 import org.apache.spark.rdd._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaGrep {
 
@@ -23,8 +24,8 @@ object ScalaGrep {
     if (args.length > 3)
       format = args(3)
     
-    val io = new IOCommon(sc)
-    val data = io.load(filename, format)
+    val io = new IOCommon()
+    val data = io.load(filename, sc, format)
 
     val searched = data.filter{ case (x,y) => regex.pattern.matcher(y).matches }
 
@@ -33,7 +34,7 @@ object ScalaGrep {
                  .map{ case (y,n) => (n,y)}
                  .sortByKey(numPartitions = 1)
 
-    io.save[Int,String](save_file, sorted, format)
+    io.save[Int,String](save_file, sorted, sc, format)
     //sc.stop()
   }
 }

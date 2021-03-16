@@ -175,7 +175,7 @@ else
                 fi
                 export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
                 export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
-
+                
 		export JPS=$(which jps 2> /dev/null)
                 if [[ "x$JPS" == "x" ]]
                 then
@@ -337,6 +337,7 @@ export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
+add_conf_param "spark.sql.shuffle.partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE

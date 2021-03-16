@@ -1,7 +1,8 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark.rdd._
+import es.udc.gac.sparkbench.IOCommon
 
 /*
  * Adapted from spark's example: https://spark.apache.org/examples.html
@@ -24,13 +25,13 @@ object ScalaWordCount {
     if (args.length > 2)
       format = args(2)
     
-    val io = new IOCommon(sc)
-    val lines = io.load(filename, format) 
+    val io = new IOCommon()
+    val lines = io.load(filename, sc, format)
     val words = lines.flatMap( { case (key, line) => line.split(" |\t") } )
     val words_map = words.map(word => (word, 1))
     val result = words_map.reduceByKey(_ + _)
 
-    io.save[String,Int](save_file, result, format)
+    io.save[String,Int](save_file, result, sc, format)
     //sc.stop()
   }
 }

@@ -1,8 +1,10 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
-import org.apache.spark.{ SparkConf, SparkContext }
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark._
 import org.apache.spark.rdd._
+import org.apache.spark.sql.SparkSession
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaSort {
 
@@ -17,18 +19,20 @@ object ScalaSort {
     val sc = new SparkContext(conf)
     val filename = args(0)
     val save_file = args(1)
-    
+
     var format = "Sequence"
     if (args.length > 2)
       format = args(2)
 
     val parallel = sc.getConf.getInt("spark.default.parallelism", sc.defaultParallelism)
-    val io = new IOCommon(sc)
-    val data = io.load(filename, format)
+    val io = new IOCommon()
+
+
+    val data = io.load(filename, sc, format)
     val partitioner = new HashPartitioner(parallel)
     val sorted = data.repartitionAndSortWithinPartitions(partitioner = partitioner)
 
-    io.save[String, String](save_file, sorted, format)
+    io.save[String, String](save_file, sorted, sc, format)
     //sc.stop()
   }
 }

@@ -1,10 +1,11 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark._
 import org.apache.spark.rdd._
 import org.apache.spark.graphx._
 import org.apache.spark.graphx.lib._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaNaivePageRank {
 
@@ -28,8 +29,8 @@ object ScalaNaivePageRank {
     val random_coeff = (1.0 - mixing_c) / number_nodes
     val initial_rank = 1.0 / number_nodes
 
-    val io = new IOCommon(sc)
-    val data = io.load(filename, "KeyValueText")
+    val io = new IOCommon()
+    val data = io.load(filename, sc, "KeyValueText")
 
     val links = data.distinct().groupByKey().cache()
     var ranks = links.mapValues(v => initial_rank)
@@ -62,7 +63,7 @@ object ScalaNaivePageRank {
       i = i + 1
     }
 
-    io.save[String, Double](save_file, ranks, "Text")
+    io.save[String, Double](save_file, ranks, sc, "Text")
     //sc.stop()
   }
 }
