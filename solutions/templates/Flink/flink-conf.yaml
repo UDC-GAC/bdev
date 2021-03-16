@@ -32,7 +32,6 @@ taskmanager.memory.network.min: $flink_taskmanager_memory_network_min
 parallelism.default: $flink_default_parallelism
 io.tmp.dirs: $flink_local_dirs
 akka.ask.timeout: $flink_akka_ask_timeout s
-akka.client.timeout: $flink_akka_client_timeout s
 akka.tcp.timeout: $flink_akka_tcp_timeout s
 akka.framesize: $flink_akka_framesize
 fs.hdfs.hadoopconf: $hadoop_conf_dir
