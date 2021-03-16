@@ -337,7 +337,6 @@ export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
-add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
 add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
 add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX

@@ -24,7 +24,6 @@ jobmanager.execution.failover-strategy: region
 jobmanager.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
 historyserver.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
 taskmanager.numberOfTaskSlots: $flink_taskmanager_slots
-taskmanager.memory.preallocate: $flink_taskmanager_preallocate_memory
 taskmanager.network.netty.client.connectTimeoutSec: $flink_taskmanager_network_netty_timeout
 taskmanager.network.bind-policy: ip
 taskmanager.memory.network.fraction: $flink_taskmanager_memory_network_fraction
