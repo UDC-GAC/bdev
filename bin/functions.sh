@@ -552,7 +552,6 @@ function begin_report(){
 	REPORT="$REPORT \t Spark YARN executor heapsize (MB) \t $SPARK_YARN_EXECUTOR_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
-	REPORT="$REPORT \t Flink TaskManager preallocate memory \t $FLINK_TASKMANAGER_PREALLOCATE_MEMORY \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink JobManager heapsize (MB) \t $FLINK_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink TaskManager memory (MB) \t\t $FLINK_TASKMANAGER_MEMORY \n"
