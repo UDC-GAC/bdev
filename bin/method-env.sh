@@ -338,6 +338,13 @@ export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
-add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
+add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
+add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
+add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
+add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_akka_ask_timeout" $FLINK_AKKA_ASK_TIMEOUT
+add_conf_param "flink_akka_client_timeout" $FLINK_AKKA_CLIENT_TIMEOUT
+add_conf_param "flink_akka_tcp_timeout" $FLINK_AKKA_TCP_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
 add_conf_param "flink_rest_client_max_content_length" $FLINK_REST_CLIENT_MAX_CONTENT_LENGTH
+
