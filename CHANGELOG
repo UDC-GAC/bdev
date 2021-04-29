@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.6 - 2021-01-XX
+BDEv 3.6 - 2021-XX-XX
 ---------------------
 	A point release for the BDEv 3.x line
 
@@ -11,11 +11,28 @@ BDEv 3.6 - 2021-01-XX
 		- Updated versions of the following frameworks
 			- Hadoop 2.10.1
 			- Hadoop 3.1.4
-			- Spark 3.0.1
+			- Hadoop 3.2.2
 			- Spark 2.4.7
-			- Flink 1.11.2
+			- Spark 3.0.2
+			- Flink 1.10.3
+			- Flink 1.11.3
+
+		- Support for the Spark 3.1.x line
 
 		- Support for the Flink 1.12.x line
+
+		- Add Spark configuration parameters for
+			- spark.memory.fraction
+			- spark.memory.storageFraction
+			- spark.kryoserializer.buffer.max
+
+		- Adaptative Query Execution (AQE) can be enabled and configured for Spark 3.x
+
+		- Add Flink configuration parameters for several network memory settings and timeouts
+
+		- Command batch mode now supports running multiple scripts stored in a directory
+
+		- Remove support for Flink versions <= 1.9
 
 		- All input datasets are now created using an internal generator tool (RGen)
 
@@ -23,7 +40,7 @@ BDEv 3.6 - 2021-01-XX
 
 		- Fix missing dool files
 
-		- Minor bug fixes
+		- Minor changes and bug fixes
 
 
 BDEv 3.5 - 2020-09-04
