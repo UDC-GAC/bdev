@@ -341,6 +341,7 @@ add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETW
 add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
 add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
 add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_heartbeat_timeout" $FLINK_HEARTBEAT_TIMEOUT
 add_conf_param "flink_akka_ask_timeout" $FLINK_AKKA_ASK_TIMEOUT
 add_conf_param "flink_akka_tcp_timeout" $FLINK_AKKA_TCP_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
