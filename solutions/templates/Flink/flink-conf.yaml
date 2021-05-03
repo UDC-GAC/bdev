@@ -31,7 +31,7 @@ taskmanager.memory.network.max: $flink_taskmanager_memory_network_max
 taskmanager.memory.network.min: $flink_taskmanager_memory_network_min
 parallelism.default: $flink_default_parallelism
 io.tmp.dirs: $flink_local_dirs
-heartbeat.timeout: $flink_heartbeat_timeout s
+heartbeat.timeout: $flink_heartbeat_timeout
 akka.ask.timeout: $flink_akka_ask_timeout s
 akka.loookup.timeout: $flink_akka_ask_timeout s
 akka.tcp.timeout: $flink_akka_tcp_timeout s
