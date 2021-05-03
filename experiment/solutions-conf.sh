@@ -86,9 +86,10 @@
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network nemory size for TaskExecutors
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network nemory size for TaskExecutors
-#export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=180 # Netty client connection timeout (in seconds)
-#export FLINK_AKKA_ASK_TIMEOUT=15 # Timeout used for all futures and blocking Akka calls (in seconds)
-#export FLINK_AKKA_TCP_TIMEOUT=30 # Timeout for all outbound connections (in seconds)
+#export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
+#export FLINK_HEARTBEAT_TIMEOUT=120 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in seconds)
+#export FLINK_AKKA_ASK_TIMEOUT=60 # Timeout used for all futures and blocking Akka calls (in seconds)
+#export FLINK_AKKA_TCP_TIMEOUT=60 # Timeout for all outbound connections (in seconds)
 #export FLINK_AKKA_FRAMESIZE="209715200b" # Maximum size of messages which are sent between JobManager and TaskManagers (it requires a size-unit specifier)
 #export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 #
