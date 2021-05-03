@@ -304,6 +304,7 @@ add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
 add_conf_param "spark_network_timeout" $SPARK_NETWORK_TIMEOUT
+add_conf_param "spark_executor_heartbeat" $SPARK_EXECUTOR_HEARTBEAT_INTERVAL
 add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
 add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
 add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
