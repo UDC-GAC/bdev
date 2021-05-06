@@ -123,7 +123,22 @@ do
 	elif [[ "$BENCHMARK" == "kmeans" ]]
 	then
 		export GEN_KMEANS="true"
+	elif [[ "$BENCHMARK" == "mllib_kmeans" ]]
+	then
+		export GEN_KMEANS="true"
+	elif [[ "$BENCHMARK" == "mllib_kmeans_dataset" ]]
+	then
+		export GEN_KMEANS="true"
+	elif [[ "$BENCHMARK" == "naive_kmeans" ]]
+	then
+		export GEN_KMEANS="true"
+	elif [[ "$BENCHMARK" == "naive_kmeans_dataset" ]]
+	then
+		export GEN_KMEANS="true"
 	elif [[ "$BENCHMARK" == "bayes" ]]
+	then
+		export GEN_BAYES="true"
+	elif [[ "$BENCHMARK" == "bayes_dataset" ]]
 	then
 		export GEN_BAYES="true"
 	elif [[ "$BENCHMARK" == "aggregation" ]]
