@@ -124,7 +124,7 @@ object ScalaMLlibSparseNaiveBayes {
 
     val model = new NaiveBayes().
       setModelType("multinomial").
-      setSmoothing(1).
+      setSmoothing(params.lambda).
       fit(training.withColumnRenamed("vector", "features"))
 
     val labelsTable = sc.broadcast(examples.select($"label").distinct().as[Double].collect().sorted)
