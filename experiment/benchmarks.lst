@@ -12,8 +12,12 @@ wordcount		# Counts the number of times each word appears in the input data set
 #pagerank_dataset    # Dataset-based alternative of the pagerank benchmark
 #connected_components	# Graph algorithm which finds the connected components of a graph
 #bayes			# Performs the Naive Bayesian classification algorithm
+#bayes			# Dataset-based alternative of the bayes benchmark
 #kmeans			# Clustering algorithm which partitions N observations into K clusters
-#kmeans_dataset      # Dataset-based alternative of the kmeans benchmark
+#mllib_kmeans_dataset      # Dataset-based alternative of the kmeans benchmark (with mllib)
+#mllib_kmeans      # Clustering algorithm which partitions N observations into K clusters (with mllib)
+#naive_kmeans_dataset      # Dataset-based alternative of the kmeans benchmark (without mllib)
+#naive_kmeans      # Clustering algorithm which partitions N observations into K clusters (without mllib)
 #aggregation		# SQL-based query which sums the values from a column
 #join			# SQL-based query which joins two tables
 #scan			# SQL-based query which extracts the rows that match a certain pattern
