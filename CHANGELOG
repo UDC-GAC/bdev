@@ -25,6 +25,7 @@ BDEv 3.6 - 2021-XX-XX
 			- spark.memory.fraction
 			- spark.memory.storageFraction
 			- spark.kryoserializer.buffer.max
+			- spark.executor.heartbeatInterval
 
 		- Adaptative Query Execution (AQE) can be enabled and configured for Spark 3.x
 
