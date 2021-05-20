@@ -66,7 +66,7 @@ export DEPLOY_ARGS="-m yarn-cluster \
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
+        if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
