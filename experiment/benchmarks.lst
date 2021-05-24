@@ -4,6 +4,7 @@
 wordcount		# Counts the number of times each word appears in the input data set
 #wordcount_dataset   # Dataset-based alternative of the wordcount benchmark
 #sort			# Sorts the input data set
+#sort_dataset	     # Dataset-based alternative of the sort benchmark
 #grep			# Counts the matches of a regular expression in the input data set
 #grep_dataset        # Dataset-based alternative of the grep benchmark
 #terasort		# Sorts 100B-sized <key,value> tuples
@@ -12,7 +13,7 @@ wordcount		# Counts the number of times each word appears in the input data set
 #pagerank_dataset    # Dataset-based alternative of the pagerank benchmark
 #connected_components	# Graph algorithm which finds the connected components of a graph
 #bayes			# Performs the Naive Bayesian classification algorithm
-#bayes			# Dataset-based alternative of the bayes benchmark
+#bayes_dataset			# Dataset-based alternative of the bayes benchmark
 #kmeans			# Clustering algorithm which partitions N observations into K clusters
 #mllib_kmeans_dataset      # Dataset-based alternative of the kmeans benchmark (with mllib)
 #mllib_kmeans      # Clustering algorithm which partitions N observations into K clusters (with mllib)

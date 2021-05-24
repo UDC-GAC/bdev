@@ -99,9 +99,11 @@ object ScalaMLlibDenseKMeans {
       as[(Long, linalg.Vector, Int)]
 
 
+    val combineResultUDF = udf((key: Long, cluster: Int) => key.toString() + ", " + cluster.toString())
     val result = predictions.
-      select($"key", $"cluster").
-      as[(Long, Int)]
+      withColumn("result", combineResultUDF($"key", $"cluster")).
+      select($"result").
+      as[String]
 
 
     result.write.text(params.output)

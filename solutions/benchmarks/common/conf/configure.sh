@@ -105,16 +105,31 @@ do
 	if [ "$BENCHMARK" == "terasort" ]
 	then
 		export GEN_TERASORT="true"
+	if [ "$BENCHMARK" == "terasort_dataset" ]
+	then
+		export GEN_TERASORT="true"
 	elif [[ "$BENCHMARK" == "wordcount" ]]
+	then
+		export GEN_WORDCOUNT="true"
+	elif [[ "$BENCHMARK" == "wordcount_dataset" ]]
 	then
 		export GEN_WORDCOUNT="true"
 	elif [[ "$BENCHMARK" == "sort" ]]
 	then
 		export GEN_SORT="true"
+	elif [[ "$BENCHMARK" == "sort_dataset" ]]
+	then
+		export GEN_SORT="true"
 	elif [[ "$BENCHMARK" == "grep" ]]
 	then
 		export GEN_GREP="true"
+	elif [[ "$BENCHMARK" == "grep_dataset" ]]
+	then
+		export GEN_GREP="true"
 	elif [[ "$BENCHMARK" == "pagerank" ]]
+	then
+		export GEN_PAGERANK="true"
+	elif [[ "$BENCHMARK" == "pagerank_dataset" ]]
 	then
 		export GEN_PAGERANK="true"
 	elif [[ "$BENCHMARK" == "connected_components" ]]
