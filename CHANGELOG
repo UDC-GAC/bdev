@@ -12,6 +12,7 @@ BDEv 3.6 - 2021-XX-XX
 			- Hadoop 2.10.1
 			- Hadoop 3.1.4
 			- Hadoop 3.2.2
+			- Hadoop 3.3.1
 			- Spark 2.4.8
 			- Spark 3.0.2
 			- Flink 1.10.3
@@ -31,11 +32,13 @@ BDEv 3.6 - 2021-XX-XX
 
 		- Add Flink configuration parameters for several network memory settings and timeouts
 
+		- Add HDFS configuration parameters for setting socket timeouts
+
 		- Command batch mode now supports running multiple scripts stored in a directory
 
 		- Remove support for Flink versions <= 1.9
 
-		- All input datasets are now created using an internal generator tool (RGen)
+		- All input datasets are now created using an internal data generator tool (RGen)
 
 		- Add sanity checks for some dependencies
 
