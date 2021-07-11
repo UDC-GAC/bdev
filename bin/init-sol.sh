@@ -2,12 +2,12 @@
 
 if [[ -z "$MASTERNODE" ]]
 then
-	m_exit "Master IP is null (revise network settings)"
+	m_exit "Master node IP is null (revise network settings)"
 fi
 
 if [[ -z "$SLAVENODES" ]]
 then
-	m_exit "Slave IP is null (revise network settings)"
+	m_exit "Worker nodes IP is null (revise network settings)"
 fi
 
 #Generate configuration

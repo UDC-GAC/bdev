@@ -19,7 +19,7 @@ done
 rm -f $MASTERFILE $SLAVESFILE
 m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
-m_echo "Slaves:"
+m_echo "Workers:"
 i=1
 for SLAVE in $SLAVENODES
 do
