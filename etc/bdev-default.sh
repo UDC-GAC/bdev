@@ -21,7 +21,7 @@ export ILO_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
 export ILO_USERNAME="ilo_user"		# User name for ILO interface
 export ILO_PASSWD="..ilo_user.."	# Password for ILO user
 export ILO_BASE_IP=192.168.255		# Base IP for ILO interfaces
-export ILO_MASTER=localhost		# Node which can connect to the ILO interface for all the slaves (localhost means to use the master node)
+export ILO_MASTER=localhost		# Node which can connect to the ILO interface for all the workers (localhost means to use the master node)
 
 # RAPL
 export RAPL_GEN_GRAPHS=false	# Generate RAPL graphs during execution
