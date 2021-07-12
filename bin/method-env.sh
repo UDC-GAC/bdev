@@ -257,6 +257,8 @@ add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
+add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
+add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
 add_conf_param "io_sort_factor" $IO_SORT_FACTOR
@@ -304,6 +306,7 @@ add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
 add_conf_param "spark_network_timeout" $SPARK_NETWORK_TIMEOUT
+add_conf_param "spark_executor_heartbeat" $SPARK_EXECUTOR_HEARTBEAT_INTERVAL
 add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
 add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
 add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
@@ -340,5 +343,13 @@ add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 add_conf_param "spark.sql.shuffle.partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
+add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
+add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
+add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
+add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_heartbeat_timeout" $FLINK_HEARTBEAT_TIMEOUT
+add_conf_param "flink_akka_ask_timeout" $FLINK_AKKA_ASK_TIMEOUT
+add_conf_param "flink_akka_tcp_timeout" $FLINK_AKKA_TCP_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
 add_conf_param "flink_rest_client_max_content_length" $FLINK_REST_CLIENT_MAX_CONTENT_LENGTH
+

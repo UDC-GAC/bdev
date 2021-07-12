@@ -38,6 +38,7 @@
 #export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
 #export SPARK_HISTORY_SERVER_DIR=/spark/history # HDFS path to store application event logs
 #export SPARK_NETWORK_TIMEOUT=120 # Spark timeout for network communications (in seconds)
+#export SPARK_EXECUTOR_HEARTBEAT_INTERVAL=30 # Interval between each executor's heartbeats to the driver (in seconds)
 #export SPARK_SHUFFLE_COMPRESS=true # Compress map output files
 #export SPARK_SHUFFLE_SPILL_COMPRESS=true # Compress data spilled during shuffles
 #export SPARK_BROADCAST_COMPRESS=true # Compress broadcast variables before sending them
@@ -83,8 +84,13 @@
 #export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 #export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 #export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-#export FLINK_TASKMANAGER_PREALLOCATE_MEMORY=false # TaskManager preallocate memory
-#export FLINK_NETWORK_TIMEOUT=120 # Flink timeout for network communications (in seconds)
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors
+#export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
+#export FLINK_HEARTBEAT_TIMEOUT=120000 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in milliseconds)
+#export FLINK_AKKA_ASK_TIMEOUT=60 # Timeout used for all futures and blocking Akka calls (in seconds)
+#export FLINK_AKKA_TCP_TIMEOUT=60 # Timeout for all outbound connections (in seconds)
 #export FLINK_AKKA_FRAMESIZE="209715200b" # Maximum size of messages which are sent between JobManager and TaskManagers (it requires a size-unit specifier)
 #export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 #

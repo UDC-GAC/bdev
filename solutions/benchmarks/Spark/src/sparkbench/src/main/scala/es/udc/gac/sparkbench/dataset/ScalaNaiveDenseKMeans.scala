@@ -57,19 +57,14 @@ object ScalaNaiveDenseKMeans {
   }
 
   def run(params: Params) {
-    //val conf = new SparkConf().setAppName("SparkBench ScalaNaiveDenseKMeans")
-    System.out.println("Estoy cargando este codigo :)");
 
     val session = SparkSession.builder().appName("SparkBench ScalaNaiveDenseKMeans").getOrCreate()
-    System.out.println("Creado!");
     val sc = session.sparkContext
-    System.out.println("Sigo vivo!");
     import session.implicits._
     val io = new IOCommon()
 
     val raw_data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
     val raw_centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
-    System.out.println("Incluso cargue los datos");
     val raw_initCenters = raw_centers.map {
       case (k, v) =>
         val center = v.getCenter()
@@ -118,11 +113,6 @@ object ScalaNaiveDenseKMeans {
         .groupByKey(_._1).reduceGroups((a,b) => (a._1,(a._2._1.add(b._2._1), a._2._2 + b._2._2)))
         .map { case (k, v) => new Centroid(k, v._2._1.div(v._2._2)) }
 
-      // val changed = currentCentroids.map(c => (c.id, c))
-      //   .join(newCentroids.map(c => (c.id, c))).values.filter {
-      //     case (centroid, newCentroid) =>
-      //       centroid.squaredDistance(newCentroid) > converge_delta
-      //   }
 
       val changed = currentCentroids.map(c => (c.id, c)).as("current")
         .join(newCentroids.map(c => (c.id, c)).as("new"))

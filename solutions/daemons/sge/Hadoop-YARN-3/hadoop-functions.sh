@@ -1343,7 +1343,7 @@ function hadoop_add_to_classpath_tools
     # shellcheck disable=SC1090
     . "${HADOOP_LIBEXEC_DIR}/tools/${module}.sh"
   else
-    hadoop_error "ERROR: Tools helper ${HADOOP_LIBEXEC_DIR}/tools/${module}.sh was not found."
+    hadoop_debug "Tools helper ${HADOOP_LIBEXEC_DIR}/tools/${module}.sh was not found."
   fi
 
   if declare -f hadoop_classpath_tools_${module} >/dev/null 2>&1; then
@@ -2211,7 +2211,7 @@ function hadoop_daemon_handler
       hadoop_verify_logdir
       hadoop_status_daemon "${daemon_pidfile}"
       if [[ $? == 0  ]]; then
-        hadoop_error "${daemonname} is running as process $(cat "${daemon_pidfile}").  Stop it first."
+        hadoop_error "${daemonname} is running as process $(cat "${daemon_pidfile}").  Stop it first and ensure ${daemon_pidfile} file is empty before retry."
         exit 1
       else
         # stale pid file, so just remove it and continue on
@@ -2272,7 +2272,7 @@ function hadoop_secure_daemon_handler
       hadoop_verify_logdir
       hadoop_status_daemon "${daemon_pidfile}"
       if [[ $? == 0  ]]; then
-        hadoop_error "${daemonname} is running as process $(cat "${daemon_pidfile}").  Stop it first."
+        hadoop_error "${daemonname} is running as process $(cat "${daemon_pidfile}").  Stop it first and ensure ${daemon_pidfile} file is empty before retry."
         exit 1
       else
         # stale pid file, so just remove it and continue on
