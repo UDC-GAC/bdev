@@ -1,15 +1,17 @@
 name := "sparkbench"
 version := "3.0"
 val sparkVersion = "3.0.0"
-scalaVersion := "2.12.10"
+scalaVersion := "2.12.13"
 
 libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0",
-"org.apache.mahout" % "mahout-mr" % "0.11.2",
+"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0" % "provided",
+"org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
+  ExclusionRule("org.apache.hadoop")
+),
 "com.github.scopt" %% "scopt" % "3.7.1"
 )
 
@@ -40,6 +42,7 @@ assemblyMergeStrategy in assembly := {
   case "META-INF/mimetypes.default" => MergeStrategy.last
   case "plugin.properties" => MergeStrategy.last
   case "log4j.properties" => MergeStrategy.last
+  case "module-info.class" => MergeStrategy.discard
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)

@@ -1,11 +1,12 @@
 #!/bin/sh
 
 export HDFS=hdfs://$MASTERNODE:$FS_PORT
-export HIBENCH_DATAGEN_JAR=$THIRD_PARTY_DIR/hibench/hibench-datagen-5.0.jar
+export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
+export HADOOP_CLASSPATH=`$HADOOP_EXECUTABLE classpath`
 export CHMOD="-chmod -R"
 
 if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
