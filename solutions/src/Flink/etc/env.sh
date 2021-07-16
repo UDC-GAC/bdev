@@ -66,6 +66,25 @@ export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
 export FINISH_YARN="true"
 export DEPLOY_ARGS="-p ${FLINK_PARALLELISM}"
 
+if [[ $FLINK_SERIES == "1" ]]
+then
+	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]]
+	then
+		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+	fi
+	
+	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_HEAPSIZE"
+	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_HEAPSIZE"
+
+	if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
+	then
+		export SLAVESFILE=$SOL_CONF_DIR/slaves
+		export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_JOBMANAGER_HEAPSIZE"
+	fi
+else
+	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+fi
+
 # Copy config.sh file according to Flink version
 FLINK_CONFIG_SH_FILE=config-${FLINK_MAJOR_VERSION}.sh
 m_echo "Using Flink config.sh file: $FLINK_CONFIG_SH_FILE"
@@ -77,29 +96,7 @@ else
 	cp -f $SOL_STD_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
 fi
 
-if [[ $FLINK_SERIES == "1" ]]
-then
-	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_MEMORY"
-	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_MEMORY"
-
-	if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
-	then
-		export SLAVESFILE=$SOL_CONF_DIR/slaves
-		export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_JOBMANAGER_HEAPSIZE"
-	else
-		if [[ $FLINK_MAJOR_VERSION == "1.9" ]]
-		then
-			export SLAVESFILE=$SOL_CONF_DIR/slaves
-			export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_JOBMANAGER_HEAPSIZE"
-			export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.heap.size: $FLINK_TASKMANAGER_HEAPSIZE"
-		fi
-	fi
-else
-	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
-fi
-
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
-add_conf_param "flink_taskmanager_preallocate_memory" $FLINK_TASKMANAGER_PREALLOCATE_MEMORY
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
-add_conf_param "flink_network_timeout" $FLINK_NETWORK_TIMEOUT
+

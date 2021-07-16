@@ -1,28 +1,25 @@
 #!/bin/bash
 
-for slave in $SLAVENODES
+SLAVES=`cat $SLAVESFILE`
+for slave in $SLAVES
 do
-        m_echo "Finishing NodeManager:" $slave
-        ssh $slave 'for p in $(jps | grep NodeManager | tr -s " " | cut -d " " -f 1);
-        do echo $p; kill -9 $p; done' >& /dev/null
+	m_echo "Finishing NodeManager:" $slave
+        ssh $slave "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS NodeManager"
 done
 
 m_echo "Finishing ResourceManager:" $MASTERNODE
-ssh $MASTERNODE 'for p in $(jps | grep ResourceManager | tr -s " " | cut -d " " -f 1);
-        do echo $p; kill -9 $p; done' >& /dev/null
+ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ResourceManager"
 
 if [[ $TIMELINE_SERVER == "true" ]]
 then
 	m_echo "Finishing ApplicationHistoryServer:" $MASTERNODE
-	ssh $MASTERNODE 'for p in $(jps | grep ApplicationHistoryServer | tr -s " " | cut -d " " -f 1);
-        	do echo $p; kill -9 $p; done' >& /dev/null
+	ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
 fi
 
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]
 then
 	m_echo "Finishing JobHistoryServer:" $MASTERNODE
-	ssh $MASTERNODE 'for p in $(jps | grep JobHistoryServer | tr -s " " | cut -d " " -f 1);
-        	do echo $p; kill -9 $p; done' >& /dev/null
+	ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS JobHistoryServer"
 fi
 
 sleep 1

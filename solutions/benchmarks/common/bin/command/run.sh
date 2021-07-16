@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ -z $METHOD_COMMAND ]]
+if [[ -z $COMMAND ]]
 then
 	m_echo "Entering interactive mode"
 
@@ -10,6 +10,16 @@ then
 
 	m_echo "Leaving interactive mode"
 else
-	m_echo "Running $METHOD_COMMAND"
-	run_benchmark $METHOD_COMMAND
+	if [[ -d $COMMAND ]]; then
+		COMMANDS=`ls -d $COMMAND/*`
+
+		for CMD in $COMMANDS
+		do
+			m_echo "Running $CMD"
+			run_benchmark $CMD
+		done
+	else
+		m_echo "Running $COMMAND"
+		run_benchmark $COMMAND
+	fi
 fi

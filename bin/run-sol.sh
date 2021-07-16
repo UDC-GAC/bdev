@@ -38,7 +38,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		export EXPERIMENTS_POST_ENDPOINT=$BDWATCHDOG_EXPERIMENTS_POST_ENDPOINT
 
 	### MARK start of experiments
-		MY_DATE=`date '+%y-%m-%d-%H:%M'`
+		MY_DATE=`date '+%d-%m-%Y-%H:%M'`
 		MY_SOLUTION=`echo $SOLUTION | cut -d"-" -f1`
 		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
 		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
@@ -57,6 +57,11 @@ do
 		# Starting workload
 		m_echo "Running ${BENCHMARK}, reporting to ${BENCHMARK_OUTPUT_DIR}"
 
+		START_TOTAL_TIME=0
+		END_TOTAL_TIME=0
+		START_TIME=0
+		END_TIME=0
+
 		if [[ $BENCHMARK_WAIT_SECONDS -gt 0 ]]
 		then
 			m_echo "Waiting $BENCHMARK_WAIT_SECONDS seconds"
@@ -70,7 +75,7 @@ do
 		then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
-			m_echo "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
+			m_warn "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
 			break
 		fi
 

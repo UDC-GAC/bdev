@@ -1,14 +1,14 @@
 #!/bin/sh
 
 function get_date {
-	DATE=`date '+%y/%m/%d %H:%M:%S'`
+	DATE=`date '+%d/%m/%Y %H:%M:%S'`
 }
 
 export -f get_date
 
 function m_echo() {
 	get_date
-	echo -e "\e[48;5;22m[${METHOD_NAME} $DATE INFO]\e[0m $@" 
+	echo -e "\e[48;5;2m[${METHOD_NAME} $DATE INFO]\e[0m $@" 
 	echo "$DATE > $@" >> $REPORT_LOG
 }
 
@@ -16,50 +16,31 @@ export -f m_echo
 
 function m_err() {
 	get_date
-	echo -e "\e[48;5;124m[${METHOD_NAME} $DATE ERR ]\e[0m $@" >&2
+	echo -e "\e[48;5;1m[${METHOD_NAME} $DATE ERR ]\e[0m $@" >&2
 	echo "$DATE ! $@" >> $REPORT_LOG
 }
 
 export -f m_err
 
+function m_warn() {
+	get_date
+	echo -e "\e[48;5;208m[${METHOD_NAME} $DATE WARN]\e[0m $@"
+	echo "$DATE ! $@" >> $REPORT_LOG
+}
+
+export -f m_err
+
+
 function m_exit() {
 	m_err $@
+
+	if [ ! -z ${SOLUTION_DIR+x} ]; then
+		. $SOLUTION_DIR/bin/finish.sh
+	fi
 	exit -1
 }
 
 export -f m_exit
-
-function print_workload_conf()
-{
-	m_echo "TestDFSIO num of files: $DFSIO_N_FILES"
-	m_echo "TestDFSIO file size (MB): $DFSIO_FILE_SIZE"
-	m_echo "WordCount datasize (B): $WORDCOUNT_DATASIZE"
-	m_echo "Sort datasize (B): $SORT_DATASIZE"
-	m_echo "TeraSort datasize (B): $TERASORT_DATASIZE"
-	m_echo "Grep datasize (B): $GREP_DATASIZE"
-	m_echo "PageRank pages: $PAGERANK_PAGES"
-	m_echo "PageRank iterations: $PAGERANK_MAX_ITERATIONS"
-	m_echo "ConCmpt pages: $CC_PAGES"
-	m_echo "ConCmpt iterations: $CC_MAX_ITERATIONS"
-	m_echo "KMeans num of clusters: $KMEANS_NUM_OF_CLUSTERS"
-	m_echo "KMeans dimensions: $KMEANS_DIMENSIONS"
-	m_echo "KMeans num of samples: $KMEANS_NUM_OF_SAMPLES"
-	m_echo "KMeans samples per file: $KMEANS_SAMPLES_PER_INPUTFILE"
-	m_echo "KMeans convergence delta: $KMEANS_CONVERGENCE_DELTA"
-	m_echo "KMeans iterations: $KMEANS_MAX_ITERATIONS"
-	m_echo "Bayes pages: $BAYES_PAGES"
-	m_echo "Bayes clasess: $BAYES_CLASSES"
-	m_echo "Bayes ngrams: $BAYES_NGRAMS"
-	m_echo "Aggregations pages: $AGGREGATION_PAGES"
-	m_echo "Aggregations uservisits: $AGGREGATION_USERVISITS"
-	m_echo "Join pages: $JOIN_PAGES"
-	m_echo "Join uservisits: $JOIN_USERVISITS"
-	m_echo "Scan pages: $SCAN_PAGES"
-	m_echo "Scan uservisits: $SCAN_USERVISITS"
-}
-
-export -f print_workload_conf
-
 
 function m_start_message()
 {
@@ -68,7 +49,7 @@ function m_start_message()
 	m_echo "Benchmarks: $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Solutions: $SOLUTIONS"
-	print_workload_conf	
+	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
 export -f m_start_message
@@ -233,8 +214,8 @@ function get_nodes_by_name()
         for NODE in $NODES
         do
 		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
-		NODE_IP=`echo $OUT | cut -d " " -f 1`
-		NODE_NAME=`echo $OUT | cut -d " " -f 2`
+		NODE_IP=`echo $OUT | awk '{print $1}'`
+		NODE_NAME=`echo $OUT | awk '{print $2}'`
 		IP_NODES="${IP_NODES} ${NODE_IP}"
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
@@ -252,7 +233,7 @@ function get_nodes_by_interface()
 	touch $NODE_FILE
 	for NODE in $NODES
 	do
-		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | cut -d ' ' -f 6 | cut -d '/' -f 1 | head -n 1`
+		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
 		INTERFACE_NODES="${INTERFACE_NODES} ${INTERFACE_IP}"
 		echo "$NODE $INTERFACE_IP" >> $NODE_FILE
 	done
@@ -286,6 +267,8 @@ function set_network_configuration()
 				load_nodes ${IP_COMPUTE_NODES}
 				FILE=$NODE_FILE
 			fi	
+		else
+			m_exit "Invalid network interface: $SOLUTION_NET_INTERFACE (revise network settings)"
 		fi
 	fi
 
@@ -425,7 +408,8 @@ function end_solution(){
 export -f end_solution
 
 function write_report(){
-	printf " %-5s \t %-25s \t %-20s \t %-10s\n" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf "\n" >> $REPORT_FILE
 
 	if [[ $ENABLE_PLOT == "true" ]]
 	then
@@ -498,6 +482,8 @@ function begin_report(){
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
+	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
 	if [[ -n $GBE_INTERFACE ]]
 	then
 		REPORT="$REPORT \t GbE interface  \t\t\t $GBE_INTERFACE \n"
@@ -566,7 +552,6 @@ function begin_report(){
 	REPORT="$REPORT \t Spark YARN executor heapsize (MB) \t $SPARK_YARN_EXECUTOR_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
-	REPORT="$REPORT \t Flink TaskManager preallocate memory \t $FLINK_TASKMANAGER_PREALLOCATE_MEMORY \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink JobManager heapsize (MB) \t $FLINK_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink TaskManager memory (MB) \t\t $FLINK_TASKMANAGER_MEMORY \n"
@@ -625,7 +610,8 @@ function start_benchmark(){
 	fi
 
 	WAIT_SECONDS=0
-	START_TOTAL_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	START_TOTAL_TIME=$(($START_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_ILO == "true" ]]
 	then
@@ -687,13 +673,15 @@ function start_benchmark(){
 	fi
 
 	m_echo "Starting $BENCHMARK"
-	START_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	START_TIME=$(($START_TIME+$CURRENT_TIME))
 }
 
 export -f start_benchmark
 
 function end_benchmark(){
-	END_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	END_TIME=$(($END_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
@@ -752,7 +740,8 @@ function end_benchmark(){
 		fi
 	fi
 
-	END_TOTAL_TIME=`timestamp`
+	CURRENT_TIME=`timestamp`
+	END_TOTAL_TIME=$(($END_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ELAPSED_TIME == "TIMEOUT" ]]
 	then
@@ -794,7 +783,7 @@ function run_command_timeout()
 {
 	CMD="/bin/sh -c \"$*\""
 
-	expect -c \
+	$EXPECT -c \
 	"set echo -noecho; set timeout $TIMEOUT; spawn -noecho $CMD; expect timeout { exit 1 } eof { exit 0 }"
 
 	if [[ $? == 1 ]] ; then ELAPSED_TIME="TIMEOUT" ; fi

@@ -1,13 +1,16 @@
 name := "flinkbench"
-version := "1.8"
-val flinkVersion = "1.8.0"
-crossScalaVersions := Seq("2.11.12", "2.12.10")
+version := "1.10"
+val flinkVersion = "1.10.0"
+crossScalaVersions := Seq("2.11.12", "2.12.13")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
-"org.apache.mahout" % "mahout-mr" % "0.11.2"
+"org.apache.hadoop" % "hadoop-client" % "2.10.1" % "provided",
+"org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
+  ExclusionRule("org.apache.hadoop")
+)
 )
 
 assemblyShadeRules in assembly := Seq(
@@ -36,6 +39,7 @@ assemblyMergeStrategy in assembly := {
   case "META-INF/mimetypes.default" => MergeStrategy.last
   case "plugin.properties" => MergeStrategy.last
   case "log4j.properties" => MergeStrategy.last
+  case "module-info.class" => MergeStrategy.discard
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)

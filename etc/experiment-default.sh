@@ -61,8 +61,8 @@ export SCAN_PAGES=120		# Number of pages in the data set (nodes of the graph)
 export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Command
-#export METHOD_COMMAND=		# Command to run in batch mode
-#export METHOD_PREPARE_COMMAND=	# Command to run to set up input datasets
+#export COMMAND=		# Command to run in batch mode (executable script or a directory containing only scripts)
+#export PREPARE_COMMAND=	# Command to run to set up input datasets
 
 #TIMEOUT
 #export TESTDFSIO_TIMEOUT=0
