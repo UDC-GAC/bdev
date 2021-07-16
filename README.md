@@ -36,5 +36,4 @@ This tool is developed in the [Computer Architecture Group](http://gac.udc.es/en
 
 ## License
 
-This tool is distributed as free software and is publicly available under the MIT license (see the [LICENSE](LICENSE) file for more details)
-
+This tool is distributed as free software and is publicly available under the MIT license (see the [LICENSE](LICENSE) file for more details).
