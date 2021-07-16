@@ -8,7 +8,7 @@ export ENABLE_ILO=false		# Enable HPE iLO power monitoring
 export ENABLE_RAPL=false	# Enable RAPL power monitoring
 export ENABLE_OPROFILE=false	# Enable Oprofile event counting
 export ENABLE_BDWATCHDOG=false	# Enable resource monitoring through BDWatchdog
-export DEFAULT_TIMEOUT=86400	# Default workload timeout
+export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
 export OUT_DIR=$PWD/${METHOD_NAME}_OUT	# Default report output directory
 export MONITOR_DELAY_SECONDS=10	# Delay time (seconds) after/before starting/stopping all monitors
 
@@ -21,7 +21,7 @@ export ILO_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
 export ILO_USERNAME="ilo_user"		# User name for ILO interface
 export ILO_PASSWD="..ilo_user.."	# Password for ILO user
 export ILO_BASE_IP=192.168.255		# Base IP for ILO interfaces
-export ILO_MASTER=localhost		# Node which can connect to the ILO interface for all the slaves (localhost means to use the master node)
+export ILO_MASTER=localhost		# Node which can connect to the ILO interface for all the workers (localhost means to use the master node)
 
 # RAPL
 export RAPL_GEN_GRAPHS=false	# Generate RAPL graphs during execution

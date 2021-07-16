@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.5
+export METHOD_VERSION=3.6-dev
 
 if [[ -z $METHOD_HOME ]]
 then
@@ -11,7 +11,7 @@ fi
 
 export METHOD_CONF_DIR=$METHOD_HOME/etc
 export METHOD_BIN_DIR=$METHOD_HOME/bin
-export METHOD_START_DATE=`date +"%m_%d_%H-%M-%S-%N"`
+export METHOD_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 
 # Load bash functions
 . $METHOD_BIN_DIR/functions.sh
@@ -175,6 +175,12 @@ else
                 fi
                 export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
                 export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
+
+		export JPS=$(which jps 2> /dev/null)
+                if [[ "x$JPS" == "x" ]]
+                then
+                        m_exit "Missing jps command"
+                fi
         fi
         if [[ -z $LOAD_MPI_COMMAND ]]
         then
@@ -193,6 +199,13 @@ else
                         export LOAD_MPI_COMMAND="export MPI_HOME=$MPI_HOME"
                 fi
         fi
+fi
+
+# Check expect command
+export EXPECT=$(which expect 2> /dev/null)
+if [[ "x$EXPECT" == "x" ]]
+then
+	m_warn "Missing expect command (required when using timeouts)"
 fi
 
 # Define variables for BDWatchdog binary daemons
@@ -244,6 +257,8 @@ add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
+add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
+add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
 add_conf_param "io_sort_factor" $IO_SORT_FACTOR
@@ -290,11 +305,26 @@ add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
+add_conf_param "spark_network_timeout" $SPARK_NETWORK_TIMEOUT
+add_conf_param "spark_executor_heartbeat" $SPARK_EXECUTOR_HEARTBEAT_INTERVAL
+add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
+add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
+add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
+add_conf_param "spark_rdd_compress" $SPARK_RDD_COMPRESS
+add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
+add_conf_param "spark_serializer" $SPARK_SERIALIZER
+add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
+add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
+add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
+add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
 export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
 export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
 add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
+add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
+add_conf_param "spark_aqe_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
+add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
 
 #RDMA-SPARK
 add_conf_param "rdma_spark_ib_enabled" $RDMA_SPARK_IB_ENABLED
@@ -310,4 +340,13 @@ export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
+add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
+add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
+add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
+add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_heartbeat_timeout" $FLINK_HEARTBEAT_TIMEOUT
+add_conf_param "flink_akka_ask_timeout" $FLINK_AKKA_ASK_TIMEOUT
+add_conf_param "flink_akka_tcp_timeout" $FLINK_AKKA_TCP_TIMEOUT
+add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
+add_conf_param "flink_rest_client_max_content_length" $FLINK_REST_CLIENT_MAX_CONTENT_LENGTH
 
