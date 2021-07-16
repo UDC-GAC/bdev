@@ -3,7 +3,7 @@
 ## Configuration parameters for the frameworks
 
 #FLAME-MR
-export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.0
+export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
 export FLAMEMR_WORKERS_PER_NODE=1 # Number of workers per node
 export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"` # Number of cores per Worker
 export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
@@ -26,16 +26,19 @@ export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations for HD
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.0
+export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
 export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_HEAPSIZE_FACTOR=0.90 # Percentage of the driver memory allocated to heap
 export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_HEAPSIZE_FACTOR"` # Driver heapsize
+export SPARK_MEMORY_FRACTION=0.6 # Fraction of Executor heap space used for execution and storage
+export SPARK_MEMORY_STORAGE_FRACTION=0.5 # Amount of storage memory immune to eviction, expressed as a fraction of SPARK_MEMORY_FRACTION
 export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
 export SPARK_HISTORY_SERVER_DIR=/spark/history # HDFS path to store application event logs
-export SPARK_NETWORK_TIMEOUT=120 # Spark timeout for network communications (in seconds)
+export SPARK_NETWORK_TIMEOUT=180 # Spark timeout for network communications (in seconds)
+export SPARK_EXECUTOR_HEARTBEAT_INTERVAL=30 # Interval between each executor's heartbeats to the driver (in seconds)
 export SPARK_SHUFFLE_COMPRESS=true # Compress map output files
 export SPARK_SHUFFLE_SPILL_COMPRESS=true # Compress data spilled during shuffles
 export SPARK_BROADCAST_COMPRESS=true # Compress broadcast variables before sending them
@@ -43,6 +46,10 @@ export SPARK_RDD_COMPRESS=false # Compress serialized RDD partitions (e.g. for S
 export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf and snappy. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
 export SPARK_SERIALIZER=KryoSerializer # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
 export SPARK_KRYO_UNSAFE=true # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
+export SPARK_KRYO_BUFFER_MAX=64 # Maximum allowable size in MiB of Kryo serialization buffer. It must be less than 2048 MiB
+export SPARK_SQL_AQE=false # Enable Adaptive Query Execution (AQE), the optimization technique in Spark SQL to choose the most efficient query execution plan
+export SPARK_AQE_COALESCE_PARTITIONS=true # Coalesce contiguous shuffle partitions according to SPARK_AQE_PARTITION_SIZE, to avoid too many small tasks
+export SPARK_AQE_PARTITION_SIZE=$((64*1024*1024)) # The advisory size in bytes of the shuffle partition during adaptive optimization
 
 # Spark standalone
 export SPARK_DAEMON_MEMORY=1024	# Memory to allocate to the Master, Worker and HistoryServer daemons
@@ -53,7 +60,7 @@ export SPARK_WORKER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $SPARK_MEMORY_RESE
 export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
 export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
-export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
+export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.95 # Percentage of the Executor memory allocated to heap
 export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
 
 # Spark on YARN (client mode)
@@ -70,22 +77,29 @@ export RDMA_SPARK_ROCE_ENABLED=false		# Enable RDMA connections through RDMA ove
 export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 
 # Flink (common)
-export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.0
-export FLINK_SCALA_VERSION=2.11	# Scala version used by your Flink distribution
+export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
+export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-export FLINK_TASKMANAGER_PREALLOCATE_MEMORY=false # TaskManager preallocate memory
-export FLINK_NETWORK_TIMEOUT=120 # Flink timeout for network communications (in seconds)
+export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
+export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors (it requires a size-unit specifier)
+export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors (it requires a size-unit specifier)
+export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
+export FLINK_HEARTBEAT_TIMEOUT=120000 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in milliseconds)
+export FLINK_AKKA_ASK_TIMEOUT=60 # Timeout used for all futures and blocking Akka calls (in seconds)
+export FLINK_AKKA_TCP_TIMEOUT=60 # Timeout for all outbound connections (in seconds)
+export FLINK_AKKA_FRAMESIZE="209715200b" # Maximum size of messages which are sent between JobManager and TaskManagers (it requires a size-unit specifier)
+export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 
 # Flink standalone
 export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
 export FLINK_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE	# JobManager heapsize
-export FLINK_MEMORY_RESERVED=`op_int "$FLINK_JOBMANAGER_HEAPSIZE + $DATANODE_D_HEAPSIZE"` # Memory reserved to other services
+export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE # Memory reserved to other services
 export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
+export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.95 # Percentage of the TaskManager memory allocated to heap
 export FLINK_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 
 # Flink on YARN

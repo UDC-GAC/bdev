@@ -592,7 +592,7 @@ readSlaves() {
 
 # starts or stops TMs on all slaves
 # TMSlaves start|stop
-TMSlaves() {
+TMWorkers() {
     CMD=$1
 
     readSlaves
