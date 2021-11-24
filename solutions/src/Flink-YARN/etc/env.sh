@@ -66,7 +66,7 @@ export DEPLOY_ARGS="-m yarn-cluster \
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-        if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]]
+	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
@@ -84,14 +84,18 @@ else
 fi
 
 # Copy config.sh file according to Flink version
-FLINK_CONFIG_SH_FILE=config-${FLINK_MAJOR_VERSION}.sh
-m_echo "Using Flink config.sh file: $FLINK_CONFIG_SH_FILE"
-
 if [[ "$SGE_ENV" == "true" ]]
 then
-        cp -f $SOL_SGE_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+	FLINK_CONFIG_SH_FILE=$SOL_SGE_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
 else
-        cp -f $SOL_STD_DAEMONS_DIR/config/$FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+	FLINK_CONFIG_SH_FILE=$SOL_STD_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
+fi
+
+if [ ! -f $FLINK_CONFIG_SH_FILE ]; then
+        m_exit "Flink config.sh file not found: $FLINK_CONFIG_SH_FILE"
+else
+	m_echo "Copying Flink config.sh file: $FLINK_CONFIG_SH_FILE"
+	cp -f $FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
 fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR

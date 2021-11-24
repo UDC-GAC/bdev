@@ -78,15 +78,15 @@ mkdir -p "$FLINK_PID_DIR"
 #    flock 200
 #fi
 
-if [ ! -w "$FLINK_LOG_DIR" ] ; then
-	mkdir -p "$FLINK_LOG_DIR"
-fi
-
 echo "$DAEMON" >> "$pid"
 
 # Ascending ID depending on number of lines in pid file.
 # This allows us to start multiple daemon of each type.
 id=$([ -f "$pid" ] && echo $(wc -l < "$pid") || echo "0")
+
+if [ ! -w "$FLINK_LOG_DIR" ] ; then
+	mkdir -p "$FLINK_LOG_DIR"
+fi
 
 FLINK_LOG_PREFIX="${FLINK_LOG_DIR}/flink-${FLINK_IDENT_STRING}-${DAEMON}-${id}-${HOSTNAME}"
 log="${FLINK_LOG_PREFIX}.log"
@@ -103,7 +103,7 @@ function guaranteed_kill {
   # if timeout exists, use it
   if command -v timeout &> /dev/null ; then
     # wait 10 seconds for process to stop. By default, Flink kills the JVM 5 seconds after sigterm.
-    timeout 10 tail --pid=$to_stop_pid -f /dev/null
+    timeout 10 tail --pid=$to_stop_pid -f /dev/null &> /dev/null
     if [ "$?" -eq 124 ]; then
       echo "Daemon $daemon didn't stop within 10 seconds. Killing it."
       # send sigkill
