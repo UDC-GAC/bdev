@@ -46,3 +46,4 @@ env.log.dir: $flink_log_dir
 env.pid.dir: $tmp_dir/flink/pid
 containerized.master.env.LD_LIBRARY_PATH: $hadoop_home/lib/native
 containerized.taskmanager.env.LD_LIBRARY_PATH: $hadoop_home/lib/native
+classloader.check-leaked-classloader: false
