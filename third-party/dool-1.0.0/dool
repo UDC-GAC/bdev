@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ### This program is free software; you can redistribute it and/or
 ### modify it under the terms of the GNU General Public License
@@ -2640,12 +2640,14 @@ def main():
     ### Prepare CSV output file (unbuffered)
     if op.output:
         if not os.path.exists(op.output):
-            outputfile = open(op.output, 'w')
+            # Fix: DO not buffer writes to the output file
+            outputfile = open(op.output, 'w', 1)
             outputfile.write('"Dstat %s CSV output"\n' % VERSION)
             header = ('"Author:","Dag Wieers <dag@wieers.com>"','','','','"URL:"','"http://dag.wieers.com/home-made/dstat/"\n')
             outputfile.write(char['sep'].join(header))
         else:
-            outputfile = open(op.output, 'a')
+            # Fix: DO not buffer writes to the output file
+            outputfile = open(op.output, 'a', 1)
             outputfile.write('\n\n')
 
         header = ('"Host:"','"%s"' % hostname,'','','','"User:"','"%s"\n' % user)

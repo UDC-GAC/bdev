@@ -18,7 +18,6 @@ do
 	fi;
 	killall -q -9 hydra_pmi_proxy; \
 	killall -q -9 python; \
-	killall -q -9 ${PYTHON2_BIN}; \
 	killall -q -9 ${PYTHON3_BIN}; \
 	killall -q -9 ocount; \
 	killall -q -9 rapl_plot; \
