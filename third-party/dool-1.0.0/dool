@@ -37,7 +37,7 @@ try:
 except ImportError:
     from collections import Sequence # Python 2.x
 
-VERSION = '0.9.9'
+VERSION = '1.0.0'
 
 theme = { 'default': '' }
 
@@ -111,7 +111,8 @@ class Options:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
 
-        default_plugins = [ 'cpu', 'disk', 'net', 'load', 'time' ]
+        default_plugins = [ 'cpu', 'disk', 'net', 'load' ]
+        plugin_defaults = 0
 
         for opt, arg in opts:
             if opt in ['-c']:
@@ -156,11 +157,12 @@ class Options:
             elif opt in ['-y']:
                 self.plugins.append('sys')
             elif opt in ['--defaults']:
-                self.plugins = default_plugins
+                self.plugins    = default_plugins
+                plugin_defaults = 1
             elif opt in ['--more']:
-                self.plugins += [ 'cpu', 'disk', 'net', 'mem', 'proc', 'load', 'time' ]
+                self.plugins += [ 'cpu', 'disk', 'net', 'mem', 'proc', 'load' ]
             elif opt in ['-a', '--all']:
-                self.plugins += [ 'cpu', 'disk', 'net', 'page', 'mem', 'sys', 'proc', 'load', 'time' ]
+                self.plugins += [ 'cpu', 'disk', 'net', 'page', 'mem', 'sys', 'proc', 'load' ]
             elif opt in ['-v', '--vmstat']:
                 self.plugins += [ 'proc', 'mem', 'page', 'disk', 'sys', 'cpu' ]
             elif opt in ['-f', '--full']:
@@ -219,8 +221,21 @@ class Options:
             sys.exit(1)
 
         if not self.plugins:
-            self.plugins = default_plugins
+            self.plugins    = default_plugins
+            plugin_defaults = 1
             print("Using default plugins: " + ", ".join(self.plugins) + "")
+
+        # Loop through the opt array and find the keys
+        opt_keys = []
+        for x in opts:
+            key = x[0]
+            opt_keys.append(key)
+
+        # Append the 'time' plugin to the end for 'more' and 'all'
+        needs_time_added = ('time' not in self.plugins) and (("--more" in opt_keys) or ("--all" in opt_keys) or (plugin_defaults))
+
+        if needs_time_added:
+            self.plugins.append('time');
 
         try:
             if len(args) > 0: self.delay = int(args[0])
@@ -1832,6 +1847,7 @@ ansi = {
     'restore_all' : '\0338',
     'linewrap'    : '\033[7h',
     'nolinewrap'  : '\033[7l',
+    'column_zero' : '\033[0G',
 
     'up'   : '\033[1A',
     'down' : '\033[1B',
@@ -2624,12 +2640,12 @@ def main():
     ### Prepare CSV output file (unbuffered)
     if op.output:
         if not os.path.exists(op.output):
-            outputfile = open(op.output, 'w', 1)
+            outputfile = open(op.output, 'w')
             outputfile.write('"Dstat %s CSV output"\n' % VERSION)
             header = ('"Author:","Dag Wieers <dag@wieers.com>"','','','','"URL:"','"http://dag.wieers.com/home-made/dstat/"\n')
             outputfile.write(char['sep'].join(header))
         else:
-            outputfile = open(op.output, 'a', 1)
+            outputfile = open(op.output, 'a')
             outputfile.write('\n\n')
 
         header = ('"Host:"','"%s"' % hostname,'','','','"User:"','"%s"\n' % user)
@@ -2829,10 +2845,12 @@ def perform(update):
         ### The first step is to show the definitive line if necessary
         newline = ''
         if op.update:
+            ### If we are starting a whole new line we \n and reset
             if step == 1 and update != 0:
-                newline = '\n' + ansi['reset'] + ansi['clearline'] + ansi['save']
+                newline = '\n' + ansi['reset'] + ansi['clearline']
+            ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['restore']
+                newline = ansi['column_zero'];
 
         ### Display header
         if showheader:
