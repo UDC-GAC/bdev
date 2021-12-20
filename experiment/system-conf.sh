@@ -15,5 +15,4 @@
 #export ENABLE_MODULES=false 	# Enable use of modules environment
 #export MODULE_JAVA=java 	# Java module
 #export MODULE_MPI=mvapich2 	# MPI module
-#export PYTHON2_BIN=python2	# Binary name for Python2
-#export PYTHON3_BIN=python3	# Binary name for Python3
+#export PYTHON3_BIN=python3	# Binary name for Python 3
