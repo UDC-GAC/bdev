@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.7-dev
+export METHOD_VERSION=3.7
 
 if [[ -z $METHOD_HOME ]]
 then
@@ -345,6 +345,8 @@ add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETW
 add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
 add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
 add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_taskmanager_memory_off_heap_shuffle_size" $FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE
+add_conf_param "flink_taskmanager_memory_off_heap_size" $FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE
 add_conf_param "flink_taskmanager_network_sort_shuffle_buffers" $FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS
 add_conf_param "flink_taskmanager_network_sort_shuffle_parallelism" $FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM
 add_conf_param "flink_taskmanager_network_shuffle_compress" $FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS

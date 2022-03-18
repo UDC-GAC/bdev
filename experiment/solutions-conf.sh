@@ -84,12 +84,14 @@
 #export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 #export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 #export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.2 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="128mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="256mb" # Framework off-heap Memory size for TaskManagers
 #export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=1024 # Minimum number of network buffers required per sort-merge blocking result partition
 #export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM=1 # Hash-based blocking shuffle is used for parallelism smaller than this threshold. Otherwise, sort-merge one is used
-#export FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS=true # Compress shuffle data for blocking shuffle mode
+#export FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS=true # Compress shuffle data for blocking shuffle
 #export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
 #export FLINK_HEARTBEAT_TIMEOUT=120000 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in milliseconds)
 #export FLINK_AKKA_ASK_TIMEOUT=60 # Timeout used for all futures and blocking Akka calls (in seconds)
