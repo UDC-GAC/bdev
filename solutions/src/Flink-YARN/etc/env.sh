@@ -66,19 +66,13 @@ export DEPLOY_ARGS="-m yarn-cluster \
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.10" ]] && [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]]
+	if [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
 
         export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.process.size: $FLINK_YARN_JOBMANAGER_MEMORY"
         export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_YARN_TASKMANAGER_MEMORY"
-
-        if [[ $FLINK_MAJOR_VERSION == "1.10" ]]
-        then
-                export SLAVESFILE=$SOL_CONF_DIR/slaves
-                export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.heap.size: $FLINK_YARN_JOBMANAGER_MEMORY"
-	fi
 else
         m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 fi
