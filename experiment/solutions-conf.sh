@@ -26,7 +26,7 @@
 #export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 #
 ## Spark (common)
-#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
+#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.2
 #export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 #export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 #export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
@@ -77,7 +77,7 @@
 #export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 #
 ## Flink (common)
-#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
+#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.2
 #export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 #export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 #export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
@@ -87,6 +87,9 @@
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors
+#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=1024 # Minimum number of network buffers required per sort-merge blocking result partition
+#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM=1 # Hash-based blocking shuffle is used for parallelism smaller than this threshold. Otherwise, sort-merge one is used
+#export FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS=true # Compress shuffle data for blocking shuffle mode
 #export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
 #export FLINK_HEARTBEAT_TIMEOUT=120000 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in milliseconds)
 #export FLINK_AKKA_ASK_TIMEOUT=60 # Timeout used for all futures and blocking Akka calls (in seconds)
