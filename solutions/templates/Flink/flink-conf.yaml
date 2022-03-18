@@ -29,6 +29,9 @@ taskmanager.network.bind-policy: ip
 taskmanager.memory.network.fraction: $flink_taskmanager_memory_network_fraction
 taskmanager.memory.network.max: $flink_taskmanager_memory_network_max
 taskmanager.memory.network.min: $flink_taskmanager_memory_network_min
+taskmanager.network.sort-shuffle.min-buffers: $flink_taskmanager_network_sort_shuffle_buffers
+taskmanager.network.sort-shuffle.min-parallelism: $flink_taskmanager_network_sort_shuffle_parallelism
+taskmanager.network.blocking-shuffle.compression.enabled: $flink_taskmanager_network_shuffle_compress
 parallelism.default: $flink_default_parallelism
 io.tmp.dirs: $flink_local_dirs
 heartbeat.timeout: $flink_heartbeat_timeout
