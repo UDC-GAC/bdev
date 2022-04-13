@@ -6,7 +6,6 @@ if [ $# -ne 1 ]; then
 fi
 
 FILE=$1
-IP=""
 
 NAME=`echo $HOSTNAME | cut -d "." -f 1`
 
@@ -21,7 +20,7 @@ do
         
         if [[ $NODE == $NAME ]]
         then
-        	NODE_NAME=`echo $i | cut -d " " -f 1`
+        	NODE_NAME=`echo $i | awk '{print $1}'`
         	echo $NODE_NAME
                 break
         fi

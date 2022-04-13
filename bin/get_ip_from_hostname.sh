@@ -21,7 +21,7 @@ do
         
         if [[ $NODE == $NAME ]]
         then
-        	IP=`echo $i | cut -d " " -f 2`
+        	IP=`echo $i | awk '{print $2}'`
         	echo $IP
                 break
         fi
