@@ -109,9 +109,8 @@ fi
 # restore ordinary behaviour
 unset IFS
 
-export YARN_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export YARN_HOSTNAME=`$method_bin_dir/get_hostname_from_ip.sh $YARN_IP_ADDRESS $hostfile`
-export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARN_HOSTNAME}"
+export YARNHOSTNAME=`$method_bin_dir/get_hostname.sh $hostfile`
+export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME}"
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"
