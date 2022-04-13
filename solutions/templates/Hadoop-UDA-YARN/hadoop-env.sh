@@ -126,8 +126,5 @@ export HADOOP_SECURE_DN_PID_DIR=${HADOOP_PID_DIR}
 # A string representing this instance of hadoop. $USER by default.
 export HADOOP_IDENT_STRING=$USER
 
-export HADOOP_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export HADOOP_OPTS="${HADOOP_OPTS} -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"
-
 #UDA
 export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$uda_lib_dir/uda-hadoop-2.x.jar

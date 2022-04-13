@@ -52,7 +52,7 @@ SPARK_DRIVER_MEMORY=$spark_driver_memoryM
 # Options for the daemons used in the standalone deploy mode
 # - SPARK_MASTER_HOST, to bind the master to a different IP address or hostname
 SPARK_MASTER_HOST=$master
-SPARK_MASTER_IP=$master
+SPARK_MASTER_IP=$ip_master
 # - SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT, to use non-default ports for the master
 # - SPARK_MASTER_OPTS, to set config properties only for the master (e.g. "-Dx=y")
 # - SPARK_WORKER_CORES, to set the number of cores to use on this machine
