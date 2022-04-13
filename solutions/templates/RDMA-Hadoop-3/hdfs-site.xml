@@ -1,5 +1,9 @@
 <configuration>
   <property>
+    <name>dfs.datanode.hostname</name>
+    <value>${HADOOPHOSTNAME}</value>
+  </property>
+  <property>
     <name>dfs.replication</name>
     <value>$replication_factor</value>
   </property>
