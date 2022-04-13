@@ -216,7 +216,7 @@ function get_nodes_by_name()
 		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
-		IP_NODES="${IP_NODES} ${NODE_IP}"
+		IP_NODES="${IP_NODES} ${NODE_NAME}"
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
         echo $IP_NODES
@@ -234,8 +234,11 @@ function get_nodes_by_interface()
 	for NODE in $NODES
 	do
 		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
-		INTERFACE_NODES="${INTERFACE_NODES} ${INTERFACE_IP}"
-		echo "$NODE $INTERFACE_IP" >> $NODE_FILE
+		OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
+		NODE_IP=`echo $OUT | awk '{print $1}'`
+                NODE_NAME=`echo $OUT | awk '{print $2}'`
+		INTERFACE_NODES="${INTERFACE_NODES} ${NODE_NAME}"
+		echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
 	done
 	echo $INTERFACE_NODES
 }
@@ -244,15 +247,15 @@ export -f get_nodes_by_interface
 
 function set_network_configuration()
 {
-	if [[ "${SOLUTION_NET_INTERFACE}" == "gbe" ]]
+	if [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]
 	then
-		if [[ -n ${GBE_COMPUTE_NODES} ]]
+		if [[ -n ${ETH_COMPUTE_NODES} ]]
 		then
-			load_nodes ${GBE_COMPUTE_NODES}
-			export NET_INTERFACE=$GBE_INTERFACE
-			FILE=$NODE_FILE_GBE
+			load_nodes ${ETH_COMPUTE_NODES}
+			export NET_INTERFACE=$ETH_INTERFACE
+			FILE=$NODE_FILE_ETH
 		else
-			load_nodes ${IP_COMPUTE_NODES}
+			load_nodes ${COMPUTE_NODES}
 			FILE=$NODE_FILE
 		fi
 	else 
@@ -264,7 +267,7 @@ function set_network_configuration()
 				export NET_INTERFACE=$IPOIB_INTERFACE
 				FILE=$NODE_FILE_IPOIB
 			else
-				load_nodes ${IP_COMPUTE_NODES}
+				load_nodes ${COMPUTE_NODES}
 				FILE=$NODE_FILE
 			fi	
 		else
@@ -272,7 +275,9 @@ function set_network_configuration()
 		fi
 	fi
 
+	MASTERIP=`$METHOD_BIN_DIR/get_ip_from_hostname.sh $FILE`
 	add_conf_param "master" $MASTERNODE
+	add_conf_param "ip_master" $MASTERIP
 	add_conf_param "net_interface" $NET_INTERFACE
 	add_conf_param "hostfile" $FILE
 }
@@ -484,11 +489,11 @@ function begin_report(){
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
 	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
-	if [[ -n $GBE_INTERFACE ]]
+	if [[ -n $ETH_INTERFACE ]]
 	then
-		REPORT="$REPORT \t GbE interface  \t\t\t $GBE_INTERFACE \n"
+		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
 	else
-		REPORT="$REPORT \t GbE interface  \t\t\t Not specified \n"
+		REPORT="$REPORT \t ETH interface  \t\t\t Not specified \n"
 	fi
 	if [[ -n $IPOIB_INTERFACE ]]
 	then
