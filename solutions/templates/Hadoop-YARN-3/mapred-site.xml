@@ -1,9 +1,5 @@
 <configuration>
   <property>
-    <name>mapreduce.tasktracker.host.name</name>
-    <value>${HADOOPHOSTNAME}</value>
-  </property>
-  <property>
     <name>mapreduce.cluster.local.dir</name>
     <value>$mapreduce_local_dir</value>
   </property>

@@ -147,7 +147,7 @@ case $startStop in
     fi
 
     hadoop_rotate_log $log
-    echo starting $command on $HADOOP_IP_ADDRESS, logging to $log
+    echo starting $command on $HOSTNAME, logging to $log
     cd "$HADOOP_PREFIX"
     case $command in
       namenode|secondarynamenode|datanode|journalnode|dfs|dfsadmin|fsck|balancer|zkfc|portmap|nfs3|dfsrouter)
