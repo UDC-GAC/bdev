@@ -8,10 +8,6 @@
     <value>$tmp_dir/hadoop</value>
   </property>
   <property>
-    <name>slave.host.name</name>
-    <value>${HADOOPHOSTNAME}</value>
-  </property>
-  <property>
     <name>io.file.buffer.size</name>
     <value>$io_file_buffer_size</value>
   </property>

@@ -77,8 +77,7 @@ export HADOOP_JOB_HISTORYSERVER_OPTS="-Xmx""${HADOOP_JOB_HISTORYSERVER_HEAPSIZE}
 # The scheduling priority for daemon processes.  See 'man nice'.
 # export HADOOP_NICENESS=10
 
-export HADOOP_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export HADOOP_OPTS="${HADOOP_OPTS} -Djava.net.preferIPv4Stack=true -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"
+export HADOOP_OPTS="${HADOOP_OPTS} -Djava.net.preferIPv4Stack=true"
 
 #UDA
 export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$uda_lib_dir/uda-hadoop-1.x.jar
