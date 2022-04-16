@@ -62,6 +62,7 @@ export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of th
 
 #TPCx-HS
 export TPCX_HS_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
+export SPARK_HSSORT_IMPL="HSSort" 				# TPCx-HS sort class for Spark
 
 #Command
 #export COMMAND=		# Command to run in batch mode (executable script or a directory containing only scripts)
