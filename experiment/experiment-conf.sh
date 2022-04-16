@@ -62,6 +62,7 @@
 #
 ##TPCx-HS
 #export TPCX_HS_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
+#export SPARK_HSSORT_IMPL="HSSort" 				# TPCx-HS sort class for Spark
 #
 ##Command
 #export COMMAND=		# Command to run in batch mode (executable script or a directory containing only scripts)
