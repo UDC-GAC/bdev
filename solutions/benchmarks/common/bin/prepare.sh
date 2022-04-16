@@ -190,6 +190,18 @@ then
 	fi
 fi
 
+if [[ $GEN_TPCX_HS == "true" ]]
+then
+	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
+
+	OPTIONS="HSGen \
+    -D $CONFIG_MAP_NUMBER=${MAPPERS_NUMBER} \
+    -D $CONFIG_REDUCER_NUMBER=${REDUCERS_NUMBER} \
+    $TPCX_HS_DATASIZE $INPUT_TPCX_HS"
+
+	${HADOOP_EXECUTABLE} jar ${TPCX_HS_JAR} ${OPTIONS}
+fi
+
 if [[ $GEN_COMMAND == "true" ]]
 then
 	if [[ -n "$PREPARE_COMMAND" ]]
