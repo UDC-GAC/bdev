@@ -2,6 +2,7 @@
 
 export HDFS=hdfs://$MASTERNODE:$FS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
+export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/tpcx-hs-master-1.0_2.12.jar
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
@@ -75,6 +76,7 @@ export INPUT_BAYES="${HDFS}/Input/Bayes"
 export INPUT_AGGREGATION="${HDFS}/Input/Aggregation"
 export INPUT_JOIN="${HDFS}/Input/Join"
 export INPUT_SCAN="${HDFS}/Input/Scan"
+export INPUT_TPCX_HS="${HDFS}/Input/TPCx-HS"
 
 export OUTPUT_WORDCOUNT="${HDFS}/Output/WordCount"
 export OUTPUT_SORT="${HDFS}/Output/Sort"
@@ -87,6 +89,7 @@ export OUTPUT_BAYES="${HDFS}/Output/Bayes"
 export OUTPUT_AGGREGATION="${HDFS}/Output/Aggregation"
 export OUTPUT_JOIN="${HDFS}/Output/Join"
 export OUTPUT_SCAN="${HDFS}/Output/Scan"
+export OUTPUT_TPCX_HS="${HDFS}/Output/TPCx-HS"
 
 export GEN_WORDCOUNT="false"
 export GEN_SORT="false"
@@ -99,6 +102,7 @@ export GEN_BAYES="false"
 export GEN_AGGREGATION="false"
 export GEN_JOIN="false"
 export GEN_SCAN="false"
+export GEN_TPCX_HS="false"
 export GEN_COMMAND="false"
 
 for BENCHMARK in $BENCHMARKS
@@ -136,6 +140,9 @@ do
 	elif [[ "$BENCHMARK" == "scan" ]]
 	then
 		export GEN_SCAN="true"
+	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
+    then
+    	export GEN_TPCX_HS="true"
 	elif [[ "$BENCHMARK" == "command" ]]
 	then
 		export GEN_COMMAND="true"
