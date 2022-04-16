@@ -5,7 +5,7 @@ export FLINK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
 export SORT_PARTITIONS=$FLINK_PARALLELISM
 
-if [[ ! -f $FLINK_BENCH_JAR ]]
+if [[ ! -f $FLINK_BENCH_JAR && ! "$BENCHMARK" == "tpcx_hs" ]]
 then
         # Download flinkbench jar file
         URL=http://bdev.des.udc.es/dist/flinkbench
