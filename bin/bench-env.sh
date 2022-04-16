@@ -62,6 +62,10 @@ case "$BENCHMARK" in
 		export TIMEOUT=$SCAN_TIMEOUT
 	;;
 
+	'tpcx_hs')
+		export TIMEOUT=$TPCX_HS_TIMEOUT
+	;;
+
 	'command')
 		export TIMEOUT=$COMMAND_TIMEOUT
 	;;
