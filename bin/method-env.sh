@@ -258,6 +258,7 @@ add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
+add_conf_param "client_write_packet_size" $CLIENT_WRITE_PACKET_SIZE
 add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
