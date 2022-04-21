@@ -47,6 +47,14 @@
     <name>dfs.blocksize</name>
     <value>$blocksize</value>
   </property>
+  <property>
+    <name>dfs.client-write-packet-size</name>
+    <value>$client_write_packet_size</value>
+  </property>
+  <property>
+    <name>dfs.datanode.socket.write.timeout</name>
+    <value>$datanode_socket_write_timeout</value>
+  </property>
 
 <!-- RDMA-Hadoop specific -->
 
