@@ -4,3 +4,5 @@
 
 export FS_PORT=8020			# Filesystem port number
 export IO_FILE_BUFFER_SIZE=131072	# The buffer size used in sequence files
+export IPC_PING_INTERVAL_MS=60000	# Client will send ping when the interval is passed without receiving bytes
+export IPC_CLIENT_RPC_TIMEOUT_MS=120000	# Timeout on waiting response from server
