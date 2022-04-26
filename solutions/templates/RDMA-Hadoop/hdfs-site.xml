@@ -20,6 +20,10 @@
     <value>$namenode_handler_count</value>
   </property>
   <property>
+    <name>dfs.datanode.handler.count</name>
+    <value>$datanode_handler_count</value>
+  </property>
+  <property>
     <name>dfs.access.time.precision</name>
     <value>$namenode_accesstime_precision</value>
   </property>
