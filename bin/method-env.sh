@@ -263,6 +263,8 @@ add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
+add_conf_param "ipc_ping_interval" $IPC_PING_INTERVAL_MS
+add_conf_param "ipc_client_rpc_timeout" $IPC_CLIENT_RPC_TIMEOUT_MS
 add_conf_param "io_sort_factor" $IO_SORT_FACTOR
 add_conf_param "io_sort_mb" $IO_SORT_MB
 add_conf_param "shuffle_parallelcopies" $SHUFFLE_PARALLELCOPIES
