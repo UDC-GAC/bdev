@@ -159,7 +159,7 @@ while [ -L "$target" ]; do
 done
 
 # Convert relative path to absolute path and resolve directory symlinks
-bin=`dirname "$target"`
+bin=`dirname "$targetHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`"`
 SYMLINK_RESOLVED_BIN=`cd "$bin"; pwd -P`
 
 # Define the main directory of the flink installation
@@ -207,7 +207,7 @@ if [ -z "${MY_JAVA_HOME}" ] && ! type java > /dev/null 2> /dev/null; then
     echo "Please specify JAVA_HOME. Either in Flink config ./conf/flink-conf.yaml or as system-wide JAVA_HOME."
     exit 1
 else
-    JAVA_HOME="${MY_JAVA_HOME}"
+    JAVA_HOME="${MY_JHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`AVA_HOME}"
 fi
 
 UNAME=$(uname -s)
@@ -369,6 +369,7 @@ if [ -z "$HBASE_CONF_DIR" ]; then
     fi
 fi
 
+HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 INTERNAL_HADOOP_CLASSPATHS="${HADOOP_CLASSPATH}:${HADOOP_CONF_DIR}:${YARN_CONF_DIR}"
 
 if [ -n "${HBASE_CONF_DIR}" ]; then
