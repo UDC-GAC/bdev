@@ -45,7 +45,6 @@ fs.hdfs.hadoopconf: $hadoop_conf_dir
 fs.output.always-create-directory: true
 env.hadoop.conf.dir: $hadoop_conf_dir
 env.yarn.conf.dir: $hadoop_conf_dir
-#env.java.opts: -XX:+UseParallelGC -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native
 env.java.opts: -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native
 env.log.dir: $flink_log_dir
 env.pid.dir: $tmp_dir/flink/pid
