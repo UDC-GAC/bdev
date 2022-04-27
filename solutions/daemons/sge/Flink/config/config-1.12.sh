@@ -92,7 +92,7 @@ readFromConfig() {
     # if a key exists multiple times, take the "last" one (tail)
     local value=`sed -n "s/^[ ]*${key}[ ]*: \([^#]*\).*$/\1/p" "${configFile}" | sed "s/^ *//;s/ *$//" | tail -n 1`
 
-    [ -z "$value" ] && echo "$defaultValue" || echo "$value"
+    [ -z "$value" ] && echHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`o "$defaultValue" || echo "$value"
 }
 
 ########################################################################################################################
@@ -369,6 +369,7 @@ if [ -z "$HBASE_CONF_DIR" ]; then
     fi
 fi
 
+HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 INTERNAL_HADOOP_CLASSPATHS="${HADOOP_CLASSPATH}:${HADOOP_CONF_DIR}:${YARN_CONF_DIR}"
 
 if [ -n "${HBASE_CONF_DIR}" ]; then

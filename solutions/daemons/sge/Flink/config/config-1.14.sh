@@ -94,7 +94,7 @@ readFromConfig() {
 
     [ -z "$value" ] && echo "$defaultValue" || echo "$value"
 }
-
+HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 ########################################################################################################################
 # DEFAULT CONFIG VALUES: These values will be used when nothing has been specified in conf/flink-conf.yaml
 # -or- the respective environment variables are not set.
@@ -148,7 +148,7 @@ target="$0"
 # Note: we can't use the readlink utility here if we want to be POSIX
 # compatible.
 iteration=0
-while [ -L "$target" ]; do
+while [HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath` -L "$target" ]; do
     if [ "$iteration" -gt 100 ]; then
         echo "Cannot resolve path: You have a cyclic symlink in $target."
         break
@@ -202,7 +202,7 @@ if [ -z "${MY_JAVA_HOME}" ]; then
     # config did not specify JAVA_HOME. Use system JAVA_HOME
     MY_JAVA_HOME="${JAVA_HOME}"
 fi
-# check if we have a valid JAVA_HOME and if java is not available
+# checkHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath` if we have a valid JAVA_HOME and if java is not available
 if [ -z "${MY_JAVA_HOME}" ] && ! type java > /dev/null 2> /dev/null; then
     echo "Please specify JAVA_HOME. Either in Flink config ./conf/flink-conf.yaml or as system-wide JAVA_HOME."
     exit 1
@@ -267,7 +267,7 @@ fi
 if [ -z "${FLINK_ENV_JAVA_OPTS}" ]; then
     FLINK_ENV_JAVA_OPTS=$(readFromConfig ${KEY_ENV_JAVA_OPTS} "${DEFAULT_ENV_JAVA_OPTS}" "${YAML_CONF}")
 
-    # Remove leading and ending double quotes (if present) of value
+    # RHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`emove leading and ending double quotes (if present) of value
     FLINK_ENV_JAVA_OPTS="$( echo "${FLINK_ENV_JAVA_OPTS}" | sed -e 's/^"//'  -e 's/"$//' )"
 fi
 
@@ -369,6 +369,7 @@ if [ -z "$HBASE_CONF_DIR" ]; then
     fi
 fi
 
+HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 INTERNAL_HADOOP_CLASSPATHS="${HADOOP_CLASSPATH}:${HADOOP_CONF_DIR}:${YARN_CONF_DIR}"
 
 if [ -n "${HBASE_CONF_DIR}" ]; then
