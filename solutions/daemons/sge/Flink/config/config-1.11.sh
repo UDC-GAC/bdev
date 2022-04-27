@@ -344,6 +344,7 @@ if [ -z "$HADOOP_CONF_DIR" ] && [ -z "$HADOOP_CLASSPATH" ]; then
     fi
 fi
 
+HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 INTERNAL_HADOOP_CLASSPATHS="${HADOOP_CLASSPATH}:${HADOOP_CONF_DIR}:${YARN_CONF_DIR}"
 
 if [ -n "${HBASE_CONF_DIR}" ]; then

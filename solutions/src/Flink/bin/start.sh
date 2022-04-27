@@ -10,6 +10,9 @@ for j in `cat ${SLAVESFILE}`; do
         ssh $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
 
+HADOOP_CLASSPATH=`$HADOOP_HOME/bin/hadoop classpath`
+echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
+
 $FLINK_HOME/bin/start-cluster.sh
 
 if [[ $FLINK_HISTORY_SERVER == "true" ]]
