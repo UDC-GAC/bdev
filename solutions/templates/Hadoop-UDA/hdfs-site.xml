@@ -24,6 +24,10 @@
     <value>$datanode_handler_count</value>
   </property>
   <property>
+    <name>dfs.namenode.service.handler.count</name>
+    <value>$namenode_service_handler_count</value>
+  </property>
+  <property>
     <name>dfs.access.time.precision</name>
     <value>$namenode_accesstime_precision</value>
   </property>

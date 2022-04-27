@@ -255,6 +255,8 @@ add_conf_param "replication_factor" $REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
+NAMENODE_SERVICE_HANDLER_COUNT=$(($NAMENODE_HANDLER_COUNT / 2))
+add_conf_param "namenode_service_handler_count" $NAMENODE_SERVICE_HANDLER_COUNT
 add_conf_param "datanode_handler_count" $DATANODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
