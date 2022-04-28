@@ -194,7 +194,7 @@ if [[ $GEN_TPCX_HS == "true" ]]
 then
 	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
 
-	OPTIONS="HSGen \
+	OPTIONS="es.udc.tpcx_hs.datagen.HSGen \
     -D $CONFIG_MAP_NUMBER=${MAPPERS_NUMBER} \
     -D $CONFIG_REDUCER_NUMBER=${REDUCERS_NUMBER} \
     $TPCX_HS_DATASIZE $INPUT_TPCX_HS"
