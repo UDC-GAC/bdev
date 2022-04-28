@@ -32,6 +32,9 @@ then
 		rm $SPARK_BENCH_JAR >& /dev/null
 		m_exit "Error when downloading $SPARK_BENCH_JAR_NAME"
         fi
+elif [[ "$BENCHMARK" == "tpcx_hs" ]]
+then
+	m_echo "Using $TPCX_HS_JAR"
 else
 	m_echo "Using $SPARK_BENCH_JAR"
 fi
