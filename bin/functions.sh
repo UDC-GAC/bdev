@@ -205,31 +205,37 @@ function load_nodes()
 
 export -f load_nodes
 
-function get_nodes_by_name() 
+function get_nodes_by_hostname() 
 {
 	NODE_FILE=${1}
         NODES=${*:2}
-	IP_NODES=""
+	OUT_NODES=""
 	touch $NODE_FILE
         for NODE in $NODES
         do
 		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
-		IP_NODES="${IP_NODES} ${NODE_NAME}"
+
+		if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+		else
+			OUT_NODES="${OUT_NODES} ${NODE_IP}"
+		fi
+
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
-        echo $IP_NODES
+        echo $OUT_NODES
 }
 
-export -f get_nodes_by_name
+export -f get_nodes_by_hostname
 
 function get_nodes_by_interface() 
 {
 	NODE_FILE=${1}
 	INTERFACE=${2}
 	NODES=${*:3}
-	INTERFACE_NODES=""
+	OUT_NODES=""
 	touch $NODE_FILE
 	for NODE in $NODES
 	do
@@ -237,10 +243,16 @@ function get_nodes_by_interface()
 		OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
 		NODE_IP=`echo $OUT | awk '{print $1}'`
                 NODE_NAME=`echo $OUT | awk '{print $2}'`
-		INTERFACE_NODES="${INTERFACE_NODES} ${NODE_NAME}"
+
+		if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+		else
+			OUT_NODES="${OUT_NODES} ${NODE_IP}"
+		fi
+
 		echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
 	done
-	echo $INTERFACE_NODES
+	echo $OUT_NODES
 }
 
 export -f get_nodes_by_interface
@@ -275,6 +287,7 @@ function set_network_configuration()
 		fi
 	fi
 
+	m_echo "Using hostfile: $FILE"
 	MASTERIP=`$METHOD_BIN_DIR/get_ip_from_hostname.sh $FILE`
 	add_conf_param "master" $MASTERNODE
 	add_conf_param "ip_master" $MASTERIP
