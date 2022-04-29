@@ -29,6 +29,7 @@
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
 SPARK_LOCAL_IP=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
+SPARK_LOCAL_HOSTNAME=`$method_bin_dir/$hostname_script $hostfile`
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
 SPARK_LOCAL_DIRS=$spark_local_dirs
@@ -73,11 +74,15 @@ SPARK_DAEMON_MEMORY=$spark_daemon_memoryM
 # - SPARK_DAEMON_CLASSPATH, to set the classpath for all daemons
 # - SPARK_PUBLIC_DNS, to set the public dns name of the master or workers
 
+# Options for launcher
+# - SPARK_LAUNCHER_OPTS, to set config properties and Java options for the launcher (e.g. "-Dx=y")
+
 # Generic options for the daemons used in the standalone deploy mode
 # - SPARK_CONF_DIR      Alternate conf dir. (Default: ${SPARK_HOME}/conf)
 SPARK_CONF_DIR=$spark_conf_dir
 # - SPARK_LOG_DIR       Where log files are stored.  (Default: ${SPARK_HOME}/logs)
 SPARK_LOG_DIR=$spark_log_dir
+# - SPARK_LOG_MAX_FILES Max log files of Spark daemons can rotate to. Default is 5.
 # - SPARK_PID_DIR       Where the pid file is stored. (Default: /tmp)
 SPARK_PID_DIR=$tmp_dir/spark/pid
 # - SPARK_IDENT_STRING  A string representing this instance of spark. (Default: $USER)
