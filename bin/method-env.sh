@@ -270,6 +270,9 @@ add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
 add_conf_param "client_write_packet_size" $CLIENT_WRITE_PACKET_SIZE
 add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
+add_conf_param "client_block_write_retries" $CLIENT_BLOCK_WRITE_RETRIES
+CLIENT_BLOCK_LOCATEBLOCK_RETRIES=$(($CLIENT_BLOCK_WRITE_RETRIES * 2))
+add_conf_param "client_block_write_locateblock_retries" $CLIENT_BLOCK_LOCATEBLOCK_RETRIES
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
