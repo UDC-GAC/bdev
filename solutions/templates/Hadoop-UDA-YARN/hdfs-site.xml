@@ -63,4 +63,12 @@
     <name>dfs.datanode.socket.write.timeout</name>
     <value>$datanode_socket_write_timeout</value>
   </property>
+  <property>
+    <name>dfs.client.block.write.retries</name>
+    <value>$client_block_write_retries</value>
+  </property>
+  <property>
+    <name>dfs.client.block.write.locateFollowingBlock.retries</name>
+    <value>$client_block_write_locateblock_retries</value>
+  </property>
 </configuration>
