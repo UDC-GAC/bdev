@@ -231,10 +231,17 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         fi
 fi
 
+if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+	HOSTNAME_SCRIPT=get_hostname.sh
+else
+	HOSTNAME_SCRIPT=get_ip_from_hostname.sh
+fi
+
 #Configuration parameters
 ini_conf_params
 add_conf_param "method_home" $METHOD_HOME
 add_conf_param "method_bin_dir" $METHOD_BIN_DIR
+add_conf_param "hostname_script" $HOSTNAME_SCRIPT
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"

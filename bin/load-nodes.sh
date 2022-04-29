@@ -12,7 +12,7 @@ export IP_COMMAND=`which ip`
 export RESOLVEIP_COMMAND=`which getent`
 
 export NODE_FILE=$REPORT_DIR/hostfile
-export COMPUTE_NODES=`get_nodes_by_name $NODE_FILE $COMPUTE_NODES`
+export COMPUTE_NODES=`get_nodes_by_hostname $NODE_FILE $COMPUTE_NODES`
 m_echo "Nodes: "$COMPUTE_NODES
 
 if [[ ! -z $ETH_INTERFACE ]]
