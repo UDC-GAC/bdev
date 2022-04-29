@@ -14,3 +14,4 @@
 #export DOMAIN_SOCKET_PATH=/var/lib/hdfs/$USER	# Permissions in this special path must be properly configured before enabling the short-circuit reads
 #export CLIENT_SOCKET_TIMEOUT=60000	# Default timeout value in ms for all sockets
 #export DATANODE_SOCKET_WRITE_TIMEOUT=60000	# Timeout in ms for clients socket writes to DataNodes
+#export CLIENT_BLOCK_WRITE_RETRIES=5	# Number of retries for writing blocks to DataNodes
