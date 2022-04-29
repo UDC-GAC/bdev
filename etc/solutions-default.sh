@@ -84,7 +84,7 @@ export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.2 # Fraction of total Flink memory to be used as network memory
+export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors (it requires a size-unit specifier)
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors (it requires a size-unit specifier)
 export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="128mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
@@ -101,18 +101,11 @@ export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length i
 
 # Flink standalone
 export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-export FLINK_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE	# JobManager heapsize
-export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE # Memory reserved to other services
-export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.95 # Percentage of the TaskManager memory allocated to heap
-export FLINK_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
+export FLINK_TASKMANAGER_MEMORY=`op_int "$NODEMANAGER_MEMORY / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 
 # Flink on YARN
 export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-export FLINK_YARN_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE	# JobManager heapsize
 export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-export FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
-export FLINK_YARN_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_YARN_TASKMANAGER_MEMORY * $FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 
 # DataMPI
 export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1

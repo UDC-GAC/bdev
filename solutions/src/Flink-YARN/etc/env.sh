@@ -62,7 +62,7 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 #Deploy mode
 export FINISH_YARN="false"
 export DEPLOY_ARGS="-m yarn-cluster \
-	-yjm $FLINK_YARN_JOBMANAGER_HEAPSIZE \
+	-yjm $FLINK_YARN_JOBMANAGER_MEMORY \
 	-ys $FLINK_TASKMANAGER_SLOTS"
 
 if [[ $FLINK_SERIES == "1" ]]
