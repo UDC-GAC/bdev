@@ -504,6 +504,7 @@ function begin_report(){
 	REPORT="$REPORT \t Sort datasize (B) \t\t\t $SORT_DATASIZE \n"
 	REPORT="$REPORT \t TeraSort datasize (B) \t\t\t $TERASORT_DATASIZE \n"
 	REPORT="$REPORT \t Grep datasize (B) \t\t\t $GREP_DATASIZE \n"
+	REPORT="$REPORT \t TPCx-HS datasize (B) \t\t\t $TPCX_HS_DATASIZE \n"
 	REPORT="$REPORT \t PageRank pages \t\t\t $PAGERANK_PAGES \n"
 	REPORT="$REPORT \t PageRank iterations \t\t\t $PAGERANK_MAX_ITERATIONS \n"
 	REPORT="$REPORT \t ConCmpt pages \t\t\t\t $CC_PAGES \n"
