@@ -87,9 +87,9 @@
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb"  # Maximum network memory size for TaskManagers
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers
-#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="128mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
-#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="256mb" # Framework off-heap memory size for TaskManagers
-#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=1024 # Minimum number of network buffers required per sort-merge blocking result partition
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
+#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=512 # Minimum number of network buffers required per sort-merge blocking result partition
 #export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM=1 # Hash-based blocking shuffle is used for parallelism smaller than this threshold. Otherwise, sort-merge is used
 #export FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS=true # Compress shuffle data for blocking shuffle
 #export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
