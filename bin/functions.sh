@@ -30,13 +30,9 @@ function m_warn() {
 
 export -f m_err
 
-
 function m_exit() {
 	m_err $@
-
-	if [ ! -z ${SOLUTION_DIR+x} ]; then
-		. $SOLUTION_DIR/bin/finish.sh
-	fi
+	bash $CLEAN_DAEMONS_SCRIPT
 	exit -1
 }
 
