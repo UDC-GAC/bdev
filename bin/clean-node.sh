@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DAEMONS="NameNode|DataNode|ResourceManager|NodeManager|JobTracker|TaskTracker|JobHistoryServer|ApplicationHistoryServer|RunJar|Child|MRAppMaster|YarnChild|MPI_D_Runner|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner|CliFrontend"
 
