@@ -10,6 +10,5 @@ DAEMON_PIDS=`echo $DAEMON_PIDS`
 
 if [ ! -z "$DAEMON_PIDS" ]
 then
-	#echo "Killing $2: $DAEMON_PIDS"
 	kill -9 $DAEMON_PIDS
 fi
