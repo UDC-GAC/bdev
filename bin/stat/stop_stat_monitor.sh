@@ -1,6 +1,7 @@
 #!/bin/sh
 
-for SLAVE in $SLAVENODES $MASTERNODE
+for SLAVE in $MASTERNODE $SLAVENODES
 do
-	ssh $SLAVE "pkill -f ${DOOL_COMMAND}"
+	echo "Stopping dstat/dool monitor in ${SLAVE}" >> ${STATLOGDIR}/log 2>&1
+	ssh $SLAVE "pkill -u $USER -9 -f ${DOOL_COMMAND}" >> ${STATLOGDIR}/log 2>&1
 done

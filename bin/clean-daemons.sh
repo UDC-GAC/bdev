@@ -16,12 +16,11 @@ do
 	then
 		kill -9 $DAEMON_PIDS;
 	fi;
-	killall -q -9 hydra_pmi_proxy; \
-	killall -q -9 python; \
-	killall -q -9 ${PYTHON3_BIN}; \
-	killall -q -9 ocount; \
-	killall -q -9 rapl_plot; \
-	rm -rf $TMP_DIR $LOCAL_DIRS; \
+	killall -u $USER -q -9 hydra_pmi_proxy; \
+	killall -u $USER -q -9 python; \
+	killall -u $USER -q -9 ${PYTHON3_BIN}; \
+	killall -u $USER -q -9 ocount; \
+	killall -u $USER -q -9 rapl_plot; \
+	rm -rf $TMP_DIR $LOCAL_DIRS /tmp/hsperfdata_$USER; \
 	mkdir -p $TMP_DIR $LOCAL_DIRS"
 done
-

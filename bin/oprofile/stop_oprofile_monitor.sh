@@ -2,5 +2,5 @@
 
 for SLAVE in $SLAVENODES $MASTERNODE
 do
-	ssh $SLAVE "killall -SIGINT ocount"
+	ssh $SLAVE "killall -u $USER -q -SIGINT ocount"
 done
