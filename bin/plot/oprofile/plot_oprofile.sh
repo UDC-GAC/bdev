@@ -50,28 +50,3 @@ do
 done
 
 
-
-# for OPROFILENODEDIR in $OPROFILENODEDIRS
-# do
-# 	OUTPUT_NODE_FILE=$OPROFILENODEDIR/oprofile_counters
-# 
-# 	rm -f $OUTPUT_NODE_FILE
-# 
-# 	NUM_LINES=`cat ${OPROFILENODEDIR}/oprofile | wc -l`
-# 	EVENT_COUNTERS=`cat ${OPROFILENODEDIR}/oprofile | egrep "Event *Count" -A $NUM_LINES | tail -n +2`
-# 
-# 	#EVENTS=`cat ${OPROFILENODEDIR}/oprofile.out | grep "Monitoring events:" | cut -f 3 -d " " | tr "," "\n"`
-# 	#NUM_EVENTS=`echo "$EVENTS" | wc -l`
-# 
-# 	#for i in `seq 1 $NUM_EVENTS`
-# 	#do
-# 	#	EVENT=`get_row $i "$EVENTS"`
-# 	#	COUNTER=`get_row $i "$EVENT_COUNTERS"`
-# 	#	echo $EVENT $COUNTER >> $OUTPUT_NODE_FILE
-# 	#done
-# 
-# 	echo "${EVENT_COUNTERS//,}" | sed -e 's/^[ \t]*//' |  tr -s "\t " "," > $OUTPUT_NODE_FILE
-# 
-# done
-
-

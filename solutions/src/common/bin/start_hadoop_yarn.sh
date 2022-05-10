@@ -7,5 +7,4 @@ else
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_2.sh
 fi
 
-
-sleep 15
+sleep 10

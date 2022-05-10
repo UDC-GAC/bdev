@@ -3,7 +3,6 @@
 . $STAT_PLOT_HOME/functions.sh
 . $STAT_PLOT_HOME/constants.sh
 
-
 cd ${STATLOGDIR}
 
 GRAPHS_SCRIPT=${STATLOGDIR}/gen_graphs.sh
