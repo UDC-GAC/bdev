@@ -436,7 +436,7 @@ function write_report(){
 		then
 			mkdir -p $PLOT_DIR
 		fi
-		bash $PLOT_HOME/plot_benchmark.sh >> $PLOT_DIR/log 2>&1
+		bash $PLOT_HOME/plot_benchmarks.sh >> $PLOT_DIR/log 2>&1
 	fi
 
 	if [[ $ENABLE_RAPL == "true" ]]
@@ -775,14 +775,17 @@ function end_benchmark(){
 
 	if [[ $ENABLE_OPROFILE == "true" ]]
 	then
+		m_echo "Generating Oprofile data"
 		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
 	fi
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
+		m_echo "Generating RAPL data"
 		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
+		m_echo "Generating dstat/dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 }
