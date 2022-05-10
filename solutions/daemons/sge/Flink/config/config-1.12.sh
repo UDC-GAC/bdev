@@ -92,7 +92,7 @@ readFromConfig() {
     # if a key exists multiple times, take the "last" one (tail)
     local value=`sed -n "s/^[ ]*${key}[ ]*: \([^#]*\).*$/\1/p" "${configFile}" | sed "s/^ *//;s/ *$//" | tail -n 1`
 
-    [ -z "$value" ] && echHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`o "$defaultValue" || echo "$value"
+    [ -z "$value" ] && echo "$defaultValue" || echo "$value"
 }
 
 ########################################################################################################################
