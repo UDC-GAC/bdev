@@ -94,7 +94,7 @@ readFromConfig() {
 
     [ -z "$value" ] && echo "$defaultValue" || echo "$value"
 }
-HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
+
 ########################################################################################################################
 # DEFAULT CONFIG VALUES: These values will be used when nothing has been specified in conf/flink-conf.yaml
 # -or- the respective environment variables are not set.
@@ -148,7 +148,7 @@ target="$0"
 # Note: we can't use the readlink utility here if we want to be POSIX
 # compatible.
 iteration=0
-while [HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath` -L "$target" ]; do
+while [ -L "$target" ]; do
     if [ "$iteration" -gt 100 ]; then
         echo "Cannot resolve path: You have a cyclic symlink in $target."
         break
@@ -202,7 +202,7 @@ if [ -z "${MY_JAVA_HOME}" ]; then
     # config did not specify JAVA_HOME. Use system JAVA_HOME
     MY_JAVA_HOME="${JAVA_HOME}"
 fi
-# checkHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath` if we have a valid JAVA_HOME and if java is not available
+# check if we have a valid JAVA_HOME and if java is not available
 if [ -z "${MY_JAVA_HOME}" ] && ! type java > /dev/null 2> /dev/null; then
     echo "Please specify JAVA_HOME. Either in Flink config ./conf/flink-conf.yaml or as system-wide JAVA_HOME."
     exit 1
@@ -267,7 +267,7 @@ fi
 if [ -z "${FLINK_ENV_JAVA_OPTS}" ]; then
     FLINK_ENV_JAVA_OPTS=$(readFromConfig ${KEY_ENV_JAVA_OPTS} "${DEFAULT_ENV_JAVA_OPTS}" "${YAML_CONF}")
 
-    # RHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`emove leading and ending double quotes (if present) of value
+    # Remove leading and ending double quotes (if present) of value
     FLINK_ENV_JAVA_OPTS="$( echo "${FLINK_ENV_JAVA_OPTS}" | sed -e 's/^"//'  -e 's/"$//' )"
 fi
 
@@ -376,7 +376,7 @@ if [ -n "${HBASE_CONF_DIR}" ]; then
     INTERNAL_HADOOP_CLASSPATHS="${INTERNAL_HADOOP_CLASSPATHS}:${HBASE_CONF_DIR}"
 fi
 
-# Auxilliary function which extracts the name of host from a line which
+# Auxiliary function which extracts the name of host from a line which
 # also potentially includes topology information and the taskManager type
 extractHostName() {
     # handle comments: extract first part of string (before first # character)
@@ -503,7 +503,7 @@ extractExecutionResults() {
 
     execution_results=$(echo "${output}" | grep ${EXECUTION_PREFIX})
     num_lines=$(echo "${execution_results}" | wc -l)
-    # explicit check for empty result, becuase if execution_results is empty, then wc returns 1
+    # explicit check for empty result, because if execution_results is empty, then wc returns 1
     if [[ -z ${execution_results} ]]; then
         echo "[ERROR] The execution result is empty." 1>&2
         exit 1
@@ -527,7 +527,7 @@ extractLoggingOutputs() {
 
 parseResourceParamsAndExportLogs() {
   local cmd=$1
-  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "$@")
+  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "${@:2}")
   logging_output=$(extractLoggingOutputs "${java_utils_output}")
   params_output=$(extractExecutionResults "${java_utils_output}" 2)
 
@@ -553,9 +553,9 @@ logs: $logging_output
 }
 
 parseJmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS "$@"
 }
 
 parseTmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS "$@"
 }

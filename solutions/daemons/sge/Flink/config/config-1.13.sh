@@ -159,7 +159,7 @@ while [ -L "$target" ]; do
 done
 
 # Convert relative path to absolute path and resolve directory symlinks
-bin=`dirname "$targetHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`"`
+bin=`dirname "$target"`
 SYMLINK_RESOLVED_BIN=`cd "$bin"; pwd -P`
 
 # Define the main directory of the flink installation
@@ -207,7 +207,7 @@ if [ -z "${MY_JAVA_HOME}" ] && ! type java > /dev/null 2> /dev/null; then
     echo "Please specify JAVA_HOME. Either in Flink config ./conf/flink-conf.yaml or as system-wide JAVA_HOME."
     exit 1
 else
-    JAVA_HOME="${MY_JHADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`AVA_HOME}"
+    JAVA_HOME="${MY_JAVA_HOME}"
 fi
 
 UNAME=$(uname -s)
@@ -527,7 +527,7 @@ extractLoggingOutputs() {
 
 parseResourceParamsAndExportLogs() {
   local cmd=$1
-  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "$@")
+  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "${@:2}")
   logging_output=$(extractLoggingOutputs "${java_utils_output}")
   params_output=$(extractExecutionResults "${java_utils_output}" 2)
 
@@ -553,9 +553,9 @@ logs: $logging_output
 }
 
 parseJmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS "$@"
 }
 
 parseTmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS "$@"
 }
