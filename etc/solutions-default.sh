@@ -101,12 +101,12 @@ export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length i
 
 # Flink standalone
 export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-export FLINK_TASKMANAGER_MEMORY=`op_int "$MEMORY_ALLOC_PER_NODE / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
+export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE	# Memory reserved to other services
+export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 
 # Flink on YARN
 export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE	# Memory reserved to other services
-export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
+export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 
 # DataMPI
 export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1
