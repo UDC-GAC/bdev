@@ -279,7 +279,7 @@ function set_network_configuration()
 				FILE=$NODE_FILE
 			fi	
 		else
-			m_exit "Invalid network interface: $SOLUTION_NET_INTERFACE (revise network settings)"
+			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE. Revise network settings"
 		fi
 	fi
 
