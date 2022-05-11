@@ -2,12 +2,12 @@
 
 if [[ -z "$MASTERNODE" ]]
 then
-	m_exit "Master node IP is null (revise network settings)"
+	m_exit "Master node is null. Revise network settings"
 fi
 
 if [[ -z "$SLAVENODES" ]]
 then
-	m_exit "Worker nodes IP is null (revise network settings)"
+	m_exit "Worker nodes are null. Revise network settings"
 fi
 
 #Generate configuration
@@ -16,4 +16,4 @@ m_echo "Generating configuration: $SOL_TEMPLATE_DIR"
 
 . $COPY_DAEMONS_SCRIPT
 
-sleep 2
+sleep 1
