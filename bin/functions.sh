@@ -279,7 +279,7 @@ function set_network_configuration()
 				FILE=$NODE_FILE
 			fi	
 		else
-			m_exit "Invalid network interface: $SOLUTION_NET_INTERFACE (revise network settings)"
+			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE. Revise network settings"
 		fi
 	fi
 
@@ -512,7 +512,7 @@ function begin_report(){
 	fi
 	REPORT="$REPORT \t Cores per node \t\t\t $CORES_PER_NODE \n"
 	REPORT="$REPORT \t Total memory per node (MB) \t\t $MEMORY_PER_NODE \n"
-	REPORT="$REPORT \t Available memory per node (MB) \t $MEMORY_AVAIL_PER_NODE \n"
+	REPORT="$REPORT \t Allocated memory per node (MB) \t $MEMORY_ALLOC_PER_NODE \n"
 	REPORT="$REPORT \t YARN RM daemon heapsize (MB)  \t\t $RESOURCEMANAGER_D_HEAPSIZE \n"
 	REPORT="$REPORT \t YARN NM daemon heapsize (MB)  \t\t $NODEMANAGER_D_HEAPSIZE \n"
 	REPORT="$REPORT \t YARN NM vcores  \t\t\t $NODEMANAGER_VCORES \n"
