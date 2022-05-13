@@ -3,9 +3,9 @@
 DAEMONS="NameNode|DataNode|ResourceManager|NodeManager|JobTracker|TaskTracker|JobHistoryServer|ApplicationHistoryServer|RunJar|Child|MRAppMaster|YarnChild|MPI_D_Runner|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner|CliFrontend"
 
 DAEMON_PIDS=`${JPS} | egrep $DAEMONS | awk '{print $1}'`
-
+DAEMON_NAMES=`${JPS} | egrep $DAEMONS | awk '{print $2}'`
+	
 if [[ \"x$DAEMON_PIDS\" != \"x\" ]]; then
-	DAEMON_NAMES=`${JPS} | egrep $DAEMONS | awk '{print $2}'`
 	DAEMON_PIDS=`echo $DAEMON_PIDS`
 	DAEMON_NAMES=`echo $DAEMON_NAMES`
 	echo "$HOSTNAME: cleaning up $DAEMON_NAMES with PIDs $DAEMON_PIDS"
