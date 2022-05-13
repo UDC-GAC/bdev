@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sleep 1
+
 for SLAVE in $MASTERNODE $SLAVENODES
 do
 	ssh $SLAVE "export JPS=${JPS};\
