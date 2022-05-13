@@ -4,6 +4,10 @@
     <value>${HADOOPHOSTNAME}</value>
   </property>
   <property>
+    <name>dfs.block.size</name>
+    <value>$blocksize</value>
+  </property>
+  <property>
     <name>dfs.replication</name>
     <value>$replication_factor</value>
   </property>
@@ -48,8 +52,16 @@
     <value>$net_interface</value>
   </property>
   <property>
-    <name>dfs.block.size</name>
-    <value>$blocksize</value>
+    <name>dfs.client.local.interfaces</name>
+    <value>$net_interface</value>
+  </property>
+  <property>
+    <name>dfs.datanode.use.datanode.hostname</name>
+    <value>$enable_hostnames</value>
+  </property>
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>$enable_hostnames</value>
   </property>
   <property>
     <name>dfs.client-write-packet-size</name>
