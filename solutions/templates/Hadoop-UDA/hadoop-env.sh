@@ -23,7 +23,7 @@ export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 # Extra Java runtime options.  Empty by default.
 # export HADOOP_OPTS=-server
-export HADOOPHOSTNAME=`$method_bin_dir/$hostname_script $hostfile`
+export HADOOPHOSTNAME=`$method_bin_dir/$hostname_script $hostfile $loopback_ip`
 export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME}"
 
 # Command specific options appended to HADOOP_OPTS when specified
