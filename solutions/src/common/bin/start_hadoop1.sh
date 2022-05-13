@@ -2,7 +2,7 @@
 
 #Format HDFS
 HDFS_FORMAT_LOG=$SOLUTION_REPORT_DIR/hdfs-format.log
-m_echo "HDFS format, logging to $HDFS_FORMAT_LOG"
+m_echo "Formatting HDFS, logging to $HDFS_FORMAT_LOG"
 ssh $MASTERNODE $HADOOP_HOME/bin/hadoop --config $HADOOP_CONF_DIR namenode -format > $HDFS_FORMAT_LOG 2>&1
 
 #Namenode & Datanodes
