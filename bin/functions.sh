@@ -209,7 +209,7 @@ function get_nodes_by_hostname()
 	touch $NODE_FILE
         for NODE in $NODES
         do
-		OUT=`$RESOLVEIP_COMMAND ahostsv4 | grep -m1 $NODE`
+		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
 		if [[ -z "${OUT}" ]]; then
 			m_exit "Error resolving hostname $NODE"
 		fi
@@ -238,10 +238,17 @@ function get_nodes_by_interface()
 	touch $NODE_FILE
 	for NODE in $NODES
 	do
-		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
+		INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
+		if [[ ! $? -eq 0 ]]; then
+			m_exit "$INTERFACE interface not found or not configured for $NODE"
+		fi
+		INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
+		if [[ -z "${INTERFACE_IP}" ]]; then
+			m_exit "IP not found for $NODE using $INTERFACE interface"
+		fi
 		OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
 		if [[ -z "${OUT}" ]]; then
-			m_exit "Error resolving IP $INTERFACE_IP"
+			m_exit "IP $INTERFACE_IP could not be revolved for $NODE"
 		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
                 NODE_NAME=`echo $OUT | awk '{print $2}'`
@@ -270,6 +277,7 @@ function set_network_configuration()
 			FILE=$NODE_FILE_ETH
 		else
 			load_nodes ${COMPUTE_NODES}
+			export NET_INTERFACE=default
 			FILE=$NODE_FILE
 		fi
 	else 
@@ -282,6 +290,7 @@ function set_network_configuration()
 				FILE=$NODE_FILE_IPOIB
 			else
 				load_nodes ${COMPUTE_NODES}
+				export NET_INTERFACE=default
 				FILE=$NODE_FILE
 			fi	
 		else
