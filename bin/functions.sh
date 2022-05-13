@@ -209,9 +209,14 @@ function get_nodes_by_hostname()
 	touch $NODE_FILE
         for NODE in $NODES
         do
-		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+        	if [[ $NODE == "localhost" ]] || [[ $NODE == $LOOPBACK_IP ]]; then
+        		OUT=`echo $LOOPBACK_IP localhost`
+        	else
+			OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+		fi
+		
 		if [[ -z "${OUT}" ]]; then
-			m_exit "Error resolving hostname $NODE"
+			m_exit "Node $NODE could not be revolved"
 		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
@@ -294,11 +299,11 @@ function set_network_configuration()
 				FILE=$NODE_FILE
 			fi	
 		else
-			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE. Revise network settings"
+			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 		fi
 	fi
 
-	m_echo "Using hostfile: $FILE"
+	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
 	MASTERIP=`$METHOD_BIN_DIR/get_ip_from_hostname.sh $FILE`
 	add_conf_param "master" $MASTERNODE
 	add_conf_param "ip_master" $MASTERIP
