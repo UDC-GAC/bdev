@@ -22,18 +22,22 @@ if [[ ! -z $ETH_INTERFACE ]]; then
 	export NODE_FILE_ETH=$REPORT_DIR/hostfile.eth
 	export ETH_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETH $ETH_INTERFACE $COMPUTE_NODES`
 	if [[ -z "${ETH_COMPUTE_NODES}" ]]; then
-		m_exit "ETH ($ETH_INTERFACE): Revise network settings"
+		export ETH_COMPUTE_NODES=""
+		m_warn "ETH ($ETH_INTERFACE): interface will be ignored"
+	else
+		m_echo "ETH ($ETH_INTERFACE): "$ETH_COMPUTE_NODES
 	fi
-	m_echo "ETH ($ETH_INTERFACE): "$ETH_COMPUTE_NODES
 fi
 
 if [[ ! -z $IPOIB_INTERFACE ]]; then
 	export NODE_FILE_IPOIB=$REPORT_DIR/hostfile.ipoib
        	export IPOIB_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_IPOIB $IPOIB_INTERFACE $COMPUTE_NODES`
 	if [[ -z "${IPOIB_COMPUTE_NODES}" ]]; then
-		m_exit "IPoIB ($IPOIB_INTERFACE): Revise network settings"
+		export IPOIB_COMPUTE_NODES=""
+		m_warn "IPoIB ($IPOIB_INTERFACE): interface will be ignored"
+	else
+		m_echo "IPoIB ($IPOIB_INTERFACE): "$IPOIB_COMPUTE_NODES
 	fi
-	m_echo "IPoIB ($IPOIB_INTERFACE): "$IPOIB_COMPUTE_NODES
 fi
 
 load_nodes $COMPUTE_NODES
