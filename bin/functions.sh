@@ -209,7 +209,10 @@ function get_nodes_by_hostname()
 	touch $NODE_FILE
         for NODE in $NODES
         do
-		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+		OUT=`$RESOLVEIP_COMMAND ahostsv4 | grep -m1 $NODE`
+		if [[ -z "${OUT}" ]]; then
+			m_exit "Error resolving hostname $NODE"
+		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
 
@@ -237,6 +240,9 @@ function get_nodes_by_interface()
 	do
 		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
 		OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
+		if [[ -z "${OUT}" ]]; then
+			m_exit "Error resolving IP $INTERFACE_IP"
+		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
                 NODE_NAME=`echo $OUT | awk '{print $2}'`
 
