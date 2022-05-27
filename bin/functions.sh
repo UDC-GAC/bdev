@@ -229,6 +229,7 @@ function get_nodes_by_hostname()
 
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
+
         echo $OUT_NODES
 }
 
@@ -241,32 +242,41 @@ function get_nodes_by_interface()
 	NODES=${*:3}
 	OUT_NODES=""
 	touch $NODE_FILE
-	for NODE in $NODES
-	do
-		INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
-		if [[ ! $? -eq 0 ]]; then
-			m_exit "$INTERFACE interface not found or not configured for $NODE"
-		fi
-		INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
-		if [[ -z "${INTERFACE_IP}" ]]; then
-			m_exit "IP not found for $NODE using $INTERFACE interface"
-		fi
-		OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
-		if [[ -z "${OUT}" ]]; then
-			m_exit "IP $INTERFACE_IP could not be revolved for $NODE"
-		fi
-		NODE_IP=`echo $OUT | awk '{print $1}'`
-                NODE_NAME=`echo $OUT | awk '{print $2}'`
+        SUCCESS=1
+        for NODE in $NODES
+        do
+                INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
+                if [[ ! $? -eq 0 ]]; then
+                        m_exit "$INTERFACE interface not found or not configured for $NODE"
+                fi
+                INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
+                if [[ -z "${INTERFACE_IP}" ]]; then
+                        m_exit "IP not found for $NODE using $INTERFACE interface"
+                fi
+                OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
+                if [[ -z "${OUT}" ]]; then
+                        SUCCESS=0
+                        NODE_IP=$INTERFACE_IP
+                        NODE_NAME=$NODE
+                else
+                        NODE_IP=`echo $OUT | awk '{print $1}'`
+                        NODE_NAME=`echo $OUT | awk '{print $2}'`
+                fi
 
-		if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
-		else
-			OUT_NODES="${OUT_NODES} ${NODE_IP}"
-		fi
+                if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+                        OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+                else
+                        OUT_NODES="${OUT_NODES} ${NODE_IP}"
+                fi
 
-		echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
-	done
-	echo $OUT_NODES
+                echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
+        done
+
+        echo $OUT_NODES
+
+        if [[ $SUCCESS -ne 1 ]]; then
+                m_warn "IP to hostname resolution not working for $INTERFACE"
+        fi
 }
 
 export -f get_nodes_by_interface
