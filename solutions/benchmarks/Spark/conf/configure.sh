@@ -19,7 +19,10 @@ export SPARK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export SPARK_BENCH_JAR=$SPARK_BENCH_DIR/$SPARK_BENCH_JAR_NAME
 export SPARK_BENCH_JAR_DELETE="find $SOLUTION_REPORT_DIR -name "$SPARK_BENCH_JAR_NAME" -type f -delete"
 
-if [[ ! -f $SPARK_BENCH_JAR ]]
+if [[ "$BENCHMARK" == "tpcx_hs" ]]
+then
+	m_echo "Using $TPCX_HS_JAR"
+elif [[ ! -f $SPARK_BENCH_JAR ]]
 then
 	# Download sparkbench jar file
 	URL=http://bdev.des.udc.es/dist/sparkbench
@@ -32,9 +35,6 @@ then
 		rm $SPARK_BENCH_JAR >& /dev/null
 		m_exit "Error when downloading $SPARK_BENCH_JAR_NAME"
         fi
-elif [[ "$BENCHMARK" == "tpcx_hs" ]]
-then
-	m_echo "Using $TPCX_HS_JAR"
 else
 	m_echo "Using $SPARK_BENCH_JAR"
 fi
