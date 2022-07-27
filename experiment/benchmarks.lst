@@ -12,4 +12,5 @@ wordcount		# Counts the number of times each word appears in the input data set
 #aggregation		# SQL-based query which sums the values from a column
 #join			# SQL-based query which joins two tables
 #scan			# SQL-based query which extracts the rows that match a certain pattern
+#tpcx_hs		# Uses map/reduce to sort <key,value> tuples into a total order
 #command		# Executes user-defined actions (interactive or batch)
