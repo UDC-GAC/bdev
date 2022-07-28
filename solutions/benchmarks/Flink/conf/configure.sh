@@ -5,14 +5,13 @@ export FLINK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
 export SORT_PARTITIONS=$FLINK_PARALLELISM
 
-
 if [[ "$BENCHMARK" == "tpcx_hs" ]]
 then
 	m_echo "Using $TPCX_HS_JAR"
 elif [[ ! -f $FLINK_BENCH_JAR ]]
 then
         # Download flinkbench jar file
-        URL=http://bdev.des.udc.es/dist/flinkbench
+        URL=https://bdev.des.udc.es/dist/flinkbench
         m_echo "Downloading $FLINK_BENCH_JAR_NAME"
 
         wget -q -O $FLINK_BENCH_JAR $URL/$FLINK_BENCH_JAR_NAME
