@@ -70,6 +70,7 @@ export INPUT_WORDCOUNT="${HDFS}/Input/WordCount"
 export INPUT_SORT="${HDFS}/Input/Sort"
 export INPUT_GREP="${HDFS}/Input/Grep"
 export INPUT_TERASORT="${HDFS}/Input/TeraSort"
+export INPUT_TPCX_HS="${HDFS}/Input/TPCx-HS"
 export INPUT_PAGERANK="${HDFS}/Input/PageRank"
 export INPUT_CC="${HDFS}/Input/ConnectedComponents"
 export INPUT_KMEANS="${HDFS}/Input/KMeans"
@@ -77,12 +78,12 @@ export INPUT_BAYES="${HDFS}/Input/Bayes"
 export INPUT_AGGREGATION="${HDFS}/Input/Aggregation"
 export INPUT_JOIN="${HDFS}/Input/Join"
 export INPUT_SCAN="${HDFS}/Input/Scan"
-export INPUT_TPCX_HS="${HDFS}/Input/TPCx-HS"
 
 export OUTPUT_WORDCOUNT="${HDFS}/Output/WordCount"
 export OUTPUT_SORT="${HDFS}/Output/Sort"
 export OUTPUT_GREP="${HDFS}/Output/Grep"
 export OUTPUT_TERASORT="${HDFS}/Output/TeraSort"
+export OUTPUT_TPCX_HS="${HDFS}/Output/TPCx-HS"
 export OUTPUT_PAGERANK="${HDFS}/Output/PageRank"
 export OUTPUT_CC="${HDFS}/Output/ConnectedComponents"
 export OUTPUT_KMEANS="${HDFS}/Output/KMeans"
@@ -90,12 +91,12 @@ export OUTPUT_BAYES="${HDFS}/Output/Bayes"
 export OUTPUT_AGGREGATION="${HDFS}/Output/Aggregation"
 export OUTPUT_JOIN="${HDFS}/Output/Join"
 export OUTPUT_SCAN="${HDFS}/Output/Scan"
-export OUTPUT_TPCX_HS="${HDFS}/Output/TPCx-HS"
 
 export GEN_WORDCOUNT="false"
 export GEN_SORT="false"
-export GEN_TERASORT="false"
 export GEN_GREP="false"
+export GEN_TERASORT="false"
+export GEN_TPCX_HS="false"
 export GEN_CC="false"
 export GEN_PAGERANK="false"
 export GEN_KMEANS="false"
@@ -103,7 +104,6 @@ export GEN_BAYES="false"
 export GEN_AGGREGATION="false"
 export GEN_JOIN="false"
 export GEN_SCAN="false"
-export GEN_TPCX_HS="false"
 export GEN_COMMAND="false"
 
 for BENCHMARK in $BENCHMARKS
@@ -120,6 +120,9 @@ do
 	elif [[ "$BENCHMARK" == "grep" ]]
 	then
 		export GEN_GREP="true"
+	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
+	then
+		export GEN_TPCX_HS="true"
 	elif [[ "$BENCHMARK" == "pagerank" ]]
 	then
 		export GEN_PAGERANK="true"
@@ -141,9 +144,6 @@ do
 	elif [[ "$BENCHMARK" == "scan" ]]
 	then
 		export GEN_SCAN="true"
-	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
-    then
-    	export GEN_TPCX_HS="true"
 	elif [[ "$BENCHMARK" == "command" ]]
 	then
 		export GEN_COMMAND="true"
