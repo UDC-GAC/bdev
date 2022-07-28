@@ -67,11 +67,12 @@ if [[ $GEN_TPCX_HS == "true" ]]
 then
 	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
 
-	OPTIONS="es.udc.tpcx_hs.datagen.HSGen \
-		-D $CONFIG_MAP_NUMBER=${MAPPERS_NUMBER} \
-		$TPCX_HS_ROWS_NUMBER $INPUT_TPCX_HS"
+	OPTIONS="-t hsgen \
+		-n ${INPUT_TPCX_HS} \
+		-m ${MAPPERS_NUMBER} \
+		-p ${TPCX_HS_ROWS_NUMBER}"
 
-	${HADOOP_EXECUTABLE} jar ${TPCX_HS_JAR} ${OPTIONS}
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_PAGERANK == "true" ]]
