@@ -5,14 +5,14 @@ export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 
 if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]]
 then
-	URL="http://archive.apache.org/dist/mahout"
+	URL="https://archive.apache.org/dist/mahout"
 
 	# Download Mahout 0.11.1 and 0.12.0 compiled for Hadoop 1 from bdev
 	if [[ $MAHOUT_HOME == $THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop ]]
 	then
 		if [[ $MAHOUT_VERSION=0.11.1 || $MAHOUT_VERSION=0.12.0 ]]
 		then
-			URL="http://bdev.des.udc.es/dist/mahout"
+			URL="https://bdev.des.udc.es/dist/mahout"
 		else
 			m_exit "Mahout version $MAHOUT_VERSION not found"
 		fi
@@ -40,7 +40,7 @@ fi
 
 if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true" ) && ! -d $HIVE_HOME ]]
 then
-	URL="http://archive.apache.org/dist/hive/"
+	URL="https://archive.apache.org/dist/hive/"
 	TMP_HIVE_FILE=$THIRD_PARTY_DIR/apache-hive-${HIVE_VERSION}-bin.tar.gz
 	TMP_HIVE_DIR=$THIRD_PARTY_DIR/apache-hive-${HIVE_VERSION}-bin
 

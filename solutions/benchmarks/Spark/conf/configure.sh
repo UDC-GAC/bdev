@@ -25,7 +25,7 @@ then
 elif [[ ! -f $SPARK_BENCH_JAR ]]
 then
 	# Download sparkbench jar file
-	URL=http://bdev.des.udc.es/dist/sparkbench
+	URL=https://bdev.des.udc.es/dist/sparkbench
 	m_echo "Downloading $SPARK_BENCH_JAR_NAME from $URL"
 
         wget -q -O $SPARK_BENCH_JAR $URL/$SPARK_BENCH_JAR_NAME
