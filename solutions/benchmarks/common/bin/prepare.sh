@@ -63,6 +63,17 @@ then
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
+if [[ $GEN_TPCX_HS == "true" ]]
+then
+	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
+
+	OPTIONS="es.udc.tpcx_hs.datagen.HSGen \
+		-D $CONFIG_MAP_NUMBER=${MAPPERS_NUMBER} \
+		$TPCX_HS_ROWS_NUMBER $INPUT_TPCX_HS"
+
+	${HADOOP_EXECUTABLE} jar ${TPCX_HS_JAR} ${OPTIONS}
+fi
+
 if [[ $GEN_PAGERANK == "true" ]]
 then
 	m_echo "Generating PageRank data: ${PAGERANK_PAGES} pages"
@@ -188,18 +199,6 @@ then
 
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	fi
-fi
-
-if [[ $GEN_TPCX_HS == "true" ]]
-then
-	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
-
-	OPTIONS="es.udc.tpcx_hs.datagen.HSGen \
-    -D $CONFIG_MAP_NUMBER=${MAPPERS_NUMBER} \
-    -D $CONFIG_REDUCER_NUMBER=${REDUCERS_NUMBER} \
-    $TPCX_HS_ROWS_NUMBER $INPUT_TPCX_HS"
-
-	${HADOOP_EXECUTABLE} jar ${TPCX_HS_JAR} ${OPTIONS}
 fi
 
 if [[ $GEN_COMMAND == "true" ]]
