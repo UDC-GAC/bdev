@@ -2,14 +2,14 @@
 #Hadoop			1.2.1		ETH
 #Hadoop			1.2.1		IPoIB
 #Hadoop-UDA		1.2.1		IPoIB
-Hadoop-YARN		2.10.2		ETH
+#Hadoop-YARN		2.10.2		ETH
 #Hadoop-YARN		2.10.2		IPoIB
 #Hadoop-UDA-YARN		2.10.2		IPoIB
 #Hadoop-YARN		3.1.4		ETH
 #Hadoop-YARN		3.1.4		IPoIB
 #Hadoop-YARN		3.2.4		ETH
 #Hadoop-YARN		3.2.4		IPoIB
-#Hadoop-YARN		3.3.3		ETH
+Hadoop-YARN		3.3.3		ETH
 #Hadoop-YARN		3.3.3		IPoIB
 #RDMA-Hadoop		0.9.9		ETH
 #RDMA-Hadoop		0.9.9		IPoIB
