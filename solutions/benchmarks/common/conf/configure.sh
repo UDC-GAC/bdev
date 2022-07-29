@@ -2,13 +2,14 @@
 
 export HDFS=hdfs://$MASTERNODE:$FS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
-export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/tpcx-hs-master-1.0_2.12.jar
+export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
+export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/${TPCX_HS_JAR_NAME}
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TPCX_HS_ROWS_NUMBER=$(( $TPCX_HS_DATASIZE / 100 ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
-export HADOOP_CLASSPATH=`$HADOOP_EXECUTABLE classpath`
+export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
 export CHMOD="-chmod -R"
 
 if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
@@ -123,6 +124,23 @@ do
 	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
 	then
 		export GEN_TPCX_HS="true"
+
+		if [[ ! -f $TPCX_HS_JAR ]]
+		then
+			# Download TPCx-HS jar file
+			URL=https://bdev.des.udc.es/dist/tpcx-hs
+			m_echo "Downloading $TPCX_HS_JAR_NAME from $URL"
+
+        		wget -q -O $TPCX_HS_JAR $URL/$TPCX_HS_JAR_NAME
+
+        		if [[ $? != 0 ]]
+        		then
+				rm $TPCX_HS_JAR >& /dev/null
+				m_exit "Error when downloading $TPCX_HS_JAR_NAME"
+        		fi
+		else
+			m_echo "Using $TPCX_HS_JAR"
+		fi
 	elif [[ "$BENCHMARK" == "pagerank" ]]
 	then
 		export GEN_PAGERANK="true"
