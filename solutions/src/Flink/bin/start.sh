@@ -10,7 +10,7 @@ for j in `cat ${SLAVESFILE}`; do
         ssh $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
 
-HADOOP_CLASSPATH=`$HADOOP_HOME/bin/hadoop classpath`
+#Save Hadoop classpath to a file
 echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 
 $FLINK_HOME/bin/start-cluster.sh
