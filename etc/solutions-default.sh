@@ -3,7 +3,7 @@
 ## Configuration parameters for the frameworks
 
 #FLAME-MR
-export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.3
+export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.2
 export FLAMEMR_WORKERS_PER_NODE=1 # Number of workers per node
 export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"` # Number of cores per Worker
 export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
