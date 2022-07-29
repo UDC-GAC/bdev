@@ -132,7 +132,7 @@ case $startStop in
     fi
 
     hadoop_rotate_log $log
-    echo starting $command on $HADOOP_IP_ADDRESS, logging to $log
+    echo starting $command on $HOSTNAME, logging to $log
     cd "$HADOOP_PREFIX"
     nohup nice -n $HADOOP_NICENESS "$HADOOP_PREFIX"/bin/hadoop --config $HADOOP_CONF_DIR $command "$@" > "$log" 2>&1 < /dev/null 
     #echo $! > $pid

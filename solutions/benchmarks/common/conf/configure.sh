@@ -2,11 +2,14 @@
 
 export HDFS=hdfs://$MASTERNODE:$FS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
+export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
+export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/${TPCX_HS_JAR_NAME}
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
+export TPCX_HS_ROWS_NUMBER=$(( $TPCX_HS_DATASIZE / 100 ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
-export HADOOP_CLASSPATH=`$HADOOP_EXECUTABLE classpath`
+export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
 export CHMOD="-chmod -R"
 
 if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
@@ -68,6 +71,7 @@ export INPUT_WORDCOUNT="${HDFS}/Input/WordCount"
 export INPUT_SORT="${HDFS}/Input/Sort"
 export INPUT_GREP="${HDFS}/Input/Grep"
 export INPUT_TERASORT="${HDFS}/Input/TeraSort"
+export INPUT_TPCX_HS="${HDFS}/Input/TPCx-HS"
 export INPUT_PAGERANK="${HDFS}/Input/PageRank"
 export INPUT_CC="${HDFS}/Input/ConnectedComponents"
 export INPUT_KMEANS="${HDFS}/Input/KMeans"
@@ -80,6 +84,7 @@ export OUTPUT_WORDCOUNT="${HDFS}/Output/WordCount"
 export OUTPUT_SORT="${HDFS}/Output/Sort"
 export OUTPUT_GREP="${HDFS}/Output/Grep"
 export OUTPUT_TERASORT="${HDFS}/Output/TeraSort"
+export OUTPUT_TPCX_HS="${HDFS}/Output/TPCx-HS"
 export OUTPUT_PAGERANK="${HDFS}/Output/PageRank"
 export OUTPUT_CC="${HDFS}/Output/ConnectedComponents"
 export OUTPUT_KMEANS="${HDFS}/Output/KMeans"
@@ -90,8 +95,9 @@ export OUTPUT_SCAN="${HDFS}/Output/Scan"
 
 export GEN_WORDCOUNT="false"
 export GEN_SORT="false"
-export GEN_TERASORT="false"
 export GEN_GREP="false"
+export GEN_TERASORT="false"
+export GEN_TPCX_HS="false"
 export GEN_CC="false"
 export GEN_PAGERANK="false"
 export GEN_KMEANS="false"
@@ -115,6 +121,26 @@ do
 	elif [[ "$BENCHMARK" == "grep" ]]
 	then
 		export GEN_GREP="true"
+	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
+	then
+		export GEN_TPCX_HS="true"
+
+		if [[ ! -f $TPCX_HS_JAR ]]
+		then
+			# Download TPCx-HS jar file
+			URL=https://bdev.des.udc.es/dist/tpcx-hs
+			m_echo "Downloading $TPCX_HS_JAR_NAME from $URL"
+
+        		wget -q -O $TPCX_HS_JAR $URL/$TPCX_HS_JAR_NAME
+
+        		if [[ $? != 0 ]]
+        		then
+				rm $TPCX_HS_JAR >& /dev/null
+				m_exit "Error when downloading $TPCX_HS_JAR_NAME"
+        		fi
+		else
+			m_echo "Using $TPCX_HS_JAR"
+		fi
 	elif [[ "$BENCHMARK" == "pagerank" ]]
 	then
 		export GEN_PAGERANK="true"

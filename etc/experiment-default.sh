@@ -23,6 +23,10 @@ export TERASORT_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Byte
 export GREP_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
 export GREP_REGEX=".*toxoplasmosis.*"		# Regular expression
 
+#TPCx-HS
+export TPCX_HS_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
+export SPARK_HSSORT_IMPL="HSSort"		# TPCx-HS implementation for Spark. Values = [ HSSort | HSOptimizedSort ]
+
 #TestDFSIO
 export DFSIO_N_FILES=32		# Number of files to generate
 export DFSIO_FILE_SIZE=10	# Size of each file (MBytes)
@@ -77,4 +81,5 @@ export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of th
 #export AGGREGATION_TIMEOUT=0
 #export JOIN_TIMEOUT=0
 #export SCAN_TIMEOUT=0
+#export TPCX_HS_TIMEOUT=0
 #export COMMAND_TIMEOUT=0

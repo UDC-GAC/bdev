@@ -21,6 +21,7 @@ export FLINK_PARALLELISM=$(($FLINK_TASKMANAGERS * $FLINK_TASKMANAGER_SLOTS))
 export FLINK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export FLINK_SERIES=`echo ${FLINK_MAJOR_VERSION} | cut -d '.' -f 1`
 export FLINK_CONFIG_YAML_FILE=$SOL_CONF_DIR/flink-conf.yaml
+export FLINK_HADOOP_CLASSPATH=$SOL_CONF_DIR/classpath
 
 #YARN environment variables
 export HADOOP_HOME=$FLINK_HADOOP_HOME
@@ -68,13 +69,13 @@ export DEPLOY_ARGS="-p ${FLINK_PARALLELISM}"
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]]
+	if [[ $FLINK_MAJOR_VERSION != "1.15" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
 	
-	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.flink.size: $FLINK_JOBMANAGER_HEAPSIZE"
-	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.flink.size: $FLINK_TASKMANAGER_HEAPSIZE"
+	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.process.size: $FLINK_JOBMANAGER_MEMORY"
+	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_TASKMANAGER_MEMORY"
 else
 	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 fi

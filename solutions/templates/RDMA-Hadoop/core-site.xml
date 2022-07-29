@@ -8,14 +8,18 @@
     <value>$tmp_dir/hadoop</value>
   </property>
   <property>
-    <name>slave.host.name</name>
-    <value>${HADOOPHOSTNAME}</value>
-  </property>
-  <property>
     <name>io.file.buffer.size</name>
     <value>$io_file_buffer_size</value>
   </property>
-
+  <property>
+	<name>ipc.client.rpc-timeout.ms</name>
+	<value>$ipc_client_rpc_timeout</value>
+  </property>
+  <property>
+	<name>ipc.ping.interval</name>
+	<value>$ipc_ping_interval</value>
+  </property>
+  
 <!-- RDMA-Hadoop specific -->
   <property>
     <name>hadoop.ib.enabled</name>

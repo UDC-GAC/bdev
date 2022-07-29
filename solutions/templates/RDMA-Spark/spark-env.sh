@@ -29,17 +29,15 @@
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
 SPARK_LOCAL_IP=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
+SPARK_LOCAL_HOSTNAME=`$method_bin_dir/$hostname_script $hostfile`
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
 SPARK_LOCAL_DIRS=$spark_local_dirs
 # - MESOS_NATIVE_JAVA_LIBRARY, to point to your libmesos.so if you use Mesos
 
-# Options read in YARN client/cluster mode
+# Options read in any mode
 # - SPARK_CONF_DIR, Alternate conf dir. (Default: ${SPARK_HOME}/conf)
-# - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
-HADOOP_CONF_DIR=$hadoop_conf_dir
-# - YARN_CONF_DIR, to point Spark towards YARN configuration files when you use YARN
-YARN_CONF_DIR=$hadoop_conf_dir
+SPARK_CONF_DIR=$spark_conf_dir
 # - SPARK_EXECUTOR_INSTANCES, Number of workers to start (Default: 2)
 SPARK_EXECUTOR_INSTANCES=$spark_executor_instances
 # - SPARK_EXECUTOR_CORES, Number of cores for the executors (Default: 1).
@@ -49,10 +47,18 @@ SPARK_EXECUTOR_MEMORY=$spark_yarn_executor_memoryM
 # - SPARK_DRIVER_MEMORY, Memory for Driver (e.g. 1000M, 2G) (Default: 1G)
 SPARK_DRIVER_MEMORY=$spark_driver_memoryM
 
+# Options read in any cluster manager using HDFS
+# - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
+HADOOP_CONF_DIR=$hadoop_conf_dir
+
+# Options read in YARN client/cluster mode
+# - YARN_CONF_DIR, to point Spark towards YARN configuration files when you use YARN
+YARN_CONF_DIR=$hadoop_conf_dir
+
 # Options for the daemons used in the standalone deploy mode
 # - SPARK_MASTER_HOST, to bind the master to a different IP address or hostname
 SPARK_MASTER_HOST=$master
-SPARK_MASTER_IP=$master
+SPARK_MASTER_IP=$ip_master
 # - SPARK_MASTER_PORT / SPARK_MASTER_WEBUI_PORT, to use non-default ports for the master
 # - SPARK_MASTER_OPTS, to set config properties only for the master (e.g. "-Dx=y")
 # - SPARK_WORKER_CORES, to set the number of cores to use on this machine
@@ -73,11 +79,15 @@ SPARK_DAEMON_MEMORY=$spark_daemon_memoryM
 # - SPARK_DAEMON_CLASSPATH, to set the classpath for all daemons
 # - SPARK_PUBLIC_DNS, to set the public dns name of the master or workers
 
+# Options for launcher
+# - SPARK_LAUNCHER_OPTS, to set config properties and Java options for the launcher (e.g. "-Dx=y")
+
 # Generic options for the daemons used in the standalone deploy mode
 # - SPARK_CONF_DIR      Alternate conf dir. (Default: ${SPARK_HOME}/conf)
 SPARK_CONF_DIR=$spark_conf_dir
 # - SPARK_LOG_DIR       Where log files are stored.  (Default: ${SPARK_HOME}/logs)
 SPARK_LOG_DIR=$spark_log_dir
+# - SPARK_LOG_MAX_FILES Max log files of Spark daemons can rotate to. Default is 5.
 # - SPARK_PID_DIR       Where the pid file is stored. (Default: /tmp)
 SPARK_PID_DIR=$tmp_dir/spark/pid
 # - SPARK_IDENT_STRING  A string representing this instance of spark. (Default: $USER)
@@ -87,4 +97,8 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 # You might get better performance to enable these options if using native BLAS (see SPARK-21305).
 # - MKL_NUM_THREADS=1        Disable multi-threading of Intel MKL
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
-LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
+
+# Extra options added by BDEv
+export LD_LIBRARY_PATH=$hadoop_home/lib/native:$LD_LIBRARY_PATH
+export SPARK_DIST_CLASSPATH=$($hadoop_home/bin/hadoop classpath)
+

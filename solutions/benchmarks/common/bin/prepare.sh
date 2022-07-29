@@ -63,6 +63,18 @@ then
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 fi
 
+if [[ $GEN_TPCX_HS == "true" ]]
+then
+	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
+
+	OPTIONS="-t hsgen \
+		-n ${INPUT_TPCX_HS} \
+		-m ${MAPPERS_NUMBER} \
+		-p ${TPCX_HS_ROWS_NUMBER}"
+
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+fi
+
 if [[ $GEN_PAGERANK == "true" ]]
 then
 	m_echo "Generating PageRank data: ${PAGERANK_PAGES} pages"

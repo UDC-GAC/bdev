@@ -5,6 +5,7 @@ wordcount		# Counts the number of times each word appears in the input data set
 #sort			# Sorts the input data set
 #grep			# Counts the matches of a regular expression in the input data set
 #terasort		# Sorts 100B-sized <key,value> tuples
+#tpcx_hs		# TPC Express Benchmark HS: Sorts the input data set into a total order
 #pagerank		# Graph algorithm which ranks elements by counting the number and quality of the links to each one
 #connected_components	# Graph algorithm which finds the connected components of a graph
 #bayes			# Performs the Naive Bayesian classification algorithm

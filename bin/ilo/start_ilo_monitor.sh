@@ -2,6 +2,11 @@
 
 mkdir -p $POWERLOGDIR
 
+if [[ $ILO_MASTER == "localhost" ]]
+then
+        export ILO_MASTER=$MASTERNODE
+fi
+
 m_echo "iLO master: $ILO_MASTER"
 
 nohup /usr/bin/ssh $ILO_MASTER \

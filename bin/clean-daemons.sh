@@ -1,27 +1,13 @@
 #!/bin/sh
 
-sleep 2
+sleep 1
 
-for slave in $MASTERNODE $SLAVENODES
+for SLAVE in $MASTERNODE $SLAVENODES
 do
-	DAEMON_PIDS=`ssh $slave "${LOAD_JAVA_COMMAND}; ${JPS}" | \
-		egrep \
-		"NameNode|DataNode|ResourceManager|NodeManager|JobTracker|TaskTracker|JobHistoryServer|ApplicationHistoryServer|RunJar|Child|MRAppMaster|YarnChild|MPI_D_Runner|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner|CliFrontend" \
-		| cut -f 1 -d " "`
-	
-	DAEMON_PIDS=`echo $DAEMON_PIDS`
-	
-	ssh $slave "
-	if [[ \"x$DAEMON_PIDS\" != \"x\" ]];
-	then
-		kill -9 $DAEMON_PIDS;
-	fi;
-	killall -q -9 hydra_pmi_proxy; \
-	killall -q -9 python; \
-	killall -q -9 ${PYTHON3_BIN}; \
-	killall -q -9 ocount; \
-	killall -q -9 rapl_plot; \
-	rm -rf $TMP_DIR $LOCAL_DIRS; \
-	mkdir -p $TMP_DIR $LOCAL_DIRS"
+	ssh $SLAVE "export JPS=${JPS};\
+		export TMP_DIR=${TMP_DIR};\
+		export LOCAL_DIRS=${LOCAL_DIRS};\
+		export DOOL_COMMAND_NAME=${DOOL_COMMAND_NAME};\
+		export PYTHON3_BIN=${PYTHON3_BIN};\
+		$METHOD_BIN_DIR/clean-node.sh"
 done
-

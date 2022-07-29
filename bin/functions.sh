@@ -30,13 +30,9 @@ function m_warn() {
 
 export -f m_err
 
-
 function m_exit() {
 	m_err $@
-
-	if [ ! -z ${SOLUTION_DIR+x} ]; then
-		. $SOLUTION_DIR/bin/finish.sh
-	fi
+	bash $CLEAN_DAEMONS_SCRIPT
 	exit -1
 }
 
@@ -205,54 +201,98 @@ function load_nodes()
 
 export -f load_nodes
 
-function get_nodes_by_name() 
+function get_nodes_by_hostname() 
 {
 	NODE_FILE=${1}
         NODES=${*:2}
-	IP_NODES=""
+	OUT_NODES=""
 	touch $NODE_FILE
         for NODE in $NODES
         do
-		OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+        	if [[ $NODE == "localhost" ]] || [[ $NODE == $LOOPBACK_IP ]]; then
+        		OUT=`echo $LOOPBACK_IP localhost`
+        	else
+			OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+		fi
+		
+		if [[ -z "${OUT}" ]]; then
+			m_exit "Node $NODE could not be revolved"
+		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
-		IP_NODES="${IP_NODES} ${NODE_IP}"
+
+		if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+		else
+			OUT_NODES="${OUT_NODES} ${NODE_IP}"
+		fi
+
                 echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
         done
-        echo $IP_NODES
+
+        echo $OUT_NODES
 }
 
-export -f get_nodes_by_name
+export -f get_nodes_by_hostname
 
 function get_nodes_by_interface() 
 {
 	NODE_FILE=${1}
 	INTERFACE=${2}
 	NODES=${*:3}
-	INTERFACE_NODES=""
+	OUT_NODES=""
 	touch $NODE_FILE
-	for NODE in $NODES
-	do
-		INTERFACE_IP=`ssh $NODE "$IP_COMMAND addr show" | grep $INTERFACE | grep inet | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
-		INTERFACE_NODES="${INTERFACE_NODES} ${INTERFACE_IP}"
-		echo "$NODE $INTERFACE_IP" >> $NODE_FILE
-	done
-	echo $INTERFACE_NODES
+        SUCCESS=1
+        for NODE in $NODES
+        do
+                INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
+                if [[ ! $? -eq 0 ]]; then
+                        m_exit "$INTERFACE interface not found or not configured for $NODE"
+                fi
+                INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
+                if [[ -z "${INTERFACE_IP}" ]]; then
+                        m_exit "IP not found for $NODE using $INTERFACE interface"
+                fi
+                OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
+                if [[ -z "${OUT}" ]]; then
+                        SUCCESS=0
+                        NODE_IP=$INTERFACE_IP
+                        NODE_NAME=$NODE
+                else
+                        NODE_IP=`echo $OUT | awk '{print $1}'`
+                        NODE_NAME=`echo $OUT | awk '{print $2}'`
+                fi
+
+                if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+                        OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+                else
+                        OUT_NODES="${OUT_NODES} ${NODE_IP}"
+                fi
+
+                echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
+        done
+
+        echo $OUT_NODES
+
+        if [[ $SUCCESS -ne 1 ]]; then
+                m_warn "IP to hostname resolution not working for $INTERFACE"
+        fi
 }
 
 export -f get_nodes_by_interface
 
 function set_network_configuration()
 {
-	if [[ "${SOLUTION_NET_INTERFACE}" == "gbe" ]]
+	if [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]
 	then
-		if [[ -n ${GBE_COMPUTE_NODES} ]]
+		if [[ -n ${ETH_COMPUTE_NODES} ]]
 		then
-			load_nodes ${GBE_COMPUTE_NODES}
-			export NET_INTERFACE=$GBE_INTERFACE
-			FILE=$NODE_FILE_GBE
+			load_nodes ${ETH_COMPUTE_NODES}
+			export NET_INTERFACE=$ETH_INTERFACE
+			FILE=$NODE_FILE_ETH
 		else
-			load_nodes ${IP_COMPUTE_NODES}
+			load_nodes ${COMPUTE_NODES}
+			export NET_INTERFACE=default
 			FILE=$NODE_FILE
 		fi
 	else 
@@ -264,15 +304,19 @@ function set_network_configuration()
 				export NET_INTERFACE=$IPOIB_INTERFACE
 				FILE=$NODE_FILE_IPOIB
 			else
-				load_nodes ${IP_COMPUTE_NODES}
+				load_nodes ${COMPUTE_NODES}
+				export NET_INTERFACE=default
 				FILE=$NODE_FILE
 			fi	
 		else
-			m_exit "Invalid network interface: $SOLUTION_NET_INTERFACE (revise network settings)"
+			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 		fi
 	fi
 
+	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
+	MASTERIP=`$METHOD_BIN_DIR/get_ip_from_hostname.sh $FILE`
 	add_conf_param "master" $MASTERNODE
+	add_conf_param "ip_master" $MASTERIP
 	add_conf_param "net_interface" $NET_INTERFACE
 	add_conf_param "hostfile" $FILE
 }
@@ -418,7 +462,7 @@ function write_report(){
 		then
 			mkdir -p $PLOT_DIR
 		fi
-		bash $PLOT_HOME/plot_benchmark.sh >> $PLOT_DIR/log 2>&1
+		bash $PLOT_HOME/plot_benchmarks.sh >> $PLOT_DIR/log 2>&1
 	fi
 
 	if [[ $ENABLE_RAPL == "true" ]]
@@ -460,6 +504,7 @@ function begin_report(){
 	REPORT="$REPORT \t Sort datasize (B) \t\t\t $SORT_DATASIZE \n"
 	REPORT="$REPORT \t TeraSort datasize (B) \t\t\t $TERASORT_DATASIZE \n"
 	REPORT="$REPORT \t Grep datasize (B) \t\t\t $GREP_DATASIZE \n"
+	REPORT="$REPORT \t TPCx-HS datasize (B) \t\t\t $TPCX_HS_DATASIZE \n"
 	REPORT="$REPORT \t PageRank pages \t\t\t $PAGERANK_PAGES \n"
 	REPORT="$REPORT \t PageRank iterations \t\t\t $PAGERANK_MAX_ITERATIONS \n"
 	REPORT="$REPORT \t ConCmpt pages \t\t\t\t $CC_PAGES \n"
@@ -484,11 +529,11 @@ function begin_report(){
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
 	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
-	if [[ -n $GBE_INTERFACE ]]
+	if [[ -n $ETH_INTERFACE ]]
 	then
-		REPORT="$REPORT \t GbE interface  \t\t\t $GBE_INTERFACE \n"
+		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
 	else
-		REPORT="$REPORT \t GbE interface  \t\t\t Not specified \n"
+		REPORT="$REPORT \t ETH interface  \t\t\t Not specified \n"
 	fi
 	if [[ -n $IPOIB_INTERFACE ]]
 	then
@@ -498,7 +543,7 @@ function begin_report(){
 	fi
 	REPORT="$REPORT \t Cores per node \t\t\t $CORES_PER_NODE \n"
 	REPORT="$REPORT \t Total memory per node (MB) \t\t $MEMORY_PER_NODE \n"
-	REPORT="$REPORT \t Available memory per node (MB) \t $MEMORY_AVAIL_PER_NODE \n"
+	REPORT="$REPORT \t Allocated memory per node (MB) \t $MEMORY_ALLOC_PER_NODE \n"
 	REPORT="$REPORT \t YARN RM daemon heapsize (MB)  \t\t $RESOURCEMANAGER_D_HEAPSIZE \n"
 	REPORT="$REPORT \t YARN NM daemon heapsize (MB)  \t\t $NODEMANAGER_D_HEAPSIZE \n"
 	REPORT="$REPORT \t YARN NM vcores  \t\t\t $NODEMANAGER_VCORES \n"
@@ -512,6 +557,7 @@ function begin_report(){
 	REPORT="$REPORT \t HDFS replication factor  \t\t $REPLICATION_FACTOR \n"
 	REPORT="$REPORT \t HDFS NN handlers \t\t\t $NAMENODE_HANDLER_COUNT \n"
 	REPORT="$REPORT \t HDFS NN access times \t\t\t $NAMENODE_ACCESTIME_PRECISION \n"
+	REPORT="$REPORT \t HDFS DN handlers \t\t\t $DATANODE_HANDLER_COUNT \n"
 	REPORT="$REPORT \t HDFS short-circuit local reads \t $SHORT_CIRCUIT_LOCAL_READS \n"
 	REPORT="$REPORT \t HDFS client domain socket path \t $DOMAIN_SOCKET_PATH \n"
 	REPORT="$REPORT \t Mappers per node  \t\t\t $MAPPERS_PER_NODE \n"
@@ -553,13 +599,9 @@ function begin_report(){
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
-	REPORT="$REPORT \t Flink JobManager heapsize (MB) \t $FLINK_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink TaskManager memory (MB) \t\t $FLINK_TASKMANAGER_MEMORY \n"
-	REPORT="$REPORT \t Flink TaskManager heapsize (MB) \t $FLINK_TASKMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink YARN JobManager memory (MB) \t $FLINK_YARN_JOBMANAGER_MEMORY \n"
-	REPORT="$REPORT \t Flink YARN JobManager heapsize (MB) \t $FLINK_YARN_JOBMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \t Flink YARN TaskManager memory (MB) \t $FLINK_YARN_TASKMANAGER_MEMORY \n"
-	REPORT="$REPORT \t Flink YARN TaskManager heapsize (MB) \t $FLINK_YARN_TASKMANAGER_HEAPSIZE \n"
 	REPORT="$REPORT \n Benchmarks: \n"
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
@@ -760,14 +802,17 @@ function end_benchmark(){
 
 	if [[ $ENABLE_OPROFILE == "true" ]]
 	then
+		m_echo "Generating Oprofile data"
 		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
 	fi
 	if [[ $ENABLE_RAPL == "true" ]]
 	then
+		m_echo "Generating RAPL data"
 		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
+		m_echo "Generating dstat/dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 }

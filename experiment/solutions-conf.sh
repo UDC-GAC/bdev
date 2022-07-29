@@ -3,7 +3,7 @@
 ### Configuration parameters for the frameworks
 #
 ##FLAME-MR
-#export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.1
+#export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.2
 #export FLAMEMR_WORKERS_PER_NODE=1 # Number of workers per node
 #export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"` # Number of cores per Worker
 #export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
@@ -26,7 +26,7 @@
 #export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 #
 ## Spark (common)
-#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.2
+#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.3
 #export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 #export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 #export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
@@ -56,7 +56,7 @@
 #export SPARK_MEMORY_RESERVED=`op_int "$SPARK_DAEMON_MEMORY + $DATANODE_D_HEAPSIZE"` # Memory reserved to other services
 #export SPARK_WORKERS_PER_NODE=1 # Number of workers per node (recommended 1 per node)
 #export SPARK_WORKER_CORES=`op_int "$NODEMANAGER_VCORES / $SPARK_WORKERS_PER_NODE"` # Number of cores per Worker
-#export SPARK_WORKER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $SPARK_MEMORY_RESERVED) / $SPARK_WORKERS_PER_NODE"` # Memory available to Workers
+#export SPARK_WORKER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $SPARK_MEMORY_RESERVED) / $SPARK_WORKERS_PER_NODE"` # Memory available to Workers
 #export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 #export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
 #export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
@@ -77,20 +77,20 @@
 #export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 #
 ## Flink (common)
-#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.2
+#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.3
 #export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 #export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 #export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 #export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
 #export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 #export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.2 # Fraction of total Flink memory to be used as network memory
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb" # Maximum network memory size for TaskExecutors
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskExecutors
-#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="128mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
-#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="256mb" # Framework off-heap Memory size for TaskManagers
-#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=1024 # Minimum number of network buffers required per sort-merge blocking result partition
-#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM=1 # Hash-based blocking shuffle is used for parallelism smaller than this threshold. Otherwise, sort-merge one is used
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb"  # Maximum network memory size for TaskManagers
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
+#export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
+#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=512 # Minimum number of network buffers required per sort-merge blocking result partition
+#export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_PARALLELISM=1 # Hash-based blocking shuffle is used for parallelism smaller than this threshold. Otherwise, sort-merge is used
 #export FLINK_TASKMANAGER_NETWORK_SHUFFLE_COMPRESS=true # Compress shuffle data for blocking shuffle
 #export FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT=120 # Netty client connection timeout (in seconds)
 #export FLINK_HEARTBEAT_TIMEOUT=120000 # Timeout for requesting and receiving heartbeat for both sender and receiver sides (in milliseconds)
@@ -100,19 +100,13 @@
 #export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 #
 ## Flink standalone
-#export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY       # Memory allocated to the JobManager
-#export FLINK_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE   # JobManager heapsize
-#export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE # Memory reserved to other services
-#export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_AVAIL_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-#export FLINK_TASKMANAGER_HEAPSIZE_FACTOR=0.95 # Percentage of the TaskManager memory allocated to heap
-#export FLINK_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
+#export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
+#export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE	# Memory reserved to other services
+#export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 #
 ## Flink on YARN
 #export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-#export FLINK_YARN_JOBMANAGER_HEAPSIZE=$APP_MASTER_HEAPSIZE	# JobManager heapsize
 #export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
-#export FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR=0.90 # Percentage of the TaskManager memory allocated to heap
-#export FLINK_YARN_TASKMANAGER_HEAPSIZE=`op_int "$FLINK_YARN_TASKMANAGER_MEMORY * $FLINK_YARN_TASKMANAGER_HEAPSIZE_FACTOR"` # TaskManager heapsize
 #
 ## DataMPI
 #export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1

@@ -21,6 +21,7 @@ export FLINK_PARALLELISM=$(($FLINK_TASKMANAGERS * $FLINK_TASKMANAGER_SLOTS))
 export FLINK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export FLINK_SERIES=`echo ${FLINK_MAJOR_VERSION} | cut -d '.' -f 1`
 export FLINK_CONFIG_YAML_FILE=$SOL_CONF_DIR/flink-conf.yaml
+export FLINK_HADOOP_CLASSPATH=$SOL_CONF_DIR/classpath
 
 #YARN environment variables
 export HADOOP_HOME=$FLINK_HADOOP_HOME
@@ -61,12 +62,12 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 #Deploy mode
 export FINISH_YARN="false"
 export DEPLOY_ARGS="-m yarn-cluster \
-	-yjm $FLINK_YARN_JOBMANAGER_HEAPSIZE \
+	-yjm $FLINK_YARN_JOBMANAGER_MEMORY \
 	-ys $FLINK_TASKMANAGER_SLOTS"
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.11" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]]
+	if [[ $FLINK_MAJOR_VERSION != "1.15" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi

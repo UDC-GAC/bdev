@@ -10,6 +10,9 @@ for j in `cat ${SLAVESFILE}`; do
         ssh $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
 
+#Save Hadoop classpath to a file
+echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
+
 if [[ $FLINK_HISTORY_SERVER == "true" ]]
 then
         $HADOOP_EXECUTABLE fs ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}

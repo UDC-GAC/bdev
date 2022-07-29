@@ -23,8 +23,8 @@ export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 
 # Extra Java runtime options.  Empty by default.
 # export HADOOP_OPTS=-server
-
-export HADOOP_OPTS="-Djava.io.tmpdir=$tmp_dir"
+export HADOOPHOSTNAME=`$method_bin_dir/$hostname_script $hostfile $loopback_ip`
+export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME}"
 
 # Command specific options appended to HADOOP_OPTS when specified
 #export HADOOP_NAMENODE_OPTS="-Dcom.sun.management.jmxremote $HADOOP_NAMENODE_OPTS"
@@ -76,6 +76,3 @@ export HADOOP_JOB_HISTORYSERVER_OPTS="-Xmx""${HADOOP_JOB_HISTORYSERVER_HEAPSIZE}
 
 # The scheduling priority for daemon processes.  See 'man nice'.
 # export HADOOP_NICENESS=10
-
-export HADOOP_IP_ADDRESS=`$method_bin_dir/get_ip_from_hostname.sh $hostfile`
-export HADOOP_OPTS="${HADOOP_OPTS} -Djava.net.preferIPv4Stack=true -DHADOOPHOSTNAME=${HADOOP_IP_ADDRESS}"

@@ -6,13 +6,13 @@
   </property>
 
   <property>
-    <name>yarn.nodemanager.hostname</name>
-    <value>${YARNHOSTNAME}</value>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>$master</value>
   </property>
 
   <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>$master</value>
+    <name>yarn.nodemanager.hostname</name>
+    <value>${YARNHOSTNAME}</value>
   </property>
 
   <property>

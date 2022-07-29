@@ -1,5 +1,13 @@
 <configuration>
   <property>
+    <name>dfs.datanode.hostname</name>
+    <value>${HADOOPHOSTNAME}</value>
+  </property>
+  <property>
+    <name>dfs.block.size</name>
+    <value>$blocksize</value>
+  </property>
+  <property>
     <name>dfs.replication</name>
     <value>$replication_factor</value>
   </property>
@@ -14,6 +22,14 @@
   <property>
     <name>dfs.namenode.handler.count</name>
     <value>$namenode_handler_count</value>
+  </property>
+  <property>
+    <name>dfs.datanode.handler.count</name>
+    <value>$datanode_handler_count</value>
+  </property>
+  <property>
+    <name>dfs.namenode.service.handler.count</name>
+    <value>$namenode_service_handler_count</value>
   </property>
   <property>
     <name>dfs.access.time.precision</name>
@@ -36,8 +52,20 @@
     <value>$net_interface</value>
   </property>
   <property>
-    <name>dfs.block.size</name>
-    <value>$blocksize</value>
+    <name>dfs.client.local.interfaces</name>
+    <value>$net_interface</value>
+  </property>
+  <property>
+    <name>dfs.datanode.use.datanode.hostname</name>
+    <value>$enable_hostnames</value>
+  </property>
+  <property>
+    <name>dfs.client.use.datanode.hostname</name>
+    <value>$enable_hostnames</value>
+  </property>
+  <property>
+    <name>dfs.client-write-packet-size</name>
+    <value>$client_write_packet_size</value>
   </property>
   <property>
     <name>dfs.socket.timeout</name>
@@ -46,5 +74,13 @@
   <property>
     <name>dfs.datanode.socket.write.timeout</name>
     <value>$datanode_socket_write_timeout</value>
+  </property>
+  <property>
+    <name>dfs.client.block.write.retries</name>
+    <value>$client_block_write_retries</value>
+  </property>
+  <property>
+    <name>dfs.client.block.write.locateFollowingBlock.retries</name>
+    <value>$client_block_write_locateblock_retries</value>
   </property>
 </configuration>

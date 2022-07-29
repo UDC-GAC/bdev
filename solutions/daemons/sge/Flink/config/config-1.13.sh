@@ -369,6 +369,9 @@ if [ -z "$HBASE_CONF_DIR" ]; then
     fi
 fi
 
+if [[ -f "${FLINK_CONF_DIR}/classpath" ]]; then
+	HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
+fi
 INTERNAL_HADOOP_CLASSPATHS="${HADOOP_CLASSPATH}:${HADOOP_CONF_DIR}:${YARN_CONF_DIR}"
 
 if [ -n "${HBASE_CONF_DIR}" ]; then
@@ -526,7 +529,7 @@ extractLoggingOutputs() {
 
 parseResourceParamsAndExportLogs() {
   local cmd=$1
-  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "$@")
+  java_utils_output=$(runBashJavaUtilsCmd ${cmd} "${FLINK_CONF_DIR}" "${FLINK_BIN_DIR}/bash-java-utils.jar:$(findFlinkDistJar)" "${@:2}")
   logging_output=$(extractLoggingOutputs "${java_utils_output}")
   params_output=$(extractExecutionResults "${java_utils_output}" 2)
 
@@ -552,9 +555,9 @@ logs: $logging_output
 }
 
 parseJmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_JM_RESOURCE_PARAMS "$@"
 }
 
 parseTmArgsAndExportLogs() {
-  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS
+  parseResourceParamsAndExportLogs GET_TM_RESOURCE_PARAMS "$@"
 }

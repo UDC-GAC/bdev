@@ -50,7 +50,8 @@ export PLOT_HOME=$METHOD_BIN_DIR/plot
 export STAT_HOME=$METHOD_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
 export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.0.0
-export DOOL_COMMAND=$DOOL_HOME/dool
+export DOOL_COMMAND_NAME=dool
+export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate"
 
 #RAPL
@@ -231,10 +232,19 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         fi
 fi
 
+if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+	HOSTNAME_SCRIPT=get_hostname.sh
+else
+	HOSTNAME_SCRIPT=get_ip_from_hostname.sh
+fi
+
 #Configuration parameters
 ini_conf_params
 add_conf_param "method_home" $METHOD_HOME
 add_conf_param "method_bin_dir" $METHOD_BIN_DIR
+add_conf_param "enable_hostnames" $ENABLE_HOSTNAMES
+add_conf_param "hostname_script" $HOSTNAME_SCRIPT
+add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
@@ -255,13 +265,22 @@ add_conf_param "replication_factor" $REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
+NAMENODE_SERVICE_HANDLER_COUNT=$(($NAMENODE_HANDLER_COUNT / 2))
+add_conf_param "namenode_service_handler_count" $NAMENODE_SERVICE_HANDLER_COUNT
+add_conf_param "datanode_handler_count" $DATANODE_HANDLER_COUNT
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
+add_conf_param "client_write_packet_size" $CLIENT_WRITE_PACKET_SIZE
 add_conf_param "client_socket_timeout" $CLIENT_SOCKET_TIMEOUT
+add_conf_param "client_block_write_retries" $CLIENT_BLOCK_WRITE_RETRIES
+CLIENT_BLOCK_LOCATEBLOCK_RETRIES=$(($CLIENT_BLOCK_WRITE_RETRIES * 2))
+add_conf_param "client_block_write_locateblock_retries" $CLIENT_BLOCK_LOCATEBLOCK_RETRIES
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
 add_conf_param "fs_port" $FS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
+add_conf_param "ipc_ping_interval" $IPC_PING_INTERVAL_MS
+add_conf_param "ipc_client_rpc_timeout" $IPC_CLIENT_RPC_TIMEOUT_MS
 add_conf_param "io_sort_factor" $IO_SORT_FACTOR
 add_conf_param "io_sort_mb" $IO_SORT_MB
 add_conf_param "shuffle_parallelcopies" $SHUFFLE_PARALLELCOPIES
