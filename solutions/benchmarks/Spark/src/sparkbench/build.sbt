@@ -1,27 +1,27 @@
 name := "sparkbench"
-version := "3.0"
-val sparkVersion = "3.0.0"
-scalaVersion := "2.12.13"
+version := "3.2"
+val sparkVersion = "3.2.0"
+crossScalaVersions := Seq("2.12.16", "2.13.8")
 
 libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.7.0" % "provided",
+"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.10.2" % "provided",
 "org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
 "com.github.scopt" %% "scopt" % "3.7.1"
 )
 
-assemblyShadeRules in assembly := Seq(
+assembly / assemblyShadeRules := Seq(
   ShadeRule.rename("com.github.scopt.**" -> "shadeSCOPT.@1").inAll
 )
 
-assemblyJarName in assembly := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
+assembly / assemblyJarName := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
 
-assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+assembly / assemblyOption := (assemblyOption in assembly).value.copy(includeScala = false)
 
 assemblyMergeStrategy in assembly := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
@@ -44,6 +44,6 @@ assemblyMergeStrategy in assembly := {
   case "log4j.properties" => MergeStrategy.last
   case "module-info.class" => MergeStrategy.discard
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
