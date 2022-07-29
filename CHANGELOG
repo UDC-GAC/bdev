@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.8 - 2022-07-XX
+BDEv 3.8 - 2022-07-29
 ---------------------
 	A point release for the BDEv 3.x line
 
@@ -19,7 +19,7 @@ BDEv 3.8 - 2022-07-XX
 				
 		- Support for the Flink 1.15.x line
 		
-		- New sorting benchmark for Hadoop, Spark and Flink: TPCx-HS
+		- Add new sorting benchmark for Hadoop, Spark and Flink: TPCx-HS
 
 		- Upate RGen data generator to support TPCx-HS (HSGen) and fix TeraGen bug with Hadoop 3.X
 				
@@ -35,11 +35,11 @@ BDEv 3.8 - 2022-07-XX
 		 
 		- Add HDFS parameter to configure handler count for DataNodes (hdfs-default.sh)
 
-		- Add option to set IP for loopback interface (system-default.sh)
+		- Add option to set an IP for loopback interface (system-default.sh)
 
 		- Improve frameworks cleanup
 		
-		- Add sanity checks for network setup
+		- Add sanity checks for networking setup
 				
 		- Remove support for Flink versions 1.11.x
 		
