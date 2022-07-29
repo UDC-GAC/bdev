@@ -21,7 +21,7 @@ BDEv 3.8 - 2022-07-29
 		
 		- Add new sorting benchmark for Hadoop, Spark and Flink: TPCx-HS
 
-		- Upate RGen data generator to support TPCx-HS (HSGen) and fix TeraGen bug with Hadoop 3.X
+		- Update RGen data generator to support TPCx-HS (HSGen) and fix TeraGen bug with Hadoop 3.X
 				
 		- Hadoop classpath is now automatically configured for Spark and Flink
 	
