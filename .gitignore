@@ -9,6 +9,5 @@ solutions/benchmarks/Spark/src/sparkbench/target
 solutions/benchmarks/Flink/src/flinkbench/project/target
 solutions/benchmarks/Flink/src/flinkbench/project/project/target
 solutions/benchmarks/Flink/src/flinkbench/target
-solutions/benchmarks/common/bin/tpcx
 third-party/mahout*
 third-party/hive*
