@@ -1,27 +1,27 @@
 name := "flinkbench"
-version := "1.10"
-val flinkVersion = "1.10.0"
-crossScalaVersions := Seq("2.11.12", "2.12.13")
+version := "1.12"
+val flinkVersion = "1.12.0"
+crossScalaVersions := Seq("2.11.12", "2.12.16")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
-"org.apache.hadoop" % "hadoop-client" % "2.10.1" % "provided",
+"org.apache.hadoop" % "hadoop-client" % "2.10.2" % "provided",
 "org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 )
 )
 
-assemblyShadeRules in assembly := Seq(
+assembly / assemblyShadeRules := Seq(
   ShadeRule.rename("org.apache.commons.cli.**" -> "shadeApacheCommonsCLI.@1").inAll
 )
 
-assemblyJarName in assembly := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
+assembly / assemblyJarName := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
 
-assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+assembly / assemblyOption := (assemblyOption in assembly).value.copy(includeScala = false)
 
-assemblyMergeStrategy in assembly := {
+assembly / assemblyMergeStrategy := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
   case PathList("javax", "inject", xs @ _*) => MergeStrategy.last
   case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
@@ -41,6 +41,6 @@ assemblyMergeStrategy in assembly := {
   case "log4j.properties" => MergeStrategy.last
   case "module-info.class" => MergeStrategy.discard
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
 }
