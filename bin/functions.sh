@@ -558,6 +558,7 @@ function begin_report(){
 	REPORT="$REPORT \t HDFS NN handlers \t\t\t $NAMENODE_HANDLER_COUNT \n"
 	REPORT="$REPORT \t HDFS NN access times \t\t\t $NAMENODE_ACCESTIME_PRECISION \n"
 	REPORT="$REPORT \t HDFS DN handlers \t\t\t $DATANODE_HANDLER_COUNT \n"
+	REPORT="$REPORT \t HDFS DN heartbeat interval \t\t $DATANODE_HEARTBEAT_INTERVAL \n"
 	REPORT="$REPORT \t HDFS short-circuit local reads \t $SHORT_CIRCUIT_LOCAL_READS \n"
 	REPORT="$REPORT \t HDFS client domain socket path \t $DOMAIN_SOCKET_PATH \n"
 	REPORT="$REPORT \t Mappers per node  \t\t\t $MAPPERS_PER_NODE \n"
