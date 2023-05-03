@@ -37,6 +37,11 @@ export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
 export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/clean-daemons.sh
 
+if [[ -z $EXP_DIR ]]
+then
+	export EXP_DIR=$METHOD_EXP_DIR
+fi
+
 #ILO
 export ILO_HOME=$METHOD_BIN_DIR/ilo
 export ILO_SCRIPTS=$THIRD_PARTY_DIR/ilo-5.30.0
@@ -70,6 +75,19 @@ export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
+# Load BDEv configuration to define OUT_DIR
+. $METHOD_CONF_DIR/bdev-default.sh
+. $EXP_DIR/bdev-conf.sh
+
+export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${METHOD_START_DATE}
+export REPORT_FILE=$REPORT_DIR/summary
+export REPORT_LOG=$REPORT_DIR/log
+export PLOT_DIR=$REPORT_DIR/graphs
+export RAPL_PLOT_DIR=$PLOT_DIR/rapl
+export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
+export ILO_DIR=$PLOT_DIR/ilo
+export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
+
 # Check if we are under a SGE environment
 if [[ -n "$SGE_ROOT" ]]
 then
@@ -85,15 +103,23 @@ then
         export SLURM_ENV="true"
 fi
 
+if [[ ! -d $REPORT_DIR ]]
+then
+        mkdir -p $REPORT_DIR
+	mkdir -p $REPORT_DIR/etc
+	mkdir -p $REPORT_DIR/experiment
+fi
+
+# Copy configuration to REPORT_DIR
+cp $METHOD_CONF_DIR/* $REPORT_DIR/etc
+cp $EXP_DIR/* $REPORT_DIR/experiment
+
+export METHOD_CONF_DIR=$REPORT_DIR/etc
+
 # Load default configuration
 . $METHOD_CONF_DIR/bdev-default.sh
 . $METHOD_CONF_DIR/system-default.sh
 . $METHOD_CONF_DIR/experiment-default.sh
-
-if [[ -z $EXP_DIR ]]
-then
-	export EXP_DIR=$METHOD_EXP_DIR
-fi
 
 export HOSTFILE_DEFAULT=$EXP_DIR/hostfile
 
@@ -140,19 +166,7 @@ fi
 . $METHOD_CONF_DIR/solutions-default.sh
 . $EXP_DIR/solutions-conf.sh
 
-export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${METHOD_START_DATE}
-export REPORT_FILE=$REPORT_DIR/summary
-export REPORT_LOG=$REPORT_DIR/log
-export PLOT_DIR=$REPORT_DIR/graphs
-export RAPL_PLOT_DIR=$PLOT_DIR/rapl
-export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
-export ILO_DIR=$PLOT_DIR/ilo
-export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
 
-if [[ ! -d $REPORT_DIR ]]
-then
-        mkdir -p $REPORT_DIR
-fi
 
 m_echo "Running $METHOD_NAME v$METHOD_VERSION"
 
