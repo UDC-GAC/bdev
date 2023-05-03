@@ -43,6 +43,10 @@ Hadoop-YARN		3.3.5		ETH
 #Spark                  3.3.2           IPoIB
 #Spark-YARN             3.3.2           ETH
 #Spark-YARN             3.3.2           IPoIB
+#Spark                  3.4.0          ETH
+#Spark                  3.4.0           IPoIB
+#Spark-YARN             3.4.0           ETH
+#Spark-YARN             3.4.0           IPoIB
 #RDMA-Spark		0.9.5		ETH
 #RDMA-Spark		0.9.5		IPoIB
 #RDMA-Spark-YARN		0.9.5		ETH

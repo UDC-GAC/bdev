@@ -31,11 +31,16 @@ constructFlinkClassPath() {
         fi
     done < <(find "$FLINK_LIB_DIR" ! -type d -name '*.jar' -print0 | sort -z)
 
-    if [[ "$FLINK_DIST" == "" ]]; then
-        # write error message to stderr since stdout is stored as the classpath
-        (>&2 echo "[ERROR] Flink distribution jar not found in $FLINK_LIB_DIR.")
+    local FLINK_DIST_COUNT
+    FLINK_DIST_COUNT="$(echo "$FLINK_DIST" | wc -l)"
 
-        # exit function with empty classpath to force process failure
+    # If flink-dist*.jar cannot be resolved write error messages to stderr since stdout is stored
+    # as the classpath and exit function with empty classpath to force process failure
+    if [[ "$FLINK_DIST" == "" ]]; then
+        (>&2 echo "[ERROR] Flink distribution jar not found in $FLINK_LIB_DIR.")
+        exit 1
+    elif [[ "$FLINK_DIST_COUNT" -gt 1 ]]; then
+        (>&2 echo "[ERROR] Multiple flink-dist*.jar found in $FLINK_LIB_DIR. Please resolve.")
         exit 1
     fi
 
@@ -43,17 +48,41 @@ constructFlinkClassPath() {
 }
 
 findFlinkDistJar() {
-    local FLINK_DIST="`find "$FLINK_LIB_DIR" -name 'flink-dist*.jar'`"
+    local FLINK_DIST
+    FLINK_DIST="$(find "$FLINK_LIB_DIR" -name 'flink-dist*.jar')"
+    local FLINK_DIST_COUNT
+    FLINK_DIST_COUNT="$(echo "$FLINK_DIST" | wc -l)"
 
+    # If flink-dist*.jar cannot be resolved write error messages to stderr since stdout is stored
+    # as the classpath and exit function with empty classpath to force process failure
     if [[ "$FLINK_DIST" == "" ]]; then
-        # write error message to stderr since stdout is stored as the classpath
         (>&2 echo "[ERROR] Flink distribution jar not found in $FLINK_LIB_DIR.")
-
-        # exit function with empty classpath to force process failure
+        exit 1
+    elif [[ "$FLINK_DIST_COUNT" -gt 1 ]]; then
+        (>&2 echo "[ERROR] Multiple flink-dist*.jar found in $FLINK_LIB_DIR. Please resolve.")
         exit 1
     fi
 
     echo "$FLINK_DIST"
+}
+
+findSqlGatewayJar() {
+    local SQL_GATEWAY
+    SQL_GATEWAY="$(find "$FLINK_OPT_DIR" -name 'flink-sql-gateway*.jar')"
+    local SQL_GATEWAY_COUNT
+    SQL_GATEWAY_COUNT="$(echo "$SQL_GATEWAY" | wc -l)"
+
+    # If flink-sql-gateway*.jar cannot be resolved write error messages to stderr since stdout is stored
+    # as the classpath and exit function with empty classpath to force process failure
+    if [[ "$SQL_GATEWAY" == "" ]]; then
+        (>&2 echo "[ERROR] Flink distribution jar not found in $FLINK_OPT_DIR.")
+        exit 1
+    elif [[ "$SQL_GATEWAY_COUNT" -gt 1 ]]; then
+        (>&2 echo "[ERROR] Multiple flink-sql-gateway*.jar found in $FLINK_OPT_DIR. Please resolve.")
+        exit 1
+    fi
+
+    echo "$SQL_GATEWAY"
 }
 
 # These are used to mangle paths that are passed to java when using

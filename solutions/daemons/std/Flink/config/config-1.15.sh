@@ -369,6 +369,7 @@ if [ -z "$HBASE_CONF_DIR" ]; then
     fi
 fi
 
+#BDEv
 if [[ -f "${FLINK_CONF_DIR}/classpath" ]]; then
 	HADOOP_CLASSPATH=`cat ${FLINK_CONF_DIR}/classpath`
 fi
@@ -469,11 +470,11 @@ TMWorkers() {
         command -v pdsh >/dev/null 2>&1
         if [[ $? -ne 0 ]]; then
             for worker in ${WORKERS[@]}; do
-                ssh -n $FLINK_SSH_OPTS $worker -- "FLINK_CONF_DIR=${FLINK_CONF_DIR} nohup /bin/bash -l \"${FLINK_BIN_DIR}/taskmanager.sh\" \"${CMD}\" &"
+                ssh -n $FLINK_SSH_OPTS $worker -- "FLINK_CONF_DIR=${FLINK_CONF_DIR} nohup /bin/bash -l \"${FLINK_BIN_DIR}/taskmanager.sh\" \"${CMD}\" &" #BDEv
             done
         else
             PDSH_SSH_ARGS="" PDSH_SSH_ARGS_APPEND=$FLINK_SSH_OPTS pdsh -w $(IFS=, ; echo "${WORKERS[*]}") \
-                "FLINK_CONF_DIR=${FLINK_CONF_DIR} nohup /bin/bash -l \"${FLINK_BIN_DIR}/taskmanager.sh\" \"${CMD}\""
+                "FLINK_CONF_DIR=${FLINK_CONF_DIR} nohup /bin/bash -l \"${FLINK_BIN_DIR}/taskmanager.sh\" \"${CMD}\"" #BDEv
         fi
     fi
 }
