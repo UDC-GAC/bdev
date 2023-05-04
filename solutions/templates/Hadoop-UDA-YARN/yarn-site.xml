@@ -2,7 +2,7 @@
 
   <property>
     <name>yarn.resourcemanager.scheduler.class</name>
-    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+    <value>$scheduler_class</value>
   </property>
 
   <property>

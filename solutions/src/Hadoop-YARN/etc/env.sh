@@ -33,3 +33,4 @@ else
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 fi
+

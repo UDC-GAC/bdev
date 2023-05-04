@@ -23,3 +23,4 @@ if [[ "$SGE_ENV" == "true" ]]
 then
 	export HADOOP_SSH_OPTS=" "
 fi
+

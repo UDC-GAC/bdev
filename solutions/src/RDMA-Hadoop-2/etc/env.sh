@@ -18,3 +18,4 @@ export PATH=$HADOOP_HOME/bin:$PATH
 
 export HADOOP_MR_VERSION="YARN"
 export HADOOP_SERIES=2
+

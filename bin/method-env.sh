@@ -252,6 +252,20 @@ else
 	HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
+if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
+	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+else
+	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
+		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+	else
+		if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
+			export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
+		else
+			m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
+		fi
+	fi
+fi
+
 #Configuration parameters
 ini_conf_params
 add_conf_param "method_home" $METHOD_HOME
@@ -320,6 +334,7 @@ add_conf_param "nodemanager_vmem_check" $NODEMANAGER_VMEM_CHECK
 add_conf_param "nodemanager_vmem_pmem_ratio" $NODEMANAGER_VMEM_PMEM_RATIO
 add_conf_param "nodemanager_max_disk_util_percent" $NODEMANAGER_MAX_DISK_UTIL_PERCENT
 add_conf_param "nodemanager_disk_health_checker" $NODEMANAGER_DISK_HEALTH_CHECKER
+add_conf_param "scheduler_class" $SCHEDULER_CLASS
 
 #UDA
 add_conf_param "uda_lib_dir" $UDA_LIB_DIR
