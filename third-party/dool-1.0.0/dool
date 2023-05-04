@@ -826,7 +826,7 @@ class dool_disk(dstat):
         for l in self.splitlines():
             if len(l) < 13: continue
             # if l[3:] == ['0',] * 11: continue
-            # Fix from github PR by TobiX
+            # BDEv fix from github PR by TobiX
             if l[3:] == ['0',] * (len(l) - 3): continue
             name = l[2]
             ret.append(name)
@@ -2640,13 +2640,13 @@ def main():
     ### Prepare CSV output file (unbuffered)
     if op.output:
         if not os.path.exists(op.output):
-            # Fix: DO not buffer writes to the output file
+            # BDEv fix: DO not buffer writes to the output file
             outputfile = open(op.output, 'w', 1)
             outputfile.write('"Dstat %s CSV output"\n' % VERSION)
             header = ('"Author:","Dag Wieers <dag@wieers.com>"','','','','"URL:"','"http://dag.wieers.com/home-made/dstat/"\n')
             outputfile.write(char['sep'].join(header))
         else:
-            # Fix: DO not buffer writes to the output file
+            # BDEv fix: DO not buffer writes to the output file
             outputfile = open(op.output, 'a', 1)
             outputfile.write('\n\n')
 
