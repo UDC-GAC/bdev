@@ -37,7 +37,7 @@ try:
 except ImportError:
     from collections import Sequence # Python 2.x
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 
 theme = { 'default': '' }
 
@@ -81,6 +81,7 @@ class Options:
         self.output       = False
         self.pidfile      = False
         self.profile      = ''
+        self.use_ascii    = False
 
         ### List of available plugins
         allplugins = listplugins()
@@ -106,12 +107,13 @@ class Options:
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat'] + allplugins)
+                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii'] + allplugins)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
 
         default_plugins = [ 'cpu', 'disk', 'net', 'load' ]
+
         plugin_defaults = 0
 
         for opt, arg in opts:
@@ -176,6 +178,8 @@ class Options:
                 self.bits = False
             elif opt in ['--bits']:
                 self.bits = True
+            elif opt in ['--ascii']:
+                self.use_ascii = True
             elif opt in ['--bw', '--black-on-white', '--blackonwhite']:
                 self.blackonwhite = True
             elif opt in ['--color']:
@@ -279,10 +283,10 @@ class Options:
         showplugins()
 
     def usage(self):
-        print('Usage: dool [-afv] [options..] [delay [count]]')
+        print('Usage: dool [options] [delay] [count]')
 
     def help(self):
-        print('''Versatile tool for generating system resource statistics)
+        print('''\nVersatile tool for generating system resource statistics
 
 Dool options:
   -c, --cpu                enable cpu stats
@@ -327,6 +331,7 @@ Dool options:
   -v, --vmstat             equals -pmgdsc -D total
 
   --bits                   force bits for values expressed in bytes
+  --bytes                  force bytes for output measurements
   --float                  force float values on screen
   --integer                force integer values on screen
 
@@ -337,6 +342,7 @@ Dool options:
   --noupdate               disable intermediate updates
   --output file            write CSV output to file
   --profile                show profiling statistics when exiting dool
+  --ascii                  output table in ascii not unicode box drawing
 
 delay is the delay in seconds between each update (default: 1)
 count is the number of updates to display before exiting (default: unlimited)
@@ -462,17 +468,19 @@ class dstat:
 
     def title(self):
         ret = theme['title']
+
         if isinstance(self.name, string_types):
             width = self.statwidth()
-            return ret + self.name[0:width].center(width).replace(' ', '-') + theme['default']
+            return ret + self.name[0:width].center(width).replace(' ', char['dash']) + theme['default']
         for i, name in enumerate(self.name):
             width = self.colwidth()
-            ret = ret + name[0:width].center(width).replace(' ', '-')
+            ret = ret + name[0:width].center(width).replace(' ', char['dash'])
             if i + 1 != len(self.vars):
                 if op.color:
                     ret = ret + theme['frame'] + char['dash'] + theme['title']
                 else:
                     ret = ret + char['space']
+
         return ret
 
     def subtitle(self):
@@ -502,7 +510,7 @@ class dstat:
 
                 # If it's not the last one
                 if i + 1 != len(self.name):
-                    ret += theme['frame'] + char['colon'] + ansi['reset']
+                    ret += theme['subtitle'] + char['space'] + ansi['reset']
                 else:
                     ret += ansi['reset']
 
@@ -572,7 +580,7 @@ class dstat:
 
             if isinstance(self.val[name], Sequence) and not isinstance(self.val[name], string_types):
                 line = line + cprintlist(self.val[name], ctype, self.width, scale)
-                sep  = theme['frame'] + char['colon']
+                sep  = theme['subtitle'] + char['colon'] + ansi['reset']
 
                 if i + 1 != len(self.vars):
                     line = line + sep
@@ -1354,8 +1362,10 @@ class dool_lock(dstat):
 class dool_mem(dstat):
     def __init__(self):
         self.name = 'memory usage'
-        self.nick = ('used', 'free', 'buff', 'cach')
-        self.vars = ('MemUsed', 'MemFree', 'Buffers', 'Cached')
+        #BDEV fix self.nick = ('used', 'free', 'cach', 'avai')
+        self.nick = ('used', 'free', 'buff', 'cach', 'avai')
+        #BDEV fix self.vars = ('MemUsed', 'MemFree', 'Cached', 'MemAvailable')
+        self.vars = ('MemUsed', 'MemFree', 'Buffers', 'Cached', 'MemAvailable')
         self.open('/proc/meminfo')
 
     def extract(self):
@@ -1369,7 +1379,11 @@ class dool_mem(dstat):
             if name in adv_extract_vars:
                 adv_val[name] = int(l[1]) * 1024.0
 
-        self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+        # Original math
+        #self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+
+        # New math that is closer to the `free` output
+        self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Cached'] - adv_val['SReclaimable']
 
 class dool_mem_adv(dool_mem):
     """
@@ -1866,6 +1880,14 @@ char = {
     'plus'       : '+',
     'underscore' : '_',
     'sep'        : ',',
+    'title_sep'  : '|',
+}
+
+char_box_draw = {
+    'pipe'       : u'\u2502',
+    'dash'       : u'\u2504',
+    'title_sep'  : u'\u252c',
+    'colon'      : u'\u250a',
 }
 
 def set_theme():
@@ -2259,7 +2281,7 @@ def header(totlist, vislist):
     for o in vislist:
         line += o.title()
         if o is not vislist[-1]:
-            line += theme['frame'] + char['space']
+            line += theme['frame'] + char['title_sep']
         elif totlist != vislist:
             line += theme['title'] + char['gt']
     line += '\n'
@@ -2637,6 +2659,10 @@ def main():
     if op.color == None:
         op.color = gettermcolor()
 
+    if not op.use_ascii:
+        for key in char_box_draw:
+            char[key] = char_box_draw[key]
+
     ### Prepare CSV output file (unbuffered)
     if op.output:
         if not os.path.exists(op.output):
@@ -2700,28 +2726,16 @@ def main():
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
-                    import imp
-                    fp, pathname, description = imp.find_module(pluginfile, pluginpath)
-                    fp.close()
+                    xpath = find_plugin_file(pluginfile, pluginpath)
 
-                    ### TODO: Would using .pyc help with anything ?
                     ### Try loading python plugin
-                    if description[0] in ('.py', ):
-                        exec(open(pathname).read())
-                        #execfile(pathname)
+                    if xpath:
+                        exec(open(xpath).read())
                         exec('global plug; plug = dstat_plugin(); del(dstat_plugin)')
                         plug.filename = pluginfile
                         plug.check()
                         plug.prepare()
 
-                    ### Try loading C plugin (not functional yet)
-                    elif description[0] == '.so':
-                        exec('import %s; global plug; plug = %s.new()' % (pluginfile, pluginfile))
-                        plug.check()
-                        plug.prepare()
-#                        print(dir(plug))
-#                        print(plug.__module__)
-#                        print(plug.name)
                     else:
                         print('Module %s is of unknown type.' % pluginfile, file=sys.stderr)
 
@@ -2852,7 +2866,7 @@ def perform(update):
                 newline = '\n' + ansi['reset'] + ansi['clearline']
             ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['column_zero'];
+                newline = ansi['clearline'] + ansi['column_zero'];
 
         ### Display header
         if showheader:
@@ -2905,6 +2919,15 @@ def stripcolor(self, mystr):
     ret         = ansi_escape.sub('', mystr)
 
     return ret
+
+# Look through each dir and try and find the .py file
+def find_plugin_file(name, dirs):
+    for x in dirs:
+        file = x + name + ".py"
+        if os.path.exists(file):
+            return file
+
+    return ""
 
 ### Main entrance
 if __name__ == '__main__':

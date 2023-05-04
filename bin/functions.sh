@@ -664,7 +664,7 @@ function start_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Starting dstat monitors"
+		m_echo "Starting dool monitors"
 		bash $STAT_HOME/start_stat_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
@@ -759,7 +759,7 @@ function end_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Stopping dstat monitors"
+		m_echo "Stopping dool monitors"
 		bash $STAT_HOME/stop_stat_monitor.sh
 	fi
 
@@ -813,7 +813,7 @@ function end_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Generating dstat/dool data"
+		m_echo "Generating dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 }

@@ -23,8 +23,10 @@ BDEv 3.9 - 2023-XX-XX
 		
 		- Add HDFS parameter to configure DataNode heartbeat (hdfs-default.sh)
 
-		- Configuration of the experiment is now copied in the output directory
+		- Configuration of each experiment is now copied in the output directory
 
+		- Update resource monitoring tool to dool v1.1.0
+		
 		- Remove support for Flink versions 1.12.x
 		
 		- Minor changes and bug fixes
