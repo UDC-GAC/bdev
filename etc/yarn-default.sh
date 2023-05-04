@@ -20,4 +20,4 @@ export NODEMANAGER_DISK_HEALTH_CHECKER=true     # Enable or disable the disk hea
 export NODEMANAGER_MAX_DISK_UTIL_PERCENT=95.0	# Maximum percentage of disk space that may be utilized before a disk is marked as unhealthy
 export TIMELINE_SERVER=false		# Start the YARN Timeline server, also known as Application History server
 export TIMELINE_SERVER_D_HEAPSIZE=1024	# YARN Timeline daemon heapsize (MB)
-export SCHEDULER_CLASS=capacity		# The class to use as the resource scheduler. Options: capacity, fair and fifo
+export SCHEDULER_CLASS=fifo		# The class to use as the resource scheduler. Options: fifo, capacity and fair
