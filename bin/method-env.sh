@@ -111,8 +111,10 @@ then
 fi
 
 # Copy configuration to REPORT_DIR
-cp $METHOD_CONF_DIR/* $REPORT_DIR/etc
-cp $EXP_DIR/* $REPORT_DIR/experiment
+cp $METHOD_CONF_DIR/*-default.sh $REPORT_DIR/etc
+cp $EXP_DIR/*-conf.sh $REPORT_DIR/experiment
+cp $EXP_DIR/*.lst $REPORT_DIR/experiment
+cp $EXP_DIR/*-scheduler.xml $REPORT_DIR/experiment
 
 export METHOD_CONF_DIR=$REPORT_DIR/etc
 
