@@ -24,7 +24,9 @@ BDEv 3.9 - 2023-XX-XX
 		- Add HDFS parameter to configure DataNode heartbeat (hdfs-default.sh)
 
 		- Add YARN parameter to configure the scheduler class (yarn-default.sh)
-		
+
+		- Add YARN parameter to configure NodeManager heartbeat (yarn-default.sh)
+
 		- Configuration of each experiment is now copied in the output directory
 
 		- Update resource monitoring tool to dool v1.1.0
