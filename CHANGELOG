@@ -27,7 +27,9 @@ BDEv 3.9 - 2023-XX-XX
 
 		- Add YARN parameter to configure NodeManager heartbeat (yarn-default.sh)
 
-		- Configuration of each experiment is now copied in the output directory
+		- Configuration of each experiment is now copied into the output report directory
+
+		- Upate RGen data generator to include minor improvements and bug fixes
 
 		- Update resource monitoring tool to dool v1.1.0
 		
