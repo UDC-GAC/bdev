@@ -5,7 +5,7 @@
     <maxResources>90000 mb,64 vcores</maxResources>
     <maxRunningApps>50</maxRunningApps>
     <weight>2.0</weight>
-    <!-- Scheduling policy for the queue. Allowed values: “fifo”/“fair”/“drf” -->
+    <!-- Scheduling policy for the queue. Allowed values: fifo, fair, drf -->
     <schedulingPolicy>fair</schedulingPolicy>
   </queue>
 
