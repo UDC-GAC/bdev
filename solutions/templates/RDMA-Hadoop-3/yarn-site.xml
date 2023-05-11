@@ -97,7 +97,22 @@
 
   <property>
     <name>yarn.scheduler.fair.assignmultiple</name>
-    <value>true</value>
+    <value>$scheduler_fair_assignmultiple</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.dynamic.max.assign</name>
+    <value>$scheduler_fair_dynamic_max_assign</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.max.assign</name>
+    <value>$scheduler_fair_max_assign</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.continuous-scheduling-enabled</name>
+    <value>$scheduler_fair_continuous_scheduling</value>
   </property>
 
 </configuration>

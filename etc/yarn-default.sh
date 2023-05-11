@@ -22,3 +22,7 @@ export NODEMANAGER_HEARTBEAT_INTERVAL_MS=5000	# Heartbeat interval in millisecon
 export TIMELINE_SERVER=false		# Start the YARN Timeline server, also known as Application History server
 export TIMELINE_SERVER_D_HEAPSIZE=1024	# YARN Timeline daemon heapsize (MB)
 export SCHEDULER_CLASS=fifo		# The class to use as the resource scheduler. Options: fifo, capacity and fair
+export SCHEDULER_FAIR_ASSIGN_MULTIPLE=true	# Whether to allow multiple container assignments in one heartbeat
+export SCHEDULER_FAIR_DYNAMIC_MAX_ASSIGN=true	# Whether to dynamically determine the amount of resources assigned in one heartbeat
+export SCHEDULER_FAIR_MAX_ASSIGN=-1		# Maximum amount of containers that can be assigned in one heartbeat (-1 sets no limit)
+export SCHEDULER_FAIR_CONTINUOUS=false		# Enable continuous scheduling. It can cause the ResourceManager to become unresponsive on large clusters

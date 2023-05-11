@@ -338,6 +338,10 @@ add_conf_param "nodemanager_max_disk_util_percent" $NODEMANAGER_MAX_DISK_UTIL_PE
 add_conf_param "nodemanager_disk_health_checker" $NODEMANAGER_DISK_HEALTH_CHECKER
 add_conf_param "nodemanager_heartbeat_interval" $NODEMANAGER_HEARTBEAT_INTERVAL_MS
 add_conf_param "scheduler_class" $SCHEDULER_CLASS
+add_conf_param "scheduler_fair_assignmultiple" $SCHEDULER_FAIR_ASSIGN_MULTIPLE
+add_conf_param "scheduler_fair_dynamic_max_assign" $SCHEDULER_FAIR_DYNAMIC_MAX_ASSIGN
+add_conf_param "scheduler_fair_max_assign" $SCHEDULER_FAIR_MAX_ASSIGN
+add_conf_param "scheduler_fair_continuous_scheduling" $SCHEDULER_FAIR_CONTINUOUS
 
 #UDA
 add_conf_param "uda_lib_dir" $UDA_LIB_DIR
