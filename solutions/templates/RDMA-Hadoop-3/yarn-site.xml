@@ -90,4 +90,14 @@
     <value>$nodemanager_max_disk_util_percent</value>
   </property>
 
+  <property>
+    <name>yarn.resourcemanager.nodemanagers.heartbeat-interval-ms</name>
+    <value>$nodemanager_heartbeat_interval</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.assignmultiple</name>
+    <value>true</value>
+  </property>
+
 </configuration>

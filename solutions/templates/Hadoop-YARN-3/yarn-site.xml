@@ -95,4 +95,9 @@
     <value>$nodemanager_heartbeat_interval</value>
   </property>
 
+  <property>
+    <name>yarn.scheduler.fair.assignmultiple</name>
+    <value>true</value>
+  </property>
+  
 </configuration>
