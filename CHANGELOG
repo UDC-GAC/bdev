@@ -25,6 +25,8 @@ BDEv 3.9 - 2023-XX-XX
 
 		- Add YARN parameter to configure the scheduler class (yarn-default.sh)
 
+		- Add several options to customize the YARN fair scheduler (yarn-default.sh)
+		
 		- Add YARN parameter to configure NodeManager heartbeat (yarn-default.sh)
 
 		- Configuration of each experiment is now copied into the output report directory
