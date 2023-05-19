@@ -275,7 +275,7 @@ function get_nodes_by_interface()
         echo $OUT_NODES
 
         if [[ $SUCCESS -ne 1 ]]; then
-                m_warn "IP to hostname resolution not working for $INTERFACE"
+                m_warn "IP to hostname resolution failed for $INTERFACE"
         fi
 }
 
