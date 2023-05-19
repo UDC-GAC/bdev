@@ -4,22 +4,22 @@ SLAVES=`cat $SLAVESFILE`
 for slave in $SLAVES
 do
 	m_echo "Finishing NodeManager:" $slave
-        ssh $slave "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS NodeManager"
+        $SSH_CMD $slave "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS NodeManager"
 done
 
 m_echo "Finishing ResourceManager:" $MASTERNODE
-ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ResourceManager"
+$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ResourceManager"
 
 if [[ $TIMELINE_SERVER == "true" ]]
 then
 	m_echo "Finishing ApplicationHistoryServer:" $MASTERNODE
-	ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
+	$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
 fi
 
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]
 then
 	m_echo "Finishing JobHistoryServer:" $MASTERNODE
-	ssh $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS JobHistoryServer"
+	$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${METHOD_BIN_DIR}/kill.sh $JPS JobHistoryServer"
 fi
 
 sleep 1

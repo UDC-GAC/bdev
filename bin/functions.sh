@@ -245,7 +245,7 @@ function get_nodes_by_interface()
         SUCCESS=1
         for NODE in $NODES
         do
-                INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
+                INTERFACE_DATA=`$SSH_CMD $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
                 if [[ ! $? -eq 0 ]]; then
                         m_exit "$INTERFACE interface not found or not configured for $NODE"
                 fi
@@ -527,6 +527,7 @@ function begin_report(){
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
 	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
 	if [[ -n $ETH_INTERFACE ]]

@@ -12,6 +12,7 @@ export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostna
 export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
 export OUT_DIR=$PWD/${METHOD_NAME}_OUT	# Default report output directory
 export MONITOR_DELAY_SECONDS=10	# Delay time (seconds) after/before starting/stopping all monitors
+export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 
 # Resource stats
 export STAT_GEN_GRAPHS=false	# Generate graphs during execution

@@ -168,9 +168,16 @@ fi
 . $METHOD_CONF_DIR/solutions-default.sh
 . $EXP_DIR/solutions-conf.sh
 
-
-
 m_echo "Running $METHOD_NAME v$METHOD_VERSION"
+
+# Check ssh command
+SSH_CMD=$(which ssh 2> /dev/null)
+if [[ "x$SSH_CMD" == "x" ]]
+then
+        m_exit "Missing ssh command"
+fi
+
+export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
 # Check modules environment
 if [[ "$ENABLE_MODULES" == "true" ]]
