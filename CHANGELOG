@@ -35,6 +35,8 @@ BDEv 3.9 - 2023-XX-XX
 
 		- Update resource monitoring tool to dool v1.1.0
 		
+		- SSH optional parameters can now be set (bdev-default.sh)
+		
 		- Remove support for Flink versions 1.12.x
 		
 		- Minor changes and bug fixes
