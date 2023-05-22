@@ -589,7 +589,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark workers per node   \t\t $SPARK_WORKERS_PER_NODE \n"
 	REPORT="$REPORT \t Spark worker cores   \t\t\t $SPARK_WORKER_CORES \n"
 	REPORT="$REPORT \t Spark worker memory (MB)   \t\t $SPARK_WORKER_MEMORY \n"
-	REPORT="$REPORT \t Spark executors per Worker   \t\t $SPARK_EXECUTORS_PER_WORKER \n"
+	REPORT="$REPORT \t Spark executors per worker   \t\t $SPARK_EXECUTORS_PER_WORKER \n"
 	REPORT="$REPORT \t Spark executor cores   \t\t $SPARK_CORES_PER_EXECUTOR \n"
 	REPORT="$REPORT \t Spark executor memory (MB)   \t\t $SPARK_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark executor heapsize (MB) \t\t $SPARK_EXECUTOR_HEAPSIZE \n"
