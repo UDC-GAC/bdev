@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_SORT
+${HDFS_CMD} ${RMR} $OUTPUT_SORT
 
 run_benchmark "$FLINK_HOME/bin/flink run \
 	${DEPLOY_ARGS} \

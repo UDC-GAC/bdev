@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_AGGREGATION
+${HDFS_CMD} ${RMR} $OUTPUT_AGGREGATION
 
 HIVE_SQL_FILE=${BENCHMARK_OUTPUT_DIR}/uservisits_aggregation.hive
 prepare_sql_aggregation ${HIVE_SQL_FILE}

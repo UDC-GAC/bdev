@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_TPCX_HS
+${HDFS_CMD} ${RMR} $OUTPUT_TPCX_HS
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.tpcx_hs.spark.${SPARK_HSSORT_IMPL} ${DEPLOY_ARGS} $TPCX_HS_JAR \
