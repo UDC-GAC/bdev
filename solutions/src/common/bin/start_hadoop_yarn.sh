@@ -10,9 +10,11 @@ else
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_2.sh
 fi
 
-if [[ $NAMENODE_SAFEMODE_TIMEOUT -ge 15 ]]
+SLEEP=15
+
+if [[ $NAMENODE_SAFEMODE_TIMEOUT -gt 15000 ]]
 then
-	sleep $NAMENODE_SAFEMODE_TIMEOUT
-else
-	sleep 15
+	SLEEP=$(($NAMENODE_SAFEMODE_TIMEOUT / 1000))
 fi
+
+sleep $SLEEP
