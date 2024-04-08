@@ -1,3 +1,5 @@
 #!/bin/sh
 
+export FORCE_DELETE_HDFS=false
 bash $CLEAN_DAEMONS_SCRIPT
+bash $CLEAN_DATA_SCRIPT
