@@ -83,6 +83,10 @@
     <name>dfs.heartbeat.interval</name>
     <value>$datanode_heartbeat_interval</value>
   </property>
+  <property>
+    <name>dfs.namenode.safemode.extension</name>
+    <value>$namenode_safemode_time</value>
+  </property>
 
 <!-- RDMA-Hadoop specific -->
 

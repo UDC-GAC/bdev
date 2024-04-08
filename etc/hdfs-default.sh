@@ -16,3 +16,6 @@ export DOMAIN_SOCKET_PATH=/var/lib/hdfs/$USER	# Permissions in this special path
 export CLIENT_SOCKET_TIMEOUT=60000	# Default timeout value in ms for all sockets
 export DATANODE_SOCKET_WRITE_TIMEOUT=60000	# Timeout in ms for clients socket writes to DataNodes
 export CLIENT_BLOCK_WRITE_RETRIES=5	# Number of retries for writing blocks to DataNodes
+export NAMENODE_SAFEMODE_TIMEOUT=20000	# NameNode safe mode extension (in milliseconds)
+export FORMAT_HDFS=true			# Format HDFS (only significant when running a single cluster size)
+export DELETE_HDFS=true			# Delete previous & generated HDFS data (only significant when running a single cluster size)

@@ -15,7 +15,7 @@ do
 	done
 	echo "$filecontent" > $SOL_CONF_DIR/${file}
 done
-
+echo -e "$CONFIG_KEYS"
 rm -f $MASTERFILE $SLAVESFILE
 m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE

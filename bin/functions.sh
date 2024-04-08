@@ -41,10 +41,10 @@ export -f m_exit
 function m_start_message()
 {
 	m_echo "Reporting to $REPORT_DIR"
-	m_echo "Cluster sizes: $CLUSTER_SIZES"
-	m_echo "Benchmarks: $BENCHMARKS"
+	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
-	m_echo "Solutions: $SOLUTIONS"
+	m_echo "Solutions ($NUM_SOLUTIONS): $SOLUTIONS"
+	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
@@ -349,6 +349,14 @@ function set_cluster_size()
 	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
 	m_echo "Cluster size set to $CLUSTER_SIZE"
+	
+	export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
+	if [[ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]]; then
+		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
+	fi
+
+	add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 }
 
 export -f set_cluster_size

@@ -35,7 +35,8 @@ export METHOD_EXP_DIR=$METHOD_HOME/experiment
 export INIT_SOL_SCRIPT=$METHOD_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
-export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/clean-daemons.sh
+export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/kill-daemons.sh
+export CLEAN_DATA_SCRIPT=$METHOD_BIN_DIR/delete-nodes-data.sh
 
 if [[ -z $EXP_DIR ]]
 then
@@ -145,6 +146,9 @@ fi
 export CLUSTER_SIZES=`read_list $EXP_DIR/cluster_sizes.lst`
 export BENCHMARKS=`read_list $EXP_DIR/benchmarks.lst`
 export SOLUTIONS=`read_solutions $EXP_DIR/solutions.lst`
+export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
+export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
+export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
 
 if [[ -z "$LOCAL_DIRS" ]]
 then
@@ -299,7 +303,7 @@ add_conf_param "jobtracker_d_heapsize" $JOBTRACKER_D_HEAPSIZE
 add_conf_param "tasktracker_d_heapsize" $TASKTRACKER_D_HEAPSIZE
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
-add_conf_param "replication_factor" $REPLICATION_FACTOR
+export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
@@ -308,6 +312,7 @@ add_conf_param "namenode_service_handler_count" $NAMENODE_SERVICE_HANDLER_COUNT
 add_conf_param "datanode_handler_count" $DATANODE_HANDLER_COUNT
 add_conf_param "datanode_heartbeat_interval" $DATANODE_HEARTBEAT_INTERVAL
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
+add_conf_param "namenode_safemode_time" $NAMENODE_SAFEMODE_TIMEOUT
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
 add_conf_param "client_write_packet_size" $CLIENT_WRITE_PACKET_SIZE
