@@ -2,6 +2,8 @@
 
 if [[ $GEN_WORDCOUNT == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_WORDCOUNT}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating Wordcount data: ${WORDCOUNT_DATASIZE} bytes"
 	OPTIONS="-t randomtext \
 		-n ${INPUT_WORDCOUNT} \
@@ -10,6 +12,9 @@ then
 		-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "Wordcount data already exists"
+    fi
 fi
 
 if [[ $GEN_SORT == "true" ]]
@@ -19,6 +24,8 @@ then
 		m_echo "Reusing $INPUT_WORDCOUNT as input for Sort"
 		export INPUT_SORT=$INPUT_WORDCOUNT
 	else
+	    ${HDFS_CMD} -test -d ${INPUT_SORT}
+	    if [[ $? != 0 ]]; then
 		m_echo "Generating Sort data: ${SORT_DATASIZE} bytes"
 		OPTIONS="-t randomtext \
 			-n ${INPUT_SORT} \
@@ -27,6 +34,9 @@ then
 			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+	    else
+                m_echo "Sort data already exists"
+	    fi
 	fi
 fi
 
@@ -40,7 +50,9 @@ then
 	then
 		m_echo "Reusing $INPUT_SORT as input for Grep"
 		export INPUT_GREP=$INPUT_SORT
-	else			
+	else
+	    ${HDFS_CMD} -test -d ${INPUT_GREP}
+	    if [[ $? != 0 ]]; then
 		m_echo "Generating Grep data: ${GREP_DATASIZE} bytes"
 		OPTIONS="-t randomtext \
 			-n ${INPUT_GREP} \
@@ -49,11 +61,16 @@ then
 			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+	    else
+                m_echo "Grep data already exists"
+            fi
 	fi
 fi
 	
 if [[ $GEN_TERASORT == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_TERASORT}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating Terasort data: ${TERASORT_DATASIZE} bytes"
 	OPTIONS="-t teragen \
 		-n ${INPUT_TERASORT} \
@@ -61,10 +78,15 @@ then
 		-p ${TERASORT_ROWS_NUMBER}"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "Terasort data already exists"
+    fi
 fi
 
 if [[ $GEN_TPCX_HS == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_TPCX_HS}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
 
 	OPTIONS="-t hsgen \
@@ -73,10 +95,15 @@ then
 		-p ${TPCX_HS_ROWS_NUMBER}"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "TPCx-HS data already exists"
+    fi
 fi
 
 if [[ $GEN_PAGERANK == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_PAGERANK}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating PageRank data: ${PAGERANK_PAGES} pages"
 	OPTIONS="-t pagerank \
 		-n ${INPUT_PAGERANK} \
@@ -87,6 +114,9 @@ then
 		-o text"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "PageRank data already exists"
+    fi
 fi
 
 if [[ $GEN_CC == "true" ]]
@@ -96,6 +126,8 @@ then
 		m_echo "Reusing $INPUT_PAGERANK as input for Connected Components"
 		export INPUT_CC=$INPUT_PAGERANK
 	else
+	    ${HDFS_CMD} -test -d ${INPUT_CC}
+	    if [[ $? != 0 ]]; then
 		m_echo "Generating Connected Components data: ${CC_PAGES} pages"
 		OPTIONS="-t pagerank \
 			-n ${INPUT_CC} \
@@ -106,11 +138,16 @@ then
 			-o text"
 
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+	    else
+                m_echo "Connected Components data already exists"
+            fi
     fi
 fi
 
 if [[ $GEN_KMEANS == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_KMEANS}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating KMeans data: ${KMEANS_NUM_OF_CLUSTERS} clusters, ${KMEANS_DIMENSIONS} dimensions, ${KMEANS_NUM_OF_SAMPLES} samples"
 	OPTIONS="-t kmeans \
 		-compress false \
@@ -122,10 +159,15 @@ then
 		-sampleDimension ${KMEANS_DIMENSIONS}"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "KMeans data already exists"
+    fi
 fi
 
 if [[ $GEN_BAYES == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_BAYES}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating Bayes data: ${BAYES_PAGES} pages, ${BAYES_CLASSES} classes"
 	OPTIONS="-t bayes \
 		-n ${INPUT_BAYES} \
@@ -135,11 +177,16 @@ then
 		-g ${BAYES_CLASSES} \
 		-o sequence"
 
-	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}	
+	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "Bayes data already exists"
+    fi
 fi
 
 if [[ $GEN_AGGREGATION == "true" ]]
 then
+    ${HDFS_CMD} -test -d ${INPUT_AGGREGATION}
+    if [[ $? != 0 ]]; then
 	m_echo "Generating Aggregation data: ${AGGREGATION_PAGES} pages, ${AGGREGATION_USERVISITS} uservisits"
 	OPTIONS="-t hive \
 		-n ${INPUT_AGGREGATION} \
@@ -150,6 +197,9 @@ then
 		-o sequence"
 
 	${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+    else
+        m_echo "Aggregation data already exists"
+    fi
 fi
 
 if [[ $GEN_JOIN == "true" ]]
@@ -161,6 +211,8 @@ then
 		m_echo "Reusing $INPUT_AGGREGATION as input for Join"
 		export INPUT_JOIN=$INPUT_AGGREGATION
 	else
+	    ${HDFS_CMD} -test -d ${INPUT_JOIN}
+	    if [[ $? != 0 ]]; then
 		m_echo "Generating Join data: ${JOIN_PAGES} pages, ${JOIN_USERVISITS} uservisits"
 		OPTIONS="-t hive \
 			-n ${INPUT_JOIN} \
@@ -171,6 +223,9 @@ then
 			-o sequence"
 		
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+            else
+                m_echo "Join data already exists"
+            fi
 	fi
 fi
 
@@ -189,6 +244,8 @@ then
 		m_echo "Reusing $INPUT_JOIN as input for Scan"
 		export INPUT_SCAN=$INPUT_JOIN
 	else
+	    ${HDFS_CMD} -test -d ${INPUT_SCAN}
+	    if [[ $? != 0 ]]; then
 		m_echo "Generating Scan data: ${SCAN_PAGES} pages, ${SCAN_USERVISITS} uservisits"
 		OPTIONS="-t hive \
 			-n ${INPUT_SCAN} \
@@ -199,6 +256,9 @@ then
 			-o sequence"
 
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+            else
+                m_echo "Scan data already exists"
+            fi
 	fi
 fi
 
@@ -211,3 +271,5 @@ then
 		bash -c "$PREPARE_COMMAND"
 	fi
 fi
+
+sleep 2
