@@ -128,6 +128,57 @@ function add_conf_param(){
 
 export -f add_conf_param
 
+function remove_conf_param(){
+	PARAM=$1
+	NEW_CONFIG_KEYS=
+	NEW_CONFIG_VALUES=
+	FOUND="false"
+
+	for k in `seq 1 $NUM_CONF_PARAMS`
+        do
+		key="null"
+		key=$(get_conf_key $k)
+		if [[ $key != "null" ]]; then
+		    if [[ $key == $PARAM ]]; then
+			FOUND="true"
+		    else
+			value=$(get_conf_value $k)
+			NEW_CONFIG_KEYS+="\t$key"
+			NEW_CONFIG_VALUES+="\t$value"
+		    fi
+		fi
+	done
+
+	if [[ $FOUND == "true" ]]; then
+		export NUM_CONF_PARAMS=$(($NUM_CONF_PARAMS - 1))
+		export CONFIG_KEYS=$NEW_CONFIG_KEYS
+	        export CONFIG_VALUES=$NEW_CONFIG_VALUES
+	fi
+}
+
+export -f remove_conf_param
+
+function exist_conf_param(){
+	PARAM=$1
+	FOUND="false"
+
+	for k in `seq 1 $NUM_CONF_PARAMS`
+        do
+                key="null"
+                key=$(get_conf_key $k)
+                if [[ $key != "null" ]]; then
+                    if [[ $key == $PARAM ]]; then
+                        FOUND="true"
+			return 1
+		    fi
+                fi
+        done
+
+	return 0
+}
+
+export -f exist_conf_param
+
 function add_conf_param_list(){
 	KEY="$1"
 	VALUE=""
@@ -355,6 +406,12 @@ function set_cluster_size()
 		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
 		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
 	fi
+
+	exist_conf_param "replication_factor"
+
+        if [[ $? -eq 1 ]]; then
+		remove_conf_param "replication_factor"
+        fi
 
 	add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 }
