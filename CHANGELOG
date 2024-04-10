@@ -3,24 +3,24 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.9 - 2023-XX-XX
+BDEv 3.9 - 2024-04-10
 ---------------------
 	A point release for the BDEv 3.x line
 
 	NEW FEATURES
 		- Updated versions of the following frameworks
-			- Hadoop 3.3.5
+			- Hadoop 3.3.6
 			- Spark 3.2.4
-			- Spark 3.3.2
+			- Spark 3.3.4
 			- Flink 1.14.6
 			- Flink 1.15.4
 
-		- Support for the Spark 3.4.x line
-				
-		- Support for the Flink 1.16.x line
+		- Support for the Hadoop 3.4.x line
 
-		- Support for the Flink 1.17.x line
-		
+		- Support for the Spark 3.4.x and 3.5.x lines
+				
+		- Support for the Flink 1.16.x, 1.17.x, 1.18.x and 1.19.x lines
+
 		- Add HDFS parameter to configure DataNode heartbeat (hdfs-default.sh)
 
 		- Add YARN parameter to configure the scheduler class (yarn-default.sh)
@@ -31,6 +31,10 @@ BDEv 3.9 - 2023-XX-XX
 
 		- Configuration of each experiment is now copied into the output report directory
 
+		- HDFS formatting and data deletion can be configured (hdfs-default)
+
+		- Input data in HDFS is reused if already exist
+
 		- Upate RGen data generator to include minor improvements and bug fixes
 
 		- Update resource monitoring tool to dool v1.1.0
@@ -39,6 +43,8 @@ BDEv 3.9 - 2023-XX-XX
 		
 		- Remove support for Flink versions 1.12.x
 		
+		- Fix bug when running Spark and Flink on YARN
+
 		- Minor changes and bug fixes
 
 
