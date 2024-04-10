@@ -368,6 +368,7 @@ function set_solution()
 	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
 	export SOLUTION_NET_INTERFACE=`echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}'`
 	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
+	SOLUTION_NUM=$1
 
 	if [[ "$SOLUTION_NAME" == "Hadoop-UDA-YARN" ]]
 	then
@@ -399,26 +400,41 @@ function set_solution()
                 then
                         m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${SPARK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "Flink" ]]
         then
                 if [[ ! -d $FLINK_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "FlameMR" ]]
         then
                 if [[ ! -d $FLAMEMR_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $FLAMEMR_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${FLAMEMR_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "DataMPI" ]]
         then
                 if [[ ! -d $DATAMPI_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $DATAMPI_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${DATAMPI_HADOOP_HOME##*/}`
+	else
+		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
 
+	if [[ $NUM_SOLUTIONS -gt 1 ]]; then
+		if [[ $SOLUTION_NUM -gt 1 ]]; then
+			export LAST_HADOOP_VERSION=$CURRENT_HADOOP_VERSION
+		else
+			export LAST_HADOOP_VERSION="null"
+		fi
+	fi
+
+	export CURRENT_HADOOP_VERSION=`echo ${HADOOP_VERSION##*/}`
 	mkdir -p $SOLUTION_REPORT_DIR
 	unset FINISH
 }
@@ -609,6 +625,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark YARN executor cores   \t\t $SPARK_YARN_CORES_PER_EXECUTOR \n"
 	REPORT="$REPORT \t Spark YARN executor memory (MB)   \t $SPARK_YARN_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark YARN executor heapsize (MB) \t $SPARK_YARN_EXECUTOR_HEAPSIZE \n"
+	REPORT="$REPORT \t Spark YARN executor overhead (MB) \t $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
