@@ -21,10 +21,8 @@ COLS=`echo $SOLUTIONS | wc -w`
 
 echo gnuplot -e "input_file='$DAT_LEGEND_FILE'; \
 		legend_file='$PLOT_LEGEND_FILE';palette_file='$PLOT_HOME/palette.plt'; \
-		cols='$COLS'; " $PLOT_HOME/legend.gplot 
+		cols='$COLS'" $PLOT_HOME/legend.gplot 
 
 gnuplot -e "input_file='$DAT_LEGEND_FILE'; \
 		legend_file='$PLOT_LEGEND_FILE';palette_file='$PLOT_HOME/palette.plt'; \
-		cols='$COLS'; " $PLOT_HOME/legend.gplot 
-
-rm $DAT_LEGEND_FILE
+		cols='$COLS'" $PLOT_HOME/legend.gplot 
