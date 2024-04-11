@@ -83,4 +83,12 @@
     <name>dfs.client.block.write.locateFollowingBlock.retries</name>
     <value>$client_block_write_locateblock_retries</value>
   </property>
+  <property>
+    <name>dfs.heartbeat.interval</name>
+    <value>$datanode_heartbeat_interval</value>
+  </property>
+  <property>
+    <name>dfs.namenode.safemode.extension</name>
+    <value>$namenode_safemode_time</value>
+  </property>
 </configuration>

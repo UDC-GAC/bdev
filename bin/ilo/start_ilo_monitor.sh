@@ -9,7 +9,7 @@ fi
 
 m_echo "iLO master: $ILO_MASTER"
 
-nohup /usr/bin/ssh $ILO_MASTER \
+nohup $SSH_CMD $ILO_MASTER \
 "export POWERLOGDIR='$POWERLOGDIR';\
 export SLAVES='$SLAVENODES';\
 export MASTERNODE='$MASTERNODE';\

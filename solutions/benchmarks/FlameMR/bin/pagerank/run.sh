@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_PAGERANK
+${HDFS_CMD} ${RMR} $OUTPUT_PAGERANK
 
 run_benchmark "$FLAMEMR_HOME/bin/flame-mr ${FLAMEMR_WORKLOADS_JAR} es.udc.gac.flamemr.workloads.PageRank \
 		${INPUT_PAGERANK}/edges ${OUTPUT_PAGERANK} \

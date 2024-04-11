@@ -41,10 +41,10 @@ export -f m_exit
 function m_start_message()
 {
 	m_echo "Reporting to $REPORT_DIR"
-	m_echo "Cluster sizes: $CLUSTER_SIZES"
-	m_echo "Benchmarks: $BENCHMARKS"
+	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
-	m_echo "Solutions: $SOLUTIONS"
+	m_echo "Solutions ($NUM_SOLUTIONS): $SOLUTIONS"
+	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
@@ -127,6 +127,57 @@ function add_conf_param(){
 }
 
 export -f add_conf_param
+
+function remove_conf_param(){
+	PARAM=$1
+	NEW_CONFIG_KEYS=
+	NEW_CONFIG_VALUES=
+	FOUND="false"
+
+	for k in `seq 1 $NUM_CONF_PARAMS`
+        do
+		key="null"
+		key=$(get_conf_key $k)
+		if [[ $key != "null" ]]; then
+		    if [[ $key == $PARAM ]]; then
+			FOUND="true"
+		    else
+			value=$(get_conf_value $k)
+			NEW_CONFIG_KEYS+="\t$key"
+			NEW_CONFIG_VALUES+="\t$value"
+		    fi
+		fi
+	done
+
+	if [[ $FOUND == "true" ]]; then
+		export NUM_CONF_PARAMS=$(($NUM_CONF_PARAMS - 1))
+		export CONFIG_KEYS=$NEW_CONFIG_KEYS
+	        export CONFIG_VALUES=$NEW_CONFIG_VALUES
+	fi
+}
+
+export -f remove_conf_param
+
+function exist_conf_param(){
+	PARAM=$1
+	FOUND="false"
+
+	for k in `seq 1 $NUM_CONF_PARAMS`
+        do
+                key="null"
+                key=$(get_conf_key $k)
+                if [[ $key != "null" ]]; then
+                    if [[ $key == $PARAM ]]; then
+                        FOUND="true"
+			return 1
+		    fi
+                fi
+        done
+
+	return 0
+}
+
+export -f exist_conf_param
 
 function add_conf_param_list(){
 	KEY="$1"
@@ -245,7 +296,7 @@ function get_nodes_by_interface()
         SUCCESS=1
         for NODE in $NODES
         do
-                INTERFACE_DATA=`ssh $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
+                INTERFACE_DATA=`$SSH_CMD $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
                 if [[ ! $? -eq 0 ]]; then
                         m_exit "$INTERFACE interface not found or not configured for $NODE"
                 fi
@@ -275,7 +326,7 @@ function get_nodes_by_interface()
         echo $OUT_NODES
 
         if [[ $SUCCESS -ne 1 ]]; then
-                m_warn "IP to hostname resolution not working for $INTERFACE"
+                m_warn "IP to hostname resolution failed for $INTERFACE"
         fi
 }
 
@@ -349,6 +400,20 @@ function set_cluster_size()
 	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
 	m_echo "Cluster size set to $CLUSTER_SIZE"
+	
+	export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
+	if [[ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]]; then
+		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
+	fi
+
+	exist_conf_param "replication_factor"
+
+        if [[ $? -eq 1 ]]; then
+		remove_conf_param "replication_factor"
+        fi
+
+	add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 }
 
 export -f set_cluster_size
@@ -360,6 +425,7 @@ function set_solution()
 	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
 	export SOLUTION_NET_INTERFACE=`echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}'`
 	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
+	SOLUTION_NUM=$1
 
 	if [[ "$SOLUTION_NAME" == "Hadoop-UDA-YARN" ]]
 	then
@@ -391,26 +457,41 @@ function set_solution()
                 then
                         m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${SPARK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "Flink" ]]
         then
                 if [[ ! -d $FLINK_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "FlameMR" ]]
         then
                 if [[ ! -d $FLAMEMR_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $FLAMEMR_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${FLAMEMR_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "DataMPI" ]]
         then
                 if [[ ! -d $DATAMPI_HADOOP_HOME ]]
                 then
                         m_exit "Hadoop distribution not found at $DATAMPI_HADOOP_HOME"
                 fi
+		HADOOP_VERSION=`echo ${DATAMPI_HADOOP_HOME##*/}`
+	else
+		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
 
+	if [[ $NUM_SOLUTIONS -gt 1 ]]; then
+		if [[ $SOLUTION_NUM -gt 1 ]]; then
+			export LAST_HADOOP_VERSION=$CURRENT_HADOOP_VERSION
+		else
+			export LAST_HADOOP_VERSION="null"
+		fi
+	fi
+
+	export CURRENT_HADOOP_VERSION=`echo ${HADOOP_VERSION##*/}`
 	mkdir -p $SOLUTION_REPORT_DIR
 	unset FINISH
 }
@@ -527,6 +608,7 @@ function begin_report(){
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
 	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
 	if [[ -n $ETH_INTERFACE ]]
@@ -555,9 +637,13 @@ function begin_report(){
 	REPORT="$REPORT \t HDFS DN daemon heapsize (MB)  \t\t $DATANODE_D_HEAPSIZE \n"
 	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $BLOCKSIZE \n"
 	REPORT="$REPORT \t HDFS replication factor  \t\t $REPLICATION_FACTOR \n"
+	REPORT="$REPORT \t HDFS format  \t\t\t\t $FORMAT_HDFS \n"
+	REPORT="$REPORT \t HDFS delete data \t\t\t $DELETE_HDFS \n"
 	REPORT="$REPORT \t HDFS NN handlers \t\t\t $NAMENODE_HANDLER_COUNT \n"
 	REPORT="$REPORT \t HDFS NN access times \t\t\t $NAMENODE_ACCESTIME_PRECISION \n"
+	REPORT="$REPORT \t HDFS NN safe mode extension \t\t $NAMENODE_SAFEMODE_TIMEOUT \n"
 	REPORT="$REPORT \t HDFS DN handlers \t\t\t $DATANODE_HANDLER_COUNT \n"
+	REPORT="$REPORT \t HDFS DN heartbeat interval \t\t $DATANODE_HEARTBEAT_INTERVAL \n"
 	REPORT="$REPORT \t HDFS short-circuit local reads \t $SHORT_CIRCUIT_LOCAL_READS \n"
 	REPORT="$REPORT \t HDFS client domain socket path \t $DOMAIN_SOCKET_PATH \n"
 	REPORT="$REPORT \t Mappers per node  \t\t\t $MAPPERS_PER_NODE \n"
@@ -587,7 +673,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark workers per node   \t\t $SPARK_WORKERS_PER_NODE \n"
 	REPORT="$REPORT \t Spark worker cores   \t\t\t $SPARK_WORKER_CORES \n"
 	REPORT="$REPORT \t Spark worker memory (MB)   \t\t $SPARK_WORKER_MEMORY \n"
-	REPORT="$REPORT \t Spark executors per Worker   \t\t $SPARK_EXECUTORS_PER_WORKER \n"
+	REPORT="$REPORT \t Spark executors per worker   \t\t $SPARK_EXECUTORS_PER_WORKER \n"
 	REPORT="$REPORT \t Spark executor cores   \t\t $SPARK_CORES_PER_EXECUTOR \n"
 	REPORT="$REPORT \t Spark executor memory (MB)   \t\t $SPARK_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark executor heapsize (MB) \t\t $SPARK_EXECUTOR_HEAPSIZE \n"
@@ -596,6 +682,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark YARN executor cores   \t\t $SPARK_YARN_CORES_PER_EXECUTOR \n"
 	REPORT="$REPORT \t Spark YARN executor memory (MB)   \t $SPARK_YARN_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark YARN executor heapsize (MB) \t $SPARK_YARN_EXECUTOR_HEAPSIZE \n"
+	REPORT="$REPORT \t Spark YARN executor overhead (MB) \t $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
@@ -663,7 +750,7 @@ function start_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Starting dstat monitors"
+		m_echo "Starting dool monitors"
 		bash $STAT_HOME/start_stat_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
@@ -758,7 +845,7 @@ function end_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Stopping dstat monitors"
+		m_echo "Stopping dool monitors"
 		bash $STAT_HOME/stop_stat_monitor.sh
 	fi
 
@@ -812,7 +899,7 @@ function end_benchmark(){
 	fi
 	if [[ $ENABLE_STAT == "true" ]]
 	then
-		m_echo "Generating dstat/dool data"
+		m_echo "Generating dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 }

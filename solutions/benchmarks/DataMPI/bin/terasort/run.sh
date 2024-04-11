@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_TERASORT
+${HDFS_CMD} ${RMR} $OUTPUT_TERASORT
 
 
 run_benchmark "${DATAMPI_HOME}/bin/mpidrun \

@@ -7,6 +7,7 @@ export SOL_SBIN_DIR=$SOLUTION_HOME/bin
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/flink
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs/flink
+export SOL_LIB_DIR=$SOLUTION_HOME/lib
 export MASTERFILE=$SOL_CONF_DIR/masters
 export SLAVESFILE=$SOL_CONF_DIR/workers
 
@@ -67,7 +68,12 @@ export DEPLOY_ARGS="-m yarn-cluster \
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.15" ]] && [[ $FLINK_MAJOR_VERSION != "1.14" ]] && [[ $FLINK_MAJOR_VERSION != "1.13" ]] && [[ $FLINK_MAJOR_VERSION != "1.12" ]]
+	if [[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.15" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.14" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
@@ -91,6 +97,14 @@ if [ ! -f $FLINK_CONFIG_SH_FILE ]; then
 else
 	m_echo "Copying Flink config.sh file: $FLINK_CONFIG_SH_FILE"
 	cp -f $FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
+fi
+
+# Copy MapReduce jar
+export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
+if [ ! -f $MAPREDUCE_JAR_FILE ]; then
+	m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
+else
+	cp -f $MAPREDUCE_JAR_FILE $SOL_LIB_DIR
 fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_JOIN
+${HDFS_CMD} ${RMR} $OUTPUT_JOIN
 
 HIVE_SQL_FILE=${BENCHMARK_OUTPUT_DIR}/rankings_uservisits_join.hive
 prepare_sql_join ${HIVE_SQL_FILE}

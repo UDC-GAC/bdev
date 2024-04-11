@@ -6,8 +6,8 @@ $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 rm -rf ${FLINK_LOCAL_DIRS}/*
 mkdir -p ${FLINK_LOCAL_DIRS}
 for j in `cat ${SLAVESFILE}`; do
-        ssh $j "rm -rf ${FLINK_LOCAL_DIRS}/*"
-        ssh $j "mkdir -p ${FLINK_LOCAL_DIRS}"
+        $SSH_CMD $j "rm -rf ${FLINK_LOCAL_DIRS}/*"
+        $SSH_CMD $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
 
 #Save Hadoop classpath to a file
@@ -17,8 +17,8 @@ $FLINK_HOME/bin/start-cluster.sh
 
 if [[ $FLINK_HISTORY_SERVER == "true" ]]
 then
-        $HADOOP_EXECUTABLE fs ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
-        $HADOOP_EXECUTABLE fs ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
+        ${HDFS_CMD} ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
+        ${HDFS_CMD} ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
 
         #Flink history server
         $FLINK_HOME/bin/historyserver.sh start

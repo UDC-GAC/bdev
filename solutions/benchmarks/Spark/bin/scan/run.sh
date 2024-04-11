@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_SCAN
+${HDFS_CMD} ${RMR} $OUTPUT_SCAN
 
 HIVE_SQL_FILE=${BENCHMARK_OUTPUT_DIR}/uservisits_scan.hive
 prepare_sql_scan ${HIVE_SQL_FILE}

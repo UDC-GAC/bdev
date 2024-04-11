@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_SORT
+${HDFS_CMD} ${RMR} $OUTPUT_SORT
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.gac.sparkbench.ScalaSort ${DEPLOY_ARGS} $SPARK_BENCH_JAR \

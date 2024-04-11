@@ -2,7 +2,7 @@
 
 FLAMEMRMAHOUT=${SOLUTION_DIR}/bin/flamemr_mahout
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_KMEANS
+${HDFS_CMD} ${RMR} $OUTPUT_KMEANS
 
 run_benchmark "${FLAMEMRMAHOUT} kmeans \
 		-i ${INPUT_KMEANS}/samples -c ${INPUT_KMEANS}/cluster \

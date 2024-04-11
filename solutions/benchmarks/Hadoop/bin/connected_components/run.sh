@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_CC
+${HDFS_CMD} ${RMR} $OUTPUT_CC
 
 run_benchmark "$HADOOP_EXECUTABLE jar ${PEGASUS_JAR} pegasus.ConCmpt \
 		${INPUT_CC}/edges ${OUTPUT_CC} \

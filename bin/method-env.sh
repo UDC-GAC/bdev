@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.8
+export METHOD_VERSION=3.9
 
 if [[ -z $METHOD_HOME ]]
 then
@@ -35,7 +35,13 @@ export METHOD_EXP_DIR=$METHOD_HOME/experiment
 export INIT_SOL_SCRIPT=$METHOD_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
-export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/clean-daemons.sh
+export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/kill-daemons.sh
+export CLEAN_DATA_SCRIPT=$METHOD_BIN_DIR/delete-nodes-data.sh
+
+if [[ -z $EXP_DIR ]]
+then
+	export EXP_DIR=$METHOD_EXP_DIR
+fi
 
 #ILO
 export ILO_HOME=$METHOD_BIN_DIR/ilo
@@ -49,10 +55,10 @@ export PLOT_HOME=$METHOD_BIN_DIR/plot
 #STAT
 export STAT_HOME=$METHOD_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
-export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.0.0
+export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.3.1
 export DOOL_COMMAND_NAME=dool
 export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
-export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate"
+export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes"
 
 #RAPL
 export RAPL_HOME=$METHOD_BIN_DIR/rapl
@@ -70,6 +76,19 @@ export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
+# Load BDEv configuration to define OUT_DIR
+. $METHOD_CONF_DIR/bdev-default.sh
+. $EXP_DIR/bdev-conf.sh
+
+export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${METHOD_START_DATE}
+export REPORT_FILE=$REPORT_DIR/summary
+export REPORT_LOG=$REPORT_DIR/log
+export PLOT_DIR=$REPORT_DIR/graphs
+export RAPL_PLOT_DIR=$PLOT_DIR/rapl
+export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
+export ILO_DIR=$PLOT_DIR/ilo
+export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
+
 # Check if we are under a SGE environment
 if [[ -n "$SGE_ROOT" ]]
 then
@@ -85,15 +104,25 @@ then
         export SLURM_ENV="true"
 fi
 
+if [[ ! -d $REPORT_DIR ]]
+then
+        mkdir -p $REPORT_DIR
+	mkdir -p $REPORT_DIR/etc
+	mkdir -p $REPORT_DIR/experiment
+fi
+
+# Copy configuration to REPORT_DIR
+cp $METHOD_CONF_DIR/*-default.sh $REPORT_DIR/etc
+cp $EXP_DIR/*-conf.sh $REPORT_DIR/experiment
+cp $EXP_DIR/*.lst $REPORT_DIR/experiment
+cp $EXP_DIR/*-scheduler.xml $REPORT_DIR/experiment
+
+export METHOD_CONF_DIR=$REPORT_DIR/etc
+
 # Load default configuration
 . $METHOD_CONF_DIR/bdev-default.sh
 . $METHOD_CONF_DIR/system-default.sh
 . $METHOD_CONF_DIR/experiment-default.sh
-
-if [[ -z $EXP_DIR ]]
-then
-	export EXP_DIR=$METHOD_EXP_DIR
-fi
 
 export HOSTFILE_DEFAULT=$EXP_DIR/hostfile
 
@@ -117,6 +146,9 @@ fi
 export CLUSTER_SIZES=`read_list $EXP_DIR/cluster_sizes.lst`
 export BENCHMARKS=`read_list $EXP_DIR/benchmarks.lst`
 export SOLUTIONS=`read_solutions $EXP_DIR/solutions.lst`
+export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
+export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
+export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
 
 if [[ -z "$LOCAL_DIRS" ]]
 then
@@ -140,21 +172,16 @@ fi
 . $METHOD_CONF_DIR/solutions-default.sh
 . $EXP_DIR/solutions-conf.sh
 
-export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${METHOD_START_DATE}
-export REPORT_FILE=$REPORT_DIR/summary
-export REPORT_LOG=$REPORT_DIR/log
-export PLOT_DIR=$REPORT_DIR/graphs
-export RAPL_PLOT_DIR=$PLOT_DIR/rapl
-export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
-export ILO_DIR=$PLOT_DIR/ilo
-export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
+m_echo "Running $METHOD_NAME v$METHOD_VERSION"
 
-if [[ ! -d $REPORT_DIR ]]
+# Check ssh command
+SSH_CMD=$(which ssh 2> /dev/null)
+if [[ "x$SSH_CMD" == "x" ]]
 then
-        mkdir -p $REPORT_DIR
+        m_exit "Missing ssh command"
 fi
 
-m_echo "Running $METHOD_NAME v$METHOD_VERSION"
+export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
 # Check modules environment
 if [[ "$ENABLE_MODULES" == "true" ]]
@@ -238,12 +265,27 @@ else
 	HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
+if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
+	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+else
+	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
+		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+	else
+		if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
+			export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
+		else
+			m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
+		fi
+	fi
+fi
+
 #Configuration parameters
 ini_conf_params
 add_conf_param "method_home" $METHOD_HOME
 add_conf_param "method_bin_dir" $METHOD_BIN_DIR
 add_conf_param "enable_hostnames" $ENABLE_HOSTNAMES
 add_conf_param "hostname_script" $HOSTNAME_SCRIPT
+add_conf_param "ssh_opts" "$SSH_OPTS"
 add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
@@ -261,14 +303,16 @@ add_conf_param "jobtracker_d_heapsize" $JOBTRACKER_D_HEAPSIZE
 add_conf_param "tasktracker_d_heapsize" $TASKTRACKER_D_HEAPSIZE
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
-add_conf_param "replication_factor" $REPLICATION_FACTOR
+export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 NAMENODE_SERVICE_HANDLER_COUNT=$(($NAMENODE_HANDLER_COUNT / 2))
 add_conf_param "namenode_service_handler_count" $NAMENODE_SERVICE_HANDLER_COUNT
 add_conf_param "datanode_handler_count" $DATANODE_HANDLER_COUNT
+add_conf_param "datanode_heartbeat_interval" $DATANODE_HEARTBEAT_INTERVAL
 add_conf_param "namenode_accesstime_precision" $NAMENODE_ACCESTIME_PRECISION
+add_conf_param "namenode_safemode_time" $NAMENODE_SAFEMODE_TIMEOUT
 add_conf_param "client_shortcircuit_reads" $SHORT_CIRCUIT_LOCAL_READS
 add_conf_param "domain_socket_path" "${DOMAIN_SOCKET_PATH}/dn_socket"
 add_conf_param "client_write_packet_size" $CLIENT_WRITE_PACKET_SIZE
@@ -305,6 +349,12 @@ add_conf_param "nodemanager_vmem_check" $NODEMANAGER_VMEM_CHECK
 add_conf_param "nodemanager_vmem_pmem_ratio" $NODEMANAGER_VMEM_PMEM_RATIO
 add_conf_param "nodemanager_max_disk_util_percent" $NODEMANAGER_MAX_DISK_UTIL_PERCENT
 add_conf_param "nodemanager_disk_health_checker" $NODEMANAGER_DISK_HEALTH_CHECKER
+add_conf_param "nodemanager_heartbeat_interval" $NODEMANAGER_HEARTBEAT_INTERVAL_MS
+add_conf_param "scheduler_class" $SCHEDULER_CLASS
+add_conf_param "scheduler_fair_assignmultiple" $SCHEDULER_FAIR_ASSIGN_MULTIPLE
+add_conf_param "scheduler_fair_dynamic_max_assign" $SCHEDULER_FAIR_DYNAMIC_MAX_ASSIGN
+add_conf_param "scheduler_fair_max_assign" $SCHEDULER_FAIR_MAX_ASSIGN
+add_conf_param "scheduler_fair_continuous_scheduling" $SCHEDULER_FAIR_CONTINUOUS
 
 #UDA
 add_conf_param "uda_lib_dir" $UDA_LIB_DIR
@@ -320,6 +370,8 @@ add_conf_param "rdma_hadoop_disk_shuffle_enabled" $RDMA_HADOOP_DISK_SHUFFLE_ENAB
 #SPARK
 add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
 add_conf_param "spark_yarn_am_memory" $SPARK_YARN_AM_HEAPSIZE
+add_conf_param "spark_yarn_am_memOverhead" $APP_MASTER_MEMORY_OVERHEAD
+add_conf_param "spark_executor_memOverhead" $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
 add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES

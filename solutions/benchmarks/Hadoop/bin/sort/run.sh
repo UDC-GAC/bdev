@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_SORT
+${HDFS_CMD} ${RMR} $OUTPUT_SORT
 
 run_benchmark "$HADOOP_EXECUTABLE jar $HADOOP_EXAMPLES_JAR sort \
     -outKey org.apache.hadoop.io.Text \

@@ -6,7 +6,9 @@ OLD_PWD=$PWD
 
 cd $RAPL_HOME/rapl_plot
 
-make >> ${RAPLLOGDIR}/log 2>&1
+if [ ! -f ${RAPL_HOME}/rapl_plot/rapl_plot ]; then
+	make >> ${RAPLLOGDIR}/log 2>&1
+fi
 
 cd $OLD_PWD
 
@@ -17,7 +19,7 @@ do
 	RAPLTMPDIR=${TMP_DIR}/rapl/node-${NODE_NUMBER}
 	mkdir -p ${RAPLNODEDIR}
 	echo "Starting RAPL monitor in ${SLAVE}, storing data on ${RAPLNODEDIR}" >> ${RAPLLOGDIR}/log 2>&1
-	nohup ssh $SLAVE "export RAPLLOGFILE=${RAPLNODEDIR}/rapl; \
+	nohup $SSH_CMD $SLAVE "export RAPLLOGFILE=${RAPLNODEDIR}/rapl; \
 		export RAPLTMPDIR=${RAPLTMPDIR}; \
 		export RAPL_HOME=${RAPL_HOME}; \
 		export RAPL_SECONDS_INTERVAL=${RAPL_SECONDS_INTERVAL}; \

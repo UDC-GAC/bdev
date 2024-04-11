@@ -2,7 +2,7 @@
 
   <property>
     <name>yarn.resourcemanager.scheduler.class</name>
-    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
+    <value>$scheduler_class</value>
   </property>
 
   <property>
@@ -83,6 +83,31 @@
   <property>
     <name>yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage</name>
     <value>$nodemanager_max_disk_util_percent</value>
+  </property>
+
+  <property>
+    <name>yarn.resourcemanager.nodemanagers.heartbeat-interval-ms</name>
+    <value>$nodemanager_heartbeat_interval</value>
+  </property>
+  
+  <property>
+    <name>yarn.scheduler.fair.assignmultiple</name>
+    <value>$scheduler_fair_assignmultiple</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.dynamic.max.assign</name>
+    <value>$scheduler_fair_dynamic_max_assign</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.max.assign</name>
+    <value>$scheduler_fair_max_assign</value>
+  </property>
+
+  <property>
+    <name>yarn.scheduler.fair.continuous-scheduling-enabled</name>
+    <value>$scheduler_fair_continuous_scheduling</value>
   </property>
 
   <!-- UDA specific -->

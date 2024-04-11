@@ -82,7 +82,7 @@ function start_instance {
   "${SPARK_HOME}/sbin"/spark-daemon.sh start $CLASS $WORKER_NUM \
      --webui-port "$WEBUI_PORT" $PORT_FLAG $PORT_NUM $MASTER "$@"
 }
-echo "start-worker.sh on $SPARK_LOCAL_IP using SPARK_CONF_DIR=$SPARK_CONF_DIR"
+echo "start-worker.sh on $SPARK_LOCAL_IP using SPARK_CONF_DIR=$SPARK_CONF_DIR" #BDEv
 if [ "$SPARK_WORKER_INSTANCES" = "" ]; then
   start_instance 1 "$@"
 else

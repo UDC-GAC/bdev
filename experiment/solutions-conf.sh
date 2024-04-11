@@ -26,7 +26,7 @@
 #export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 #
 ## Spark (common)
-#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.3
+#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
 #export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 #export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 #export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
@@ -67,9 +67,13 @@
 #export SPARK_YARN_AM_HEAPSIZE=$APP_MASTER_HEAPSIZE # Application Master heapsize
 #export SPARK_YARN_EXECUTORS_PER_NODE=1 # Number of Executors per node
 #export SPARK_YARN_CORES_PER_EXECUTOR=`op_int "$NODEMANAGER_VCORES / $SPARK_YARN_EXECUTORS_PER_NODE"` # Number of cores per Executor
-#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"` # Memory allocated to each Executor
-#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90	# Percentage of the Executor memory allocated to heap
+#export SPARK_YARN_EXECUTOR_MEM=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"`
+#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$SPARK_YARN_EXECUTOR_MEM - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each Executor
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR=0.1   # Fraction of Executor memory to be allocated as additional non-heap memory per executor
+#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=`op "(1 - $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR)"`     # Percentage of the Executor memory allocated to heap
 #export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_EXECUTOR_HEAPSIZE * $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD:384))
 #
 ## RDMA-Spark
 #export RDMA_SPARK_IB_ENABLED=true		# Enable RDMA connections through InfiniBand (IB)
@@ -77,7 +81,7 @@
 #export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 #
 ## Flink (common)
-#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.3
+#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
 #export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 #export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 #export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
@@ -106,7 +110,8 @@
 #
 ## Flink on YARN
 #export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
+#export FLINK_YARN_TASKMANAGER_MEM=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"`
+#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "$FLINK_YARN_TASKMANAGER_MEM - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each TaskManager
 #
 ## DataMPI
 #export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1

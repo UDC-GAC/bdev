@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_KMEANS
+${HDFS_CMD} ${RMR} $OUTPUT_KMEANS
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.gac.sparkbench.ScalaMLlibDenseKMeans ${DEPLOY_ARGS} $SPARK_BENCH_JAR \

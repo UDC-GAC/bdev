@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<allocations>
+  <queue name="sample_queue">
+    <minResources>10000 mb,1 vcores</minResources>
+    <maxResources>90000 mb,64 vcores</maxResources>
+    <maxRunningApps>50</maxRunningApps>
+    <weight>2.0</weight>
+    <!-- Scheduling policy for the queue. Allowed values: fifo, fair, drf -->
+    <schedulingPolicy>fair</schedulingPolicy>
+  </queue>
+
+  <queueMaxAMShareDefault>0.5</queueMaxAMShareDefault>
+
+  <user name="sample_user">
+    <maxRunningApps>30</maxRunningApps>
+  </user>
+  <userMaxAppsDefault>5</userMaxAppsDefault>
+
+  <queuePlacementPolicy>
+    <rule name="specified" />
+    <rule name="primaryGroup" create="false" />
+    <rule name="default" queue="sample_queue"/>
+  </queuePlacementPolicy>
+</allocations>

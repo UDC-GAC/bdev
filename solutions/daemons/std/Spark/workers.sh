@@ -100,7 +100,9 @@ if [ "$SPARK_SSH_OPTS" = "" ]; then
   SPARK_SSH_OPTS="-o StrictHostKeyChecking=no"
 fi
 
-set -- "export" "SPARK_CONF_DIR=${SPARK_CONF_DIR}" ";" "${@}"
+#BDEv
+export SPARK_SSH_OPTS=$SSH_OPTS
+set -- "export" "SPARK_CONF_DIR=${SPARK_CONF_DIR}" ";" "${@}" #BDEv
 for host in `echo "$HOSTLIST"|sed  "s/#.*$//;/^$/d"`; do
   if [ -n "${SPARK_SSH_FOREGROUND}" ]; then
     ssh $SPARK_SSH_OPTS "$host" $"${@// /\\ }" \

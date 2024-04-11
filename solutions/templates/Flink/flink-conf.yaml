@@ -30,6 +30,7 @@ env.yarn.conf.dir: $hadoop_conf_dir
 env.java.opts: -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native
 env.log.dir: $flink_log_dir
 env.pid.dir: $tmp_dir/flink/pid
+env.ssh.opts: $ssh_opts
 containerized.master.env.LD_LIBRARY_PATH: $hadoop_home/lib/native
 containerized.taskmanager.env.LD_LIBRARY_PATH: $hadoop_home/lib/native
 classloader.check-leaked-classloader: false

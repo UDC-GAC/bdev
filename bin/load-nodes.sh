@@ -16,7 +16,9 @@ export COMPUTE_NODES=`get_nodes_by_hostname $NODE_FILE $COMPUTE_NODES`
 if [[ -z "${COMPUTE_NODES}" ]]; then
 	m_exit "Nodes: Revise network settings"
 fi
-m_echo "Nodes: "$COMPUTE_NODES
+
+export NUM_NODES=`echo $COMPUTE_NODES | wc -w`
+m_echo "Nodes ($NUM_NODES): "$COMPUTE_NODES
 
 if [[ ! -z $ETH_INTERFACE ]]; then
 	export NODE_FILE_ETH=$REPORT_DIR/hostfile.eth

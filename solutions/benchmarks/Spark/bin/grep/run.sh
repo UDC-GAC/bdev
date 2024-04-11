@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_GREP
+${HDFS_CMD} ${RMR} $OUTPUT_GREP
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.gac.sparkbench.ScalaGrep ${DEPLOY_ARGS} $SPARK_BENCH_JAR \

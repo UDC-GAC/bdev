@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_BAYES
+${HDFS_CMD} ${RMR} $OUTPUT_BAYES
 
 run_benchmark "${MAHOUT_HOME}/bin/mahout seq2sparse \
 		-i ${INPUT_BAYES} -o ${OUTPUT_BAYES}/vectors \

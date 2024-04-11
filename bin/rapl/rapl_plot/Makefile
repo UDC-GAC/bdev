@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -O3 -Wall
 LFLAGS = 
-PAPI_INCLUDE = ../../../third-party/papi-6.0.0/src
-PAPI_LIBRARY = ../../../third-party/papi-6.0.0/src/libpapi.a
+PAPI_INCLUDE = ../../../third-party/papi-7.1.0/src
+PAPI_LIBRARY = ../../../third-party/papi-7.1.0/src/libpapi.a
 
 all:	rapl_plot
 

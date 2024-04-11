@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_WORDCOUNT
+${HDFS_CMD} ${RMR} $OUTPUT_WORDCOUNT
 
 
 run_benchmark "${DATAMPI_HOME}/bin/mpidrun \

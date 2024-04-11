@@ -55,7 +55,7 @@ do
 	do
 		. $METHOD_BIN_DIR/bench-env.sh
 		# Starting workload
-		m_echo "Running ${BENCHMARK}, reporting to ${BENCHMARK_OUTPUT_DIR}"
+		m_echo "Running ${BENCHMARK}, logging to ${BENCHMARK_OUTPUT_DIR}"
 
 		START_TOTAL_TIME=0
 		END_TOTAL_TIME=0

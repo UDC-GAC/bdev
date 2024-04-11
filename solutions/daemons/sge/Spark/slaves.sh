@@ -19,5 +19,5 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-#>&2 echo "This script is deprecated, use workers.sh"
+#BDEv >&2 echo "This script is deprecated, use workers.sh"
 "${DIR}/workers.sh" "$@"

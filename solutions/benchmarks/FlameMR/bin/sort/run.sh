@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_SORT
+${HDFS_CMD} ${RMR} $OUTPUT_SORT
 
 run_benchmark "$FLAMEMR_HOME/bin/flame-mr $HADOOP_EXAMPLES_JAR sort \
     -outKey org.apache.hadoop.io.Text \

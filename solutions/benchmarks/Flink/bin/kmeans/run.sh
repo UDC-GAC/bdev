@@ -1,6 +1,6 @@
 #!/bin/sh
 
-$HADOOP_EXECUTABLE fs ${RMR} $OUTPUT_KMEANS
+${HDFS_CMD} ${RMR} $OUTPUT_KMEANS
 
 run_benchmark "$FLINK_HOME/bin/flink run \
 	${DEPLOY_ARGS} \
