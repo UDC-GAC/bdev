@@ -53,10 +53,6 @@ Hadoop-YARN		3.4.0		ETH
 #RDMA-Spark		0.9.5		IPoIB
 #RDMA-Spark-YARN		0.9.5		ETH
 #RDMA-Spark-YARN		0.9.5		IPoIB
-#Flink			1.13.6		ETH
-#Flink			1.13.6		IPoIB
-#Flink-YARN		1.13.6		ETH
-#Flink-YARN		1.13.6		IPoIB
 #Flink			1.14.6		ETH
 #Flink			1.14.6		IPoIB
 #Flink-YARN		1.14.6		ETH

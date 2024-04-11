@@ -47,7 +47,7 @@ BDEv 3.9 - 2024-04-11
 
 		- SSH optional parameters can now be set (bdev-default.sh)
 		
-		- Remove support for Flink versions 1.12.x
+		- Remove support for Flink versions 1.12.x and 1.13.x
 		
 		- Fix bug when running Spark and Flink on YARN
 

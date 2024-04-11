@@ -74,8 +74,7 @@ then
 		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.15" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.14" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.13" ]]
+		[[ $FLINK_MAJOR_VERSION != "1.14" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
