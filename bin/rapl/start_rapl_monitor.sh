@@ -6,7 +6,9 @@ OLD_PWD=$PWD
 
 cd $RAPL_HOME/rapl_plot
 
-make >> ${RAPLLOGDIR}/log 2>&1
+if [ ! -f ${RAPL_HOME}/rapl_plot/rapl_plot ]; then
+	make >> ${RAPLLOGDIR}/log 2>&1
+fi
 
 cd $OLD_PWD
 
