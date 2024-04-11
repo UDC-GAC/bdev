@@ -3,7 +3,6 @@
 . $RAPL_PLOT_HOME/functions.sh
 . $RAPL_PLOT_HOME/constants.sh
 
-
 cd ${RAPLLOGDIR}
 
 GRAPHS_SCRIPT=${RAPLLOGDIR}/gen_graphs.sh
@@ -142,7 +141,6 @@ avg_dat_file
 plot_dat_file_lines
 FILE_PREFIX=${RAPL_AVG_DIR}/rapl_power
 plot_dat_file_lines
-
 
 chmod +x ${GRAPHS_SCRIPT}
 
