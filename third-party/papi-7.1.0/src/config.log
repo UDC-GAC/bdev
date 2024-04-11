@@ -707,7 +707,7 @@ configure:4351: checking for sched.h
 configure:4351: result: yes
 configure:4364: checking for gethrtime
 configure:4364: gcc -o conftest    conftest.c  >&5
-/tmp/ccphhf9B.o: In function `main':
+/tmp/cccoB7Zv.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `gethrtime'
 collect2: error: ld returned 1 exit status
 configure:4364: $? = 1
@@ -780,7 +780,7 @@ configure: failed program was:
 configure:4364: result: no
 configure:4364: checking for read_real_time
 configure:4364: gcc -o conftest    conftest.c  >&5
-/tmp/ccA3KjHU.o: In function `main':
+/tmp/ccXNXj2J.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `read_real_time'
 collect2: error: ld returned 1 exit status
 configure:4364: $? = 1
@@ -853,7 +853,7 @@ configure: failed program was:
 configure:4364: result: no
 configure:4364: checking for time_base_to_time
 configure:4364: gcc -o conftest    conftest.c  >&5
-/tmp/cc9zIFqS.o: In function `main':
+/tmp/ccSunvX5.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `time_base_to_time'
 collect2: error: ld returned 1 exit status
 configure:4364: $? = 1
@@ -930,7 +930,7 @@ configure:4364: $? = 0
 configure:4364: result: yes
 configure:4364: checking for mach_absolute_time
 configure:4364: gcc -o conftest    conftest.c  >&5
-/tmp/cc8VeAas.o: In function `main':
+/tmp/ccgy2PEe.o: In function `main':
 conftest.c:(.text+0xa): undefined reference to `mach_absolute_time'
 collect2: error: ld returned 1 exit status
 configure:4364: $? = 1
@@ -1008,7 +1008,7 @@ configure:4364: $? = 0
 configure:4364: result: yes
 configure:4379: checking for timer_create and timer_*ettime symbols in base system
 configure:4393: gcc -o conftest    conftest.c  >&5
-/tmp/ccGMGb4i.o: In function `main':
+/tmp/ccy8IhkB.o: In function `main':
 conftest.c:(.text+0x1a): undefined reference to `timer_create'
 collect2: error: ld returned 1 exit status
 configure:4393: $? = 1
@@ -1058,7 +1058,7 @@ configure:4423: $? = 0
 configure:4432: result: found
 configure:4478: checking for dlopen and dlerror symbols in base system
 configure:4491: gcc -o conftest    conftest.c  >&5
-/tmp/cccL0R9K.o: In function `main':
+/tmp/ccQHqsrR.o: In function `main':
 conftest.c:(.text+0x13): undefined reference to `dlopen'
 conftest.c:(.text+0x1c): undefined reference to `dlerror'
 collect2: error: ld returned 1 exit status
@@ -1130,7 +1130,7 @@ conftest.c:34:40: warning: implicit declaration of function 'gettid'; did you me
                  int main() { pid_t a = gettid(); }
                                         ^~~~~~
                                         getgid
-/tmp/ccBgEWMH.o: In function `main':
+/tmp/ccX7MITF.o: In function `main':
 conftest.c:(.text+0xe): undefined reference to `gettid'
 collect2: error: ld returned 1 exit status
 configure:5015: $? = 1
