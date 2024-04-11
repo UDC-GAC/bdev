@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.9 - 2024-04-10
+BDEv 3.9 - 2024-04-11
 ---------------------
 	A point release for the BDEv 3.x line
 
@@ -31,14 +31,20 @@ BDEv 3.9 - 2024-04-10
 
 		- Configuration of each experiment is now copied into the output report directory
 
-		- HDFS formatting and data deletion can be configured (hdfs-default)
+		- HDFS formatting and data deletion can be configured (hdfs-default.sh)
 
-		- Input data in HDFS is reused if already exist
+		- HDFS replication factor is automatically set when there are not enough DataNodes
+
+		- HDFS input data is reused if already exist
+
+		- Update RAPL-based power monitoring tool to PAPI v7.1.0
 
 		- Upate RGen data generator to include minor improvements and bug fixes
 
-		- Update resource monitoring tool to dool v1.1.0
+		- Update resource monitoring tool to dool v1.3.1
 		
+		- Fix bug when running Spark and Flink on YARN
+
 		- SSH optional parameters can now be set (bdev-default.sh)
 		
 		- Remove support for Flink versions 1.12.x
