@@ -55,7 +55,7 @@ export PLOT_HOME=$METHOD_BIN_DIR/plot
 #STAT
 export STAT_HOME=$METHOD_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
-export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.1.0
+export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.3.1
 export DOOL_COMMAND_NAME=dool
 export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes"
