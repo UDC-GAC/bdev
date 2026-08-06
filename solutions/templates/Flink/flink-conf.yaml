@@ -6,7 +6,7 @@ jobmanager.rpc.port: 6123
 jobmanager.execution.failover-strategy: region
 jobmanager.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
 historyserver.archive.fs.dir: hdfs://$master:$fs_port/$flink_history_server_dir
-taskmanager.memory.process.size: $flink_taskmanager_memor ymb
+taskmanager.memory.process.size: $flink_taskmanager_memory mb
 taskmanager.numberOfTaskSlots: $flink_taskmanager_slots
 taskmanager.network.netty.client.connectTimeoutSec: $flink_taskmanager_network_netty_timeout
 taskmanager.network.bind-policy: ip
