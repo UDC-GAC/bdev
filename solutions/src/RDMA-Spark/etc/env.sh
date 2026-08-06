@@ -75,6 +75,6 @@ add_conf_param "spark_executor_instances" $SPARK_EXECUTORS
 add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
 add_conf_param "spark_sql_shuffle_partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 add_conf_param "spark_executor_memory" $SPARK_EXECUTOR_HEAPSIZE
-add_conf_param "spark_executor_cores" $SPARK_YARN_CORES_PER_EXECUTOR
+add_conf_param "spark_executor_cores" $SPARK_CORES_PER_EXECUTOR
 
 add_conf_param "spark_extra_library_path" $SPARK_EXTRA_LIBRARY_PATH
