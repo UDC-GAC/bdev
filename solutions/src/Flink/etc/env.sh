@@ -65,16 +65,17 @@ export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
 
 #Deploy mode
 export FINISH_YARN="true"
-export DEPLOY_ARGS="-p ${FLINK_PARALLELISM}"
+# Session Mode
+export DEPLOY_ARGS="run -p ${FLINK_PARALLELISM}"
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
+	if [[ $FLINK_MAJOR_VERSION != "1.20" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.15" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.14" ]]
+		[[ $FLINK_MAJOR_VERSION != "1.15" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi

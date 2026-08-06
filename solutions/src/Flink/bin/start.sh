@@ -13,6 +13,7 @@ done
 #Save Hadoop classpath to a file
 echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 
+m_echo "Starting the standalone Flink cluster (Session Mode)"
 $FLINK_HOME/bin/start-cluster.sh
 
 if [[ $FLINK_HISTORY_SERVER == "true" ]]
@@ -26,4 +27,4 @@ then
         sleep 1
 fi
 
-sleep 15
+sleep 10

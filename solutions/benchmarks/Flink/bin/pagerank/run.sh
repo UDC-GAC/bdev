@@ -2,7 +2,7 @@
 
 ${HDFS_CMD} ${RMR} $OUTPUT_PAGERANK
 
-run_benchmark "$FLINK_HOME/bin/flink run \
+run_benchmark "$FLINK_HOME/bin/flink \
 	${DEPLOY_ARGS} \
 	--class es.udc.gac.flinkbench.ScalaPageRank $FLINK_BENCH_JAR \
 	${INPUT_PAGERANK}/edges ${OUTPUT_PAGERANK} ${PAGERANK_PAGES} ${PAGERANK_MAX_ITERATIONS}"

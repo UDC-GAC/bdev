@@ -62,18 +62,20 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 
 #Deploy mode
 export FINISH_YARN="false"
-export DEPLOY_ARGS="-m yarn-cluster \
-	-yjm $FLINK_YARN_JOBMANAGER_MEMORY \
-	-ys $FLINK_TASKMANAGER_SLOTS"
+# Session Mode
+export DEPLOY_ARGS="run -t yarn-session"
+export YARN_PROPS_FILE_CUSTOM="$TMP_DIR/.yarn-properties-$USER"
+export YARN_PROPS_FILE_DEFAULT="/tmp/.yarn-properties-$USER"
+export YARN_APP_ID=""
 
 if [[ $FLINK_SERIES == "1" ]]
 then
-	if [[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
+	if [[ $FLINK_MAJOR_VERSION != "1.20" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.15" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.14" ]]
+		[[ $FLINK_MAJOR_VERSION != "1.15" ]]
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
