@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Avoid cleanup if solution does not exist
 SCRIPT=$SPARK_HOME/sbin/stop-all.sh
 
 if [ -f "$SCRIPT" ]; then
@@ -7,5 +8,3 @@ if [ -f "$SCRIPT" ]; then
 fi
 
 bash $CLEAN_DAEMONS_SCRIPT
-
-$COMMON_SRC_DIR/bin/spark-config.sh
