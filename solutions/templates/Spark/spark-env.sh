@@ -39,13 +39,9 @@ SPARK_LOCAL_DIRS=$spark_local_dirs
 # - SPARK_CONF_DIR, Alternate conf dir. (Default: ${SPARK_HOME}/conf)
 SPARK_CONF_DIR=$spark_conf_dir
 # - SPARK_EXECUTOR_INSTANCES, Number of workers to start (Default: 2)
-SPARK_EXECUTOR_INSTANCES=$spark_executor_instances
 # - SPARK_EXECUTOR_CORES, Number of cores for the executors (Default: 1).
-SPARK_EXECUTOR_CORES=$spark_executor_cores
 # - SPARK_EXECUTOR_MEMORY, Memory per Executor (e.g. 1000M, 2G) (Default: 1G)
-SPARK_EXECUTOR_MEMORY=$spark_executor_memoryM
 # - SPARK_DRIVER_MEMORY, Memory for Driver (e.g. 1000M, 2G) (Default: 1G)
-SPARK_DRIVER_MEMORY=$spark_driver_memoryM
 
 # Options read in any cluster manager using HDFS
 # - HADOOP_CONF_DIR, to point Spark towards Hadoop configuration files
@@ -101,4 +97,3 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 # Extra options added by BDEv
 export LD_LIBRARY_PATH=$hadoop_home/lib/native:$LD_LIBRARY_PATH
 export SPARK_DIST_CLASSPATH=$($hadoop_home/bin/hadoop classpath)
-
