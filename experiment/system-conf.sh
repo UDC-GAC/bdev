@@ -2,10 +2,10 @@
 #
 ### Configuration parameters for the host system characteristics
 #
-#export TMP_DIR=/tmp/$USER/$METHOD_NAME	# Directory to store temporary files
+export TMP_DIR=/scratch/$USER/$METHOD_NAME	# Directory to store temporary files
 #export LOCAL_DIRS="" 		# Comma-separated list of directories to store local data in each node
 #export LOOPBACK_IP=127.0.0.1	# IP of the loopback network interface
-#export ETH_INTERFACE=eth0 	# Ethernet interface to use in the nodes
+export ETH_INTERFACE=eno1 	# Ethernet interface to use in the nodes
 #export IPOIB_INTERFACE=ib0 	# IPoIB interface to use in the nodes
 #export CPUS_PER_NODE=`grep "^physical id" /proc/cpuinfo | sort -u | wc -l`	# CPUs per node
 #export CORES_PER_CPU=`grep "^core id" /proc/cpuinfo | sort -u | wc -l`	# Cores per CPU

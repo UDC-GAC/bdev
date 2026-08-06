@@ -43,7 +43,7 @@ SPARK_EXECUTOR_INSTANCES=$spark_executor_instances
 # - SPARK_EXECUTOR_CORES, Number of cores for the executors (Default: 1).
 SPARK_EXECUTOR_CORES=$spark_executor_cores
 # - SPARK_EXECUTOR_MEMORY, Memory per Executor (e.g. 1000M, 2G) (Default: 1G)
-SPARK_EXECUTOR_MEMORY=$spark_yarn_executor_memoryM
+SPARK_EXECUTOR_MEMORY=$spark_executor_memoryM
 # - SPARK_DRIVER_MEMORY, Memory for Driver (e.g. 1000M, 2G) (Default: 1G)
 SPARK_DRIVER_MEMORY=$spark_driver_memoryM
 

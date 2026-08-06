@@ -16,6 +16,7 @@ export SPARK_LOG_DIR=$SOL_LOG_DIR
 export SPARK_WORKER_DIR=$SOLUTION_REPORT_DIR/logs/spark/work
 export SPARK_EXECUTORS=$(($SPARK_YARN_EXECUTORS_PER_NODE * $SLAVES_NUMBER))
 export SPARK_DEFAULT_PARALLELISM=$(($SPARK_EXECUTORS * $SPARK_YARN_CORES_PER_EXECUTOR))
+export SPARK_SQL_SHUFFLE_PARTITIONS=$(($SPARK_DEFAULT_PARALLELISM * $SPARK_SQL_SHUFFLE_PARTITIONS_PER_CORE))
 export SPARK_EXTRA_LIBRARY_PATH="$SPARK_HOME/lib/native/Linux-amd64-64"
 export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
@@ -67,7 +68,7 @@ add_conf_param "spark_log_dir" $SPARK_LOG_DIR
 add_conf_param "spark_worker_dir" $SPARK_WORKER_DIR
 add_conf_param "spark_executor_instances" $SPARK_EXECUTORS
 add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
-add_conf_param "spark_sql_shuffle_partitions" $SPARK_DEFAULT_PARALLELISM
+add_conf_param "spark_sql_shuffle_partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 
 add_conf_param "spark_executor_memory" $SPARK_YARN_EXECUTOR_HEAPSIZE
 add_conf_param "spark_yarn_executor_memory" $SPARK_YARN_EXECUTOR_HEAPSIZE
