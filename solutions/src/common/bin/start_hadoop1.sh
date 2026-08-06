@@ -11,7 +11,7 @@ fi
 $SSH_CMD $MASTERNODE "$HADOOP_HOME/bin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start namenode" &
 $HADOOP_HOME/bin/hadoop-daemons.sh --config $HADOOP_CONF_DIR start datanode &
 
-sleep 10
+sleep 5
 
 #Jobtracker & Tasktrackers
 $SSH_CMD $MASTERNODE "$HADOOP_HOME/bin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start jobtracker" &
@@ -23,11 +23,12 @@ then
 	$SSH_CMD $MASTERNODE "$HADOOP_HOME/bin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start historyserver" &
 fi
 
-SLEEP=15
+sleep 5
 
-if [[ $NAMENODE_SAFEMODE_TIMEOUT -gt 15000 ]]
-then
-	SLEEP=$(($NAMENODE_SAFEMODE_TIMEOUT / 1000))
+SAFEMODE_STATUS=$($HADOOP_HOME/bin/hdfs dfsadmin -safemode get 2>/dev/null)
+
+if [[ "$SAFEMODE_STATUS" == *"ON"* ]]; then
+    m_echo "HDFS is in Safe Mode. Waiting for DataNodes..."
+    $HADOOP_HOME/bin/hdfs dfsadmin -safemode wait >/dev/null 2>&1
+    m_echo "HDFS has exited the Safe Mode and is ready for writing"
 fi
-
-sleep $SLEEP

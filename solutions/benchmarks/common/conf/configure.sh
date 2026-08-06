@@ -9,9 +9,10 @@ export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TPCX_HS_ROWS_NUMBER=$(( $TPCX_HS_DATASIZE / 100 ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
+export YARN_EXECUTABLE="$HADOOP_HOME/bin/yarn"
 export HDFS_CMD="$HADOOP_HOME/bin/hdfs dfs"
 export HDFS_CONFIG="$HADOOP_HOME/bin/hdfs --config"
-export YARN_CONFIG="$HADOOP_HOME/bin/yarn --config"
+export YARN_CONFIG="$YARN_EXECUTABLE --config"
 export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
 export CHMOD="-chmod -R"
 
