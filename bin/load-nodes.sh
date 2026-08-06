@@ -26,9 +26,9 @@ if [[ ! -z $ETH_INTERFACE ]]; then
 	if [[ -z "${ETH_COMPUTE_NODES}" ]]; then
 		export ETH_COMPUTE_NODES=""
 		rm $NODE_FILE_ETH >& /dev/null
-		m_warn "ETH ($ETH_INTERFACE): interface will be ignored"
+		m_warn "Ethernet ($ETH_INTERFACE): interface will be ignored"
 	else
-		m_echo "ETH ($ETH_INTERFACE): "$ETH_COMPUTE_NODES
+		m_echo "Ethernet ($ETH_INTERFACE): "$ETH_COMPUTE_NODES
 	fi
 fi
 

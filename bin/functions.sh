@@ -32,6 +32,7 @@ export -f m_err
 
 function m_exit() {
 	m_err $@
+	bash $YARN_KILLALL_SCRIPT
 	bash $CLEAN_DAEMONS_SCRIPT
 	exit -1
 }

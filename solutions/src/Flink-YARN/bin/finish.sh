@@ -1,9 +1,6 @@
 #!/bin/sh
 
-SCRIPT=$FLINK_HOME/bin/stop-cluster.sh
+echo "stop" | $FLINK_HOME/bin/yarn-session.sh -id $YARN_APP_ID
 
-if [ -f "$SCRIPT" ]; then
-	bash $SCRIPT
-fi
-
+bash $YARN_KILLALL_SCRIPT
 bash $CLEAN_DAEMONS_SCRIPT
