@@ -101,4 +101,5 @@ fi
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
-
+add_conf_param "flink_jobmanager_memory" $FLINK_JOBMANAGER_MEMORY
+add_conf_param "flink_taskmanager_memory" $FLINK_TASKMANAGER_MEMORY
