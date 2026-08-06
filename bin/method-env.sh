@@ -408,7 +408,6 @@ add_conf_param "rdma_spark_shuffle_chunk_size"	$RDMA_SPARK_SHUFFLE_CHUNK_SIZE
 add_conf_param "datampi_task_heapsize" $DATAMPI_TASK_HEAPSIZE
 
 #FLINK
-add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
 export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX:-"auto"}
@@ -419,6 +418,7 @@ if [ "${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX,,}" = "auto" ]; then
 fi
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
+add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
 add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
 add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
 add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
@@ -434,4 +434,3 @@ add_conf_param "flink_akka_ask_timeout" $FLINK_AKKA_ASK_TIMEOUT
 add_conf_param "flink_akka_tcp_timeout" $FLINK_AKKA_TCP_TIMEOUT
 add_conf_param "flink_akka_framesize" $FLINK_AKKA_FRAMESIZE
 add_conf_param "flink_rest_client_max_content_length" $FLINK_REST_CLIENT_MAX_CONTENT_LENGTH
-
