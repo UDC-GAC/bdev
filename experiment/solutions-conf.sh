@@ -26,7 +26,7 @@
 #export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 #
 ## Spark (common)
-#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
+#export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.4.3
 #export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 #export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 #export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
@@ -82,7 +82,7 @@
 #export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 #
 ## Flink (common)
-#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
+#export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.4.3
 #export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 #export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 #export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
@@ -91,7 +91,7 @@
 #export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="auto" # Maximum network memory size for TaskManagers (it requires a size-unit specifier). It accepts "auto" to use an auto-calculated value
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers (it requires a size-unit specifier)
 #export FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE="64kb" #Size of memory buffers used by the network stack and the memory manager
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
@@ -105,15 +105,14 @@
 #export FLINK_AKKA_FRAMESIZE="209715200b" # Maximum size of messages which are sent between JobManager and TaskManagers (it requires a size-unit specifier)
 #export FLINK_REST_CLIENT_MAX_CONTENT_LENGTH=209715200 # Maximum content length in bytes that the client will handle
 #
-## Flink standalone
+# Flink standalone
 #export FLINK_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
 #export FLINK_MEMORY_RESERVED=$DATANODE_D_HEAPSIZE	# Memory reserved to other services
 #export FLINK_TASKMANAGER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $FLINK_MEMORY_RESERVED) / $FLINK_TASKMANAGERS_PER_NODE"` # Memory allocated to each TaskManager
 #
-## Flink on YARN
+# Flink on YARN
 #export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
-#export FLINK_YARN_TASKMANAGER_MEM=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE"`
-#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "$FLINK_YARN_TASKMANAGER_MEM - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each TaskManager
+#export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "(($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE) - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each TaskManager
 #
 ## DataMPI
 #export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1
