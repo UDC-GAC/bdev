@@ -79,9 +79,6 @@ then
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
-	
-	export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.process.size: $FLINK_JOBMANAGER_MEMORY"
-	export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_TASKMANAGER_MEMORY"
 else
 	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 fi
