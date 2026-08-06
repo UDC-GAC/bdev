@@ -26,7 +26,7 @@ export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations for HD
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
+export SPARK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.4.3
 export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
@@ -81,7 +81,7 @@ export RDMA_SPARK_ROCE_ENABLED=false		# Enable RDMA connections through RDMA ove
 export RDMA_SPARK_SHUFFLE_CHUNK_SIZE=524288	# Chunk size for shuffle
 
 # Flink (common)
-export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.3.6
+export FLINK_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/3.4.3
 export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
@@ -89,8 +89,9 @@ export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of 
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
 export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
-export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb"  # Maximum network memory size for TaskManagers (it requires a size-unit specifier)
+export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="auto" # Maximum network memory size for TaskManagers (it requires a size-unit specifier). It accepts "auto" to use an auto-calculated value
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers (it requires a size-unit specifier)
+export FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE="64kb" #Size of memory buffers used by the network stack and the memory manager
 export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
 export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
 export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=512 # Minimum number of network buffers required per sort-merge blocking result partition

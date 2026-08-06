@@ -11,6 +11,7 @@ taskmanager.network.bind-policy: ip
 taskmanager.memory.network.fraction: $flink_taskmanager_memory_network_fraction
 taskmanager.memory.network.max: $flink_taskmanager_memory_network_max
 taskmanager.memory.network.min: $flink_taskmanager_memory_network_min
+taskmanager.memory.segment-size: $flink_taskmanager_memory_segment_size
 taskmanager.memory.framework.off-heap.batch-shuffle.size: $flink_taskmanager_memory_off_heap_shuffle_size
 taskmanager.memory.framework.off-heap.size: $flink_taskmanager_memory_off_heap_size
 taskmanager.network.sort-shuffle.min-buffers: $flink_taskmanager_network_sort_shuffle_buffers
@@ -20,7 +21,7 @@ parallelism.default: $flink_default_parallelism
 io.tmp.dirs: $flink_local_dirs
 heartbeat.timeout: $flink_heartbeat_timeout
 akka.ask.timeout: $flink_akka_ask_timeout s
-akka.loookup.timeout: $flink_akka_ask_timeout s
+akka.lookup.timeout: $flink_akka_ask_timeout s
 akka.tcp.timeout: $flink_akka_tcp_timeout s
 akka.framesize: $flink_akka_framesize
 fs.hdfs.hadoopconf: $hadoop_conf_dir

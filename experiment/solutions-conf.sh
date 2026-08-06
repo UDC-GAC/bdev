@@ -89,8 +89,9 @@
 #export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 #export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
-#export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="1gb"  # Maximum network memory size for TaskManagers
+#export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="auto" # Maximum network memory size for TaskManagers (it requires a size-unit specifier). It accepts "auto" to use an auto-calculated value
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers
+#export FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE="64kb" #Size of memory buffers used by the network stack and the memory manager
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
 #export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=512 # Minimum number of network buffers required per sort-merge blocking result partition

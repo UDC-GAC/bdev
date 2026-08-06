@@ -37,6 +37,7 @@ export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
 export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/kill-daemons.sh
 export CLEAN_DATA_SCRIPT=$METHOD_BIN_DIR/delete-nodes-data.sh
+export YARN_KILLALL_SCRIPT=$METHOD_BIN_DIR/yarn-killall.sh
 
 if [[ -z $EXP_DIR ]]
 then
@@ -410,12 +411,19 @@ add_conf_param "datampi_task_heapsize" $DATAMPI_TASK_HEAPSIZE
 add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
 export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
+export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX:-"auto"}
+FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=${FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION:-0.1}
+if [ "${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX,,}" = "auto" ]; then
+	AUTO_FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=$(awk "BEGIN { printf \"%d\", $FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION }")
+	export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="${AUTO_FLINK_TASKMANAGER_MEMORY_NETWORK_MAX}m"
+fi
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 add_conf_param "flink_taskmanager_network_netty_timeout" $FLINK_TASKMANAGER_NETWORK_NETTY_TIMEOUT
 add_conf_param "flink_taskmanager_memory_network_fraction" $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION
 add_conf_param "flink_taskmanager_memory_network_max" $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX
 add_conf_param "flink_taskmanager_memory_network_min" $FLINK_TASKMANAGER_MEMORY_NETWORK_MIN
+add_conf_param "flink_taskmanager_memory_segment_size" $FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE
 add_conf_param "flink_taskmanager_memory_off_heap_shuffle_size" $FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE
 add_conf_param "flink_taskmanager_memory_off_heap_size" $FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE
 add_conf_param "flink_taskmanager_network_sort_shuffle_buffers" $FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS
