@@ -58,6 +58,7 @@ export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 
 #Deploy mode
 export FINISH_YARN="false"
+# YARN client mode
 export DEPLOY_ARGS="--master yarn --deploy-mode client \
 	--conf spark.hadoop.yarn.timeline-service.enabled=false"
 
