@@ -79,9 +79,6 @@ then
 	then
 		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 	fi
-
-        export FLINK_JOBMANAGER_MEMORY_PARAM="jobmanager.memory.process.size: $FLINK_YARN_JOBMANAGER_MEMORY"
-        export FLINK_TASKMANAGER_MEMORY_PARAM="taskmanager.memory.process.size: $FLINK_YARN_TASKMANAGER_MEMORY"
 else
         m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
 fi
@@ -112,4 +109,3 @@ fi
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
-
