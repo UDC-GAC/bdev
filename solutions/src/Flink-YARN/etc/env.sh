@@ -31,7 +31,6 @@ export HADOOP_CONF_DIR=$SOLUTION_REPORT_DIR/conf/hadoop
 export HADOOP_LOG_DIR=$SOLUTION_REPORT_DIR/logs/hadoop
 export YARN_CONF_DIR=$HADOOP_CONF_DIR
 export YARN_LOG_DIR=$SOLUTION_REPORT_DIR/logs/hadoop
-export HADOOP_YARN_BIN_DIR=$SOLUTIONS_SRC_DIR/Hadoop-YARN/bin
 export PATH=$HADOOP_HOME/bin:$PATH
 
 export HADOOP_SERIES=`echo ${HADOOP_HOME##*/} | cut -d '.' -f 1`
