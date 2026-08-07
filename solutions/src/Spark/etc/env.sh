@@ -1,8 +1,6 @@
 #!/bin/sh
 export SOL_BENCH_DIR=$SOLUTIONS_BENCH_DIR/Spark
 export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Spark
-export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Spark
-export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Spark
 export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/spark
@@ -23,6 +21,16 @@ export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export SPARK_SERIES=`echo ${SPARK_MAJOR_VERSION} | cut -d '.' -f 1`
 
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
+	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
+else if [[ $SPARK_SERIES == "2" ]]
+	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
+	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Spark-2
+else
+	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
+	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Spark
+fi
+
 #YARN environment variables
 export HADOOP_HOME=$SPARK_HADOOP_HOME
 export HADOOP_CONF_DIR_SRC=$HADOOP_HOME/etc/hadoop
@@ -41,10 +49,6 @@ then
 	export HADOOP_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
 	export HADOOP_SBIN_DIR=$HADOOP_HOME/libexec
 	export HADOOP_SLAVESFILE=$HADOOP_CONF_DIR/workers
-	if [[ "$SGE_ENV" == "true" ]]
-	then
-		export HADOOP_SSH_OPTS=" "
-	fi
 else
 	export HADOOP_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export HADOOP_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN
@@ -66,14 +70,6 @@ export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
 #Deploy mode
 export FINISH_YARN="true"
 export DEPLOY_ARGS="--master spark://${MASTERNODE}:7077 --deploy-mode client"
-
-if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
-	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
-else if [[ $SPARK_SERIES == "2" ]]
-	SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
-else
-	SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
-fi
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
 add_conf_param "spark_log_dir" $SPARK_LOG_DIR
