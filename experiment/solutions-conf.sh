@@ -2,22 +2,7 @@
 #
 ### Configuration parameters for the frameworks
 #
-##FLAME-MR
-#export FLAMEMR_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop-YARN/2.10.2
-#export FLAMEMR_WORKERS_PER_NODE=1 # Number of workers per node
-#export FLAMEMR_CORES_PER_WORKER=`op_int "$CORES_PER_NODE / $FLAMEMR_WORKERS_PER_NODE"` # Number of cores per Worker
-#export FLAMEMR_WORKER_MEMORY_FACTOR=0.90 # Percentage of the Worker memory allocated to heap
-#export FLAMEMR_WORKER_MEMORY=`op_int "($NODEMANAGER_MEMORY / $FLAMEMR_WORKERS_PER_NODE) * $FLAMEMR_WORKER_MEMORY_FACTOR"` # Worker heapsize
-#export FLAMEMR_BUFFER_SIZE=1048576 # Memory buffer size
-#export FLAMEMR_DEBUG_MODE=false # Debug mode 
-#export FLAMEMR_ITERATIVE_MODE=false # Iterative mode (caches intermediate results)
-#export FLAMEMR_ITERATIVE_CACHE_INPUT=false # Include input caching in iterative mode
-#export FLAMEMR_MERGE_OUTPUTS=1 # Number of merge outputs pipelined to the reduce phase
-#export FLAMEMR_LOAD_BALANCING_MODE=false # Split large reduce partitions to avoid workload unbalance
-#export FLAMEMR_LOAD_BALANCING_THRESHOLD=0 # Maximum partition size
-#export FLAMEMR_ADDITIONAL_CONFIGURATION="" # Additional Flame-MR configuration
-#
-## RDMA-Hadoop/RDMA-Hadoop-2/RDMA-Hadoop-3
+## RDMA-Hadoop-3
 #export RDMA_HADOOP_IB_ENABLED=true # Enable RDMA connections through InfiniBand (IB)
 #export RDMA_HADOOP_ROCE_ENABLED=false # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 #export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
@@ -122,15 +107,6 @@
 # Flink on YARN
 #export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the JobManager
 #export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "(($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE) - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each TaskManager
-#
-## DataMPI
-#export DATAMPI_HADOOP_HOME=${SOLUTIONS_DIST_DIR}/Hadoop/1.2.1
-#export DATAMPI_TASK_HEAPSIZE_FACTOR=0.90 # Percentage of the task memory allocated to heap
-#export DATAMPI_TASK_HEAPSIZE=`op_int "$NODEMANAGER_MEMORY * $DATAMPI_TASK_HEAPSIZE_FACTOR"` # Task heapsize
-#
-## Mellanox UDA library
-#export UDA_VERSION=3.4.1 # UDA library version
-#export UDA_LIB_DIR=$SOLUTIONS_LIB_DIR/uda-$UDA_VERSION # UDA library directory
 #
 ## Apache Mahout
 #export MAHOUT_HEAPSIZE=1024		# Heap size for Mahout master process
