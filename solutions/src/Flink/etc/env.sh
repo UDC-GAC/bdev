@@ -11,7 +11,7 @@ export SLAVESFILE=$SOL_CONF_DIR/workers
 
 #FLINK
 export FLINK_HOME=$SOLUTION_HOME
-export FLINK_VERSION=${HADOOP_HOME##*/}
+export FLINK_VERSION=${FLINK_HOME##*/}
 export FLINK_MAJOR_VERSION=${FLINK_VERSION%.*}
 export FLINK_SERIES=${FLINK_VERSION%%.*}
 export FLINK_CONF_DIR=$SOL_CONF_DIR
@@ -30,10 +30,10 @@ if [[ $FLINK_SERIES == "1" ]]; then
 		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.15" ]]; then
-		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+		m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
 else
-	m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+	m_exit "Flink version is not supported: $FLINK_VERSION"
 fi
 
 #YARN environment variables
@@ -59,7 +59,7 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 else
-	m_exit "Hadoop version is not supported: $HADOOP_MAJOR_VERSION"
+	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
 
 #Configuration
