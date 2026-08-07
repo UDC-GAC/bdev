@@ -3,6 +3,9 @@
 #Set network configuration
 set_network_configuration
 
+# Init and load configuration parameters
+. $METHOD_BIN_DIR/conf-params.sh
+
 #Read solution environment
 m_echo "Reading environment: $SOLUTION_DIR/etc/env.sh"
 . $SOLUTION_DIR/etc/env.sh

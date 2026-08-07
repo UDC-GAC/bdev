@@ -3,6 +3,9 @@
 #Set network configuration
 set_network_configuration
 
+# Init and load configuration parameters
+. $METHOD_BIN_DIR/conf-params.sh
+
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
 
