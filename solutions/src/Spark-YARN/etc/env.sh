@@ -18,11 +18,12 @@ export SPARK_EXECUTORS=$(($SPARK_YARN_EXECUTORS_PER_NODE * $SLAVES_NUMBER))
 export SPARK_DEFAULT_PARALLELISM=$(($SPARK_EXECUTORS * $SPARK_YARN_CORES_PER_EXECUTOR))
 export SPARK_SQL_SHUFFLE_PARTITIONS=$(($SPARK_DEFAULT_PARALLELISM * $SPARK_SQL_SHUFFLE_PARTITIONS_PER_CORE))
 export PATH=$SPARK_HOME/bin:$PATH
-export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
-export SPARK_SERIES=`echo ${SPARK_MAJOR_VERSION} | cut -d '.' -f 1`
+export SPARK_VERSION=${SOLUTION_HOME##*/}
+export SPARK_MAJOR_VERSION=${SPARK_VERSION%.*}
+export SPARK_SERIES=${SPARK_VERSION%%.*}
 
 if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]; then
-	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
+	m_exit "Spark version is not supported: $SPARK_VERSION"
 fi
 
 #YARN environment variables
@@ -33,8 +34,9 @@ export HADOOP_LOG_DIR=$SOLUTION_REPORT_DIR/logs/hadoop
 export YARN_CONF_DIR=$HADOOP_CONF_DIR
 export YARN_LOG_DIR=$SOLUTION_REPORT_DIR/logs/hadoop
 export PATH=$HADOOP_HOME/bin:$PATH
-export HADOOP_MAJOR_VERSION=`echo $HADOOP_HOME | awk 'BEGIN{FS=OFS="."} NF--'`
-export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
+export HADOOP_VERSION=${HADOOP_HOME##*/}
+export HADOOP_MAJOR_VERSION=${HADOOP_VERSION%.*}
+export HADOOP_SERIES=${HADOOP_VERSION%%.*}
 
 if [[ $HADOOP_SERIES == "3" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
@@ -47,7 +49,7 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 else
-	m_exit "Hadoop version is not supported: $HADOOP_MAJOR_VERSION"
+	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
 
 #Configuration
