@@ -23,8 +23,4 @@ then
 
         #Flink history server
         $FLINK_HOME/bin/historyserver.sh start
-
-        sleep 1
 fi
-
-sleep 5
