@@ -9,7 +9,7 @@ fi
 
 #Namenode and Secondary NameNode (optionaal)
 m_echo "Starting NameNode and DataNodes"
-$SSH_CMD $MASTERNODE "$HDFS_CONFIG $HADOOP_CONF_DIR --workers --daemon start namenode"
+$SSH_CMD $MASTERNODE "$HDFS_CONFIG $HADOOP_CONF_DIR --daemon start namenode"
 
 if [[ $SECONDARY_NAMENODE == "true" ]]
 then
@@ -22,7 +22,7 @@ $HDFS_CONFIG $HADOOP_CONF_DIR --workers --daemon start datanode
 
 #Resourcemanager & Nodemanagers
 m_echo "Starting Resourcemanager and Nodemanagers"
-$SSH_CMD $MASTERNODE "$YARN_CONFIG $HADOOP_CONF_DIR  --workers --daemon start resourcemanager"
+$SSH_CMD $MASTERNODE "$YARN_CONFIG $HADOOP_CONF_DIR --daemon start resourcemanager"
 $YARN_CONFIG $HADOOP_CONF_DIR  --workers --daemon start nodemanager
 
 if [[ $TIMELINE_SERVER == "true" ]]
