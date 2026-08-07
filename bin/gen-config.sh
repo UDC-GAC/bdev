@@ -3,7 +3,7 @@
 #Set directories
 set_directory_configuration
 
-if [[ -n "${SOL_TEMPLATE_DIR:-}" ]]; then
+if [[ -z "${SOL_TEMPLATE_DIR:-}" ]]; then
 	m_exit "SOL_TEMPLATE_DIR is not defined or is empty"
 fi
 
