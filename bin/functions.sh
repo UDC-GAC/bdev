@@ -417,9 +417,9 @@ function set_cluster_size()
 
 	exist_conf_param "replication_factor"
 
-        if [[ $? -eq 1 ]]; then
+    if [[ $? -eq 1 ]]; then
 		remove_conf_param "replication_factor"
-        fi
+    fi
 
 	add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 }
