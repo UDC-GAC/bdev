@@ -153,7 +153,7 @@ function remove_conf_param(){
 	if [[ $FOUND == "true" ]]; then
 		export NUM_CONF_PARAMS=$(($NUM_CONF_PARAMS - 1))
 		export CONFIG_KEYS=$NEW_CONFIG_KEYS
-	        export CONFIG_VALUES=$NEW_CONFIG_VALUES
+	    export CONFIG_VALUES=$NEW_CONFIG_VALUES
 	fi
 }
 
