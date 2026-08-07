@@ -10,22 +10,20 @@ export HADOOP_HOME=$SOLUTION_HOME
 export HADOOP_CONF_DIR=$SOL_CONF_DIR
 export YARN_CONF_DIR=$HADOOP_CONF_DIR
 export PATH=$HADOOP_HOME/bin:$PATH
-
-export HADOOP_MR_VERSION="YARN"
-
-export HADOOP_SERIES=`echo ${HADOOP_HOME##*/} | cut -d '.' -f 1`
+export HADOOP_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
+export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
 
 if [[ $HADOOP_SERIES == "3" ]]
 then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
-	export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 	export SLAVESFILE=$SOL_CONF_DIR/workers
-else
+else if [[ $HADOOP_SERIES == "2" ]]
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
-	export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN
 	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
+else
+	m_exit "Hadoop version is not supported: $HADOOP_MAJOR_VERSION"
 fi
