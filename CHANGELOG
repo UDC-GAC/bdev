@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.10 - 2026-XX-XX
+BDEv 4.0 - 2026-XX-XX
 ---------------------
 	This is a major release which targets Spark 4.x and removes support for legacy frameworks
 
@@ -54,7 +54,7 @@ BDEv 3.10 - 2026-XX-XX
 
 		- Improve Hadoop deployment by waiting for HDFS safe mode readiness
 
-		- Minor changes and bug fixes
+		- Several code refactorings, minor changes and bug fixes
 
 BDEv 3.9 - 2024-04-11
 ---------------------
