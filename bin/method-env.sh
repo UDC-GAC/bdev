@@ -29,8 +29,7 @@ export SOLUTIONS_LIB_DIR=$METHOD_HOME/solutions/lib
 export COMMON_BENCH_DIR=$SOLUTIONS_BENCH_DIR/common
 export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
 export TEMPLATES_DIR=$METHOD_HOME/solutions/templates
-export SGE_DAEMONS_DIR=$METHOD_HOME/solutions/daemons/sge
-export STD_DAEMONS_DIR=$METHOD_HOME/solutions/daemons/std
+export DAEMONS_DIR=$METHOD_HOME/solutions/daemons
 export METHOD_EXP_DIR=$METHOD_HOME/experiment
 export INIT_SOL_SCRIPT=$METHOD_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
@@ -90,15 +89,6 @@ export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
 
-# Check if we are under a SGE environment
-if [[ -n "$SGE_ROOT" ]]
-then
-        if [[ -n "$JOB_ID" && -n "$PE_HOSTFILE" ]]
-	then
-        	export SGE_ENV="true"
-	fi
-fi
-
 # Check if we are under a SLURM environment
 if [[ -n "$SLURM_JOB_ID" ]]
 then
@@ -129,12 +119,9 @@ export HOSTFILE_DEFAULT=$EXP_DIR/hostfile
 
 if [[ -z $HOSTFILE ]]
 then
-	if [[ "$SGE_ENV" == "true" ]]
+	if [[ "$SLURM_ENV" == "true" ]]
 	then
-		HOSTFILE=$PE_HOSTFILE
-        elif [[ "$SLURM_ENV" == "true" ]]
-        then
-                COMPUTE_NODES=`scontrol show hostname $SLURM_JOB_NODELIST`
+		COMPUTE_NODES=`scontrol show hostname $SLURM_JOB_NODELIST`
 	else
 		HOSTFILE=$HOSTFILE_DEFAULT
 	fi
