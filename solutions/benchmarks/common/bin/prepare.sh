@@ -272,4 +272,4 @@ then
 	fi
 fi
 
-sleep 2
+sleep 1
