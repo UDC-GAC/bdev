@@ -15,45 +15,22 @@ export HDFS_CONFIG="$HADOOP_HOME/bin/hdfs --config"
 export YARN_CONFIG="$YARN_EXECUTABLE --config"
 export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
 export CHMOD="-chmod -R"
-
-if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
-then
-	#HADOOP YARN version-dependent variables
-	export RMR="-rm -r"
-	export MKDIR="-mkdir -p"
-	export CONFIG_REDUCER_NUMBER="mapreduce.job.reduces"
-	export CONFIG_MAP_NUMBER="mapreduce.job.maps"
-	export CONFIG_RANDOMTEXTWRITER_TOTALBYTES="mapreduce.randomtextwriter.totalbytes"
-	export CONFIG_RANDOMTEXTWRITER_BYTESPERMAP="mapreduce.randomtextwriter.bytespermap"
-	export CONFIG_RANDOMTEXTWRITER_MAPSPERHOST="mapreduce.randomtextwriter.mapsperhost"
-	export TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.TextInputFormat"
-	export KEY_VALUE_TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat"
-	export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat"
-	export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
-	export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
-	export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
-	export MAHOUT_VERSION=$HADOOP_2_MAHOUT_VERSION
-	export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
-	export HIVE_VERSION=$HADOOP_2_HIVE_VERSION
-else
-	#HADOOP 1 version-dependent variables
-	export RMR="-rmr"
-	export MKDIR="-mkdir"
-	export CONFIG_REDUCER_NUMBER="mapred.reduce.tasks"
-	export CONFIG_MAP_NUMBER="mapred.map.tasks"
-	export CONFIG_RANDOMTEXTWRITER_TOTALBYTES="test.randomtextwrite.total_bytes"
-	export CONFIG_RANDOMTEXTWRITER_BYTESPERMAP="test.randomtextwrite.bytes_per_map"
-	export CONFIG_RANDOMTEXTWRITER_MAPSPERHOST="test.randomtextwrite.maps_per_host"
-	export TEXT_INPUT_FORMAT="org.apache.hadoop.mapred.TextInputFormat"
-	export KEY_VALUE_TEXT_INPUT_FORMAT="org.apache.hadoop.mapred.KeyValueTextInputFormat"
-	export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapred.SequenceFileInputFormat"
-	export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapred.TextOutputFormat"
-	export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapred.SequenceFileOutputFormat"
-	export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/hadoop-examples*.jar
-	export MAHOUT_VERSION=$HADOOP_1_MAHOUT_VERSION
-	export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop
-	export HIVE_VERSION=$HADOOP_1_HIVE_VERSION
-fi
+export RMR="-rm -r"
+export MKDIR="-mkdir -p"
+export CONFIG_REDUCER_NUMBER="mapreduce.job.reduces"
+export CONFIG_MAP_NUMBER="mapreduce.job.maps"
+export CONFIG_RANDOMTEXTWRITER_TOTALBYTES="mapreduce.randomtextwriter.totalbytes"
+export CONFIG_RANDOMTEXTWRITER_BYTESPERMAP="mapreduce.randomtextwriter.bytespermap"
+export CONFIG_RANDOMTEXTWRITER_MAPSPERHOST="mapreduce.randomtextwriter.mapsperhost"
+export TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.TextInputFormat"
+export KEY_VALUE_TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat"
+export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat"
+export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
+export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
+export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
+export MAHOUT_VERSION=$HADOOP_2_MAHOUT_VERSION
+export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
+export HIVE_VERSION=$HADOOP_2_HIVE_VERSION
 
 if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]
 then
@@ -233,4 +210,3 @@ EOF
 }
 
 export -f prepare_sql_scan
-
