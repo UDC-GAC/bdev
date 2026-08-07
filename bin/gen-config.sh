@@ -3,10 +3,13 @@
 #Set directories
 set_directory_configuration
 
-for F in $SOL_TEMPLATE_DIR/*
+for F in "$SOL_TEMPLATE_DIR"/*
 do
+	[[ -f "$F" ]] || continue
+	
 	file=`basename $F`
-	filecontent="$(cat $F)"
+	filecontent=$(<"$F")
+	
 	for k in `seq 1 $(get_num_conf_params)`
 	do
 		key=$(get_conf_key $k)
