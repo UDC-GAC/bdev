@@ -16,7 +16,7 @@ echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 m_echo "Starting the standalone Flink cluster (Session Mode)"
 $FLINK_HOME/bin/start-cluster.sh
 
-if [[ $FLINK_HISTORY_SERVER == "true" ]]
+if [ $FLINK_HISTORY_SERVER == "true" ]
 then
         ${HDFS_CMD} ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
         ${HDFS_CMD} ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
