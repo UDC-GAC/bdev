@@ -8,7 +8,5 @@ then
         ${HDFS_CMD} ${CHMOD} 777 ${SPARK_HISTORY_SERVER_DIR}
 
         #Spark history server
-        $SPARK_HOME/sbin/start-history-server.sh &
-
-	sleep 5
+        $SPARK_HOME/sbin/start-history-server.sh
 fi
