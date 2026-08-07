@@ -69,6 +69,10 @@ export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -D
 # variable is REQUIRED on ALL platforms except OS X!
 # export JAVA_HOME=
 
+# The language environment in which Hadoop runs. Use the English
+# environment to ensure that logs are printed as expected.
+export LANG=en_US.UTF-8
+
 # Location of Hadoop.  By default, Hadoop will attempt to determine
 # this location based upon its execution path.
 # export HADOOP_HOME=
@@ -160,7 +164,7 @@ export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
 # Enable optional, bundled Hadoop features
 # This is a comma delimited list.  It may NOT be overridden via .hadooprc
 # Entries may be added/removed as needed.
-# export HADOOP_OPTIONAL_TOOLS="hadoop-aliyun,hadoop-openstack,hadoop-azure,hadoop-azure-datalake,hadoop-aws,hadoop-kafka"
+# export HADOOP_OPTIONAL_TOOLS="hadoop-azure,hadoop-aliyun,hadoop-kafka,hadoop-aws,hadoop-azure-datalake"
 
 ###
 # Options for remote shell connectivity
@@ -431,3 +435,16 @@ export HADOOP_OS_TYPE=${HADOOP_OS_TYPE:-$(uname -s)}
 #
 # For example, to limit who can execute the namenode command,
 # export HDFS_NAMENODE_USER=hdfs
+
+
+###
+# Registry DNS specific parameters
+###
+# For privileged registry DNS, user to run as after dropping privileges
+# This will replace the hadoop.id.str Java property in secure mode.
+# export HADOOP_REGISTRYDNS_SECURE_USER=yarn
+
+# Supplemental options for privileged registry DNS
+# By default, Hadoop uses jsvc which needs to know to launch a
+# server jvm.
+# export HADOOP_REGISTRYDNS_SECURE_EXTRA_OPTS="-jvm server"
