@@ -3,14 +3,59 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 3.10 - 2024-XX-XX
+BDEv 3.10 - 2026-XX-XX
 ---------------------
-	A point release for the BDEv 3.x line
+	This is a major release which targets Spark 4.x and removes support for legacy frameworks
 
 	NEW FEATURES
 		- Updated versions of the following frameworks
-			- XXX
-			
+			- Hadoop 3.4.3
+			- Spark 3.4.4
+			- Spark 3.5.9
+			- Flink 1.16.3
+			- Flink 1.17.2
+			- Flink 1.18.1
+			- Flink 1.19.3
+
+		- Remove support of the following frameworks
+			- Hadoop 1.x
+			- Hadoop-UDA 1.x
+			- Spark 1.x
+			- Flink < 1.15
+			- RDMA-Hadoop 1.x
+			- RDMA-Hadoop 2.x
+			- RDMA-Spark
+			- DataMPI
+			- FlameMR
+
+		- Support for the Spark 4.x line
+
+		- Support for the Hadoop 3.5.x line
+
+		- Support for the Flink 1.20.x line (LTS)
+
+		- Flink on YARN now uses the Session Mode instead of the deprecated Per-job mode
+
+		- Max value for Flink network memory size now support an auto-calculated value
+
+		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (solutions-default.sh)
+		
+		- Spark AQE is now enabled by default
+
+		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (solutions-default.sh)
+
+		- Add Spark parameter to configure Kryo registration behavior (solutions-default.sh)
+
+		- Fix Spark memory configuration for Driver and AppMaster on YARN
+
+		- Add cleanup for YARN applications
+
+		- HDFS and YARN services are now stopped using the Hadoop scripts
+
+		- Improve Hadoop deployment by waiting for HDFS safe mode readiness
+
+		- Minor changes and bug fixes
+
 BDEv 3.9 - 2024-04-11
 ---------------------
 	A point release for the BDEv 3.x line
