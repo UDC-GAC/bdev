@@ -11,9 +11,6 @@ if [[ ! -d "$SOL_TEMPLATE_DIR" ]]; then
 	m_exit "SOL_TEMPLATE_DIR does not exist or is not a directory: $SOL_TEMPLATE_DIR"
 fi
 
-#declare -p CONFIG_KEYS
-#declare -p CONFIG_VALUES
-
 sed_script=""
 k=1
 num=$(get_num_conf_params)
@@ -27,6 +24,10 @@ do
     sed_script="${sed_script};s|\$$key|$value|g"
     k=$((k + 1))
 done
+
+#declare -p CONFIG_KEYS
+#declare -p CONFIG_VALUES
+#echo $sed_script
 
 for F in "$SOL_TEMPLATE_DIR"/*
 do
