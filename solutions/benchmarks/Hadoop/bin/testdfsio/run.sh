@@ -1,17 +1,10 @@
 #!/bin/sh
 
-if [[ "x$HADOOP_MR_VERSION" == "xYARN" ]]
-then
-	TESTDFSIO="${HADOOP_EXECUTABLE} org.apache.hadoop.fs.TestDFSIO"
-else
-	TESTDFSIO="${HADOOP_EXECUTABLE} jar $HADOOP_HOME/hadoop-*test*.jar TestDFSIO"
-fi
-
+TESTDFSIO="${HADOOP_EXECUTABLE} org.apache.hadoop.fs.TestDFSIO"
 COMMAND="$TESTDFSIO -write -nrFiles $DFSIO_N_FILES -fileSize $DFSIO_FILE_SIZE ;
 $TESTDFSIO -read -nrFiles $DFSIO_N_FILES -fileSize $DFSIO_FILE_SIZE"
 
 run_benchmark "$COMMAND"
-
 
 if [ $(cat $TMPLOGFILE | grep -i -E "job failed|FinalApplicationStatus=FAILED" | wc -l) != "0" ]
 then
