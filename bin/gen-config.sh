@@ -10,21 +10,25 @@ fi
 if [[ ! -d "$SOL_TEMPLATE_DIR" ]]; then
 	m_exit "SOL_TEMPLATE_DIR does not exist or is not a directory: $SOL_TEMPLATE_DIR"
 fi
-	
+
+sed_script=""
+k=1
+num=$(get_num_conf_params)
+while [ "$k" -le "$num" ]
+do
+    key=$(get_conf_key "$k")
+    value=$(get_conf_value "$k")
+    value=$(printf '%s\n' "$value" | sed 's/[\/&]/\\&/g')
+    sed_script="${sed_script};s|\$$key|$value|g"
+    k=$((k + 1))
+done
+
 for F in "$SOL_TEMPLATE_DIR"/*
 do
 	[[ -f "$F" ]] || continue
-	
-	file=`basename $F`
-	filecontent=$(<"$F")
-	
-	for k in `seq 1 $(get_num_conf_params)`
-	do
-		key=$(get_conf_key $k)
-		value=$(echo "$(get_conf_value $k)" | sed 's/\//\\\//g')
-		filecontent=$(echo -e "$filecontent" | sed "s/\$$key/$value/g")
-	done
-	echo "$filecontent" > $SOL_CONF_DIR/${file}
+
+	file=${F##*/} # Avoiding basename
+	sed "$sed_script" "$F" > "$SOL_CONF_DIR/${file}"
 done
 
 rm -f $MASTERFILE $SLAVESFILE
