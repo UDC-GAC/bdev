@@ -1,8 +1,9 @@
 #!/bin/sh
-m_echo "Flink configuration"
-bash $OLD_GEN_CONFIG_SCRIPT
 
-if [[ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]]
+m_echo "Flink configuration"
+$OLD_GEN_CONFIG_SCRIPT
+
+if [ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]
 then
 	SLAVELIST=`cat $SLAVESFILE`
 	rm $SLAVESFILE
@@ -24,4 +25,4 @@ export MASTERFILE=$HADOOP_CONF_DIR/masters
 export SLAVESFILE=$HADOOP_SLAVESFILE
 
 m_echo "Hadoop configuration: $FLINK_HADOOP_HOME"
-bash $OLD_GEN_CONFIG_SCRIPT
+$OLD_GEN_CONFIG_SCRIPT
