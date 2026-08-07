@@ -1,10 +1,10 @@
 #!/bin/sh
 export SOL_BENCH_DIR=$SOLUTIONS_BENCH_DIR/Spark
+export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Spark
 export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/spark
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs/spark
-export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Spark
 export MASTERFILE=$SOL_CONF_DIR/masters
 export SLAVESFILE=$SOL_CONF_DIR/slaves
 
@@ -20,6 +20,10 @@ export SPARK_SQL_SHUFFLE_PARTITIONS=$(($SPARK_DEFAULT_PARALLELISM * $SPARK_SQL_S
 export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export SPARK_SERIES=`echo ${SPARK_MAJOR_VERSION} | cut -d '.' -f 1`
+
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
+	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
+fi
 
 #YARN environment variables
 export HADOOP_HOME=$SPARK_HADOOP_HOME
@@ -39,10 +43,6 @@ then
 	export HADOOP_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
 	export HADOOP_SBIN_DIR=$HADOOP_HOME/libexec
 	export HADOOP_SLAVESFILE=$HADOOP_CONF_DIR/workers
-	if [[ "$SGE_ENV" == "true" ]]
-	then
-		export HADOOP_SSH_OPTS=" "
-	fi
 else
 	export HADOOP_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export HADOOP_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN
