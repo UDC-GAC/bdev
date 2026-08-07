@@ -67,9 +67,10 @@ add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
 add_conf_param "spark_log_dir" $SPARK_LOG_DIR
 add_conf_param "spark_worker_dir" $SPARK_WORKER_DIR
 add_conf_param "spark_executor_instances" $SPARK_EXECUTORS
-add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
-add_conf_param "spark_sql_shuffle_partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 add_conf_param "spark_executor_memory" $SPARK_YARN_EXECUTOR_HEAPSIZE
 add_conf_param "spark_executor_cores" $SPARK_YARN_CORES_PER_EXECUTOR
+add_conf_param "spark_executor_memOverhead" $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD
+add_conf_param "spark_default_parallelism" $SPARK_DEFAULT_PARALLELISM
+add_conf_param "spark_sql_shuffle_partitions" $SPARK_SQL_SHUFFLE_PARTITIONS
 
 add_conf_param "spark_extra_library_path" $SPARK_EXTRA_LIBRARY_PATH
