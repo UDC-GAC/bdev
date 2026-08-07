@@ -18,6 +18,12 @@ do
 	$SSH_CMD $slave "$HDFS_CONFIG $HADOOP_CONF_DIR --daemon start datanode"
 done
 
+if [[ $SECONDARY_NAMENODE == "true" ]]
+then
+	#Secondary NameNode
+	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start secondarynamenode"
+fi
+
 #Resourcemanager & Nodemanagers
 m_echo "Starting ResourceManager:" $MASTERNODE
 $SSH_CMD $MASTERNODE "$YARN_CONFIG $HADOOP_CONF_DIR --daemon start resourcemanager"
