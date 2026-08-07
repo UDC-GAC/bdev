@@ -4,7 +4,7 @@ m_echo "Finishing..."
 
 export FORCE_DELETE_HDFS=$DELETE_HDFS
 
-if [[ $NUM_CLUSTERS -gt 1 ]]; then
+if [ $NUM_CLUSTERS -gt 1 ]; then
 	export FORCE_DELETE_HDFS=true
 fi
 
