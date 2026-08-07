@@ -69,7 +69,7 @@
 #export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_EXECUTOR_MEMORY_OVERHEAD:384))
 
 # Spark on YARN (client mode)
-#export SPARK_YARN_AM_CORES=1 # # Number of cores for the Application Master
+#export SPARK_YARN_AM_CORES=1 # Number of cores for the Application Master
 #export SPARK_YARN_AM_MEMORY=$APP_MASTER_MEMORY # Application Master memory
 #export SPARK_YARN_AM_HEAPSIZE_FACTOR=0.90 # Percentage of the Application Master memory allocated to heap
 #export SPARK_YARN_AM_HEAPSIZE=`op_int "$SPARK_YARN_AM_MEMORY * $SPARK_YARN_AM_HEAPSIZE_FACTOR"` # Application Master heapsize
@@ -100,7 +100,7 @@
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="auto" # Maximum network memory size for TaskManagers (it requires a size-unit specifier). It accepts "auto" to use an auto-calculated value
 #export FLINK_TASKMANAGER_MEMORY_NETWORK_MIN="64mb" # Minimum network memory size for TaskManagers (it requires a size-unit specifier)
-#export FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE="64kb" #Size of memory buffers used by the network stack and the memory manager
+#export FLINK_TASKMANAGER_MEMORY_SEGMENT_SIZE="64kb" # Size of memory buffers used by the network stack and the memory manager
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SHUFFLE_SIZE="64mb" # Size of memory used by sort-merge blocking shuffle for shuffle data read
 #export FLINK_TASKMANAGER_MEMORY_OFF_HEAP_SIZE="128mb" # Framework off-heap memory size for TaskManagers
 #export FLINK_TASKMANAGER_NETWORK_SORT_SHUFFLE_BUFFERS=512 # Minimum number of network buffers required per sort-merge blocking result partition
