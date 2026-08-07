@@ -1,9 +1,9 @@
 #!/bin/sh
 
 export METHOD_NAME=BDEv
-export METHOD_VERSION=3.10-dev
+export METHOD_VERSION=4.0-dev
 
-if [[ -z $METHOD_HOME ]]
+if [ -z $METHOD_HOME ]
 then
         echo "Error: METHOD_HOME must be set"
 	exit -1
@@ -38,7 +38,7 @@ export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/kill-daemons.sh
 export CLEAN_DATA_SCRIPT=$METHOD_BIN_DIR/delete-nodes-data.sh
 export YARN_KILLALL_SCRIPT=$METHOD_BIN_DIR/yarn-killall.sh
 
-if [[ -z $EXP_DIR ]]
+if [ -z $EXP_DIR ]
 then
 	export EXP_DIR=$METHOD_EXP_DIR
 fi
