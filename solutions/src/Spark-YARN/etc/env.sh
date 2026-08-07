@@ -27,6 +27,7 @@ if [ $SPARK_SERIES == "0" ] || [ $SPARK_SERIES == "1" ]; then
 fi
 
 # Hadoop
+export HADOOP_HOME=$SPARK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
 
 #Configuration
