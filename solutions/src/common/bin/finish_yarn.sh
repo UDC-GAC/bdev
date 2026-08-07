@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "x${FINISH_YARN_FORCE}" == "xtrue" ]]
+if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
   SLAVES=`cat $SLAVESFILE`
   for slave in $SLAVES
   do
