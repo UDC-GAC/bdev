@@ -15,9 +15,10 @@
 #export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 #export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 #export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
-#export SPARK_DRIVER_HEAPSIZE_FACTOR=0.90 # Percentage of the driver memory allocated to heap
-#export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_HEAPSIZE_FACTOR"` # Driver heapsize
-#export SPARK_DRIVER_MEMORY_OVERHEAD=`op_int "$SPARK_DRIVER_MEMORY - $SPARK_DRIVER_HEAPSIZE"` # Driver memory overhead
+#export SPARK_DRIVER_MEMORY_OVERHEAD_FACTOR=0.1 # Percentage of the driver memory for non-heap memory
+#export SPARK_DRIVER_MEMORY_OVERHEAD=`op_int "$SPARK_DRIVER_MEMORY * $SPARK_DRIVER_MEMORY_OVERHEAD_FACTOR"` # Driver memory overhead
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_DRIVER_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$SPARK_DRIVER_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
+#export SPARK_DRIVER_HEAPSIZE=`op_int "$SPARK_DRIVER_MEMORY - $SPARK_EXECUTOR_MEMORY_OVERHEAD"` # Driver heapsize
 #export SPARK_MEMORY_FRACTION=0.6 # Fraction of Executor heap space used for execution and storage
 #export SPARK_MEMORY_STORAGE_FRACTION=0.5 # Amount of storage memory immune to eviction, expressed as a fraction of SPARK_MEMORY_FRACTION
 #export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
@@ -38,8 +39,8 @@
 #export SPARK_SQL_AQE=true # Enable Adaptive Query Execution (AQE), the optimization technique in Spark SQL to choose the most efficient query execution plan
 #export SPARK_AQE_COALESCE_PARTITIONS=true # Coalesce contiguous shuffle partitions according to SPARK_AQE_PARTITION_SIZE, to avoid too many small tasks
 #export SPARK_AQE_PARTITION_SIZE=$((64*1024*1024)) # The advisory size in bytes of the shuffle partition during adaptive optimization
-
-# Spark standalone
+#
+## Spark standalone
 #export SPARK_DAEMON_MEMORY=1024	# Memory to allocate to the Master, Worker and HistoryServer daemons
 #export SPARK_MEMORY_RESERVED=`op_int "$SPARK_DAEMON_MEMORY + $DATANODE_D_HEAPSIZE"` # Memory reserved to other services
 #export SPARK_WORKERS_PER_NODE=1 # Number of workers per node (recommended 1 per node)
@@ -48,27 +49,26 @@
 #export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 #export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
 #export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
-#export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
-#export SPARK_EXECUTOR_MEMORY_OVERHEAD_FACTOR=`op "(1 - $SPARK_EXECUTOR_HEAPSIZE_FACTOR)"`  # Percentage of the Executor memory allocated as additional non-heap memory
-#export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD_FACTOR=0.1  # Percentage of the Executor memory for non-heap memory
 #export SPARK_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
-#export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_EXECUTOR_MEMORY_OVERHEAD:384))
-
-# Spark on YARN (client mode)
-#export SPARK_YARN_AM_CORES=1 # Number of cores for the Application Master
-#export SPARK_YARN_AM_MEMORY=$APP_MASTER_MEMORY # Application Master memory
-#export SPARK_YARN_AM_HEAPSIZE_FACTOR=0.90 # Percentage of the Application Master memory allocated to heap
-#export SPARK_YARN_AM_HEAPSIZE=`op_int "$SPARK_YARN_AM_MEMORY * $SPARK_YARN_AM_HEAPSIZE_FACTOR"` # Application Master heapsize
-#export SPARK_YARN_AM_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_AM_MEMORY - $SPARK_YARN_AM_HEAPSIZE"` # Application Master memory overhead
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_EXECUTOR_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$SPARK_EXECUTOR_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
+#export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY - $SPARK_EXECUTOR_MEMORY_OVERHEAD"` # Executor heapsize
+#
+## Spark on YARN (client mode)
 #export SPARK_YARN_EXECUTORS_PER_NODE=1 # Number of Executors per node
 #export SPARK_YARN_CORES_PER_EXECUTOR=`op_int "$NODEMANAGER_VCORES / $SPARK_YARN_EXECUTORS_PER_NODE"` # Number of cores per Executor
-#export SPARK_YARN_EXECUTOR_BASE_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"`
+#export SPARK_YARN_AM_CORES=1 # Number of cores for the Application Master
+#export SPARK_YARN_AM_MEMORY=$APP_MASTER_MEMORY # Application Master memory
+#export SPARK_YARN_AM_MEMORY_OVERHEAD_FACTOR=0.1 # Percentage of the Application Master memory for non-heap memory
+#export SPARK_YARN_AM_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_AM_MEMORY * $SPARK_YARN_AM_MEMORY_OVERHEAD_FACTOR"` # Application Master memory overhead
+#export SPARK_YARN_AM_MEMORY_OVERHEAD=$(($SPARK_YARN_AM_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$SPARK_YARN_AM_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
+#export SPARK_YARN_AM_HEAPSIZE=`op_int "$SPARK_YARN_AM_MEMORY - $SPARK_YARN_AM_MEMORY_OVERHEAD"` # Application Master heapsize
+#export SPARK_YARN_EXECUTOR_BASE_MEMORY=`op_int "($NODEMANAGER_MEMORY - $SPARK_YARN_AM_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"`
 #export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$SPARK_YARN_EXECUTOR_BASE_MEMORY - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each Executor
-#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
-#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR=`op "(1 - $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR)"`  # Percentage of the Executor memory allocated as additional non-heap memory
-#export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR=0.1 # Percentage of the Executor memory for non-heap memory
 #export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
-#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD:384))
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
+#export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY - $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD"` # Executor heapsize
 #
 ## RDMA-Spark
 #export RDMA_SPARK_IB_ENABLED=true		# Enable RDMA connections through InfiniBand (IB)
