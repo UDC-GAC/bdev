@@ -21,9 +21,9 @@ export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export SPARK_SERIES=`echo ${SPARK_MAJOR_VERSION} | cut -d '.' -f 1`
 
-if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]; then
 	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
-else if [[ $SPARK_SERIES == "2" ]]
+else if [[ $SPARK_SERIES == "2" ]]; then
 	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Spark-2
 else
