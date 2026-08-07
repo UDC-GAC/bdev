@@ -21,7 +21,7 @@ export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export SPARK_SERIES=`echo ${SPARK_MAJOR_VERSION} | cut -d '.' -f 1`
 
-if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]; then
 	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
 fi
 
