@@ -15,7 +15,7 @@ if [[ $SECONDARY_NAMENODE == "true" ]]
 then
 	#Secondary NameNode
 	m_echo "Starting Secondary NameNode:" $MASTERNODE
-	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start secondarynamenode"
+	$SSH_CMD $MASTERNODE "$HDFS_CONFIG $HADOOP_CONF_DIR --daemon start secondarynamenode"
 fi
 
 m_echo "Starting DataNodes"
