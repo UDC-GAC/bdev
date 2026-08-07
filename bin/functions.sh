@@ -28,7 +28,7 @@ function m_warn() {
 	echo "$DATE ! $@" >> $REPORT_LOG
 }
 
-export -f m_err
+export -f m_warn
 
 function m_exit() {
 	m_err $@
