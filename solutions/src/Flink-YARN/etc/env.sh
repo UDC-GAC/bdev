@@ -39,7 +39,7 @@ else
 fi
 
 # Hadoop
-$COMMON_SRC_DIR/etc/env.sh
+. $COMMON_SRC_DIR/etc/env.sh
 
 #Configuration
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
