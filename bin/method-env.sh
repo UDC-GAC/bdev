@@ -389,6 +389,7 @@ add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
 add_conf_param "spark_serializer" $SPARK_SERIALIZER
 add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
 add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
+add_conf_param "spark_kryo_registrationRequired" $SPARK_KRYO_REGISTRATION_REQUIRED
 add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
 add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
 export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`

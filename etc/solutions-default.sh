@@ -48,6 +48,7 @@ export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf and snappy. Codec to compr
 export SPARK_SERIALIZER=KryoSerializer # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
 export SPARK_KRYO_UNSAFE=true # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
 export SPARK_KRYO_BUFFER_MAX=256 # Maximum allowable size in MiB of Kryo serialization buffer. It must be less than 2048 MiB
+export SPARK_KRYO_REGISTRATION_REQUIRED=false # If set to false, Kryo will write unregistered class names along with each object, which can cause performance overhead
 export SPARK_SQL_SHUFFLE_PARTITIONS_PER_CORE=2 # Number of partitions per Executor core to use when shuffling data for joins or aggregations
 export SPARK_SQL_AQE=true # Enable Adaptive Query Execution (AQE), the optimization technique in Spark SQL to choose the most efficient query execution plan
 export SPARK_AQE_COALESCE_PARTITIONS=true # Coalesce contiguous shuffle partitions according to SPARK_AQE_PARTITION_SIZE, to avoid too many small tasks
