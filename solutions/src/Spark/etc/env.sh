@@ -33,6 +33,7 @@ else
 fi
 
 # Hadoop
+export HADOOP_HOME=$SPARK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
 
 #Configuration
