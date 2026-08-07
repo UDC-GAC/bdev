@@ -104,138 +104,109 @@ function read_solutions() {
 
 export -f read_solutions
 
-function get_num_conf_params(){
-	echo $NUM_CONF_PARAMS 
+function get_num_conf_params() {
+    echo "${#CONFIG_KEYS[@]}"
 }
 
 export -f get_num_conf_params
 
-function ini_conf_params(){
-	export NUM_CONF_PARAMS=0
-	CONFIG_KEYS=""
-	CONFIG_VALUES=""
+function ini_conf_params() {
+    CONFIG_KEYS=()
+    CONFIG_VALUES=()
 }
 
 export -f ini_conf_params
 
-function add_conf_param(){
-	NUM_CONF_PARAMS=$(($NUM_CONF_PARAMS + 1))
-	CONFIG_KEYS+="\t$1"
-	CONFIG_VALUES+="\t$2"
-	export CONFIG_KEYS
-	export CONFIG_VALUES
-	export NUM_CONF_PARAMS
+function add_conf_param() {
+    CONFIG_KEYS+=("$1")
+    CONFIG_VALUES+=("$2")
 }
 
 export -f add_conf_param
 
-function remove_conf_param(){
-	PARAM=$1
-	NEW_CONFIG_KEYS=
-	NEW_CONFIG_VALUES=
-	FOUND="false"
-	k=1
-	
-	while [ "$k" -le "$NUM_CONF_PARAMS" ]
-	do
-		key="null"
-		key=$(get_conf_key $k)
-		if [[ $key != "null" ]]; then
-		    if [[ $key == $PARAM ]]; then
-				FOUND="true"
-		    else
-				value=$(get_conf_value $k)
-				NEW_CONFIG_KEYS+="\t$key"
-				NEW_CONFIG_VALUES+="\t$value"
-		    fi
-		fi
-		k=$((k + 1))
-	done
+function remove_conf_param() {
+    local param="$1"
+    local new_keys=()
+    local new_values=()
 
-	if [[ $FOUND == "true" ]]; then
-		export NUM_CONF_PARAMS=$(($NUM_CONF_PARAMS - 1))
-		export CONFIG_KEYS=$NEW_CONFIG_KEYS
-	    export CONFIG_VALUES=$NEW_CONFIG_VALUES
-	fi
+    for ((i=0; i<${#CONFIG_KEYS[@]}; i++)); do
+        if [[ "${CONFIG_KEYS[$i]}" != "$param" ]]; then
+            new_keys+=("${CONFIG_KEYS[$i]}")
+            new_values+=("${CONFIG_VALUES[$i]}")
+        fi
+    done
+
+    CONFIG_KEYS=("${new_keys[@]}")
+    CONFIG_VALUES=("${new_values[@]}")
 }
 
 export -f remove_conf_param
 
-function exist_conf_param(){
-	PARAM=$1
-	FOUND="false"
-	k=1
-	
-	while [ "$k" -le "$NUM_CONF_PARAMS" ]
-    do
-        key="null"
-        key=$(get_conf_key $k)
-        if [[ $key != "null" ]]; then
-            if [[ $key == $PARAM ]]; then
-                FOUND="true"
-				return 1
-		    fi
+function exist_conf_param() {
+    local param="$1"
+
+    for key in "${CONFIG_KEYS[@]}"; do
+        if [[ "$key" == "$param" ]]; then
+            return 1
         fi
-		k=$((k + 1))
     done
 
-	return 0
+    return 0
 }
 
 export -f exist_conf_param
 
-function add_conf_param_list(){
-	KEY="$1"
-	VALUE=""
-	PARAM_LIST="$2"
-	FIRST="true"
+function add_conf_param_list() {
+    local key="$1"
+    local param_list="$2"
+    local value=""
+    local first=true
 
-	for PARAM in $PARAM_LIST
-	do
-		if [[ "$FIRST" == "true" ]]
-		then
-			VALUE="${PARAM}"
-			FIRST="false"
-		else
-			VALUE="${VALUE},${PARAM}"
-		fi
-	done
+    for param in $param_list; do
+        if $first; then
+            value="$param"
+            first=false
+        else
+            value+=",${param}"
+        fi
+    done
 
-	add_conf_param "$KEY" "$VALUE"
+    add_conf_param "$key" "$value"
 }
 
 export -f add_conf_param_list
 
-function add_prefix_sufix(){
-	RESULT=""
-	PARAM_LIST="$1"
-	PREFIX="$2"
-	SUFIX="$3"
+function add_prefix_sufix() {
+    local param_list="$1"
+    local prefix="$2"
+    local sufix="$3"
+    local result=""
 
-	for PARAM in $PARAM_LIST
-	do
-		RESULT="${RESULT} ${PREFIX}${PARAM}${SUFIX}"
-	done
+    for param in $param_list; do
+        result+=" ${prefix}${param}${sufix}"
+    done
 
-	echo $RESULT
+    echo "${result# }"
 }
 
 export -f add_prefix_sufix
 
-function get_conf_key(){
-	num_param=$1
-	printf '%b\n' "$CONFIG_KEYS" \
-	|  tr -s " " | sed -e 's/^[ \t]*//' \
-	| cut -f $num_param
+function get_conf_key() {
+    local index=$(( $1 - 1 ))
+
+    if (( index >= 0 && index < ${#CONFIG_KEYS[@]} )); then
+        echo "${CONFIG_KEYS[$index]}"
+    fi
 }
 
 export -f get_conf_key
 
-function get_conf_value(){
-	num_param=$1
-	printf '%b\n' "$CONFIG_VALUES" \
-	|  tr -s " " | sed -e 's/^[ \t]*//' \
-	| cut -f $num_param
+function get_conf_value() {
+    local index=$(( $1 - 1 ))
+
+    if (( index >= 0 && index < ${#CONFIG_VALUES[@]} )); then
+        echo "${CONFIG_VALUES[$index]}"
+    fi
 }
 
 export -f get_conf_value
