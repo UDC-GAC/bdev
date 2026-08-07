@@ -597,6 +597,7 @@ function begin_report(){
 	REPORT="$REPORT \t YARN container memory (MB) \t\t $CONTAINER_MEMORY \n"
 	REPORT="$REPORT \t HDFS NN daemon heapsize (MB)  \t\t $NAMENODE_D_HEAPSIZE \n"
 	REPORT="$REPORT \t HDFS DN daemon heapsize (MB)  \t\t $DATANODE_D_HEAPSIZE \n"
+	REPORT="$REPORT \t HDFS SN daemon heapsize (MB)  \t\t $SECONDARY_NAMENODE_D_HEAPSIZE \n"
 	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $BLOCKSIZE \n"
 	REPORT="$REPORT \t HDFS replication factor  \t\t $REPLICATION_FACTOR \n"
 	REPORT="$REPORT \t HDFS format  \t\t\t\t $FORMAT_HDFS \n"
