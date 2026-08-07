@@ -7,7 +7,7 @@ if [[ $FORCE_FORMAT_HDFS == "true" ]]; then
 	$SSH_CMD $MASTERNODE "$HDFS_CONFIG $HADOOP_CONF_DIR namenode -format -force -clusterID CID-bdev" > $HDFS_FORMAT_LOG 2>&1
 fi
 
-#Namenode and Secondary NameNode (optionaal)
+#Namenode and Secondary NameNode (optional)
 m_echo "Starting NameNode and DataNodes"
 $SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start namenode"
 
