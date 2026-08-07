@@ -56,24 +56,24 @@
 #export SPARK_DAEMON_MEMORY=1024	# Memory to allocate to the Master, Worker and HistoryServer daemons
 #export SPARK_MEMORY_RESERVED=`op_int "$SPARK_DAEMON_MEMORY + $DATANODE_D_HEAPSIZE"` # Memory reserved to other services
 #export SPARK_WORKERS_PER_NODE=1 # Number of workers per node (recommended 1 per node)
-#export SPARK_WORKER_CORES=`op_int "$NODEMANAGER_VCORES / $SPARK_WORKERS_PER_NODE"` # Number of cores per Worker
-#export SPARK_WORKER_MEMORY=`op_int "($MEMORY_ALLOC_PER_NODE - $SPARK_MEMORY_RESERVED) / $SPARK_WORKERS_PER_NODE"` # Memory available to Workers
-#export SPARK_EXECUTORS_PER_WORKER=1 # Number of Executors per Worker (it must be 1 when SPARK_WORKERS_PER_NODE > 1)
 #export SPARK_CORES_PER_EXECUTOR=`op_int "$SPARK_WORKER_CORES / $SPARK_EXECUTORS_PER_WORKER"` # Number of cores per Executor
 #export SPARK_EXECUTOR_MEMORY=`op_int "$SPARK_WORKER_MEMORY / $SPARK_EXECUTORS_PER_WORKER"` # Memory allocated to each Executor
-#export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.95 # Percentage of the Executor memory allocated to heap
+#export SPARK_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD_FACTOR=`op "(1 - $SPARK_EXECUTOR_HEAPSIZE_FACTOR)"`  # Percentage of the Executor memory allocated as additional non-heap memory
 #export SPARK_EXECUTOR_HEAPSIZE=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_EXECUTOR_MEMORY * $SPARK_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
+#export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_EXECUTOR_MEMORY_OVERHEAD:384))
 #
-## Spark on YARN (client mode)
+# Spark on YARN (client mode)
 #export SPARK_YARN_AM_HEAPSIZE=$APP_MASTER_HEAPSIZE # Application Master heapsize
 #export SPARK_YARN_EXECUTORS_PER_NODE=1 # Number of Executors per node
 #export SPARK_YARN_CORES_PER_EXECUTOR=`op_int "$NODEMANAGER_VCORES / $SPARK_YARN_EXECUTORS_PER_NODE"` # Number of cores per Executor
-#export SPARK_YARN_EXECUTOR_MEM=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"`
-#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$SPARK_YARN_EXECUTOR_MEM - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each Executor
-#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR=0.1   # Fraction of Executor memory to be allocated as additional non-heap memory per executor
-#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=`op "(1 - $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR)"`     # Percentage of the Executor memory allocated to heap
+#export SPARK_YARN_EXECUTOR_BASE_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $SPARK_YARN_EXECUTORS_PER_NODE"`
+#export SPARK_YARN_EXECUTOR_MEMORY=`op_int "$SPARK_YARN_EXECUTOR_BASE_MEMORY - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each Executor
+#export SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR=0.90 # Percentage of the Executor memory allocated to heap
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR=`op "(1 - $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR)"`  # Percentage of the Executor memory allocated as additional non-heap memory
 #export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_HEAPSIZE_FACTOR"` # Executor heapsize
-#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_EXECUTOR_HEAPSIZE * $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
+#export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=`op_int "$SPARK_YARN_EXECUTOR_MEMORY * $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Executor memory
 #export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD>384?$SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD:384))
 #
 ## RDMA-Spark
