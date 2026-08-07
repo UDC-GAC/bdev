@@ -25,5 +25,5 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 else
-	m_exit "Hadoop version is not supported: $HADOOP_MAJOR_VERSION"
+	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
