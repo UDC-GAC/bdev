@@ -37,6 +37,7 @@ else
 fi
 
 # Hadoop
+export HADOOP_HOME=$FLINK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
 
 #Configuration
