@@ -28,9 +28,9 @@ export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.Sequenc
 export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
 export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
 export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
-export MAHOUT_VERSION=$HADOOP_2_MAHOUT_VERSION
+export MAHOUT_VERSION=$HADOOP_MAHOUT_VERSION
 export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
-export HIVE_VERSION=$HADOOP_2_HIVE_VERSION
+export HIVE_VERSION=$HADOOP_HIVE_VERSION
 
 if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]
 then
