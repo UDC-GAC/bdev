@@ -17,9 +17,10 @@ export NODEMANAGER_VMEM_PMEM_RATIO=2.1		# Ratio between virtual to physical memo
 export NODEMANAGER_DISK_HEALTH_CHECKER=true     # Enable or disable the disk health checker service
 export NODEMANAGER_MAX_DISK_UTIL_PERCENT=95.0	# Maximum percentage of disk space that may be utilized before a disk is marked as unhealthy
 export NODEMANAGER_HEARTBEAT_INTERVAL_MS=5000	# Heartbeat interval in milliseconds for NodeManagers
-export APP_MASTER_MEMORY_OVERHEAD_FACTOR=0.1    # Fraction of Application Master memory to be allocated as additional memory
+export MEMORY_OVERHEAD_MIN=384  # The minimum amount of non-heap memory to be allocated per process
+export APP_MASTER_MEMORY_OVERHEAD_FACTOR=0.1    # Fraction of Application Master memory to be allocated as non-heap memory
 export APP_MASTER_MEMORY_OVERHEAD=`op_int "$APP_MASTER_HEAPSIZE * $APP_MASTER_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Application Master memory
-export APP_MASTER_MEMORY_OVERHEAD=$(($APP_MASTER_MEMORY_OVERHEAD>384?$APP_MASTER_MEMORY_OVERHEAD:384))
+export APP_MASTER_MEMORY_OVERHEAD=$(($APP_MASTER_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$APP_MASTER_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
 export APP_MASTER_MEMORY=`op_int "$APP_MASTER_HEAPSIZE + $APP_MASTER_MEMORY_OVERHEAD + $NODEMANAGER_INCREMENT_ALLOCATION"` # Application Master memory
 export CONTAINER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $NODEMANAGER_VCORES"`     # Memory per YARN container
 
