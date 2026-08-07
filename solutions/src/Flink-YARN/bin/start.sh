@@ -50,6 +50,4 @@ then
 
         #Flink history server
         $FLINK_HOME/bin/historyserver.sh start
-
-        sleep 5
 fi
