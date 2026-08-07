@@ -63,8 +63,12 @@ export FINISH_YARN="false"
 export DEPLOY_ARGS="--master yarn --deploy-mode client \
 	--conf spark.hadoop.yarn.timeline-service.enabled=false"
 
-if [[ $SPARK_SERIES == "1" ]]
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
 	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
+else if [[ $SPARK_SERIES == "2" ]]
+	SPARK_WORKERS_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
+else
+	SPARK_WORKERS_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
 fi
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
