@@ -287,8 +287,6 @@ add_conf_param "map_heapsize" $MAP_HEAPSIZE
 add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
 add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
-add_conf_param "jobtracker_d_heapsize" $JOBTRACKER_D_HEAPSIZE
-add_conf_param "tasktracker_d_heapsize" $TASKTRACKER_D_HEAPSIZE
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
 export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
@@ -344,9 +342,6 @@ add_conf_param "scheduler_fair_dynamic_max_assign" $SCHEDULER_FAIR_DYNAMIC_MAX_A
 add_conf_param "scheduler_fair_max_assign" $SCHEDULER_FAIR_MAX_ASSIGN
 add_conf_param "scheduler_fair_continuous_scheduling" $SCHEDULER_FAIR_CONTINUOUS
 
-#UDA
-add_conf_param "uda_lib_dir" $UDA_LIB_DIR
-
 #RDMA-HADOOP
 add_conf_param "rdma_hadoop_ib_enabled" $RDMA_HADOOP_IB_ENABLED
 add_conf_param "rdma_hadoop_roce_enabled" $RDMA_HADOOP_ROCE_ENABLED
@@ -387,14 +382,6 @@ add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
 add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
 add_conf_param "spark_aqe_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
 add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
-
-#RDMA-SPARK
-add_conf_param "rdma_spark_ib_enabled" $RDMA_SPARK_IB_ENABLED
-add_conf_param "rdma_spark_roce_enabled" $RDMA_SPARK_ROCE_ENABLED
-add_conf_param "rdma_spark_shuffle_chunk_size"	$RDMA_SPARK_SHUFFLE_CHUNK_SIZE
-
-#DataMPI
-add_conf_param "datampi_task_heapsize" $DATAMPI_TASK_HEAPSIZE
 
 #FLINK
 export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
