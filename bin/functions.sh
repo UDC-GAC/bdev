@@ -134,20 +134,22 @@ function remove_conf_param(){
 	NEW_CONFIG_KEYS=
 	NEW_CONFIG_VALUES=
 	FOUND="false"
-
-	for k in `seq 1 $NUM_CONF_PARAMS`
-        do
+	k=1
+	
+	while [ "$k" -le "$NUM_CONF_PARAMS" ]
+	do
 		key="null"
 		key=$(get_conf_key $k)
 		if [[ $key != "null" ]]; then
 		    if [[ $key == $PARAM ]]; then
-			FOUND="true"
+				FOUND="true"
 		    else
-			value=$(get_conf_value $k)
-			NEW_CONFIG_KEYS+="\t$key"
-			NEW_CONFIG_VALUES+="\t$value"
+				value=$(get_conf_value $k)
+				NEW_CONFIG_KEYS+="\t$key"
+				NEW_CONFIG_VALUES+="\t$value"
 		    fi
 		fi
+		k=$((k + 1))
 	done
 
 	if [[ $FOUND == "true" ]]; then
@@ -162,18 +164,20 @@ export -f remove_conf_param
 function exist_conf_param(){
 	PARAM=$1
 	FOUND="false"
-
-	for k in `seq 1 $NUM_CONF_PARAMS`
-        do
-                key="null"
-                key=$(get_conf_key $k)
-                if [[ $key != "null" ]]; then
-                    if [[ $key == $PARAM ]]; then
-                        FOUND="true"
-			return 1
+	k=1
+	
+	while [ "$k" -le "$NUM_CONF_PARAMS" ]
+    do
+        key="null"
+        key=$(get_conf_key $k)
+        if [[ $key != "null" ]]; then
+            if [[ $key == $PARAM ]]; then
+                FOUND="true"
+				return 1
 		    fi
-                fi
-        done
+        fi
+		k=$((k + 1))
+    done
 
 	return 0
 }
