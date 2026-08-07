@@ -2,16 +2,9 @@
 
 export SORT_PARTITIONS=$(($SPARK_EXECUTORS * $SPARK_CORES_PER_EXECUTOR))
 
-if [[ $SPARK_SERIES == "1" ]]
-then
-	export SPARK_BENCH_JAR_NAME=sparkbench-1.6_${SPARK_SCALA_VERSION}.jar
-	# Spark GraphX 1.x does not support iterative ConnCompt
-	export CC_MAX_ITERATIONS=1024
-elif [[ $SPARK_SERIES == "2" ]]
-then
+if [[ $SPARK_SERIES == "2" ]]; then
 	export SPARK_BENCH_JAR_NAME=sparkbench-2.4_${SPARK_SCALA_VERSION}.jar
-elif [[ $SPARK_SERIES == "3" ]]
-then
+elif [[ $SPARK_SERIES == "3" ]]; then
 	if [[ $SPARK_MAJOR_VERSION == "3.0" ]] || [[ $SPARK_MAJOR_VERSION == "3.1" ]]
 	then
 		export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
