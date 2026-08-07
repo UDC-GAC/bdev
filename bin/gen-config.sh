@@ -18,7 +18,9 @@ while [ "$k" -le "$num" ]
 do
     key=$(get_conf_key "$k")
     value=$(get_conf_value "$k")
-    value=$(printf '%s\n' "$value" | sed 's/[\/&]/\\&/g')
+    value=${value//\\/\\\\}
+    value=${value//&/\\&}
+    value=${value//|/\\|}
     sed_script="${sed_script};s|\$$key|$value|g"
     k=$((k + 1))
 done
