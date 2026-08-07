@@ -377,7 +377,7 @@ export -f set_network_configuration
 
 function set_directory_configuration()
 {
-	if [[ -n "${SOL_CONF_DIR:-}" ]]; then
+	if [[ -z "${SOL_CONF_DIR:-}" ]]; then
 		m_exit "SOL_CONF_DIR is not defined or is empty"
 	fi
 
