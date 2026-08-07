@@ -42,8 +42,7 @@ export PATH=$HADOOP_HOME/bin:$PATH
 export HADOOP_MAJOR_VERSION=`echo $HADOOP_HOME | awk 'BEGIN{FS=OFS="."} NF--'`
 export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
 
-if [[ $HADOOP_SERIES == "3" ]]
-then
+if [[ $HADOOP_SERIES == "3" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
