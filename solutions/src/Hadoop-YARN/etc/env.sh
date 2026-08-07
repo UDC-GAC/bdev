@@ -13,13 +13,12 @@ export PATH=$HADOOP_HOME/bin:$PATH
 export HADOOP_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--'`
 export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
 
-if [[ $HADOOP_SERIES == "3" ]]
-then
+if [[ $HADOOP_SERIES == "3" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 	export SLAVESFILE=$SOL_CONF_DIR/workers
-else if [[ $HADOOP_SERIES == "2" ]]
+elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
