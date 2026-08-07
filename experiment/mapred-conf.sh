@@ -2,8 +2,6 @@
 #
 ### Configuration parameters for Hadoop MapReduce
 #
-#export JOBTRACKER_D_HEAPSIZE=1024	# JobTracker daemon heapsize (MB) only for Hadoop 1.x
-#export TASKTRACKER_D_HEAPSIZE=1024	# NodeManager daemon heapsize (MB) only for Hadoop 1.x
 #export MR_JOBHISTORY_SERVER=false               # Start the MapReduce JobHistoryServer
 #export MR_JOBHISTORY_SERVER_D_HEAPSIZE=1024     # JobHistoryServer daemon heapsize (MB)
 #
