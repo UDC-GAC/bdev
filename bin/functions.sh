@@ -435,18 +435,12 @@ function set_solution()
 	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
 	SOLUTION_NUM=$1
 
-	if [[ "$SOLUTION_NAME" == "Hadoop-UDA-YARN" ]]
-	then
-		SOLUTION_NAME="Hadoop-YARN"
-	elif [[ "$SOLUTION_NAME" == "Spark-YARN" ]]
+	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]
 	then
 		SOLUTION_NAME="Spark"
 	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]
 	then
 		SOLUTION_NAME="Flink"
-	elif [[ "$SOLUTION_NAME" == "RDMA-Spark-YARN" ]]
-	then
-		SOLUTION_NAME="RDMA-Spark"
 	fi
 
 	export SOLUTION_HOME=${SOLUTIONS_DIST_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
@@ -459,7 +453,7 @@ function set_solution()
 		m_echo "Solution set to $SOLUTION: $SOLUTION_HOME"
 	fi
 
-	if [[ "$SOLUTION_NAME" == "Spark" || "$SOLUTION_NAME" == "RDMA-Spark" ]]
+	if [[ "$SOLUTION_NAME" == "Spark" ]]
         then
                 if [[ ! -d $SPARK_HADOOP_HOME ]]
                 then
@@ -473,20 +467,6 @@ function set_solution()
                         m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
                 fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
-	elif [[ "$SOLUTION_NAME" == "FlameMR" ]]
-        then
-                if [[ ! -d $FLAMEMR_HADOOP_HOME ]]
-                then
-                        m_exit "Hadoop distribution not found at $FLAMEMR_HADOOP_HOME"
-                fi
-		HADOOP_VERSION=`echo ${FLAMEMR_HADOOP_HOME##*/}`
-	elif [[ "$SOLUTION_NAME" == "DataMPI" ]]
-        then
-                if [[ ! -d $DATAMPI_HADOOP_HOME ]]
-                then
-                        m_exit "Hadoop distribution not found at $DATAMPI_HADOOP_HOME"
-                fi
-		HADOOP_VERSION=`echo ${DATAMPI_HADOOP_HOME##*/}`
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
