@@ -1,7 +1,7 @@
 #!/bin/sh
 
 m_echo "Spark configuration"
-.$OLD_GEN_CONFIG_SCRIPT
+. $OLD_GEN_CONFIG_SCRIPT
 
 export SOL_TEMPLATE_DIR=$HADOOP_TEMPLATE_DIR
 export SOL_CONF_DIR_SRC=$HADOOP_CONF_DIR_SRC
