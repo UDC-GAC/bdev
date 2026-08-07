@@ -36,13 +36,12 @@ export PATH=$HADOOP_HOME/bin:$PATH
 export HADOOP_MAJOR_VERSION=`echo $HADOOP_HOME | awk 'BEGIN{FS=OFS="."} NF--'`
 export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
 
-if [[ $HADOOP_SERIES == "3" ]]
-then
+if [[ $HADOOP_SERIES == "3" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 	export SLAVESFILE=$SOL_CONF_DIR/workers
-else if [[ $HADOOP_SERIES == "2" ]]
+elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
@@ -60,14 +59,6 @@ export FINISH_YARN="false"
 # YARN client mode
 export DEPLOY_ARGS="--master yarn --deploy-mode client \
 	--conf spark.hadoop.yarn.timeline-service.enabled=false"
-
-if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
-	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
-else if [[ $SPARK_SERIES == "2" ]]
-	SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
-else
-	SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
-fi
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
 add_conf_param "spark_log_dir" $SPARK_LOG_DIR
