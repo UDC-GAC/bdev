@@ -25,10 +25,10 @@ if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
 	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
 else if [[ $SPARK_SERIES == "2" ]]
 	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
-	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Spark-2
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Spark-2
 else
 	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
-	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Spark
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Spark
 fi
 
 #YARN environment variables
@@ -45,12 +45,12 @@ export HADOOP_SERIES=`echo ${HADOOP_MAJOR_VERSION} | cut -d '.' -f 1`
 if [[ $HADOOP_SERIES == "3" ]]
 then
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
-	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 	export SLAVESFILE=$SOL_CONF_DIR/workers
 else if [[ $HADOOP_SERIES == "2" ]]
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
-	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 else
