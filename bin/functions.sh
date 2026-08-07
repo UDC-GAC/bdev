@@ -377,6 +377,14 @@ export -f set_network_configuration
 
 function set_directory_configuration()
 {
+	if [[ -n "${SOL_CONF_DIR:-}" ]]; then
+		m_exit "SOL_CONF_DIR is not defined or is empty"
+	fi
+
+	if [[ ! -d "$SOL_CONF_DIR" ]]; then
+		m_exit "SOL_CONF_DIR does not exist or is not a directory: $SOL_CONF_DIR"
+	fi
+	
 	mkdir -p $SOL_CONF_DIR
 	cp -r $SOL_CONF_DIR_SRC/* $SOL_CONF_DIR
 	chmod -R +w $SOL_CONF_DIR
