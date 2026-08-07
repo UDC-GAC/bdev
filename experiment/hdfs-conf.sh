@@ -4,7 +4,7 @@
 #
 #export NAMENODE_D_HEAPSIZE=1024		# NameNode daemon heapsize (MB)
 #export DATANODE_D_HEAPSIZE=1024		# DataNode daemon heapsize (MB)
-#export SECONDARY_NAMENODE_D_HEAPSIZE=1024	# Secondary NameNode daemon heapsize (MB)
+#export SECONDARY_NAMENODE_D_HEAPSIZE=$NAMENODE_D_HEAPSIZE	# Secondary NameNode daemon heapsize (MB)
 #export SECONDARY_NAMENODE=false		# Start the Secondary NameNode
 #export BLOCKSIZE=$((128*1024*1024)) 	# HDFS block size (Bytes)
 #export REPLICATION_FACTOR=3		# Number of block replications
