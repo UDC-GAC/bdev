@@ -24,7 +24,7 @@ do
     sed_script="${sed_script};s|\$$key|$value|g"
     k=$((k + 1))
 done
-
+echo "$sed_script"
 for F in "$SOL_TEMPLATE_DIR"/*
 do
 	[[ -f "$F" ]] || continue
