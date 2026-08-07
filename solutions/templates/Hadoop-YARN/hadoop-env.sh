@@ -34,6 +34,7 @@ export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
 export HADOOP_SECONDARYNAMENODE_HEAPSIZE=$secondary_namenode_d_heapsize
 export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
+export HADOOP_SECONDARYNAMENODE_OPTS="-Xmx""${HADOOP_SECONDARYNAMENODE_HEAPSIZE}""m"
 
 # The jsvc implementation to use. Jsvc is required to run secure datanodes
 # that bind to privileged ports to provide authentication of data transfer
