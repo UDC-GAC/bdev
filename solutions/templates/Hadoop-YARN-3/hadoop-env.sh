@@ -54,8 +54,10 @@ export HADOOP_COMMON_HOME=$hadoop_home
 export HADOOP_MAPRED_PID_DIR=$HADOOP_PID_DIR
 export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
 export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
+export HADOOP_SECONDARYNAMENODE_HEAPSIZE=$secondary_namenode_d_heapsize
 export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
+export HADOOP_SECONDARYNAMENODE_OPTS="-Xmx""${HADOOP_SECONDARYNAMENODE_HEAPSIZE}""m"
 
 export HADOOPHOSTNAME=`$method_bin_dir/$hostname_script $hostfile $loopback_ip`
 export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME}"
