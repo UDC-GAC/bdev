@@ -10,7 +10,7 @@ else
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_2.sh
 fi
 
-sleep 10
+sleep 5
 
 SAFEMODE_STATUS=$($HADOOP_HOME/bin/hdfs dfsadmin -safemode get 2>/dev/null)
 
