@@ -220,7 +220,7 @@ export -f add_prefix_sufix
 
 function get_conf_key(){
 	num_param=$1
-	echo -e "$CONFIG_KEYS" \
+	printf '%b\n' "$CONFIG_KEYS" \
 	|  tr -s " " | sed -e 's/^[ \t]*//' \
 	| cut -f $num_param
 }
@@ -229,7 +229,7 @@ export -f get_conf_key
 
 function get_conf_value(){
 	num_param=$1
-	echo -e "$CONFIG_VALUES" \
+	printf '%b\n' "$CONFIG_VALUES" \
 	|  tr -s " " | sed -e 's/^[ \t]*//' \
 	| cut -f $num_param
 }
