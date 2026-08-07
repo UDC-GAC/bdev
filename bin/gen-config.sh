@@ -3,6 +3,14 @@
 #Set directories
 set_directory_configuration
 
+if [[ -n "${SOL_TEMPLATE_DIR:-}" ]]; then
+	m_exit "SOL_TEMPLATE_DIR is not defined or is empty"
+fi
+
+if [[ ! -d "$SOL_TEMPLATE_DIR" ]]; then
+	m_exit "SOL_TEMPLATE_DIR does not exist or is not a directory: $SOL_TEMPLATE_DIR"
+fi
+	
 for F in "$SOL_TEMPLATE_DIR"/*
 do
 	[[ -f "$F" ]] || continue
