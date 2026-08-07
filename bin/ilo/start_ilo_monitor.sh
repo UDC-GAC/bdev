@@ -2,7 +2,7 @@
 
 mkdir -p $POWERLOGDIR
 
-if [[ $ILO_MASTER == "localhost" ]]
+if [ $ILO_MASTER == "localhost" ]
 then
         export ILO_MASTER=$MASTERNODE
 fi
