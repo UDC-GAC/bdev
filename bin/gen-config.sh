@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Set directories
 set_directory_configuration
