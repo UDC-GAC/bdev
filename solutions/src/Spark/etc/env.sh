@@ -67,8 +67,12 @@ export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
 export FINISH_YARN="true"
 export DEPLOY_ARGS="--master spark://${MASTERNODE}:7077 --deploy-mode client"
 
-if [[ $SPARK_SERIES == "1" ]]
+if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]
 	m_exit "Spark version is not supported: $SPARK_MAJOR_VERSION"
+else if [[ $SPARK_SERIES == "2" ]]
+	WORKERS_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
+else
+	WORKERS_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
 fi
 
 add_conf_param "spark_conf_dir" $SPARK_CONF_DIR
