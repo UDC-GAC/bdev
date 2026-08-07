@@ -1,7 +1,6 @@
 #!/bin/sh
 export SOL_BENCH_DIR=$SOLUTIONS_BENCH_DIR/Flink
 export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Flink
-export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Flink
 export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Flink
 export SOL_SBIN_DIR=$SOLUTION_HOME/bin
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
@@ -23,6 +22,21 @@ export FLINK_MAJOR_VERSION=`echo $SOLUTION_VERSION | awk 'BEGIN{FS=OFS="."} NF--
 export FLINK_SERIES=`echo ${FLINK_MAJOR_VERSION} | cut -d '.' -f 1`
 export FLINK_CONFIG_YAML_FILE=$SOL_CONF_DIR/flink-conf.yaml
 export FLINK_HADOOP_CLASSPATH=$SOL_CONF_DIR/classpath
+
+if [[ $FLINK_SERIES == "1" ]]
+then
+	if [[ $FLINK_MAJOR_VERSION != "1.20" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
+		[[ $FLINK_MAJOR_VERSION != "1.15" ]]
+	then
+		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+	fi
+else
+        m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+fi
 
 #YARN environment variables
 export HADOOP_HOME=$FLINK_HADOOP_HOME
@@ -54,8 +68,6 @@ else
 	export HADOOP_SLAVESFILE=$HADOOP_CONF_DIR/slaves
 fi
 
-export HADOOP_MR_VERSION="YARN"
-
 #Configuracion
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
 export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
@@ -68,28 +80,8 @@ export YARN_PROPS_FILE_CUSTOM="$TMP_DIR/.yarn-properties-$USER"
 export YARN_PROPS_FILE_DEFAULT="/tmp/.yarn-properties-$USER"
 export YARN_APP_ID=""
 
-if [[ $FLINK_SERIES == "1" ]]
-then
-	if [[ $FLINK_MAJOR_VERSION != "1.20" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.15" ]]
-	then
-		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
-	fi
-else
-        m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
-fi
-
-# Copy config.sh file according to Flink version
-if [[ "$SGE_ENV" == "true" ]]
-then
-	FLINK_CONFIG_SH_FILE=$SOL_SGE_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
-else
-	FLINK_CONFIG_SH_FILE=$SOL_STD_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
-fi
+# Set config.sh file according to Flink version
+FLINK_CONFIG_SH_FILE=$SOL_STD_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
 
 if [ ! -f $FLINK_CONFIG_SH_FILE ]; then
         m_exit "Flink config.sh file not found: $FLINK_CONFIG_SH_FILE"
