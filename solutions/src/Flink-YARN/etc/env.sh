@@ -24,14 +24,13 @@ export FLINK_PARALLELISM=$(($FLINK_TASKMANAGERS * $FLINK_TASKMANAGER_SLOTS))
 export FLINK_CONFIG_YAML_FILE=$SOL_CONF_DIR/flink-conf.yaml
 export FLINK_HADOOP_CLASSPATH=$SOL_CONF_DIR/classpath
 
-if [[ $FLINK_SERIES == "1" ]]
-then
-	if [[ $FLINK_MAJOR_VERSION != "1.20" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.19" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.18" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
-		[[ $FLINK_MAJOR_VERSION != "1.15" ]]; then
+if [ $FLINK_SERIES == "1" ]; then
+	if [ $FLINK_MAJOR_VERSION != "1.20" ] &&
+		[ $FLINK_MAJOR_VERSION != "1.19" ] &&
+		[ $FLINK_MAJOR_VERSION != "1.18" ] &&
+		[ $FLINK_MAJOR_VERSION != "1.17" ] &&
+		[ $FLINK_MAJOR_VERSION != "1.16" ] &&
+		[ $FLINK_MAJOR_VERSION != "1.15" ]; then
 		m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
 else
