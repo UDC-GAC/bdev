@@ -14,7 +14,7 @@ $HADOOP_HOME/sbin/hadoop-daemons.sh --config $HADOOP_CONF_DIR --script hdfs star
 if [[ $SECONDARY_NAMENODE == "true" ]]
 then
 	#Secondary NameNode
-	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start secondarynamenode"
+	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start secondarynamenode"
 fi
 
 #Resourcemanager & Nodemanagers
