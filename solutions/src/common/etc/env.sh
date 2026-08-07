@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -n "${HADOOP_HOME:-}" ]; then
+if [ -z "${HADOOP_HOME:-}" ]; then
 	m_exit "HADOOP_HOME is not defined or is empty"
 fi
 
