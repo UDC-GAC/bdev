@@ -20,8 +20,8 @@ for CLUSTER_SIZE in $CLUSTER_SIZES
 do
 	set_cluster_size
 
-	if [ -z "$SOLUTIONS" ]; then
-		m_echo "No solution was selected. Running in command mode"
+	if [[ -z "$SOLUTIONS" ]]; then
+		m_echo "No solution was set. Running in command mode"
 		export SOLUTIONS=""
 		export SOLUTION=NONE
 		export BENCHMARKS=command
