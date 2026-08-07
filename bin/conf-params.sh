@@ -28,6 +28,7 @@ if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
 fi
 add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
+add_conf_param "secondary_namenode_d_heapsize" $SECONDARY_NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
 add_conf_param "namenode_handler_count" $NAMENODE_HANDLER_COUNT
 NAMENODE_SERVICE_HANDLER_COUNT=$(($NAMENODE_HANDLER_COUNT / 2))
