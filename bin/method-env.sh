@@ -178,10 +178,6 @@ then
         then
                 export LOAD_JAVA_COMMAND="module load ${MODULE_JAVA}"
         fi
-        if [[ -z $LOAD_MPI_COMMAND ]]
-        then
-                export LOAD_MPI_COMMAND="module load ${MODULE_MPI}"
-        fi
 else
         if [[ -z $LOAD_JAVA_COMMAND ]]
         then
@@ -197,23 +193,6 @@ else
                 if [[ "x$JPS" == "x" ]]
                 then
                         m_exit "Missing jps command"
-                fi
-        fi
-        if [[ -z $LOAD_MPI_COMMAND ]]
-        then
-                MPI=$(which mpirun 2> /dev/null)
-                if [[ "x$MPI" == "x" ]]
-                then
-                        for SOLUTION in $SOLUTIONS
-                        do
-                                if [[ $SOLUTION == "DataMPI"* ]]
-                                then
-                                        m_exit "Missing MPI needed for $SOLUTION"
-                                fi
-                        done
-                else
-                        MPI_HOME=$(dirname $(dirname $(readlink -f ${MPI})))
-                        export LOAD_MPI_COMMAND="export MPI_HOME=$MPI_HOME"
                 fi
         fi
 fi
@@ -278,7 +257,6 @@ add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
-add_conf_param "load_mpi_command" "$LOAD_MPI_COMMAND"
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
 add_conf_param "reducers_per_node" $REDUCERS_PER_NODE
 add_conf_param "map_memory_mb" $MAP_MEMORY

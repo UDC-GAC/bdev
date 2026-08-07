@@ -15,5 +15,4 @@ export MEMORY_PER_NODE_FACTOR=0.95	# Percentage of the total memory per node ava
 export MEMORY_ALLOC_PER_NODE=`op_int "$MEMORY_PER_NODE * $MEMORY_PER_NODE_FACTOR"`	# Memory per node available for allocation
 export ENABLE_MODULES=false 	# Enable use of modules environment
 export MODULE_JAVA=java 	# Java module
-export MODULE_MPI=mvapich2 	# MPI module
 export PYTHON3_BIN=python3	# Executable name for Python 3
