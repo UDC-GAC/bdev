@@ -1,4 +1,5 @@
 #!/bin/sh
+
 m_echo "Spark configuration"
 $OLD_GEN_CONFIG_SCRIPT
 
