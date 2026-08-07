@@ -76,8 +76,8 @@ export YARN_PROPS_FILE_CUSTOM="$TMP_DIR/.yarn-properties-$USER"
 export YARN_PROPS_FILE_DEFAULT="/tmp/.yarn-properties-$USER"
 export YARN_APP_ID=""
 
-# Set config.sh file according to Flink version
-FLINK_CONFIG_SH_FILE=$SOL_STD_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
+# Set and copy config.sh file according to Flink version
+FLINK_CONFIG_SH_FILE=$SOL_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
 
 if [ ! -f $FLINK_CONFIG_SH_FILE ]; then
         m_exit "Flink config.sh file not found: $FLINK_CONFIG_SH_FILE"
