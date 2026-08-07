@@ -1,5 +1,7 @@
 #!/bin/sh
 
+m_echo "Performing Java process cleanup"
+
 for SLAVE in $MASTERNODE $SLAVENODES
 do
 	$SSH_CMD $SLAVE "export JPS=${JPS};\

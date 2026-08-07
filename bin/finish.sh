@@ -1,6 +1,6 @@
 #!/bin/sh
 
-m_echo "Finishing"
+m_echo "Finishing..."
 
 export FORCE_DELETE_HDFS=$DELETE_HDFS
 
