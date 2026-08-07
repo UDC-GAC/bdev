@@ -57,8 +57,6 @@ else
 	export HADOOP_SLAVESFILE=$HADOOP_CONF_DIR/slaves
 fi
 
-export HADOOP_MR_VERSION="YARN"
-
 #Configuracion
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
 export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
