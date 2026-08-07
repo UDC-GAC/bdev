@@ -22,7 +22,7 @@ export SPARK_VERSION=${SOLUTION_HOME##*/}
 export SPARK_MAJOR_VERSION=${SPARK_VERSION%.*}
 export SPARK_SERIES=${SPARK_VERSION%%.*}
 
-if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]; then
+if [ $SPARK_SERIES == "0" ] || [ $SPARK_SERIES == "1" ]; then
 	m_exit "Spark version is not supported: $SPARK_VERSION"
 fi
 
