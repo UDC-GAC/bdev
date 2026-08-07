@@ -22,10 +22,6 @@ then
 	export SOL_STD_DAEMONS_DIR=$STD_DAEMONS_DIR/Hadoop-YARN-3
 	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 	export SLAVESFILE=$SOL_CONF_DIR/workers
-	if [[ "$SGE_ENV" == "true" ]]
-	then
-		export HADOOP_SSH_OPTS=" "
-	fi
 else
 	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export SOL_SGE_DAEMONS_DIR=$SGE_DAEMONS_DIR/Hadoop-YARN
@@ -33,4 +29,3 @@ else
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
 fi
-
