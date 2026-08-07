@@ -32,10 +32,10 @@ then
 		[[ $FLINK_MAJOR_VERSION != "1.17" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.16" ]] &&
 		[[ $FLINK_MAJOR_VERSION != "1.15" ]]; then
-		m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+		m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
 else
-        m_exit "Flink version is not supported: $FLINK_MAJOR_VERSION"
+        m_exit "Flink version is not supported: $FLINK_VERSION"
 fi
 
 #YARN environment variables
