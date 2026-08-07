@@ -370,11 +370,12 @@ add_conf_param "rdma_hadoop_disk_shuffle_enabled" $RDMA_HADOOP_DISK_SHUFFLE_ENAB
 
 #SPARK
 add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
-add_conf_param "spark_yarn_am_memory" $SPARK_YARN_AM_HEAPSIZE
-add_conf_param "spark_yarn_am_memOverhead" $APP_MASTER_MEMORY_OVERHEAD
-add_conf_param "spark_executor_memOverhead" $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
 add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
+add_conf_param "spark_driver_memOverhead" $SPARK_DRIVER_MEMORY_OVERHEAD
+add_conf_param "spark_yarn_am_cores" $SPARK_YARN_AM_CORES
+add_conf_param "spark_yarn_am_memory" $SPARK_YARN_AM_HEAPSIZE
+add_conf_param "spark_yarn_am_memOverhead" $SPARK_YARN_AM_MEMORY_OVERHEAD
 add_conf_param "spark_worker_cores" $SPARK_WORKER_CORES
 add_conf_param "spark_worker_memory" $SPARK_WORKER_MEMORY
 add_conf_param "spark_workers_per_node" $SPARK_WORKERS_PER_NODE
