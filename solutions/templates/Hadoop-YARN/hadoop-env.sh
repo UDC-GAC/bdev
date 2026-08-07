@@ -31,6 +31,7 @@ export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_DN_LOG_DIR=$sol_log_dir
 export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
 export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
+export HADOOP_SECONDARYNAMENODE_HEAPSIZE=$secondary_namenode_d_heapsize
 export HADOOP_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HADOOP_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 
