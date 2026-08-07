@@ -644,7 +644,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark YARN executor overhead (MB) \t $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
-	REPORT="$REPORT \t Flink TaskManager memory network max (MB) \t $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX \n"
+	REPORT="$REPORT \t Flink TaskManager memory network (MB) \t $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX \n"
 	REPORT="$REPORT \t Flink JobManager memory (MB) \t\t $FLINK_JOBMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink TaskManager memory (MB) \t\t $FLINK_TASKMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN JobManager memory (MB) \t $FLINK_YARN_JOBMANAGER_MEMORY \n"
