@@ -48,12 +48,12 @@ if [[ $HADOOP_SERIES == "3" ]]; then
 	export HADOOP_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
 	export HADOOP_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 	export HADOOP_SBIN_DIR=$SOLUTION_HOME/libexec
-	export SLAVESFILE=$SOL_CONF_DIR/workers
+	export HADOOP_SLAVESFILE=$SOL_CONF_DIR/workers
 elif [[ $HADOOP_SERIES == "2" ]]; then
 	export HADOOP_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
 	export HADOOP_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
 	export HADOOP_SBIN_DIR=$SOLUTION_HOME/sbin
-	export SLAVESFILE=$SOL_CONF_DIR/slaves
+	export HADOOP_SLAVESFILE=$SOL_CONF_DIR/slaves
 else
 	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
