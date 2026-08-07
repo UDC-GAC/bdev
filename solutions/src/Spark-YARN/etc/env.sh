@@ -27,7 +27,7 @@ if [[ $SPARK_SERIES == "0" ]] || [[ $SPARK_SERIES == "1" ]]; then
 fi
 
 # Hadoop
-$COMMON_SRC_DIR/etc/env.sh
+. $COMMON_SRC_DIR/etc/env.sh
 
 #Configuration
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
