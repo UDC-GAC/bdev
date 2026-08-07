@@ -27,4 +27,4 @@ then
         sleep 1
 fi
 
-sleep 10
+sleep 5
