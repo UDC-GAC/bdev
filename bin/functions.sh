@@ -380,14 +380,13 @@ function set_directory_configuration()
 	if [[ -z "${SOL_CONF_DIR:-}" ]]; then
 		m_exit "SOL_CONF_DIR is not defined or is empty"
 	fi
-
-	if [[ ! -d "$SOL_CONF_DIR" ]]; then
-		m_exit "SOL_CONF_DIR does not exist or is not a directory: $SOL_CONF_DIR"
-	fi
 	
 	mkdir -p $SOL_CONF_DIR
 	cp -r $SOL_CONF_DIR_SRC/* $SOL_CONF_DIR
 	chmod -R +w $SOL_CONF_DIR
+	if [[ ! -d "$SOL_CONF_DIR" ]]; then
+		m_exit "SOL_CONF_DIR does not exist or is not a directory: $SOL_CONF_DIR"
+	fi
 	add_conf_param "sol_conf_dir" $SOL_CONF_DIR
 	add_conf_param "sol_log_dir" $SOL_LOG_DIR
 	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
