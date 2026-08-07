@@ -118,8 +118,19 @@ function ini_conf_params() {
 export -f ini_conf_params
 
 function add_conf_param() {
-    CONFIG_KEYS+=("$1")
-    CONFIG_VALUES+=("$2")
+    local key=$1
+    local value=$2
+
+    local i
+    for i in "${!CONFIG_KEYS[@]}"; do
+        if [[ ${CONFIG_KEYS[i]} == "$key" ]]; then
+            CONFIG_VALUES[i]=$value
+            return
+        fi
+    done
+
+    CONFIG_KEYS+=("$key")
+    CONFIG_VALUES+=("$value")
 }
 
 export -f add_conf_param
