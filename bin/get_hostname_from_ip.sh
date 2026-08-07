@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -lt 2 ]; then
+if [[ $# -lt 2 ]]; then
        echo "$0 hostfile IP [loopback]"
        exit -1
 fi
@@ -8,7 +8,7 @@ fi
 FILE=$1
 IP=$2
 
-if [ $# -eq 3 ]; then
+if [[ $# -eq 3 ]]; then
 	LOOPBACK_IP=$3
 else
 	LOOPBACK_IP=127.0.0.1
