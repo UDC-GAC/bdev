@@ -5,7 +5,8 @@ sleep 1
 if [[ -z "$YARN_EXECUTABLE" ]] || ! command -v "$YARN_EXECUTABLE" &> /dev/null; then
     m_warn "yarn command is not avaialble or YARN_EXECUTABLE variable is empty. No cleaning is done"
 else
-    YARN_APPS=$("$YARN_EXECUTABLE" application -list -appStates RUNNING,ACCEPTED 2>/dev/null | grep "application_" | awk '{print $1}')
+    YARN_CMD_OTPS="-D ipc.client.connect.max.retries=0 -D yarn.resourcemanager.connect.max-wait.ms=5000 -D yarn.resourcemanager.connect.retry-interval.ms=1000"
+    YARN_APPS=$("$YARN_EXECUTABLE" application $YARN_CMD_OTPS -list -appStates RUNNING,ACCEPTED 2>/dev/null | grep "application_" | awk '{print $1}')
     
     if [[ $? -ne 0 ]]; then
         echo "YARN is not available. No cleaning is done."
