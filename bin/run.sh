@@ -5,7 +5,7 @@ bin=`cd "$bin"; pwd`
 export METHOD_HOME=`cd "$bin"/..; pwd`
 
 # Load BDEv configuration
-. $METHOD_BIN_DIR/method-env.sh
+. $METHOD_HOME/bin/method-env.sh
 
 m_start_message
 
