@@ -383,20 +383,7 @@ function set_cluster_size()
 	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
 	m_echo "Cluster size set to $CLUSTER_SIZE"
-	
 	export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
-	if [[ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]]; then
-		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
-		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
-	fi
-
-	exist_conf_param "replication_factor"
-
-    if [[ $? -eq 1 ]]; then
-		remove_conf_param "replication_factor"
-    fi
-
-	add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 }
 
 export -f set_cluster_size
