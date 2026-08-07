@@ -227,9 +227,9 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 fi
 
 if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-	HOSTNAME_SCRIPT=get_hostname.sh
+	export HOSTNAME_SCRIPT=get_hostname.sh
 else
-	HOSTNAME_SCRIPT=get_ip_from_hostname.sh
+	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
 if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
