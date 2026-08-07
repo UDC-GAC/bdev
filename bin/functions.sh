@@ -678,6 +678,7 @@ function begin_report(){
 	REPORT="$REPORT \t Spark executor cores   \t\t $SPARK_CORES_PER_EXECUTOR \n"
 	REPORT="$REPORT \t Spark executor memory (MB)   \t\t $SPARK_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark executor heapsize (MB) \t\t $SPARK_EXECUTOR_HEAPSIZE \n"
+	REPORT="$REPORT \t Spark executor overhead (MB) \t\t $SPARK_EXECUTOR_MEMORY_OVERHEAD \n"
 	REPORT="$REPORT \t Spark YARN AM heapsize (MB) \t\t $SPARK_YARN_AM_HEAPSIZE \n"
 	REPORT="$REPORT \t Spark YARN executors per node   \t $SPARK_YARN_EXECUTORS_PER_NODE \n"
 	REPORT="$REPORT \t Spark YARN executor cores   \t\t $SPARK_YARN_CORES_PER_EXECUTOR \n"
