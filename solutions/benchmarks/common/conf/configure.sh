@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HDFS=hdfs://$MASTERNODE:$FS_PORT
+export HDFS=hdfs://$MASTERNODE:$HDFS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
 export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/${TPCX_HS_JAR_NAME}

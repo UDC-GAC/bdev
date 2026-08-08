@@ -1,7 +1,7 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://$master:$fs_port</value>
+    <value>hdfs://$master:$hdfs_port</value>
   </property>
   <property>
     <name>hadoop.tmp.dir</name>

@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Copy YARN scheduler configuration
-cp $EXP_DIR/*-scheduler.xml $HADOOP_CONF_DIR
+for F in "$BDEV_EXPERIMENT_DIR"/yarn/*.xml
+do
+    [ -f "$F" ] || continue
+    cp "$F" "$HADOOP_CONF_DIR" || exit 1
+done
 
 if [[ $HADOOP_SERIES == "3" ]]
 then

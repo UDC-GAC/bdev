@@ -98,16 +98,15 @@ if [ ! -d $REPORT_DIR ]; then
 fi
 
 # Copy configuration to REPORT_DIR
-cp $BDEV_EXPERIMENT_DIR/*-default.sh $REPORT_DIR/etc
+cp $BDEV_EXPERIMENT_DIR/*.sh $REPORT_DIR/etc
 cp $BDEV_EXPERIMENT_DIR/*.lst $REPORT_DIR/etc
-cp $BDEV_EXPERIMENT_DIR/*-scheduler.xml $REPORT_DIR/etc
+cp $BDEV_EXPERIMENT_DIR/hostfile $REPORT_DIR/etc
 
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 
 # Load main configuration files
-. $BDEV_EXPERIMENT_DIR/bdev-default.sh
-. $BDEV_EXPERIMENT_DIR/system-default.sh
-. $BDEV_EXPERIMENT_DIR/experiment-default.sh
+. $BDEV_EXPERIMENT_DIR/system-conf.sh
+. $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
 
 export HOSTFILE_DEFAULT=$BDEV_EXPERIMENT_DIR/hostfile
 
@@ -121,7 +120,7 @@ fi
 
 export CLUSTER_SIZES=`read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst`
 export BENCHMARKS=`read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst`
-export SOLUTIONS=`read_solutions $BDEV_EXPERIMENT_DIR/solutions.lst`
+export SOLUTIONS=`read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst`
 export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
 export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
 export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
@@ -133,11 +132,10 @@ else
 fi
 
 # Load remaining configuration files
-. $BDEV_EXPERIMENT_DIR/core-conf.sh
-. $BDEV_EXPERIMENT_DIR/hdfs-conf.sh
-. $BDEV_EXPERIMENT_DIR/yarn-conf.sh
-. $BDEV_EXPERIMENT_DIR/mapred-conf.sh
-. $BDEV_EXPERIMENT_DIR/solutions-conf.sh
+. $BDEV_EXPERIMENT_DIR/hdfs.sh
+. $BDEV_EXPERIMENT_DIR/yarn.sh
+. $BDEV_EXPERIMENT_DIR/mapreduce.sh
+. $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
 
 m_echo "Running $APP_NAME v$APP_VERSION"
 

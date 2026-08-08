@@ -254,7 +254,9 @@ function get_nodes_by_hostname()
 		fi
 		
 		if [[ -z "${OUT}" ]]; then
-			m_exit "Node $NODE could not be revolved"
+			m_err "Node $NODE could not be revolved"
+			OUT_NODES=""
+			return 1
 		fi
 		NODE_IP=`echo $OUT | awk '{print $1}'`
 		NODE_NAME=`echo $OUT | awk '{print $2}'`
@@ -285,11 +287,15 @@ function get_nodes_by_interface()
         do
                 INTERFACE_DATA=`$SSH_CMD $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
                 if [[ ! $? -eq 0 ]]; then
-                        m_exit "$INTERFACE interface not found or not configured for $NODE"
+                        m_err "$INTERFACE interface not found or not configured for $NODE"
+			OUT_NODES=""
+			return 1
                 fi
                 INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
                 if [[ -z "${INTERFACE_IP}" ]]; then
-                        m_exit "IP not found for $NODE using $INTERFACE interface"
+                        m_err "IP not found for $NODE using $INTERFACE interface"
+			OUT_NODES=""
+			return 1
                 fi
                 OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
                 if [[ -z "${OUT}" ]]; then
@@ -419,9 +425,9 @@ function set_solution()
 
 	if [[ ! -d $SOLUTION_HOME ]]
 	then
-		m_exit "Solution $SOLUTION not found at $SOLUTION_HOME"
+		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
 	else
-		m_echo "Solution set to $SOLUTION: $SOLUTION_HOME"
+		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
 	fi
 
 	if [[ "$SOLUTION_NAME" == "Spark" ]]

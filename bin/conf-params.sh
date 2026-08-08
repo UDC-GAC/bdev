@@ -45,7 +45,7 @@ add_conf_param "client_block_write_retries" $CLIENT_BLOCK_WRITE_RETRIES
 CLIENT_BLOCK_LOCATEBLOCK_RETRIES=$(($CLIENT_BLOCK_WRITE_RETRIES * 2))
 add_conf_param "client_block_write_locateblock_retries" $CLIENT_BLOCK_LOCATEBLOCK_RETRIES
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
-add_conf_param "fs_port" $FS_PORT
+add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
 add_conf_param "ipc_ping_interval" $IPC_PING_INTERVAL_MS
 add_conf_param "ipc_client_rpc_timeout" $IPC_CLIENT_RPC_TIMEOUT_MS
