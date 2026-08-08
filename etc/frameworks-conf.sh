@@ -7,7 +7,7 @@ export RDMA_HADOOP_IB_ENABLED=true # Enable RDMA connections through InfiniBand 
 export RDMA_HADOOP_ROCE_ENABLED=false # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
 export RDMA_HADOOP_DFS_REPLICATION_PARALLEL=false # Enable parallel replication
-export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations for HDFS
+export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
@@ -23,14 +23,14 @@ export SPARK_MEMORY_FRACTION=0.6 # Fraction of Executor heap space used for exec
 export SPARK_MEMORY_STORAGE_FRACTION=0.5 # Amount of storage memory immune to eviction, expressed as a fraction of SPARK_MEMORY_FRACTION
 export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
-export SPARK_HISTORY_SERVER_DIR=/spark/history # HDFS path to store application event logs
+export SPARK_HISTORY_SERVER_DIR=/spark/history # Relative path to store application event logs
 export SPARK_NETWORK_TIMEOUT=180 # Spark timeout for network communications (in seconds)
 export SPARK_EXECUTOR_HEARTBEAT_INTERVAL=30 # Interval between each executor's heartbeats to the driver (in seconds)
 export SPARK_SHUFFLE_COMPRESS=true # Compress map output files
 export SPARK_SHUFFLE_SPILL_COMPRESS=true # Compress data spilled during shuffles
 export SPARK_BROADCAST_COMPRESS=true # Compress broadcast variables before sending them
 export SPARK_RDD_COMPRESS=false # Compress serialized RDD partitions (e.g. for StorageLevel.MEMORY_ONLY_SER)
-export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf and snappy. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
+export SPARK_COMPRESSION_CODEC=lz4 # Codecs: lz4, lzf, snappy and zstd. Codec to compress RDD partitions, event log, broadcast variables and shuffle outputs
 export SPARK_SERIALIZER=KryoSerializer # Serializers: JavaSerializer and KryoSerializer. Class to use for serializing objects 
 export SPARK_KRYO_UNSAFE=true # Whether to use unsafe based Kryo serializer. Can be substantially faster by using Unsafe Based IO
 export SPARK_KRYO_BUFFER_MAX=256 # Maximum allowable size in MiB of Kryo serialization buffer. It must be less than 2048 MiB
@@ -75,7 +75,7 @@ export FLINK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
 export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories to use for local data
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
-export FLINK_HISTORY_SERVER_DIR=/flink/history # HDFS path to store archives of completed jobs
+export FLINK_HISTORY_SERVER_DIR=/flink/history # Relative path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node
 export FLINK_TASKMANAGER_SLOTS=`op_int "$NODEMANAGER_VCORES / $FLINK_TASKMANAGERS_PER_NODE"` # Number of slots per TaskManager
 export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=0.1 # Fraction of total Flink memory to be used as network memory
@@ -109,4 +109,4 @@ export HADOOP_MAHOUT_VERSION=0.11.2	# Mahout version for Hadoop YARN
 
 # Apache Hive
 export HADOOP_HIVE_VERSION=1.2.1	# Hive version for Hadoop YARN
-export HIVE_TMP_DIR=/hive/tmp		# HDFS directory to store temporary files
+export HIVE_TMP_DIR=/hive/tmp		# Relative directory to store temporary files
