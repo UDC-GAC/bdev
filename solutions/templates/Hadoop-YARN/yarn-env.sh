@@ -109,7 +109,7 @@ fi
 # restore ordinary behaviour
 unset IFS
 
-export YARNHOSTNAME=`$method_bin_dir/$hostname_script $hostfile $loopback_ip`
+export YARNHOSTNAME=`$bdev_bin_dir/$hostname_script $hostfile $loopback_ip`
 export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME}"
 
 JAVA_BIN="${JAVA_HOME:+$JAVA_HOME/bin/}java"
