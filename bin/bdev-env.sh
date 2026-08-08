@@ -3,8 +3,7 @@
 export APP_NAME=BDEv
 export APP_VERSION=4.0-dev
 
-if [ -z $BDEV_HOME ]
-then
+if [ -z $BDEV_HOME ]; then
         echo "Error: BDEV_HOME must be set"
 	exit -1
 fi
@@ -36,8 +35,7 @@ export CLEAN_DAEMONS_SCRIPT=$BDEV_BIN_DIR/kill-daemons.sh
 export CLEAN_DATA_SCRIPT=$BDEV_BIN_DIR/delete-nodes-data.sh
 export YARN_KILLALL_SCRIPT=$BDEV_BIN_DIR/yarn-killall.sh
 
-if [ -z $BDEV_EXPERIMENT_DIR ]
-then
+if [ -z $BDEV_EXPERIMENT_DIR ]; then
 	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
 fi
 

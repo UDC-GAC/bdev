@@ -42,6 +42,7 @@ export -f m_exit
 function m_start_message()
 {
 	m_echo "Reporting to $REPORT_DIR"
+	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Solutions ($NUM_SOLUTIONS): $SOLUTIONS"
@@ -539,6 +540,7 @@ function begin_report(){
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
+	REPORT="$REPORT \t Frameworks directory  \t\t\t $FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
