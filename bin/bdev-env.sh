@@ -17,19 +17,18 @@ export BDEV_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 . $BDEV_BIN_DIR/functions.sh
 
 export THIRD_PARTY_DIR=$BDEV_HOME/third-party
-export SOLUTIONS_SRC_DIR=$BDEV_HOME/solutions/src
+export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
 
-if [ -z "$SOLUTIONS_DIST_DIR" ]
-then
-	export SOLUTIONS_DIST_DIR=$BDEV_HOME/solutions/dist
+if [ -z "$FRAMEWORKS_DIR" ]; then
+	export FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
 fi
 
-export SOLUTIONS_BENCH_DIR=$BDEV_HOME/solutions/benchmarks
-export SOLUTIONS_LIB_DIR=$BDEV_HOME/solutions/lib
+export SOLUTIONS_BENCH_DIR=$BDEV_HOME/frameworks/benchmarks
+export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
 export COMMON_BENCH_DIR=$SOLUTIONS_BENCH_DIR/common
 export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
-export TEMPLATES_DIR=$BDEV_HOME/solutions/templates
-export DAEMONS_DIR=$BDEV_HOME/solutions/daemons
+export TEMPLATES_DIR=$BDEV_HOME/frameworks/templates
+export DAEMONS_DIR=$BDEV_HOME/frameworks/daemons
 export INIT_SOL_SCRIPT=$BDEV_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$BDEV_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
