@@ -21,7 +21,7 @@ do
 	set_cluster_size
 
 	if [[ -z "$SOLUTIONS" ]]; then
-		m_echo "No solution was set. Running in command mode"
+		m_echo "No framework was configured. Running in command mode"
 		export SOLUTIONS=""
 		export SOLUTION=NONE
 		export BENCHMARKS=command
