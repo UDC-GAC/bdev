@@ -10,10 +10,10 @@ export BDEV_HOME=`cd "$bin"/..; pwd`
 m_start_message
 
 # Load nodes and IPs
-. $METHOD_BIN_DIR/load-nodes.sh
+. $BDEV_BIN_DIR/load-nodes.sh
 
 # Init BDEv
-. $METHOD_BIN_DIR/init.sh
+. $BDEV_BIN_DIR/init.sh
 
 # For each cluster size
 for CLUSTER_SIZE in $CLUSTER_SIZES
@@ -28,7 +28,7 @@ do
 		export NUM_BENCHMARKS=1
 		set_nosolution
 
-		bash $METHOD_BIN_DIR/run-nosol.sh
+		bash $BDEV_BIN_DIR/run-nosol.sh
 	else
 		SOLUTION_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
@@ -39,7 +39,7 @@ do
 			export FORCE_DELETE_HDFS=true
 		fi
 
-		. $METHOD_BIN_DIR/delete-nodes-data.sh
+		. $BDEV_BIN_DIR/delete-nodes-data.sh
 
 		# For each solution
 		for SOLUTION in $SOLUTIONS
@@ -67,12 +67,12 @@ do
 				export NUM_BENCHMARKS=1
 			fi
 
-			bash $METHOD_BIN_DIR/run-sol.sh
+			bash $BDEV_BIN_DIR/run-sol.sh
 		done
 	fi
 done
 
 # Finish BDEv
-. $METHOD_BIN_DIR/finish.sh
+. $BDEV_BIN_DIR/finish.sh
 
 m_stop_message
