@@ -95,9 +95,7 @@ if [ ! -d $REPORT_DIR ]; then
 fi
 
 # Copy configuration to REPORT_DIR
-cp $BDEV_EXPERIMENT_DIR/*.sh $REPORT_DIR/etc
-cp $BDEV_EXPERIMENT_DIR/*.lst $REPORT_DIR/etc
-cp $BDEV_EXPERIMENT_DIR/hostfile $REPORT_DIR/etc
+cp -r $BDEV_EXPERIMENT_DIR $REPORT_DIR/etc
 
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 
