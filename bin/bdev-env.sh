@@ -3,34 +3,34 @@
 export METHOD_NAME=BDEv
 export METHOD_VERSION=4.0-dev
 
-if [ -z $METHOD_HOME ]
+if [ -z $BDEV_HOME ]
 then
-        echo "Error: METHOD_HOME must be set"
+        echo "Error: BDEV_HOME must be set"
 	exit -1
 fi
 
-export METHOD_CONF_DIR=$METHOD_HOME/etc
-export METHOD_BIN_DIR=$METHOD_HOME/bin
+export METHOD_CONF_DIR=$BDEV_HOME/etc
+export METHOD_BIN_DIR=$BDEV_HOME/bin
 export METHOD_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 
 # Load bash functions
 . $METHOD_BIN_DIR/functions.sh
 
-export THIRD_PARTY_DIR=$METHOD_HOME/third-party
-export SOLUTIONS_SRC_DIR=$METHOD_HOME/solutions/src
+export THIRD_PARTY_DIR=$BDEV_HOME/third-party
+export SOLUTIONS_SRC_DIR=$BDEV_HOME/solutions/src
 
 if [ -z "$SOLUTIONS_DIST_DIR" ]
 then
-	export SOLUTIONS_DIST_DIR=$METHOD_HOME/solutions/dist
+	export SOLUTIONS_DIST_DIR=$BDEV_HOME/solutions/dist
 fi
 
-export SOLUTIONS_BENCH_DIR=$METHOD_HOME/solutions/benchmarks
-export SOLUTIONS_LIB_DIR=$METHOD_HOME/solutions/lib
+export SOLUTIONS_BENCH_DIR=$BDEV_HOME/solutions/benchmarks
+export SOLUTIONS_LIB_DIR=$BDEV_HOME/solutions/lib
 export COMMON_BENCH_DIR=$SOLUTIONS_BENCH_DIR/common
 export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
-export TEMPLATES_DIR=$METHOD_HOME/solutions/templates
-export DAEMONS_DIR=$METHOD_HOME/solutions/daemons
-export METHOD_EXP_DIR=$METHOD_HOME/experiment
+export TEMPLATES_DIR=$BDEV_HOME/solutions/templates
+export DAEMONS_DIR=$BDEV_HOME/solutions/daemons
+export METHOD_EXP_DIR=$BDEV_HOME/experiment
 export INIT_SOL_SCRIPT=$METHOD_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
