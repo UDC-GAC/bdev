@@ -99,7 +99,7 @@ BDEv 3.9 - 2024-04-11
 
 		- Update RAPL-based power monitoring tool to PAPI v7.1.0
 
-		- Upate RGen data generator to include minor improvements and bug fixes
+		- Update RGen data generator to include minor improvements and bug fixes
 
 		- Update resource monitoring tool to dool v1.3.1
 		
