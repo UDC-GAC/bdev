@@ -251,8 +251,8 @@ function plot_dat_file_lines(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_lines
@@ -271,8 +271,8 @@ function plot_dat_file_boxes(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/boxes_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/boxes_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_boxes
@@ -296,8 +296,8 @@ function plot_dat_file_stacked(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$STOCKED_PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'; \"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/stacked_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'; \"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/stacked_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_stacked
