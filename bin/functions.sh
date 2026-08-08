@@ -350,7 +350,7 @@ function set_network_configuration()
 	fi
 
 	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
-	MASTERIP=`$METHOD_BIN_DIR/get_ip_from_hostname.sh $FILE`
+	MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
 	add_conf_param "master" $MASTERNODE
 	add_conf_param "ip_master" $MASTERIP
 	add_conf_param "net_interface" $NET_INTERFACE
