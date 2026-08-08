@@ -1,7 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-if [[ -z $COMMAND ]]
-then
+if [[ -z $COMMAND ]]; then
 	m_echo "Entering interactive mode"
 
 	start_benchmark
