@@ -24,7 +24,6 @@ m_echo "Configuring benchmarks"
 . ${SOL_BENCH_DIR}/conf/configure.sh
 
 #Generate input datasets
-m_echo "Preparing benchmarks"
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
 if [[ -f ${SOL_BENCH_DIR}/bin/prepare.sh ]]
 then
