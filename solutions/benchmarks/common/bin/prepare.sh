@@ -271,5 +271,3 @@ then
 		bash -c "$PREPARE_COMMAND"
 	fi
 fi
-
-sleep 1
