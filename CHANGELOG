@@ -41,13 +41,13 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Max value for Flink network memory size now also supports an auto-calculated value
 
-		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (solutions-default.sh)
+		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (frameworks-conf.sh)
 		
 		- Spark AQE is now enabled by default
 
-		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (solutions-default.sh)
+		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (frameworks-conf.sh)
 
-		- Add Spark parameter to configure Kryo registration behavior (solutions-default.sh)
+		- Add Spark parameter to configure Kryo registration behavior (frameworks-conf.sh)
 
 		- Fix Spark memory configuration for Driver and AppMaster on YARN
 
@@ -60,6 +60,8 @@ BDEv 4.0 - 2026-XX-XX
 		- Improve Hadoop deployment by waiting for HDFS safe mode readiness
 
 		- Update resource monitoring tool to dool v1.3.8
+
+		- Simplified tool configuration and removed experiment directory
 
 		- Several code refactorings, minor changes and bug fixes
 
