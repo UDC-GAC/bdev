@@ -10,7 +10,7 @@ If you use **BDEv** in your research, please cite our work using the following r
 
 ## Download
 
-To download a specific version of BDEv, which is the recommended approach, you must clone a specific tag from the github repository instead of cloning the master branch. For example, you can download version 3.10 by executing:
+To download a specific version of BDEv, which is the recommended approach, you must clone a specific tag from the git repository instead of cloning the master branch. For example, you can download version 4.0 by executing:
 
 ```
 git clone --branch v4.0 https://github.com/rreye/bdev.git
