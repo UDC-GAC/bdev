@@ -20,8 +20,8 @@ function plot_dat_file_lines(){
 	echo gnuplot -e "\"input_files='$DAT_FILES';output_file='$PLOT_FILE'; \
 	tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 	label_y='$YLABEL'; format_y='$YFORMAT'; \
-	palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-	cols='$COLS'\"" '${BDEV_HOME}'${RAPL_PLOT_HOME#$METHOD_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
+	palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+	cols='$COLS'\"" '${BDEV_HOME}'${RAPL_PLOT_HOME#$BDEV_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_lines
