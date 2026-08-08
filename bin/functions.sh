@@ -321,10 +321,12 @@ export -f get_nodes_by_interface
 
 function set_network_configuration()
 {
-	if [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]
-	then
-		if [[ -n ${ETH_COMPUTE_NODES} ]]
-		then
+	if [[ "${SOLUTION}" == "NONE" ]]; then
+		load_nodes ${COMPUTE_NODES}
+		export NET_INTERFACE=default
+		FILE=$NODE_FILE
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
+		if [[ -n ${ETH_COMPUTE_NODES} ]]; then
 			load_nodes ${ETH_COMPUTE_NODES}
 			export NET_INTERFACE=$ETH_INTERFACE
 			FILE=$NODE_FILE_ETH
@@ -333,22 +335,18 @@ function set_network_configuration()
 			export NET_INTERFACE=default
 			FILE=$NODE_FILE
 		fi
-	else 
-		if [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]
-		then
-			if [[ -n ${IPOIB_COMPUTE_NODES} ]]
-			then
-				load_nodes ${IPOIB_COMPUTE_NODES}
-				export NET_INTERFACE=$IPOIB_INTERFACE
-				FILE=$NODE_FILE_IPOIB
-			else
-				load_nodes ${COMPUTE_NODES}
-				export NET_INTERFACE=default
-				FILE=$NODE_FILE
-			fi	
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
+		if [[ -n ${IPOIB_COMPUTE_NODES} ]]; then
+			load_nodes ${IPOIB_COMPUTE_NODES}
+			export NET_INTERFACE=$IPOIB_INTERFACE
+			FILE=$NODE_FILE_IPOIB
 		else
-			m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
+			load_nodes ${COMPUTE_NODES}
+			export NET_INTERFACE=default
+			FILE=$NODE_FILE
 		fi
+	else
+		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 	fi
 
 	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
