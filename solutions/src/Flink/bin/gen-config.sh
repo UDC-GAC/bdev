@@ -3,15 +3,16 @@
 m_echo "Flink configuration"
 . $OLD_GEN_CONFIG_SCRIPT
 
-if [ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]
-then
+if [ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]; then
 	SLAVELIST=`cat $SLAVESFILE`
 	rm $SLAVESFILE
 	for slave in $SLAVELIST
 	do
-		for i in `seq 1 $FLINK_TASKMANAGERS_PER_NODE`
+		i=1
+		while [ "$i" -le "$FLINK_TASKMANAGERS_PER_NODE" ]
 		do
 			echo $slave >> $SLAVESFILE
+			i=$((i + 1))
 		done
 	done
 	unset SLAVELIST

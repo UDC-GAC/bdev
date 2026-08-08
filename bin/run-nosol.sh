@@ -32,7 +32,9 @@ for BENCHMARK in $BENCHMARKS
 do
 	export BENCHMARK
 	unset ELAPSED_TIMES
-	for i in `seq 1 $NUM_EXECUTIONS`
+	i=1
+
+	while [ "$i" -le "$NUM_EXECUTIONS" ]
 	do
 		. $METHOD_BIN_DIR/bench-env.sh
 		# Starting workload
@@ -42,18 +44,16 @@ do
 		END_TOTAL_TIME=0
 		START_TIME=0
 		END_TIME=0
+		i=$((i + 1))
 
-                if [[ $BENCHMARK_WAIT_SECONDS -gt 0 ]]
-                then
+                if [[ $BENCHMARK_WAIT_SECONDS -gt 0 ]]; then
                         m_echo "Waiting $BENCHMARK_WAIT_SECONDS seconds"
                         sleep $BENCHMARK_WAIT_SECONDS
                 fi
 
-		if [[ -f ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]
-		then
+		if [[ -f ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh
-		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]
-		then
+		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
 			m_echo "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
@@ -62,14 +62,13 @@ do
 
 		save_elapsed_time
 
-		if [[ $FINISH == "true" ]]
-		then
+		if [[ $FINISH == "true" ]]; then
 			break
 		fi
 	done
+
 	write_report
-	if [[ $FINISH == "true" ]]
-	then
+	if [[ $FINISH == "true" ]]; then
 		break
 	fi
 done

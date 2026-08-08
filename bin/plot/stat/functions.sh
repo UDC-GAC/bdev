@@ -166,7 +166,8 @@ function avg_dat_file() {
 	NFILES=$(( `echo $TARGET_DAT_FILES | wc -w` ))
 	NCOLS=$(( `echo $FIRST_HEAD | grep -o "," | wc -l` + 1 ))
 
-	for COL in `seq 1 $NCOLS`
+	COL=1
+	while [ "$COL" -le "$NCOLS" ]
 	do
 		TMP_FILE=${FILE_PREFIX}_${COL}.tmp
 		JOIN_FILE=${FILE_PREFIX}_${COL}_join.tmp
@@ -187,6 +188,7 @@ function avg_dat_file() {
 
 		avg_file_rows $JOIN_FILE $TMP_AVG_FILE
 
+		COL=$((COL + 1))
 		echo "$COL_TAG" > $AVG_FILE
 		cat $TMP_AVG_FILE >> $AVG_FILE
 

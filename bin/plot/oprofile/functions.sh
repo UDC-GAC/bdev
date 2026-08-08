@@ -28,8 +28,9 @@ function op_dat_file(){
 
 	HEADER=`cat $FIRST_DAT_FILE | head -1`
 	OUTPUT_FILE_CONTENT=`get_row 1 $FIRST_DAT_FILE`
-
-	for COL in `seq 2 $NCOLS`
+	
+	COL=2
+	while [ "$COL" -le "$NCOLS" ]
 	do
 		unset ALL_COLUMNS
 		for f in $TARGET_DAT_FILES
@@ -38,9 +39,8 @@ function op_dat_file(){
 		done
 
 		NEW_COLUMN=`awk "$AWK_COMMAND" <(echo "$ALL_COLUMNS")`
-
 		OUTPUT_FILE_CONTENT=`paste -d "," <(echo "$OUTPUT_FILE_CONTENT") <(echo "$NEW_COLUMN")`
-
+		COL=$((COL + 1))
 	done
 
 	echo "$HEADER" > $OUTPUT_SUM_FILE

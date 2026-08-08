@@ -21,11 +21,12 @@ OUTPUT_NODE_SUM_FILE="${OPROFILELOGDIR}/sum.csv"
 
 rm -f $OUTPUT_NODE_SUM_FILE
 
-for i in `seq 1 $NUM_LINES`
+i=1
+while [ "$i" -le "$NUM_LINES" ]
 do
 	ROW_FIRST_FILE=`get_row $i $FIRST_FILE`
-	if [[ $ROW_FIRST_FILE == "" ]]
-	then
+	if [[ $ROW_FIRST_FILE == "" ]]; then
+		i=$((i + 1))
 		continue;
 	fi
 
@@ -46,7 +47,5 @@ do
 	done
 
 	echo "$EVENT,$VALUE_SUM,$PERCENT_SUM" >> $OUTPUT_NODE_SUM_FILE
-
+	i=$((i + 1))
 done
-
-
