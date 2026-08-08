@@ -168,7 +168,7 @@ if [[ "x$SSH_CMD" == "x" ]]; then
         m_exit "Missing ssh command"
 fi
 
-if [[ ! -f "$SH_CMD" ]]; then
+if [[ ! -f "$SSH_CMD" ]]; then
 	m_exit "Missing ssh command: $SSH_CMD"
 elif [[ ! -x "$SSH_CMD" ]]; then
 	m_exit "ssh command is not executable: $SSH_CMD"
