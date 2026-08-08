@@ -8,7 +8,7 @@ export -f get_date
 
 function m_echo() {
 	get_date
-	echo -e "\e[48;5;2m[${METHOD_NAME} $DATE INFO]\e[0m $@" 
+	echo -e "\e[48;5;2m[${APP_NAME} $DATE INFO]\e[0m $@" 
 	echo "$DATE > $@" >> $REPORT_LOG
 }
 
@@ -16,7 +16,7 @@ export -f m_echo
 
 function m_err() {
 	get_date
-	echo -e "\e[48;5;1m[${METHOD_NAME} $DATE ERR ]\e[0m $@" >&2
+	echo -e "\e[48;5;1m[${APP_NAME} $DATE ERR ]\e[0m $@" >&2
 	echo "$DATE ! $@" >> $REPORT_LOG
 }
 
@@ -24,7 +24,7 @@ export -f m_err
 
 function m_warn() {
 	get_date
-	echo -e "\e[48;5;208m[${METHOD_NAME} $DATE WARN]\e[0m $@"
+	echo -e "\e[48;5;208m[${APP_NAME} $DATE WARN]\e[0m $@"
 	echo "$DATE ! $@" >> $REPORT_LOG
 }
 
@@ -53,7 +53,7 @@ export -f m_start_message
 
 function m_stop_message()
 {
-	m_echo "$METHOD_NAME v$METHOD_VERSION finished"
+	m_echo "$APP_NAME v$METHOD_VERSION finished"
 	m_echo "Report summary stored at $REPORT_FILE"
 }
 
@@ -529,7 +529,7 @@ function write_report(){
 export -f write_report
 
 function begin_report(){
-	REPORT="$METHOD_NAME v$METHOD_VERSION report \n"
+	REPORT="$APP_NAME v$METHOD_VERSION report \n"
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
