@@ -53,7 +53,7 @@ export -f m_start_message
 
 function m_stop_message()
 {
-	m_echo "$APP_NAME v$METHOD_VERSION finished"
+	m_echo "$APP_NAME v$APP_VERSION finished"
 	m_echo "Report summary stored at $REPORT_FILE"
 }
 
@@ -529,7 +529,7 @@ function write_report(){
 export -f write_report
 
 function begin_report(){
-	REPORT="$APP_NAME v$METHOD_VERSION report \n"
+	REPORT="$APP_NAME v$APP_VERSION report \n"
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
