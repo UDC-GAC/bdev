@@ -9,9 +9,9 @@ then
 	exit -1
 fi
 
-export METHOD_CONF_DIR=$BDEV_HOME/etc
+export BDEV_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
-export METHOD_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
+export BDEV_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 
 # Load bash functions
 . $BDEV_BIN_DIR/functions.sh
@@ -77,10 +77,10 @@ export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
 # Load BDEv configuration to define OUT_DIR
-. $METHOD_CONF_DIR/bdev-default.sh
+. $BDEV_CONF_DIR/bdev-default.sh
 . $EXP_DIR/bdev-conf.sh
 
-export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${METHOD_START_DATE}
+export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export PLOT_DIR=$REPORT_DIR/graphs
@@ -103,17 +103,17 @@ then
 fi
 
 # Copy configuration to REPORT_DIR
-cp $METHOD_CONF_DIR/*-default.sh $REPORT_DIR/etc
+cp $BDEV_CONF_DIR/*-default.sh $REPORT_DIR/etc
 cp $EXP_DIR/*-conf.sh $REPORT_DIR/experiment
 cp $EXP_DIR/*.lst $REPORT_DIR/experiment
 cp $EXP_DIR/*-scheduler.xml $REPORT_DIR/experiment
 
-export METHOD_CONF_DIR=$REPORT_DIR/etc
+export BDEV_CONF_DIR=$REPORT_DIR/etc
 
 # Load default configuration
-. $METHOD_CONF_DIR/bdev-default.sh
-. $METHOD_CONF_DIR/system-default.sh
-. $METHOD_CONF_DIR/experiment-default.sh
+. $BDEV_CONF_DIR/bdev-default.sh
+. $BDEV_CONF_DIR/system-default.sh
+. $BDEV_CONF_DIR/experiment-default.sh
 
 export HOSTFILE_DEFAULT=$EXP_DIR/hostfile
 
@@ -145,19 +145,19 @@ else
 	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
 fi
 
-. $METHOD_CONF_DIR/core-default.sh
+. $BDEV_CONF_DIR/core-default.sh
 . $EXP_DIR/core-conf.sh
 
-. $METHOD_CONF_DIR/hdfs-default.sh
+. $BDEV_CONF_DIR/hdfs-default.sh
 . $EXP_DIR/hdfs-conf.sh
 
-. $METHOD_CONF_DIR/yarn-default.sh
+. $BDEV_CONF_DIR/yarn-default.sh
 . $EXP_DIR/yarn-conf.sh
 
-. $METHOD_CONF_DIR/mapred-default.sh
+. $BDEV_CONF_DIR/mapred-default.sh
 . $EXP_DIR/mapred-conf.sh
 
-. $METHOD_CONF_DIR/solutions-default.sh
+. $BDEV_CONF_DIR/solutions-default.sh
 . $EXP_DIR/solutions-conf.sh
 
 m_echo "Running $METHOD_NAME v$METHOD_VERSION"
