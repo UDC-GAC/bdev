@@ -25,6 +25,7 @@ do
 		export SOLUTIONS=""
 		export SOLUTION=NONE
 		export BENCHMARKS=command
+		export NUM_BENCHMARKS=1
 		set_nosolution
 
 		bash $METHOD_BIN_DIR/run-nosol.sh
@@ -61,10 +62,9 @@ do
 			fi
 
 			if [[ "$NUM_BENCHMARKS" -eq 0 ]]; then
+				m_warn "No benchmark was configured. Running in command mode"
 				export BENCHMARKS=command
 				export NUM_BENCHMARKS=1
-				m_warn "No benchmark was configured. Running in command mode. Benchmarks executions (NUM_EXECUTIOS=$NUM_EXECUTIONS) will be ignored"
-				export NUM_EXECUTIONS=1
 			fi
 
 			bash $METHOD_BIN_DIR/run-sol.sh
