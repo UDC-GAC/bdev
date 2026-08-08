@@ -20,7 +20,7 @@ for CLUSTER_SIZE in $CLUSTER_SIZES
 do
 	set_cluster_size
 
-	if [[ -z "$SOLUTIONS" ]]; then
+	if [[ "$NUM_SOLUTIONS" -eq 0 ]]; then
 		m_warn "No framework was configured. Running in command mode"
 		export SOLUTIONS=""
 		export SOLUTION=NONE
@@ -58,6 +58,13 @@ do
 				m_echo "Current Hadoop version is $CURRENT_HADOOP_VERSION"
 				m_echo "HDFS will be formatted due to differences in Hadoop versions"
 			    fi
+			fi
+
+			if [[ "$NUM_BENCHMARKS" -eq 0 ]]; then
+				export BENCHMARKS=command
+				export NUM_BENCHMARKS=1
+				m_warn "No benchmark was configured. Running in command mode. Benchmarks executions (NUM_EXECUTIOS=$NUM_EXECUTIONS) will be ignored"
+				export NUM_EXECUTIONS=1
 			fi
 
 			bash $METHOD_BIN_DIR/run-sol.sh
