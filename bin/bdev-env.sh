@@ -10,11 +10,11 @@ then
 fi
 
 export METHOD_CONF_DIR=$BDEV_HOME/etc
-export METHOD_BIN_DIR=$BDEV_HOME/bin
+export BDEV_BIN_DIR=$BDEV_HOME/bin
 export METHOD_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 
 # Load bash functions
-. $METHOD_BIN_DIR/functions.sh
+. $BDEV_BIN_DIR/functions.sh
 
 export THIRD_PARTY_DIR=$BDEV_HOME/third-party
 export SOLUTIONS_SRC_DIR=$BDEV_HOME/solutions/src
@@ -31,12 +31,12 @@ export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
 export TEMPLATES_DIR=$BDEV_HOME/solutions/templates
 export DAEMONS_DIR=$BDEV_HOME/solutions/daemons
 export METHOD_EXP_DIR=$BDEV_HOME/experiment
-export INIT_SOL_SCRIPT=$METHOD_BIN_DIR/init-sol.sh
-export GEN_CONFIG_SCRIPT=$METHOD_BIN_DIR/gen-config.sh
-export COPY_DAEMONS_SCRIPT=$METHOD_BIN_DIR/copy-daemons.sh
-export CLEAN_DAEMONS_SCRIPT=$METHOD_BIN_DIR/kill-daemons.sh
-export CLEAN_DATA_SCRIPT=$METHOD_BIN_DIR/delete-nodes-data.sh
-export YARN_KILLALL_SCRIPT=$METHOD_BIN_DIR/yarn-killall.sh
+export INIT_SOL_SCRIPT=$BDEV_BIN_DIR/init-sol.sh
+export GEN_CONFIG_SCRIPT=$BDEV_BIN_DIR/gen-config.sh
+export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
+export CLEAN_DAEMONS_SCRIPT=$BDEV_BIN_DIR/kill-daemons.sh
+export CLEAN_DATA_SCRIPT=$BDEV_BIN_DIR/delete-nodes-data.sh
+export YARN_KILLALL_SCRIPT=$BDEV_BIN_DIR/yarn-killall.sh
 
 if [ -z $EXP_DIR ]
 then
@@ -44,16 +44,16 @@ then
 fi
 
 #ILO
-export ILO_HOME=$METHOD_BIN_DIR/ilo
+export ILO_HOME=$BDEV_BIN_DIR/ilo
 export ILO_SCRIPTS=$THIRD_PARTY_DIR/ilo-5.30.0
 export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
 export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
 
 #PLOT
-export PLOT_HOME=$METHOD_BIN_DIR/plot
+export PLOT_HOME=$BDEV_BIN_DIR/plot
 
 #STAT
-export STAT_HOME=$METHOD_BIN_DIR/stat
+export STAT_HOME=$BDEV_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
 export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.3.1
 export DOOL_COMMAND_NAME=dool
@@ -61,15 +61,15 @@ export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes"
 
 #RAPL
-export RAPL_HOME=$METHOD_BIN_DIR/rapl
+export RAPL_HOME=$BDEV_BIN_DIR/rapl
 export RAPL_PLOT_HOME=$PLOT_HOME/rapl
 
 #OPROFILE
-export OPROFILE_HOME=$METHOD_BIN_DIR/oprofile
+export OPROFILE_HOME=$BDEV_BIN_DIR/oprofile
 export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
 
 #BDWatchdog
-export BDWATCHDOG_HOME=$METHOD_BIN_DIR/bdwatchdog
+export BDWATCHDOG_HOME=$BDEV_BIN_DIR/bdwatchdog
 export BDWATCHDOG_SRC_DIR=$THIRD_PARTY_DIR/BDWatchdog
 export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
