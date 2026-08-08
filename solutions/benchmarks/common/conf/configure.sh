@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export HDFS=hdfs://$MASTERNODE:$FS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
