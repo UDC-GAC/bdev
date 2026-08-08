@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export HDFS=hdfs://$MASTERNODE:$HDFS_PORT
+export HDFS_URI=hdfs://$MASTERNODE:$HDFS_PORT
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
 export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/${TPCX_HS_JAR_NAME}
@@ -59,31 +59,31 @@ else
 	m_err "Unknown examples format $EXAMPLES_DATA_FORMAT"
 fi
 
-export INPUT_WORDCOUNT="${HDFS}/Input/WordCount"
-export INPUT_SORT="${HDFS}/Input/Sort"
-export INPUT_GREP="${HDFS}/Input/Grep"
-export INPUT_TERASORT="${HDFS}/Input/TeraSort"
-export INPUT_TPCX_HS="${HDFS}/Input/TPCx-HS"
-export INPUT_PAGERANK="${HDFS}/Input/PageRank"
-export INPUT_CC="${HDFS}/Input/ConnectedComponents"
-export INPUT_KMEANS="${HDFS}/Input/KMeans"
-export INPUT_BAYES="${HDFS}/Input/Bayes"
-export INPUT_AGGREGATION="${HDFS}/Input/Aggregation"
-export INPUT_JOIN="${HDFS}/Input/Join"
-export INPUT_SCAN="${HDFS}/Input/Scan"
+export INPUT_WORDCOUNT="${HDFS_URI}/Input/WordCount"
+export INPUT_SORT="${HDFS_URI}/Input/Sort"
+export INPUT_GREP="${HDFS_URI}/Input/Grep"
+export INPUT_TERASORT="${HDFS_URI}/Input/TeraSort"
+export INPUT_TPCX_HS="${HDFS_URI}/Input/TPCx-HS"
+export INPUT_PAGERANK="${HDFS_URI}/Input/PageRank"
+export INPUT_CC="${HDFS_URI}/Input/ConnectedComponents"
+export INPUT_KMEANS="${HDFS_URI}/Input/KMeans"
+export INPUT_BAYES="${HDFS_URI}/Input/Bayes"
+export INPUT_AGGREGATION="${HDFS_URI}/Input/Aggregation"
+export INPUT_JOIN="${HDFS_URI}/Input/Join"
+export INPUT_SCAN="${HDFS_URI}/Input/Scan"
 
-export OUTPUT_WORDCOUNT="${HDFS}/Output/WordCount"
-export OUTPUT_SORT="${HDFS}/Output/Sort"
-export OUTPUT_GREP="${HDFS}/Output/Grep"
-export OUTPUT_TERASORT="${HDFS}/Output/TeraSort"
-export OUTPUT_TPCX_HS="${HDFS}/Output/TPCx-HS"
-export OUTPUT_PAGERANK="${HDFS}/Output/PageRank"
-export OUTPUT_CC="${HDFS}/Output/ConnectedComponents"
-export OUTPUT_KMEANS="${HDFS}/Output/KMeans"
-export OUTPUT_BAYES="${HDFS}/Output/Bayes"
-export OUTPUT_AGGREGATION="${HDFS}/Output/Aggregation"
-export OUTPUT_JOIN="${HDFS}/Output/Join"
-export OUTPUT_SCAN="${HDFS}/Output/Scan"
+export OUTPUT_WORDCOUNT="${HDFS_URI}/Output/WordCount"
+export OUTPUT_SORT="${HDFS_URI}/Output/Sort"
+export OUTPUT_GREP="${HDFS_URI}/Output/Grep"
+export OUTPUT_TERASORT="${HDFS_URI}/Output/TeraSort"
+export OUTPUT_TPCX_HS="${HDFS_URI}/Output/TPCx-HS"
+export OUTPUT_PAGERANK="${HDFS_URI}/Output/PageRank"
+export OUTPUT_CC="${HDFS_URI}/Output/ConnectedComponents"
+export OUTPUT_KMEANS="${HDFS_URI}/Output/KMeans"
+export OUTPUT_BAYES="${HDFS_URI}/Output/Bayes"
+export OUTPUT_AGGREGATION="${HDFS_URI}/Output/Aggregation"
+export OUTPUT_JOIN="${HDFS_URI}/Output/Join"
+export OUTPUT_SCAN="${HDFS_URI}/Output/Scan"
 
 export GEN_WORDCOUNT="false"
 export GEN_SORT="false"
