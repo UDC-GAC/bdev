@@ -2,7 +2,6 @@ EPOCH_TAG='"epoch"'
 EPOCH_HEADER='Epoch'
 
 PALETTE_FILE="$STAT_PLOT_HOME/palette.plt"
-export BDEV_HOME=$METHOD_HOME
 export SCRIPT_HEADER='#!/bin/bash
 dir=`dirname $0`
 cd $dir 
