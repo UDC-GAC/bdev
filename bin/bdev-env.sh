@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export METHOD_NAME=BDEv
-export METHOD_VERSION=4.0-dev
+export APP_NAME=BDEv
+export APP_VERSION=4.0-dev
 
 if [ -z $BDEV_HOME ]
 then
@@ -80,7 +80,7 @@ export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 . $BDEV_CONF_DIR/bdev-default.sh
 . $EXP_DIR/bdev-conf.sh
 
-export REPORT_DIR=${OUT_DIR}/report_${METHOD_NAME}_${BDEV_START_DATE}
+export REPORT_DIR=${OUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export PLOT_DIR=$REPORT_DIR/graphs
@@ -160,7 +160,7 @@ fi
 . $BDEV_CONF_DIR/solutions-default.sh
 . $EXP_DIR/solutions-conf.sh
 
-m_echo "Running $METHOD_NAME v$METHOD_VERSION"
+m_echo "Running $APP_NAME v$APP_VERSION"
 
 # Check ssh command
 SSH_CMD=$(which ssh 2> /dev/null)
