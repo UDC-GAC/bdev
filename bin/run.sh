@@ -2,10 +2,10 @@
 
 bin=`dirname "$0"`
 bin=`cd "$bin"; pwd`
-export METHOD_HOME=`cd "$bin"/..; pwd`
+export BDEV_HOME=`cd "$bin"/..; pwd`
 
 # Load BDEv configuration
-. $METHOD_HOME/bin/method-env.sh
+. $BDEV_HOME/bin/bdev-env.sh
 
 m_start_message
 
