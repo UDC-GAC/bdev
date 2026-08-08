@@ -13,7 +13,18 @@ export YARN_EXECUTABLE="$HADOOP_HOME/bin/yarn"
 export HDFS_CMD="$HADOOP_HOME/bin/hdfs dfs"
 export HDFS_CONFIG="$HADOOP_HOME/bin/hdfs --config"
 export YARN_CONFIG="$YARN_EXECUTABLE --config"
-export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
+if [[ -f "$HADOOP_EXECUTABLE" ]]; then
+	if [[ ! -x "$HADOOP_EXECUTABLE" ]]; then
+    		m_exit "Hadoop command is not executable: $HADOOP_EXECUTABLE"
+	fi
+
+	export HADOOP_CLASSPATH=$($HADOOP_EXECUTABLE classpath)
+fi
+if [[ -f "$YARN_EXECUTABLE" ]]; then
+        if [[ ! -x "$YARN_EXECUTABLE" ]]; then
+                m_exit "YARN command is not executable: $YARN_EXECUTABLE"
+        fi
+fi
 export CHMOD="-chmod -R"
 export RMR="-rm -r"
 export MKDIR="-mkdir -p"
