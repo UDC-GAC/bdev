@@ -4,7 +4,7 @@
 set_network_configuration
 
 # Init and load configuration parameters
-. $METHOD_BIN_DIR/conf-params.sh
+. $BDEV_BIN_DIR/conf-params.sh
 
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
@@ -36,7 +36,7 @@ do
 
 	while [ "$i" -le "$NUM_EXECUTIONS" ]
 	do
-		. $METHOD_BIN_DIR/bench-env.sh
+		. $BDEV_BIN_DIR/bench-env.sh
 		# Starting workload
 		m_echo "Running ${BENCHMARK}, logging to ${BENCHMARK_OUTPUT_DIR}"
 
