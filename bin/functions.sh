@@ -999,3 +999,10 @@ function maxmin () {
 
 export -f maxmin
 
+function is_nfs() {
+	[ "$#" -eq 1 ] || return 2
+	findmnt -T "$1" -n -t nfs,nfs4 >/dev/null 2>&1
+}
+
+export -f is_nfs
+
