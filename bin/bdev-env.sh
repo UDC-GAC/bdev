@@ -15,29 +15,38 @@ export BDEV_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
 # Load bash functions
 . $BDEV_BIN_DIR/functions.sh
 
-export THIRD_PARTY_DIR=$BDEV_HOME/third-party
-export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
+m_echo "Running $APP_NAME v$APP_VERSION"
+
+if [ -z $BDEV_EXPERIMENT_DIR ]; then
+	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
+fi
+
+if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
+	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
+fi
 
 if [ -z "$FRAMEWORKS_DIR" ]; then
 	export FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
 fi
 
+if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
+	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
+fi
+
+export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
 export SOLUTIONS_BENCH_DIR=$BDEV_HOME/frameworks/benchmarks
 export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
 export COMMON_BENCH_DIR=$SOLUTIONS_BENCH_DIR/common
 export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
 export TEMPLATES_DIR=$BDEV_HOME/frameworks/templates
 export DAEMONS_DIR=$BDEV_HOME/frameworks/daemons
+export THIRD_PARTY_DIR=$BDEV_HOME/third-party
 export INIT_SOL_SCRIPT=$BDEV_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$BDEV_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
 export CLEAN_DAEMONS_SCRIPT=$BDEV_BIN_DIR/kill-daemons.sh
 export CLEAN_DATA_SCRIPT=$BDEV_BIN_DIR/delete-nodes-data.sh
 export YARN_KILLALL_SCRIPT=$BDEV_BIN_DIR/yarn-killall.sh
-
-if [ -z $BDEV_EXPERIMENT_DIR ]; then
-	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
-fi
 
 #ILO
 export ILO_HOME=$BDEV_BIN_DIR/ilo
@@ -84,27 +93,37 @@ export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
 
-# Check if we are under a SLURM environment
-if [ -n "$SLURM_JOB_ID" ]; then
-        export SLURM_ENV="true"
-fi
-
 if [ ! -d $REPORT_DIR ]; then
-        mkdir -p $REPORT_DIR
+    mkdir -p $REPORT_DIR
 	mkdir -p $REPORT_DIR/etc
 fi
 
 # Copy configuration to REPORT_DIR
 cp -r $BDEV_EXPERIMENT_DIR $REPORT_DIR/etc
-
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 
-# Load main configuration files
+# Load configuration files
 . $BDEV_EXPERIMENT_DIR/system-conf.sh
 . $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
+. $BDEV_EXPERIMENT_DIR/hdfs.sh
+. $BDEV_EXPERIMENT_DIR/yarn.sh
+. $BDEV_EXPERIMENT_DIR/mapreduce.sh
+. $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
 
 export HOSTFILE_DEFAULT=$BDEV_EXPERIMENT_DIR/hostfile
+export CLUSTER_SIZES=`read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst`
+export BENCHMARKS=`read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst`
+export SOLUTIONS=`read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst`
+export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
+export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
+export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
 
+# Check if we are under a SLURM environment
+if [ -n "$SLURM_JOB_ID" ]; then
+        export SLURM_ENV="true"
+fi
+
+# Setup hostfile
 if [ -z $HOSTFILE ]; then
 	if [ "$SLURM_ENV" == "true" ]; then
 		COMPUTE_NODES=`scontrol show hostname $SLURM_JOB_NODELIST`
@@ -113,26 +132,11 @@ if [ -z $HOSTFILE ]; then
 	fi
 fi
 
-export CLUSTER_SIZES=`read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst`
-export BENCHMARKS=`read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst`
-export SOLUTIONS=`read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst`
-export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
-export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
-export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
-
 if [ -z "$LOCAL_DIRS" ]; then
 	export LOCAL_DIRS=${TMP_DIR}
 else
 	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
 fi
-
-# Load remaining configuration files
-. $BDEV_EXPERIMENT_DIR/hdfs.sh
-. $BDEV_EXPERIMENT_DIR/yarn.sh
-. $BDEV_EXPERIMENT_DIR/mapreduce.sh
-. $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
-
-m_echo "Running $APP_NAME v$APP_VERSION"
 
 # Check ssh command
 SSH_CMD=$(which ssh 2> /dev/null)
@@ -149,34 +153,36 @@ export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
 # Check modules environment
 if [ "$ENABLE_MODULES" == "true" ]; then
-        if [ -z $LOAD_JAVA_COMMAND ]; then
-                export LOAD_JAVA_COMMAND="module load ${MODULE_JAVA}"
-        fi
+    if [ -z $LOAD_JAVA_COMMAND ]; then
+    	export LOAD_JAVA_COMMAND="module load ${MODULE_JAVA}"
+    fi
 else
-        if [ -z $LOAD_JAVA_COMMAND ]; then
-                JAVA=$(which java 2> /dev/null)
+    if [ -z $LOAD_JAVA_COMMAND ]; then
+        JAVA=$(which java 2> /dev/null)
 
-                if [ "x$JAVA" == "x" ]; then
-                	m_exit "Missing java command"
-                fi
-
-				if [ ! -f "$JAVA" ]; then
-        			m_exit "Missing java command: $JAVA"
-				elif [ ! -x "$JAVA" ]; then
-        			m_exit "java command is not executable: $JAVA"
-				fi
-
-                export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
-                export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
-				export JPS=$(which jps 2> /dev/null)
-
-                if [ "x$JPS" == "x" ]; then
-                    m_exit "Missing jps command"
-                fi
-				if [ ! -f "$JPS" ]; then
-        			m_exit "Missing jps command: $JPS"
-				fi
+        if [ "x$JAVA" == "x" ]; then
+            m_exit "Missing java command"
         fi
+
+		if [ ! -f "$JAVA" ]; then
+        	m_exit "Missing java command: $JAVA"
+		elif [ ! -x "$JAVA" ]; then
+        	m_exit "java command is not executable: $JAVA"
+		fi
+
+        export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
+        export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
+		export JPS=$(which jps 2> /dev/null)
+
+        if [ "x$JPS" == "x" ]; then
+            m_exit "Missing jps command"
+        fi
+		if [ ! -f "$JPS" ]; then
+        	m_exit "Missing jps command: $JPS"
+		elif [ ! -x "$JAVA" ]; then
+        	m_exit "jps command is not executable: $JPS"
+		fi
+    fi
 fi
 
 # Check expect command
@@ -184,7 +190,12 @@ export EXPECT=$(which expect 2> /dev/null)
 if [ "x$EXPECT" == "x" ]; then
 	m_warn "Missing expect command (required when using timeouts)"
 fi
-
+if [ ! -f "$JPS" ]; then
+    m_exit "Missing expect command: $EXPECT (required when using timeouts)"
+elif [ ! -x "$JAVA" ]; then
+    m_exit "expect command is not executable: $EXPECT (required when using timeouts)"
+fi
+		
 # Define variables for BDWatchdog binary daemons
 if [ $ENABLE_BDWATCHDOG == "true" ]; then
         if [ $BDWATCHDOG_ATOP == "true" ]; then
