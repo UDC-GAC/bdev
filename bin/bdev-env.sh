@@ -70,8 +70,9 @@ export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
 # Load functions
 . $BDEV_BIN_DIR/functions.sh
-# Load BDEv configuration
+# Load BDEv and system configuration files
 . $BDEV_EXPERIMENT_DIR/bdev-conf.sh
+. $BDEV_EXPERIMENT_DIR/system-conf.sh
 
 export REPORT_DIR=${OUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
@@ -101,12 +102,11 @@ fi
 cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 
-# Load configuration files
-. $BDEV_EXPERIMENT_DIR/system-conf.sh
-. $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
+# Load remaining configuration files
 . $BDEV_EXPERIMENT_DIR/hdfs.sh
 . $BDEV_EXPERIMENT_DIR/yarn.sh
 . $BDEV_EXPERIMENT_DIR/mapreduce.sh
+. $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
 . $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
 
 export HOSTFILE_DEFAULT=$BDEV_EXPERIMENT_DIR/hostfile
@@ -129,12 +129,6 @@ if [ -z $HOSTFILE ]; then
 	else
 		HOSTFILE=$HOSTFILE_DEFAULT
 	fi
-fi
-
-if [ -z "$LOCAL_DIRS" ]; then
-	export LOCAL_DIRS=${TMP_DIR}
-else
-	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
 fi
 
 # Check ssh command
