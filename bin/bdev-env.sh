@@ -98,7 +98,7 @@ if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
 fi
 
 # Copy configuration to REPORT_DIR
-cp -r $BDEV_EXPERIMENT_DIR $REPORT_DIR/etc
+cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 
 # Load configuration files
