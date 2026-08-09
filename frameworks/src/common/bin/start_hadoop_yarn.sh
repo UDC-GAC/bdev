@@ -1,14 +1,6 @@
 #!/bin/bash
 
-# Copy YARN scheduler configuration
-for F in "$BDEV_EXPERIMENT_DIR"/yarn/*.xml
-do
-    [ -f "$F" ] || continue
-    cp "$F" "$HADOOP_CONF_DIR" || exit 1
-done
-
-if [[ $HADOOP_SERIES == "3" ]]
-then
+if [[ $HADOOP_SERIES == "3" ]]; then
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_3.sh
 else
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_2.sh
