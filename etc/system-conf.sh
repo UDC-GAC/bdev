@@ -3,7 +3,7 @@
 ## Configuration parameters for the host system characteristics
 
 export TMP_DIR=/tmp/$USER/$APP_NAME	# Directory to store temporary files
-export LOCAL_DIRS="" 		# Comma-separated list of directories to store local data in each node
+export LOCAL_DIRS=$TMP_DIR 	# Comma-separated list of directories to store local data in each node
 export LOOPBACK_IP=127.0.0.1	# IP of the loopback network interface
 export ETH_INTERFACE=eth0 	# Ethernet interface to use in the nodes
 export IPOIB_INTERFACE=ib0 	# IPoIB interface to use in the nodes
