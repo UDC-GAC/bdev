@@ -89,6 +89,7 @@ if [ ! -d $REPORT_DIR ]; then
 fi
 
 m_echo "Running $APP_NAME v$APP_VERSION"
+m_echo "Reporting to $REPORT_DIR"
 
 if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
 	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
@@ -97,6 +98,9 @@ fi
 if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
 	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
 fi
+
+export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
+m_echo "Configuration directory: $BDEV_EXPERIMENT_DIR"
 
 if [ -z "$TMP_DIR" ]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
@@ -112,6 +116,7 @@ fi
 # Copy configuration to REPORT_DIR
 cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
+m_echo "Configuration copied to: $BDEV_EXPERIMENT_DIR"
 
 # Load remaining configuration files
 . $BDEV_EXPERIMENT_DIR/hdfs.sh

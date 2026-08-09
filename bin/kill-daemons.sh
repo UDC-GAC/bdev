@@ -1,6 +1,6 @@
 #!/bin/sh
 
-m_echo "Performing Java process cleanup"
+m_echo "Performing process cleanup"
 
 for SLAVE in $MASTERNODE $SLAVENODES
 do
@@ -9,3 +9,5 @@ do
 		export PYTHON3_BIN=${PYTHON3_BIN};\
 		$BDEV_BIN_DIR/clean-node-daemons.sh"
 done
+
+m_echo "Cleanup finished"

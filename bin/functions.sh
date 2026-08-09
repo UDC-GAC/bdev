@@ -41,7 +41,6 @@ export -f m_exit
 
 function m_start_message()
 {
-	m_echo "Reporting to $REPORT_DIR"
 	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
