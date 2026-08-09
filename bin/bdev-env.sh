@@ -98,6 +98,17 @@ if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
 	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
 fi
 
+if [ -z "$TMP_DIR" ]; then
+	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
+fi
+
+if [ -z "$LOCAL_DIRS" ]; then
+	export LOCAL_DIRS=${TMP_DIR}
+	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
+else
+	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
+fi
+
 # Copy configuration to REPORT_DIR
 cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
