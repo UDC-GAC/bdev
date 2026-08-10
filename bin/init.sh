@@ -1,5 +1,7 @@
 #!/bin/sh
 
+m_start_message
+
 m_echo "Initializing"
 
 # Load nodes and IPs
