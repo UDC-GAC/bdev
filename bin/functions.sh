@@ -47,6 +47,9 @@ function m_start_message()
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "Storage backend: $STORAGE_BACKEND"
+	if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
+		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
+	fi
 	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
