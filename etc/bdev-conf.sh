@@ -2,17 +2,21 @@
 
 ## Configuration parameters for BDEv
 
+export STORAGE_BACKEND=hdfs  # Supported backends: hdfs, nfs
+export NFS_MOUNT_POINT=${NFS_MOUNT_POINT:-""}  #Only required if STORAGE_BACKEND=nfs
+export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostnames for cluster nodes
+export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
+export OUT_DIR=$PWD/${APP_NAME}_OUT	# Default report output directory
+export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 export ENABLE_PLOT=false	# Enable plot generation
+
+# Monitors
 export ENABLE_STAT=false	# Enable built-in resource monitoring using dool
 export ENABLE_ILO=false		# Enable HPE iLO power monitoring
 export ENABLE_RAPL=false	# Enable RAPL power monitoring
 export ENABLE_OPROFILE=false	# Enable Oprofile event counting
 export ENABLE_BDWATCHDOG=false	# Enable resource monitoring through BDWatchdog
-export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostnames for cluster nodes
-export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
-export OUT_DIR=$PWD/${APP_NAME}_OUT	# Default report output directory
 export MONITOR_DELAY_SECONDS=10	# Delay time (seconds) after/before starting/stopping all monitors
-export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 
 # Resource stats
 export STAT_GEN_GRAPHS=false	# Generate graphs during execution
