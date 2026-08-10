@@ -5,7 +5,9 @@ the Big Data Evaluator (BDEv) software package.
 
 BDEv 4.0 - 2026-XX-XX
 ---------------------
-	This is a major release which targets Spark 4.x, Hadoop 3.5 and Flink 1.20 LTS, while removing support for legacy frameworks
+	This is a major release that modernizes the orchestration stack, introducing support for Spark 4.x, Hadoop 3.5, and Flink 1.20 LTS, while removing support for legacy framework versions.
+	A key highlight of this release is the refactoring of the storage layer. BDEv v4.0 allows users to configure NFS as a lightweight storage backend alternative to HDFS for workloads that do not require distributed storage.
+	Future minor releases will build upon this foundation to introduce support for Flink 2.x and additional distributed storage backends, such as Apache Ozone.
 
 	NEW FEATURES
 		- Updated versions of the following frameworks
