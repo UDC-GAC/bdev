@@ -115,6 +115,8 @@ if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
     if ! is_nfs "$NFS_MOUNT_POINT"; then
         m_exit "NFS_MOUNT_POINT is not a directory mounted using NFS: $NFS_MOUNT_POINT"
     fi
+
+	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
 
 if [ -z "$TMP_DIR" ]; then
