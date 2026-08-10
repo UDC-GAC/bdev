@@ -8,7 +8,7 @@ function get_storage_uri_prefix() {
             echo "hdfs://$MASTERNODE:$HDFS_PORT"
             ;;
         nfs)
-            echo "file://${NFS_MOUNT_POINT}"
+            echo "file:${NFS_MOUNT_POINT}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
