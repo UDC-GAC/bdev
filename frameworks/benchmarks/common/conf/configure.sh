@@ -1,18 +1,21 @@
 #!/bin/bash
 
-export HDFS_URI=hdfs://$MASTERNODE:$HDFS_PORT
+export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
+export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
 export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
 export TPCX_HS_JAR=${COMMON_BENCH_DIR}/bin/${TPCX_HS_JAR_NAME}
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TPCX_HS_ROWS_NUMBER=$(( $TPCX_HS_DATASIZE / 100 ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
+
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
 export YARN_EXECUTABLE="$HADOOP_HOME/bin/yarn"
 export HDFS_CMD="$HADOOP_HOME/bin/hdfs dfs"
 export HDFS_CONFIG="$HADOOP_HOME/bin/hdfs --config"
 export YARN_CONFIG="$YARN_EXECUTABLE --config"
+
 if [[ -f "$HADOOP_EXECUTABLE" ]]; then
 	if [[ ! -x "$HADOOP_EXECUTABLE" ]]; then
     		m_exit "Hadoop command is not executable: $HADOOP_EXECUTABLE"
@@ -25,9 +28,11 @@ if [[ -f "$YARN_EXECUTABLE" ]]; then
                 m_exit "YARN command is not executable: $YARN_EXECUTABLE"
         fi
 fi
+
 export CHMOD="-chmod -R"
 export RMR="-rm -r"
 export MKDIR="-mkdir -p"
+
 export CONFIG_REDUCER_NUMBER="mapreduce.job.reduces"
 export CONFIG_MAP_NUMBER="mapreduce.job.maps"
 export CONFIG_RANDOMTEXTWRITER_TOTALBYTES="mapreduce.randomtextwriter.totalbytes"
@@ -38,7 +43,6 @@ export KEY_VALUE_TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.KeyVal
 export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat"
 export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
 export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
-export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
 export MAHOUT_VERSION=$HADOOP_MAHOUT_VERSION
 export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
 export HIVE_VERSION=$HADOOP_HIVE_VERSION
@@ -59,31 +63,31 @@ else
 	m_err "Unknown examples format $EXAMPLES_DATA_FORMAT"
 fi
 
-export INPUT_WORDCOUNT="${HDFS_URI}/Input/WordCount"
-export INPUT_SORT="${HDFS_URI}/Input/Sort"
-export INPUT_GREP="${HDFS_URI}/Input/Grep"
-export INPUT_TERASORT="${HDFS_URI}/Input/TeraSort"
-export INPUT_TPCX_HS="${HDFS_URI}/Input/TPCx-HS"
-export INPUT_PAGERANK="${HDFS_URI}/Input/PageRank"
-export INPUT_CC="${HDFS_URI}/Input/ConnectedComponents"
-export INPUT_KMEANS="${HDFS_URI}/Input/KMeans"
-export INPUT_BAYES="${HDFS_URI}/Input/Bayes"
-export INPUT_AGGREGATION="${HDFS_URI}/Input/Aggregation"
-export INPUT_JOIN="${HDFS_URI}/Input/Join"
-export INPUT_SCAN="${HDFS_URI}/Input/Scan"
+export INPUT_WORDCOUNT="${STORAGE_BACKEND_URI}/Input/WordCount"
+export INPUT_SORT="${STORAGE_BACKEND_URI}/Input/Sort"
+export INPUT_GREP="${STORAGE_BACKEND_URI}/Input/Grep"
+export INPUT_TERASORT="${STORAGE_BACKEND_URI}/Input/TeraSort"
+export INPUT_TPCX_HS="${STORAGE_BACKEND_URI}/Input/TPCx-HS"
+export INPUT_PAGERANK="${STORAGE_BACKEND_URI}/Input/PageRank"
+export INPUT_CC="${STORAGE_BACKEND_URI}/Input/ConnectedComponents"
+export INPUT_KMEANS="${STORAGE_BACKEND_URI}/Input/KMeans"
+export INPUT_BAYES="${STORAGE_BACKEND_URI}/Input/Bayes"
+export INPUT_AGGREGATION="${STORAGE_BACKEND_URI}/Input/Aggregation"
+export INPUT_JOIN="${STORAGE_BACKEND_URI}/Input/Join"
+export INPUT_SCAN="${STORAGE_BACKEND_URI}/Input/Scan"
 
-export OUTPUT_WORDCOUNT="${HDFS_URI}/Output/WordCount"
-export OUTPUT_SORT="${HDFS_URI}/Output/Sort"
-export OUTPUT_GREP="${HDFS_URI}/Output/Grep"
-export OUTPUT_TERASORT="${HDFS_URI}/Output/TeraSort"
-export OUTPUT_TPCX_HS="${HDFS_URI}/Output/TPCx-HS"
-export OUTPUT_PAGERANK="${HDFS_URI}/Output/PageRank"
-export OUTPUT_CC="${HDFS_URI}/Output/ConnectedComponents"
-export OUTPUT_KMEANS="${HDFS_URI}/Output/KMeans"
-export OUTPUT_BAYES="${HDFS_URI}/Output/Bayes"
-export OUTPUT_AGGREGATION="${HDFS_URI}/Output/Aggregation"
-export OUTPUT_JOIN="${HDFS_URI}/Output/Join"
-export OUTPUT_SCAN="${HDFS_URI}/Output/Scan"
+export OUTPUT_WORDCOUNT="${STORAGE_BACKEND_URI}/Output/WordCount"
+export OUTPUT_SORT="${STORAGE_BACKEND_URI}/Output/Sort"
+export OUTPUT_GREP="${STORAGE_BACKEND_URI}/Output/Grep"
+export OUTPUT_TERASORT="${STORAGE_BACKEND_URI}/Output/TeraSort"
+export OUTPUT_TPCX_HS="${STORAGE_BACKEND_URI}/Output/TPCx-HS"
+export OUTPUT_PAGERANK="${STORAGE_BACKEND_URI}/Output/PageRank"
+export OUTPUT_CC="${STORAGE_BACKEND_URI}/Output/ConnectedComponents"
+export OUTPUT_KMEANS="${STORAGE_BACKEND_URI}/Output/KMeans"
+export OUTPUT_BAYES="${STORAGE_BACKEND_URI}/Output/Bayes"
+export OUTPUT_AGGREGATION="${STORAGE_BACKEND_URI}/Output/Aggregation"
+export OUTPUT_JOIN="${STORAGE_BACKEND_URI}/Output/Join"
+export OUTPUT_SCAN="${STORAGE_BACKEND_URI}/Output/Scan"
 
 export GEN_WORDCOUNT="false"
 export GEN_SORT="false"
