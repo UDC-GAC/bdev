@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_WORDCOUNT
+storage_rm -R ${OUTPUT_WORDCOUNT}
 
 run_benchmark "$FLINK_HOME/bin/flink \
 	${DEPLOY_ARGS} \
