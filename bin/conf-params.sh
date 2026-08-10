@@ -37,7 +37,7 @@ add_conf_param "map_memory_mb" $MAP_MEMORY
 add_conf_param "reduce_memory_mb" $REDUCE_MEMORY
 add_conf_param "map_heapsize" $MAP_HEAPSIZE
 add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
-add_conf_param "app__heapsize" $APP_MASTER_HEAPSIZE
+add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
