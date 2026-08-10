@@ -49,6 +49,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Add Spark parameter to configure Kryo registration behavior (frameworks-conf.sh)
 
+		- Add Spark parameter to configure compression codec for Parquet files (frameworks-conf.sh)
+
 		- Fix Spark memory configuration for Driver and AppMaster on YARN
 
 		- Support for starting the Secondary NameNode for HDFS
