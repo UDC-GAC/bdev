@@ -91,16 +91,31 @@ fi
 m_echo "Running $APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
-if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
+if [ ! -d "$BDEV_EXPERIMENT_DIR" ]; then
 	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
 fi
 
-if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
+if [ ! -d "$FRAMEWORKS_DIR" ]; then
 	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
 fi
 
 export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
 m_echo "Configuration directory: $BDEV_EXPERIMENT_DIR"
+
+if [ -z "$STORAGE_BACKEND" ]; then
+	export STORAGE_BACKEND=hdfs
+	m_warn "STORAGE_BACKEND is not defined or is empty. Setting it to \"hdfs\""
+fi
+
+if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
+    if [ ! -d "$NFS_MOUNT_POINT" ]; then
+        m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
+    fi
+    
+    if ! is_nfs "$NFS_MOUNT_POINT"; then
+        m_exit "NFS_MOUNT_POINT is not a directory mounted using NFS: $NFS_MOUNT_POINT"
+    fi
+fi
 
 if [ -z "$TMP_DIR" ]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
