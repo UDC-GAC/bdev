@@ -1,12 +1,15 @@
 #!/bin/bash
 
-#Set network configuration
-set_network_configuration
-
 # Init and load configuration parameters
 . $BDEV_BIN_DIR/conf-params.sh
 
+#Set network configuration
+set_network_configuration
+
+#Configure benchmarks
 . ${COMMON_BENCH_DIR}/conf/configure.sh
+
+#Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
 
 start_solution
@@ -82,4 +85,3 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 fi
 
 end_solution
-
