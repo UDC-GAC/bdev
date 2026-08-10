@@ -5,11 +5,11 @@
   </property>
   <property>
     <name>dfs.blocksize</name>
-    <value>$blocksize</value>
+    <value>$dfs_blocksize</value>
   </property>
   <property>
     <name>dfs.replication</name>
-    <value>$replication_factor</value>
+    <value>$dfs_replication_factor</value>
   </property>
   <property>
     <name>dfs.namenode.name.dir</name>
