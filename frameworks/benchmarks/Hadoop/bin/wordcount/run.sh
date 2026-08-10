@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_WORDCOUNT
+storage_rm -R ${OUTPUT_WORDCOUNT}
 
 run_benchmark "$HADOOP_EXECUTABLE jar $HADOOP_EXAMPLES_JAR wordcount \
     -D $CONFIG_REDUCER_NUMBER=${REDUCERS_NUMBER} \
