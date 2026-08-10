@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_AGGREGATION
+storage_rm -R ${OUTPUT_AGGREGATION}
 
 HIVE_SQL_FILE=${BENCHMARK_OUTPUT_DIR}/uservisits_aggregation.hive
 prepare_sql_aggregation ${HIVE_SQL_FILE}
