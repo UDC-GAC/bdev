@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_GREP
+storage_rm -R ${OUTPUT_GREP}
 
 run_benchmark "$HADOOP_EXECUTABLE jar $HADOOP_EXAMPLES_JAR grep \
 	-D $CONFIG_REDUCER_NUMBER=${REDUCERS_NUMBER} \
