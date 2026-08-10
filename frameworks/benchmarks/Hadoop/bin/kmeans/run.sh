@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_KMEANS
+storage_rm -R ${OUTPUT_KMEANS}
 
 run_benchmark "${MAHOUT_HOME}/bin/mahout kmeans \
 		-i ${INPUT_KMEANS}/samples -c ${INPUT_KMEANS}/cluster \
