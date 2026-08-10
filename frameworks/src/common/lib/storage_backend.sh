@@ -11,7 +11,7 @@ function get_storage_uri_prefix() {
             echo "file://${NFS_MOUNT_POINT}"
             ;;
         *)
-            m_exit "Storage backend not supported: STORAGE_BACKEND"
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
             ;;
     esac
 }
@@ -26,7 +26,7 @@ function storage_mkdir() {
             mkdir -p "${NFS_MOUNT_POINT}/${target_dir}"
             ;;
         *)
-            m_exit "Storage backend not supported: STORAGE_BACKEND"
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
             ;;
     esac
 }
@@ -42,7 +42,35 @@ function storage_copy_from_local() {
             cp "${local_file}" "${NFS_MOUNT_POINT}/${target_dir}"
             ;;
         *)
-            m_exit "Storage backend not supported: STORAGE_BACKEND"
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
+            ;;
+    esac
+}
+
+function storage_dir_exists() {
+    local target_path="$1"
+
+    if [ -z "${target_path}" ]; then
+        m_Exit "storage_dir_exists: Missing path to check"
+        return 2 # Generic error code
+    fi
+
+    case "${STORAGE_BACKEND,,}" in
+        hdfs)
+            # HDFS test will automatically inherit and return the exit code of this command (0 if it exists, 1 if it doesn't).
+            "${HDFS_CMD[@]}" -test -d "${target_path}" 2>/dev/null
+            return $?
+            ;;
+        nfs)
+            # Native POSIX test
+            if [ -d "${NFS_MOUNT_POINT}/${target_path}" ]; then
+                return 0 # It exists
+            else
+                return 1 # It does not exist
+            fi
+            ;;
+        *)
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
             ;;
     esac
 }
@@ -71,19 +99,19 @@ function storage_rm() {
             "${HDFS_CMD[@]}" -rm $recursive -skipTrash "${target_path}" 2>/dev/null
             ;;
         nfs)
-            if [ "${target_path}" == "/" ] || [ "${target_path}" == "${BDEV_NFS_MOUNT_POINT}" ]; then
+            if [ "${target_path}" == "/" ] || [ "${target_path}" == "${NFS_MOUNT_POINT}" ]; then
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
                 exit 1
             fi
             
             if [ -n "$recursive" ]; then
-                rm -rf "${BDEV_NFS_MOUNT_POINT}/${target_path}"
+                rm -rf "${NFS_MOUNT_POINT}/${target_path}"
             else
-                rm -f "${BDEV_NFS_MOUNT_POINT}/${target_path}"
+                rm -f "${NFS_MOUNT_POINT}/${target_path}"
             fi
             ;;
         *)
-            m_exit "Storage backend not supported: STORAGE_BACKEND"
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
             ;;
     esac
 }
@@ -114,13 +142,13 @@ function storage_chmod() {
             ;;
         nfs)
             if [ -n "$recursive" ]; then
-                chmod -R "${mode}" "${BDEV_NFS_MOUNT_POINT}/${target_path}"
+                chmod -R "${mode}" "${NFS_MOUNT_POINT}/${target_path}"
             else
-                chmod "${mode}" "${BDEV_NFS_MOUNT_POINT}/${target_path}"
+                chmod "${mode}" "${NFS_MOUNT_POINT}/${target_path}"
             fi
             ;;
         *)
-            m_exit "Storage backend not supported: STORAGE_BACKEND"
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
             ;;
     esac
 }
