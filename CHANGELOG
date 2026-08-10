@@ -37,7 +37,7 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Support for the Flink 1.20.x line (LTS)
 
-		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
+		- Support for NFS a as a storage backend alternative to HDFS, which can be configured in bdev-conf.sh
 
 		- Flink on YARN relies on the Session Mode instead of the deprecated Per-job Mode
 
@@ -45,19 +45,19 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (frameworks-conf.sh)
 		
-		- Spark AQE is now enabled by default
-
 		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (frameworks-conf.sh)
 
 		- Add Spark parameter to configure Kryo registration behavior (frameworks-conf.sh)
 
 		- Add Spark parameter to configure compression codec for Parquet files (frameworks-conf.sh)
 
+		- Spark AQE is now enabled by default
+
 		- Fix Spark memory configuration for Driver and AppMaster on YARN
 
 		- Support for starting the Secondary NameNode for HDFS
 
-		- Add cleanup for YARN applications
+		- Add cleanup phase for YARN applications
 
 		- HDFS and YARN services are now stopped using the Hadoop scripts
 
@@ -65,9 +65,12 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Update resource monitoring tool to dool v1.3.8
 
+		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
+
 		- Simplified tool configuration and removed experiment directory
 
 		- Several code refactorings, minor changes and bug fixes
+
 
 BDEv 3.9 - 2024-04-11
 ---------------------
