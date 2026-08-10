@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_BAYES
+storage_rm -R ${OUTPUT_BAYES}
 
 run_benchmark "${MAHOUT_HOME}/bin/mahout seq2sparse \
 		-i ${INPUT_BAYES} -o ${OUTPUT_BAYES}/vectors \
