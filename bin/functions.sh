@@ -543,10 +543,10 @@ function begin_report(){
 	REPORT="$REPORT \t Frameworks directory  \t\t\t $FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
-	REPORT="$REPORT \t Storage backend URI  \t\t\t $STORAGE_BACKEND_URI \n"
 	if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
 		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
 	fi
+	REPORT="$REPORT \t Storage backend URI  \t\t\t $STORAGE_BACKEND_URI \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
