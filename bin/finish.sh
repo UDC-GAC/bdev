@@ -9,3 +9,5 @@ if [ $NUM_CLUSTERS -gt 1 ]; then
 fi
 
 . $CLEAN_DATA_SCRIPT
+
+m_stop_message
