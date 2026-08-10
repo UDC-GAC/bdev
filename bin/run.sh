@@ -9,9 +9,6 @@ export BDEV_HOME=`cd "$bin"/..; pwd`
 
 m_start_message
 
-# Load nodes and IPs
-. $BDEV_BIN_DIR/load-nodes.sh
-
 # Init BDEv
 . $BDEV_BIN_DIR/init.sh
 
