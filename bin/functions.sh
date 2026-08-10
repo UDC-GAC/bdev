@@ -42,10 +42,11 @@ export -f m_exit
 function m_start_message()
 {
 	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
+	m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
-	m_echo "Solutions ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
+	m_echo "Storage backend: $STORAGE_BACKEND"
 	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
@@ -540,11 +541,13 @@ function begin_report(){
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
 	REPORT="$REPORT \t Frameworks directory  \t\t\t $FRAMEWORKS_DIR \n"
+	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
+	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
+	REPORT="$REPORT \t Storage backend URI  \t\t\t $STORAGE_BACKEND_URI \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
 	REPORT="$REPORT \t Benchmark executions  \t\t\t $NUM_EXECUTIONS \n"
-	REPORT="$REPORT \t Solutions  \t\t\t\t $SOLUTIONS \n"
 	REPORT="$REPORT \t TestDFSIO num of files \t\t $DFSIO_N_FILES \n"
 	REPORT="$REPORT \t TestDFSIO file size (MB) \t\t $DFSIO_FILE_SIZE \n"
 	REPORT="$REPORT \t WordCount datasize (B) \t\t $WORDCOUNT_DATASIZE \n"
