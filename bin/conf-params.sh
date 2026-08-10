@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# Load storage backend functions
-. $COMMON_SRC_DIR/lib/storage_backend.sh
-export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
-
 #Configuration parameters
 ini_conf_params
 add_conf_param "bdev_home" $BDEV_HOME
