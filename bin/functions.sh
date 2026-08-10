@@ -402,7 +402,6 @@ function set_cluster_size()
 	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
 	m_echo "Cluster size set to $CLUSTER_SIZE"
-	export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
 }
 
 export -f set_cluster_size
@@ -612,8 +611,8 @@ function begin_report(){
 	REPORT="$REPORT \t HDFS NN daemon heapsize (MB)  \t\t $NAMENODE_D_HEAPSIZE \n"
 	REPORT="$REPORT \t HDFS DN daemon heapsize (MB)  \t\t $DATANODE_D_HEAPSIZE \n"
 	REPORT="$REPORT \t HDFS SN daemon heapsize (MB)  \t\t $SECONDARY_NAMENODE_D_HEAPSIZE \n"
-	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $BLOCKSIZE \n"
-	REPORT="$REPORT \t HDFS replication factor  \t\t $REPLICATION_FACTOR \n"
+	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $HDFS_BLOCKSIZE \n"
+	REPORT="$REPORT \t HDFS replication factor  \t\t $HDFS_REPLICATION_FACTOR \n"
 	REPORT="$REPORT \t HDFS format  \t\t\t\t $FORMAT_HDFS \n"
 	REPORT="$REPORT \t HDFS delete data \t\t\t $DELETE_HDFS \n"
 	REPORT="$REPORT \t HDFS NN handlers \t\t\t $NAMENODE_HANDLER_COUNT \n"
