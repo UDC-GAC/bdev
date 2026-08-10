@@ -43,11 +43,10 @@ fi
 m_echo "YARN appID session: $YARN_APP_ID"
 export DEPLOY_ARGS="$DEPLOY_ARGS -Dyarn.application.id=$YARN_APP_ID"
 
-if [ $FLINK_HISTORY_SERVER == "true" ]
-then
-        ${HDFS_CMD} ${MKDIR} ${FLINK_HISTORY_SERVER_DIR}
-        ${HDFS_CMD} ${CHMOD} 777 ${FLINK_HISTORY_SERVER_DIR}
+if [ $FLINK_HISTORY_SERVER == "true" ]; then
+    storage_mkdir ${FLINK_HISTORY_SERVER_DIR}
+	storage_chmod -R 777 ${FLINK_HISTORY_SERVER_DIR}
 
-        #Flink history server
-        $FLINK_HOME/bin/historyserver.sh start
+    #Flink history server
+    $FLINK_HOME/bin/historyserver.sh start
 fi
