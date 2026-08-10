@@ -3,14 +3,12 @@
 ## Configuration parameters for Hadoop HDFS
 
 export HDFS_PORT=8020                   # HDFS port number
-export FORMAT_HDFS=true                 # Format HDFS (only significant when running a single cluster size)
-export DELETE_HDFS=true                 # Delete previous & generated HDFS data (only significant when running a single cluster size)
 export NAMENODE_D_HEAPSIZE=1024		# NameNode daemon heapsize (MB)
 export DATANODE_D_HEAPSIZE=1024		# DataNode daemon heapsize (MB)
 export SECONDARY_NAMENODE_D_HEAPSIZE=$NAMENODE_D_HEAPSIZE	# Secondary NameNode daemon heapsize (MB)
 export SECONDARY_NAMENODE=false		# Start the Secondary NameNode
-export BLOCKSIZE=$((128*1024*1024)) 	# HDFS block size (Bytes)
-export REPLICATION_FACTOR=3		# Number of block replications
+export HDFS_BLOCKSIZE=$((128*1024*1024)) 	# HDFS block size (Bytes)
+export HDFS_REPLICATION_FACTOR=3		# Number of block replications
 export CLIENT_WRITE_PACKET_SIZE=65536	# Packet size for clients to write
 export NAMENODE_HANDLER_COUNT=80	# Number of NameNode RPC server threads: log2(#DataNodes)*20 (eg, 80 threads for 16 DataNodes)
 export DATANODE_HANDLER_COUNT=20	# Number of DataNode RPC server threads
@@ -25,3 +23,5 @@ export NAMENODE_SAFEMODE_TIMEOUT=20000	# NameNode safe mode extension (in millis
 export IO_FILE_BUFFER_SIZE=8192         # The buffer size used in Hadoop sequence files
 export IPC_PING_INTERVAL_MS=90000       # Client will send ping when the interval is passed without receiving bytes
 export IPC_CLIENT_RPC_TIMEOUT_MS=120000 # Timeout on waiting response from server
+export FORMAT_HDFS=true                 # Format HDFS (only significant when running a single cluster size)
+export DELETE_HDFS=true                 # Delete previous & generated HDFS data (only significant when running a single cluster size)
