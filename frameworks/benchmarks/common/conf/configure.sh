@@ -12,7 +12,6 @@ export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 
 export HADOOP_EXECUTABLE="$HADOOP_HOME/bin/hadoop"
 export YARN_EXECUTABLE="$HADOOP_HOME/bin/yarn"
-export HDFS_CMD="$HADOOP_HOME/bin/hdfs dfs"
 export HDFS_CONFIG="$HADOOP_HOME/bin/hdfs --config"
 export YARN_CONFIG="$YARN_EXECUTABLE --config"
 
@@ -28,10 +27,6 @@ if [[ -f "$YARN_EXECUTABLE" ]]; then
                 m_exit "YARN command is not executable: $YARN_EXECUTABLE"
         fi
 fi
-
-export CHMOD="-chmod -R"
-export RMR="-rm -r"
-export MKDIR="-mkdir -p"
 
 export CONFIG_REDUCER_NUMBER="mapreduce.job.reduces"
 export CONFIG_MAP_NUMBER="mapreduce.job.maps"
@@ -129,10 +124,9 @@ do
 
         		wget -q -O $TPCX_HS_JAR $URL/$TPCX_HS_JAR_NAME
 
-        		if [[ $? != 0 ]]
-        		then
-				rm $TPCX_HS_JAR >& /dev/null
-				m_exit "Error when downloading $TPCX_HS_JAR_NAME"
+        		if [[ $? != 0 ]]; then
+					rm $TPCX_HS_JAR >& /dev/null
+					m_exit "Error when downloading $TPCX_HS_JAR_NAME"
         		fi
 		else
 			m_echo "Using $TPCX_HS_JAR"
