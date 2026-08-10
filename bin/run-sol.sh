@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Init and load configuration parameters
-. $BDEV_BIN_DIR/conf-params.sh
+. ${BDEV_BIN_DIR}/conf-params.sh
 
 #Set network configuration
 set_network_configuration
 
 #Read solution environment
-m_echo "Reading environment: $SOLUTION_DIR/etc/env.sh"
-. $SOLUTION_DIR/etc/env.sh
+m_echo "Reading environment: ${SOLUTION_DIR}/etc/env.sh"
+. ${SOLUTION_DIR}/etc/env.sh
 
 #Initiliaze solution
 m_echo "Initiliazing $SOLUTION"
-. $INIT_SOL_SCRIPT
+. ${INIT_SOL_SCRIPT}
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 
 #Start solution
 m_echo "Starting $SOLUTION"
-. $SOLUTION_DIR/bin/start.sh
+. ${SOLUTION_DIR}/bin/start.sh
 
 #Configure benchmarks
 m_echo "Configuring benchmarks"
