@@ -6,9 +6,6 @@
 #Set network configuration
 set_network_configuration
 
-# Load storage backend
-. ${COMMON_SRC_DIR}/lib/storage_backend.sh
-
 #Configure benchmarks
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 
