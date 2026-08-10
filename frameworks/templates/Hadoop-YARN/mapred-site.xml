@@ -3,12 +3,10 @@
     <name>mapreduce.cluster.local.dir</name>
     <value>$mapreduce_local_dir</value>
   </property>
-
   <property>
     <name>mapreduce.jobhistory.address</name>
     <value>$master:10020</value>
   </property>
-
   <property>   
     <name>mapreduce.tasktracker.map.tasks.maximum</name>   
     <value>$mappers_per_node</value>
@@ -33,7 +31,6 @@
     <name>mapreduce.reduce.java.opts</name>
     <value>-Xmx$reduce_heapsizeM</value>
   </property>
-
   <property>
     <name>yarn.app.mapreduce.am.command-opts</name>
     <value>-Xmx$app_master_heapsizeM</value>
@@ -42,7 +39,6 @@
     <name>yarn.app.mapreduce.am.resource.mb</name>
     <value>$app_master_memory_mb</value>
   </property>
-
   <property>
     <name>mapreduce.task.io.sort.factor</name>
     <value>$io_sort_factor</value>
@@ -63,15 +59,16 @@
     <name>mapreduce.reduce.shuffle.parallelcopies</name>   
     <value>$shuffle_parallelcopies</value>  
   </property>
-
   <property>
     <name>mapreduce.framework.name</name>
     <value>yarn</value>
   </property>
-  
   <property>
     <name>mapreduce.tasktracker.dns.interface</name>
     <value>$net_interface</value>
   </property>
-  
+  <property>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>$yarn_app_staging_dir</value>
+  </property>
 </configuration>
