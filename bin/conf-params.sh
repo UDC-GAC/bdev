@@ -22,12 +22,15 @@ fi
 
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
     export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
+	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 else
     export HADOOP_DEFAULT_FS="file:///"
+	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
 fi
 
 add_conf_param "hadoop_default_fs" $HADOOP_DEFAULT_FS
 add_conf_param "hdfs_port" $HDFS_PORT
+add_conf_param "yarn_app_staging_dir" $YARN_APP_STAGING_DIR
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
 add_conf_param "reducers_per_node" $REDUCERS_PER_NODE
 add_conf_param "map_memory_mb" $MAP_MEMORY
