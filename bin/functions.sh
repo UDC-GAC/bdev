@@ -1010,9 +1010,15 @@ function maxmin () {
 export -f maxmin
 
 function is_nfs() {
-	[ "$#" -eq 1 ] || return 2
-	findmnt -T "$1" -n -t nfs,nfs4 >/dev/null 2>&1
+    local target_path="$1"
+
+	if [ -z "$target_path" ]; then
+        return 2
+    fi
+    
+	# findmnt will return 0 if it finds it, and 1 if it doesn't
+    findmnt -T "$target_path" -n -t nfs,nfs4 >/dev/null 2>&1
+    return $?
 }
 
 export -f is_nfs
-
