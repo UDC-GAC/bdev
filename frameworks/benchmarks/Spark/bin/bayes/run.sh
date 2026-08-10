@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_BAYES
+storage_rm -R ${OUTPUT_BAYES}
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.gac.sparkbench.ScalaMLlibSparseNaiveBayes ${DEPLOY_ARGS} $SPARK_BENCH_JAR \
