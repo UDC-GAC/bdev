@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_TPCX_HS
+storage_rm -R ${OUTPUT_TPCX_HS}
 
 run_benchmark "$FLINK_HOME/bin/flink \
 	${DEPLOY_ARGS} \
