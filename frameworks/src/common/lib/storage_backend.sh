@@ -18,6 +18,12 @@ function get_storage_uri_prefix() {
 
 function storage_mkdir() {
     local target_dir=$1
+
+    # Checks
+    if [ -z "${target_dir}" ]; then
+        m_exit "storage_mkdir: Missing arguments. Usage: storage_mkdir <target_dir>"
+    fi
+    
     case "${STORAGE_BACKEND,,}" in
         hdfs)
            "${HDFS_CMD[@]}" -mkdir -p "${target_dir}"
@@ -34,6 +40,12 @@ function storage_mkdir() {
 function storage_copy_from_local() {
     local local_file=$1
     local target_dir=$2
+
+    # Checks
+    if [ -z "${remote_file}" ] || [ -z "${local_dir}" ]; then
+        m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <local_file> <remote_file>"
+    fi
+    
     case "${STORAGE_BACKEND,,}" in
         hdfs)
             "${HDFS_CMD[@]}" -put "${local_file}" "${target_dir}"
@@ -47,12 +59,34 @@ function storage_copy_from_local() {
     esac
 }
 
+function storage_copy_to_local() {
+    local remote_file=$1
+    local local_dir=$2
+
+    # Checks
+    if [ -z "${remote_file}" ] || [ -z "${local_dir}" ]; then
+        m_exit "storage_copy_to_local: Missing arguments. Usage: storage_copy_to_local <remote_file> <local_dir>"
+    fi
+    
+    case "${STORAGE_BACKEND,,}" in
+        hdfs)
+            "${HDFS_CMD[@]}" -get "${remote_file}" "${local_dir}"
+            ;;
+        nfs)
+            # We add -r in case you are downloading an entire directory (HDFS -get does this by default)
+            cp -r "${NFS_MOUNT_POINT}/${remote_file}" "${local_dir}"
+            ;;
+        *)
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
+            ;;
+    esac
+}
+
 function storage_dir_exists() {
     local target_path="$1"
 
     if [ -z "${target_path}" ]; then
-        m_Exit "storage_dir_exists: Missing path to check"
-        return 2 # Generic error code
+        m_exit "storage_dir_exists: Missing path to check"
     fi
 
     case "${STORAGE_BACKEND,,}" in
@@ -87,10 +121,9 @@ function storage_rm() {
         target_path="$1"
     fi
 
-    # Check
+    # Checks
     if [ -z "${target_path}" ]; then
         m_exit "storage_rm: A valid path has not been specified"
-        exit 1
     fi
 
     case "${STORAGE_BACKEND,,}" in
@@ -101,7 +134,6 @@ function storage_rm() {
         nfs)
             if [ "${target_path}" == "/" ] || [ "${target_path}" == "${NFS_MOUNT_POINT}" ]; then
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
-                exit 1
             fi
             
             if [ -n "$recursive" ]; then
@@ -131,9 +163,9 @@ function storage_chmod() {
         target_path="$2"
     fi
 
+    # Checks
     if [ -z "${mode}" ] || [ -z "${target_path}" ]; then
         m_exit "storage_chmod: Missing arguments. Usage: storage_chmod [-R] <mode> <path>"
-        exit 1
     fi
 
     case "${STORAGE_BACKEND,,}" in
