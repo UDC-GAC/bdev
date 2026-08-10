@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_PAGERANK
+storage_rm -R ${OUTPUT_PAGERANK}
 
 run_benchmark "$SPARK_HOME/bin/spark-submit \
 	--class es.udc.gac.sparkbench.ScalaNaivePageRank ${DEPLOY_ARGS} $SPARK_BENCH_JAR \
