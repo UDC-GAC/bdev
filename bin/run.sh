@@ -7,8 +7,6 @@ export BDEV_HOME=`cd "$bin"/..; pwd`
 # Load BDEv configuration
 . $BDEV_HOME/bin/bdev-env.sh
 
-m_start_message
-
 # Init BDEv
 . $BDEV_BIN_DIR/init.sh
 
@@ -71,5 +69,3 @@ done
 
 # Finish BDEv
 . $BDEV_BIN_DIR/finish.sh
-
-m_stop_message
