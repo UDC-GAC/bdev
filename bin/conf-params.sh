@@ -14,14 +14,12 @@ add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 
 #Hadoop
-export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
-
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
     export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 
-	if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
-		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+	if [ $HDFS_REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
+		m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
 		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
 	fi
 else
@@ -41,8 +39,8 @@ add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
 add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
-add_conf_param "blocksize" $BLOCKSIZE
-add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
+add_conf_param "hdfs_blocksize" $HDFS_BLOCKSIZE
+add_conf_param "hdfs_replication_factor" $HDFS_REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "secondary_namenode_d_heapsize" $SECONDARY_NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
