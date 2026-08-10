@@ -105,7 +105,7 @@ add_conf_param "spark_shuffle_compress" $SPARK_SHUFFLE_COMPRESS
 add_conf_param "spark_shuffle_spill_compress" $SPARK_SHUFFLE_SPILL_COMPRESS
 add_conf_param "spark_broadcast_compress" $SPARK_BROADCAST_COMPRESS
 add_conf_param "spark_rdd_compress" $SPARK_RDD_COMPRESS
-add_conf_param "spark_compression_codec" $SPARK_COMPRESSION_CODEC
+add_conf_param "spark_io_compression_codec" $SPARK_IO_COMPRESSION_CODEC
 add_conf_param "spark_serializer" $SPARK_SERIALIZER
 add_conf_param "spark_kryo_unsafe" $SPARK_KRYO_UNSAFE
 add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
@@ -120,6 +120,7 @@ add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
 add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
 add_conf_param "spark_aqe_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
 add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
+add_conf_param "spark_sql_parquet_compression_codec" $SPARK_SQL_PARQUET_COMPRESSION_CODEC
 
 #FLINK
 export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
