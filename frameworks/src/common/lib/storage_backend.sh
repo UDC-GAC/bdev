@@ -30,7 +30,7 @@ function storage_mkdir() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_dir#file://}"
+            local clean_path="${target_dir#file:}"
             mkdir -p "${clean_path}"
             ;;
         *)
@@ -54,8 +54,8 @@ function storage_copy_from_local() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local local_clean_path="${local_file#file://}"
-            local target_clean_path="${target_dir#file://}"
+            local local_clean_path="${local_file#file:}"
+            local target_clean_path="${target_dir#file:}"
             cp -r "${local_clean_path}" "${target_clean_path}"
             ;;
         *)
@@ -79,8 +79,8 @@ function storage_copy_to_local() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local remote_clean_path="${remote_file#file://}"
-            local local_clean_path="${local_dir#file://}"
+            local remote_clean_path="${remote_file#file:}"
+            local local_clean_path="${local_dir#file:}"
             # We add -r in case you are downloading an entire directory (HDFS -get does this by default)
             cp -r "${remote_clean_path}" "${local_clean_path}"
             ;;
@@ -105,7 +105,7 @@ function storage_dir_exists() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file://}"
+            local clean_path="${target_path#file:}"
             
             # Native POSIX test
             if [ -d "${clean_path}" ]; then
@@ -144,7 +144,7 @@ function storage_rm() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file://}"
+            local clean_path="${target_path#file:}"
 
             if [ -z "${clean_path}" ] || [ "${clean_path}" == "/" ] || [ "${clean_path}" == "${NFS_MOUNT_POINT}" ]; then
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
@@ -188,7 +188,7 @@ function storage_chmod() {
             ;;
         nfs)
             # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file://}"
+            local clean_path="${target_path#file:}"
             
             if [ -n "$recursive" ]; then
                 chmod -R "${mode}" "${clean_path}"
