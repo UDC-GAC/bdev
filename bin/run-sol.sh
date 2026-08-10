@@ -25,8 +25,7 @@ m_echo "Configuring benchmarks"
 
 #Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
-if [[ -f ${SOL_BENCH_DIR}/bin/prepare.sh ]]
-then
+if [[ -f ${SOL_BENCH_DIR}/bin/prepare.sh ]]; then
 	. ${SOL_BENCH_DIR}/bin/prepare.sh
 fi
 
