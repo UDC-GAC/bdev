@@ -3,7 +3,7 @@
 function get_storage_uri_prefix() {
     case "${STORAGE_BACKEND,,}" in
         hdfs)
-            echo "hdfs://${master}:${hdfs_port}"
+            echo "hdfs://$MASTERNODE:$HDFS_PORT"
             ;;
         nfs)
             echo "file://${NFS_MOUNT_POINT}"
