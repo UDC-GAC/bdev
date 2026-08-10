@@ -1,6 +1,6 @@
 #!/bin/sh
 
-${HDFS_CMD} ${RMR} $OUTPUT_PAGERANK
+storage_rm -R ${OUTPUT_PAGERANK}
 
 run_benchmark "$FLINK_HOME/bin/flink \
 	${DEPLOY_ARGS} \
