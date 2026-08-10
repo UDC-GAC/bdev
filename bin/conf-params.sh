@@ -39,8 +39,8 @@ add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
 add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
-add_conf_param "hdfs_blocksize" $HDFS_BLOCKSIZE
-add_conf_param "hdfs_replication_factor" $HDFS_REPLICATION_FACTOR
+add_conf_param "dfs_blocksize" $HDFS_BLOCKSIZE
+add_conf_param "dfs_replication_factor" $HDFS_REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "secondary_namenode_d_heapsize" $SECONDARY_NAMENODE_D_HEAPSIZE
 add_conf_param "datanode_d_heapsize" $DATANODE_D_HEAPSIZE
