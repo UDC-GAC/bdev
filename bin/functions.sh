@@ -42,10 +42,11 @@ export -f m_exit
 function m_start_message()
 {
 	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
+	m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
-	m_echo "Solutions ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
+	m_echo "Storage backend: $STORAGE_BACKEND"
 	m_echo "JVM: $LOAD_JAVA_COMMAND"
 }
 
