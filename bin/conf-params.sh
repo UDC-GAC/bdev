@@ -20,13 +20,21 @@ if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
 	export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
 fi
 
+if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
+    export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
+else
+    export HADOOP_DEFAULT_FS="file:///"
+fi
+
+add_conf_param "hadoop_default_fs" $HADOOP_DEFAULT_FS
+add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
 add_conf_param "reducers_per_node" $REDUCERS_PER_NODE
 add_conf_param "map_memory_mb" $MAP_MEMORY
 add_conf_param "reduce_memory_mb" $REDUCE_MEMORY
 add_conf_param "map_heapsize" $MAP_HEAPSIZE
 add_conf_param "reduce_heapsize" $REDUCE_HEAPSIZE
-add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
+add_conf_param "app__heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
@@ -49,7 +57,6 @@ add_conf_param "client_block_write_retries" $CLIENT_BLOCK_WRITE_RETRIES
 CLIENT_BLOCK_LOCATEBLOCK_RETRIES=$(($CLIENT_BLOCK_WRITE_RETRIES * 2))
 add_conf_param "client_block_write_locateblock_retries" $CLIENT_BLOCK_LOCATEBLOCK_RETRIES
 add_conf_param "datanode_socket_write_timeout" $DATANODE_SOCKET_WRITE_TIMEOUT
-add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "io_file_buffer_size" $IO_FILE_BUFFER_SIZE
 add_conf_param "ipc_ping_interval" $IPC_PING_INTERVAL_MS
 add_conf_param "ipc_client_rpc_timeout" $IPC_CLIENT_RPC_TIMEOUT_MS
