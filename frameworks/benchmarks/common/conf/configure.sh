@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Load storage backend functions
+. $COMMON_SRC_DIR/lib/storage_backend.sh
+
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
 export TPCX_HS_JAR_NAME=tpcx-hs-1.0_${SPARK_SCALA_VERSION}.jar
