@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Load storage backend functions
+. $COMMON_SRC_DIR/lib/storage_backend.sh
+export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
+
 #Configuration parameters
 ini_conf_params
 add_conf_param "bdev_home" $BDEV_HOME
@@ -11,6 +15,15 @@ add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
+add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
+
+#Hadoop
+export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
+if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
+	m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+	export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
+fi
+
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
 add_conf_param "reducers_per_node" $REDUCERS_PER_NODE
 add_conf_param "map_memory_mb" $MAP_MEMORY
@@ -21,11 +34,6 @@ add_conf_param "app_master_heapsize" $APP_MASTER_HEAPSIZE
 add_conf_param "app_master_memory_mb" $APP_MASTER_MEMORY
 add_conf_param "mr_jobhistory_d_heapsize" $MR_JOBHISTORY_SERVER_D_HEAPSIZE
 add_conf_param "blocksize" $BLOCKSIZE
-export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
-if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
-	m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
-	export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
-fi
 add_conf_param "replication_factor" $HDFS_REPLICATION_FACTOR
 add_conf_param "namenode_d_heapsize" $NAMENODE_D_HEAPSIZE
 add_conf_param "secondary_namenode_d_heapsize" $SECONDARY_NAMENODE_D_HEAPSIZE
@@ -89,6 +97,9 @@ add_conf_param "rdma_hadoop_dfs_ssd_used" $RDMA_HADOOP_DFS_SSD_USED
 add_conf_param "rdma_hadoop_disk_shuffle_enabled" $RDMA_HADOOP_DISK_SHUFFLE_ENABLED
 
 #SPARK
+export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
+export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
+
 add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
 add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
@@ -112,8 +123,6 @@ add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
 add_conf_param "spark_kryo_registrationRequired" $SPARK_KRYO_REGISTRATION_REQUIRED
 add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
 add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
-export SPARK_LOCAL_DIRS=`echo $SPARK_LOCAL_DIRS | tr "," " "`
-export SPARK_LOCAL_DIRS=`add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local"`
 add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
@@ -126,11 +135,13 @@ add_conf_param "spark_sql_parquet_compression_codec" $SPARK_SQL_PARQUET_COMPRESS
 export FLINK_LOCAL_DIRS=`echo $FLINK_LOCAL_DIRS | tr "," " "`
 export FLINK_LOCAL_DIRS=`add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local"`
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX:-"auto"}
-FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=${FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION:-0.1}
+export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=${FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION:-0.1}
+
 if [ "${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX,,}" = "auto" ]; then
 	AUTO_FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=$(awk "BEGIN { printf \"%d\", $FLINK_TASKMANAGER_MEMORY * $FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION }")
 	export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX="${AUTO_FLINK_TASKMANAGER_MEMORY_NETWORK_MAX}m"
 fi
+
 add_conf_param_list "flink_local_dirs" "$FLINK_LOCAL_DIRS"
 add_conf_param "flink_history_server_dir" $FLINK_HISTORY_SERVER_DIR
 add_conf_param "flink_taskmanager_slots" $FLINK_TASKMANAGER_SLOTS
