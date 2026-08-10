@@ -29,7 +29,9 @@ function storage_mkdir() {
            "${HDFS_CMD[@]}" -mkdir -p "${target_dir}"
             ;;
         nfs)
-            mkdir -p "${target_dir}"
+            # Remove 'file://' prefix if it exists in the input variable
+            local clean_path="${target_dir#file://}"
+            mkdir -p "${clean_path}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -42,8 +44,8 @@ function storage_copy_from_local() {
     local target_dir=$2
 
     # Checks
-    if [ -z "${remote_file}" ] || [ -z "${local_dir}" ]; then
-        m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <local_file> <remote_file>"
+    if [ -z "${local_file}" ] || [ -z "${target_dir}" ]; then
+        m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <local_file> <target_dir>"
     fi
     
     case "${STORAGE_BACKEND,,}" in
@@ -51,7 +53,10 @@ function storage_copy_from_local() {
             "${HDFS_CMD[@]}" -put "${local_file}" "${target_dir}"
             ;;
         nfs)
-            cp "${local_file}" "${target_dir}"
+            # Remove 'file://' prefix if it exists in the input variable
+            local local_clean_path="${local_file#file://}"
+            local target_clean_path="${target_dir#file://}"
+            cp -r "${local_clean_path}" "${target_clean_path}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -73,8 +78,11 @@ function storage_copy_to_local() {
             "${HDFS_CMD[@]}" -get "${remote_file}" "${local_dir}"
             ;;
         nfs)
+            # Remove 'file://' prefix if it exists in the input variable
+            local remote_clean_path="${remote_file#file://}"
+            local local_clean_path="${local_dir#file://}"
             # We add -r in case you are downloading an entire directory (HDFS -get does this by default)
-            cp -r "${remote_file}" "${local_dir}"
+            cp -r "${remote_clean_path}" "${local_clean_path}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -96,8 +104,11 @@ function storage_dir_exists() {
             return $?
             ;;
         nfs)
+            # Remove 'file://' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            
             # Native POSIX test
-            if [ -d "${target_path}" ]; then
+            if [ -d "${clean_path}" ]; then
                 return 0 # It exists
             else
                 return 1 # It does not exist
@@ -132,14 +143,17 @@ function storage_rm() {
             "${HDFS_CMD[@]}" -rm $recursive -skipTrash "${target_path}" 2>/dev/null
             ;;
         nfs)
-            if [ "${target_path}" == "/" ] || [ "${target_path}" == "${NFS_MOUNT_POINT}" ]; then
+            # Remove 'file://' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+
+            if [ -z "${clean_path}" ] || [ "${clean_path}" == "/" ] || [ "${clean_path}" == "${NFS_MOUNT_POINT}" ]; then
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
             fi
             
             if [ -n "$recursive" ]; then
-                rm -rf "${target_path}"
+                rm -rf "${clean_path}"
             else
-                rm -f "${target_path}"
+                rm -f "${clean_path}"
             fi
             ;;
         *)
@@ -173,10 +187,13 @@ function storage_chmod() {
             "${HDFS_CMD[@]}" -chmod $recursive "${mode}" "${target_path}"
             ;;
         nfs)
+            # Remove 'file://' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            
             if [ -n "$recursive" ]; then
-                chmod -R "${mode}" "${target_path}"
+                chmod -R "${mode}" "${clean_path}"
             else
-                chmod "${mode}" "${target_path}"
+                chmod "${mode}" "${clean_path}"
             fi
             ;;
         *)
