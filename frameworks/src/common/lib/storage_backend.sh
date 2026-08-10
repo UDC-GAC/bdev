@@ -29,7 +29,7 @@ function storage_mkdir() {
            "${HDFS_CMD[@]}" -mkdir -p "${target_dir}"
             ;;
         nfs)
-            mkdir -p "${NFS_MOUNT_POINT}/${target_dir}"
+            mkdir -p "${target_dir}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -51,7 +51,7 @@ function storage_copy_from_local() {
             "${HDFS_CMD[@]}" -put "${local_file}" "${target_dir}"
             ;;
         nfs)
-            cp "${local_file}" "${NFS_MOUNT_POINT}/${target_dir}"
+            cp "${local_file}" "${target_dir}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -74,7 +74,7 @@ function storage_copy_to_local() {
             ;;
         nfs)
             # We add -r in case you are downloading an entire directory (HDFS -get does this by default)
-            cp -r "${NFS_MOUNT_POINT}/${remote_file}" "${local_dir}"
+            cp -r "${remote_file}" "${local_dir}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -97,7 +97,7 @@ function storage_dir_exists() {
             ;;
         nfs)
             # Native POSIX test
-            if [ -d "${NFS_MOUNT_POINT}/${target_path}" ]; then
+            if [ -d "${target_path}" ]; then
                 return 0 # It exists
             else
                 return 1 # It does not exist
@@ -137,9 +137,9 @@ function storage_rm() {
             fi
             
             if [ -n "$recursive" ]; then
-                rm -rf "${NFS_MOUNT_POINT}/${target_path}"
+                rm -rf "${target_path}"
             else
-                rm -f "${NFS_MOUNT_POINT}/${target_path}"
+                rm -f "${target_path}"
             fi
             ;;
         *)
@@ -174,9 +174,9 @@ function storage_chmod() {
             ;;
         nfs)
             if [ -n "$recursive" ]; then
-                chmod -R "${mode}" "${NFS_MOUNT_POINT}/${target_path}"
+                chmod -R "${mode}" "${target_path}"
             else
-                chmod "${mode}" "${NFS_MOUNT_POINT}/${target_path}"
+                chmod "${mode}" "${target_path}"
             fi
             ;;
         *)
