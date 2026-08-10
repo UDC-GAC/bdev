@@ -15,14 +15,15 @@ add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 
 #Hadoop
 export HDFS_REPLICATION_FACTOR=$REPLICATION_FACTOR
-if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
-	m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
-	export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
-fi
 
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
     export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
+
+	if [ $REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
+		m_warn "HDFS replication factor changed from $REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
+	fi
 else
     export HADOOP_DEFAULT_FS="file:///"
 	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
