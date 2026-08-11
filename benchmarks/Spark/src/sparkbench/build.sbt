@@ -1,10 +1,10 @@
 name := "sparkbench"
 version := "3.2"
+//val sparkVersion = "2.4.0"
+//val sparkVersion = "3.0.0"
 val sparkVersion = "3.2.0"
-//scalaVersion := "2.12.16"
-//crossScalaVersions := Seq("2.10.7", "2.11.12")
-//crossScalaVersions := Seq("2.11.12", "2.12.16")
-crossScalaVersions := Seq("2.12.16", "2.13.8")
+//crossScalaVersions := Seq("2.11.12", "2.12.21")
+crossScalaVersions := Seq("2.12.21", "2.13.18")
 
 libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
