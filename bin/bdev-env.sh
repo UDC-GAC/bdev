@@ -21,10 +21,10 @@ if [ -z "$FRAMEWORKS_DIR" ]; then
 fi
 
 export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
-export SOLUTIONS_BENCH_DIR=$BDEV_HOME/frameworks/benchmarks
-export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
-export COMMON_BENCH_DIR=$SOLUTIONS_BENCH_DIR/common
+export BENCHMARKS_DIR=$BDEV_HOME/benchmarks
+export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
 export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
+export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
 export TEMPLATES_DIR=$BDEV_HOME/frameworks/templates
 export DAEMONS_DIR=$BDEV_HOME/frameworks/daemons
 export THIRD_PARTY_DIR=$BDEV_HOME/third-party
