@@ -120,7 +120,7 @@ object ScalaMLlibSparseNaiveBayes {
     println(s"Test accuracy = $accuracy.")
 
     // Save model
-    model.save_rdd(sc, params.output)
+    model.save(sc, params.output)
 
     sc.stop()
   }
