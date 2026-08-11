@@ -126,7 +126,7 @@ object ScalaNaiveDenseKMeans {
     val clusteredPoints =
       samples.map(p => selectNearestCenter(p, broadcasted_centroids))
 
-    io.save_rdd(params.output, clusteredPoints, "Text")
+    io.save_rdd(params.output, clusteredPoints, sc, "Text")
     sc.stop()
   }
 
