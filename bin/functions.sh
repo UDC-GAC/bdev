@@ -634,6 +634,7 @@ function begin_report(){
 	REPORT="$REPORT \t MapReduce io.sort.spill.percent  \t $IO_SORT_SPILL_PERCENT \n"
 	REPORT="$REPORT \t MapReduce shuffle.parallelcopies \t $SHUFFLE_PARALLELCOPIES \n"
 	REPORT="$REPORT \t MapReduce reduce.start.completedmaps \t $REDUCE_SLOW_START_COMPLETED_MAPS \n"
+	REPORT="$REPORT \t Spark API  \t\t\t\t $SPARK_API \n"
 	REPORT="$REPORT \t Spark driver cores   \t\t\t $SPARK_DRIVER_CORES \n"
 	REPORT="$REPORT \t Spark driver memory (MB)   \t\t $SPARK_DRIVER_MEMORY \n"
 	REPORT="$REPORT \t Spark driver heapsize (MB)   \t\t $SPARK_DRIVER_HEAPSIZE \n"
