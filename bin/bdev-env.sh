@@ -119,14 +119,6 @@ if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
 
-case "$SPARK_API" in
-    rdd|dataset)
-        ;;
-    *)
-        m_exit "SPARK_API must be 'rdd' or 'dataset'"
-        ;;
-esac
-
 if [ -z "$TMP_DIR" ]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
 fi
@@ -149,6 +141,14 @@ m_echo "Configuration copied to: $BDEV_EXPERIMENT_DIR"
 . $BDEV_EXPERIMENT_DIR/mapreduce.sh
 . $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
 . $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
+
+case "$SPARK_API" in
+    rdd|dataset)
+        ;;
+    *)
+        m_exit "SPARK_API must be 'rdd' or 'dataset'"
+        ;;
+esac
 
 export HOSTFILE_DEFAULT=$BDEV_EXPERIMENT_DIR/hostfile
 export CLUSTER_SIZES=`read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst`
