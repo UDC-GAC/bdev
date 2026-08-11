@@ -3,9 +3,9 @@
 ###########################################################################
 ##
 ## Simplified PERL version of HPQLOCFG
-## Version 5.30
+## Version 6.00
 ##
-## Copyright 2003,2020 Hewlett Packard Enterprise Development LP
+## Copyright 2003,2021 Hewlett Packard Enterprise Development LP
 ##
 ## To use this program, you may need to install the following PERL modules
 ##       Net::SSLeay
@@ -41,7 +41,7 @@ $Net::SSLeay::slowly = 5; # Add sleep so broken servers can keep up
 ###########################################################################
 
 
-use constant VERSION => "5.30";     #program version, sent with HTTP headers
+use constant VERSION => "6.00";     #program version, sent with HTTP headers
 use constant RETRY_TIMEOUT => 20;   #retry up to 20s if RIBCL parse is busy
 use constant RETRY_DELAY => 2;      #delay 2s between the retries
 
@@ -85,7 +85,8 @@ my $r = GetOptions("server|s=s" => \$server,
                    "ilo2" => \$ilo2,
                    "ilo3" => \$ilo3,
                    "ilo4" => \$ilo3,
-                   "ilo5" => \$ilo3
+                   "ilo5" => \$ilo3,
+				   "ilo6" => \$ilo3
                    );
 
 #print "GetOptions returns = $r\n";
@@ -235,7 +236,7 @@ my $localhost = hostname() || 'localhost';
 print "\n----- Localhost name is \"$localhost\".\n" if ($verbose);
 
 #--------------------------------------------------------------------------
-# Detect iLO version (iLO2 or iLO3 (iLO4 and iLO5 is same as iLO3)) if not specified
+# Detect iLO version (iLO2 or iLO3 (iLO4,iLO5 and iLO6 is same as iLO3)) if not specified
 #--------------------------------------------------------------------------
 
 if (!$ilo2 && !$ilo3) {
@@ -269,7 +270,7 @@ if (!$ilo2 && !$ilo3) {
     print $socket "<RIBCL VERSION=\"2.0\"></RIBCL>\r\n"; # Used by Content-length
     $ln=<$socket>;    # Read first line of response
     if ($ln =~ m/HTTP.1.1 200 OK/) {
-        print "\n----- Found iLO3 or iLO4 or iLO5\n" if ($verbose);
+        print "\n----- Found iLO3 or iLO4 or iLO5 or iLO6\n" if ($verbose);
         $ilo3 = 1;                                  # It is iLO 3
     }
     else {
@@ -385,10 +386,10 @@ if ($ilo2) {
 }#end of iLO 2
 
 #--------------------------------------------------------------------------
-# iLO3/iLO4/iLO5
+# iLO3/iLO4/iLO5/iLO6
 #--------------------------------------------------------------------------
 
-print "\n----- Connected to iLO3/iLO4/iLO5\n\n" if ($verbose);
+print "\n----- Connected to iLO3/iLO4/iLO5/iLO6\n\n" if ($verbose);
 
 my $updateribfwcmd = 0;
 my $boundary;
@@ -577,7 +578,7 @@ sub usage
     print "    -i                 entering username and password interactively\n";
     print "    -u username        username\n";
     print "    -p password        password\n";
-    print "    -ilo3|-ilo4|-ilo5  target is iLO 3, iLO 4 or iLO 5\n";
+    print "    -ilo4|-ilo5|-ilo6  target is iLO 4, iLO 5 or iLO 6\n";
     print "\n  Note: Use -u and -p with caution as command line options are\n";
     print "        visible on Linux. The '-i' option is for entering the\n";
     print "        username and password interactively.\n";
@@ -596,7 +597,7 @@ sub usage_err
 sub usage_err1
 {
     print "Note:\n";
-    print "  -ilo3, -ilo4 and ilo5 can not be specified at same time.\n";
+    print "  -ilo4, -ilo5 and ilo6 can not be specified at same time.\n";
     exit 1;
 }
 
