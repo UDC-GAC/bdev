@@ -38,6 +38,6 @@ object ScalaSort {
       .sortWithinPartitions("value");
 
     io.save_dataset(save_file, sorted, session, format)
-    //sc.stop()
+    session.stop()
   }
 }
