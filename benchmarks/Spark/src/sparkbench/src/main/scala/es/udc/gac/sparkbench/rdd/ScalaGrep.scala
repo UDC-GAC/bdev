@@ -34,7 +34,7 @@ object ScalaGrep {
                  .map{ case (y,n) => (n,y)}
                  .sortByKey(numPartitions = 1)
 
-    io.save_rdd[Int,String](save_file, sorted, format)
+    io.save_rdd[Int,String](save_file, sorted, sc, format)
     sc.stop()
   }
 }
