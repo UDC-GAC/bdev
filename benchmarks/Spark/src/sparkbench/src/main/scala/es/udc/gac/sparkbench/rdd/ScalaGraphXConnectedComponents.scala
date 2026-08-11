@@ -39,7 +39,7 @@ object ScalaGraphXConnectedComponents {
     // Run ConnectedComponents until convergence or maxIterations (Spark >= 2.x)
     val vertices: RDD[(VertexId, VertexId)] = ConnectedComponents.run(graph, maxIterations).vertices
 
-    io.save_rdd[VertexId, VertexId](save_file, vertices, "Text")
+    io.save_rdd[VertexId, VertexId](save_file, vertices, sc, "Text")
     sc.stop()
   }
 }
