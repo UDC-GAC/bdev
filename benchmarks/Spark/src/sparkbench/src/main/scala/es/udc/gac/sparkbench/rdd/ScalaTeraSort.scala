@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.hadoop.examples.terasort.{TeraInputFormat,TeraOutputFormat}
 import org.apache.hadoop.io.Text
@@ -36,6 +36,6 @@ object ScalaTeraSort {
     val sorted_data = data.repartitionAndSortWithinPartitions(partitioner = partitioner).map{case (k, v)=>(new Text(k), new Text(v))}
 
     sorted_data.saveAsNewAPIHadoopFile[TeraOutputFormat](save_file)
-    //sc.stop()
+    sc.stop()
   }
 }
