@@ -53,5 +53,7 @@ object ScalaTeraSort {
       rdd.
       map{ case (a: Array[Byte], b: Array[Byte]) => (new Text(a), new Text(b))}.
       saveAsNewAPIHadoopFile[TeraOutputFormat](save_file)
+
+    session.stop()
   }
 }
