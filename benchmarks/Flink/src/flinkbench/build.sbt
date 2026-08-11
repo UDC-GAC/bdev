@@ -1,7 +1,7 @@
 name := "flinkbench"
-version := "1.12"
-val flinkVersion = "1.12.0"
-crossScalaVersions := Seq("2.11.12", "2.12.16")
+version := "1.15"
+val flinkVersion = "1.15.0"
+crossScalaVersions := Seq("2.11.12", "2.12.21")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
