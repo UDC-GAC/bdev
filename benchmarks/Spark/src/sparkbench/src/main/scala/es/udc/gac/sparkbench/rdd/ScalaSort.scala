@@ -29,7 +29,7 @@ object ScalaSort {
     val partitioner = new HashPartitioner(parallel)
     val sorted = data.repartitionAndSortWithinPartitions(partitioner = partitioner)
 
-    io.save_rdd[String, String](save_file, sorted, format)
+    io.save_rdd[String, String](save_file, sorted, sc, format)
     sc.stop()
   }
 }
