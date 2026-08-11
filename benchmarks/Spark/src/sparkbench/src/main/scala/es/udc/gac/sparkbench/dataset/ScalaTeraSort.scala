@@ -2,6 +2,7 @@ package es.udc.gac.sparkbench.dataset
 
 import org.apache.hadoop.examples.terasort.{TeraInputFormat,TeraOutputFormat}
 import org.apache.hadoop.io.Text
+import org.apache.hadoop.io.BytesWritable
 import org.apache.spark._
 import org.apache.spark.rdd._
 import org.apache.spark.SparkContext._
