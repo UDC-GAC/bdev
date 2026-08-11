@@ -31,7 +31,7 @@ object ScalaWordCount {
     val words_map = words.map(word => (word, 1))
     val result = words_map.reduceByKey(_ + _)
 
-    io.save_rdd[String,Int](save_file, result, format)
+    io.save_rdd[String,Int](save_file, result, sc, format)
     sc.stop()
   }
 }
