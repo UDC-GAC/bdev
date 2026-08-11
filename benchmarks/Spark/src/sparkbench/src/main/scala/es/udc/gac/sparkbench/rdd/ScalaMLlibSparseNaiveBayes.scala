@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -9,6 +9,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.mllib.classification.NaiveBayes
 import org.apache.hadoop.io.Text
 import org.apache.spark.SparkContext._
+import es.udc.gac.sparkbench.IOCommon
 
 /*
  * Adapted from spark's examples
@@ -60,8 +61,8 @@ object ScalaMLlibSparseNaiveBayes {
       if (params.minPartitions > 0) params.minPartitions else sc.defaultMinPartitions
 
     // Load data
-    val io = new IOCommon(sc)
-    val data = io.load(params.input, "Sequence")
+    val io = new IOCommon()
+    val data = io.load_rdd(params.input, "Sequence")
 
     // Generate vectors according to input documents
     val wordCount = data
@@ -119,8 +120,8 @@ object ScalaMLlibSparseNaiveBayes {
     println(s"Test accuracy = $accuracy.")
 
     // Save model
-    model.save(sc, params.output)
+    model.save_rdd(sc, params.output)
 
-    //sc.stop()
+    sc.stop()
   }
 }
