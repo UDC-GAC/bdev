@@ -62,7 +62,7 @@ object ScalaMLlibSparseNaiveBayes {
 
     // Load data
     val io = new IOCommon()
-    val data = io.load_rdd(params.input, "Sequence")
+    val data = io.load_rdd(params.input, sc, "Sequence")
 
     // Generate vectors according to input documents
     val wordCount = data
