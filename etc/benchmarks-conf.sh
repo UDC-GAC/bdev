@@ -4,6 +4,7 @@
 
 export NUM_EXECUTIONS=1	# Number of times each benchmark is executed
 export EXAMPLES_DATA_FORMAT="Sequence"	# Format used for WordCount, Sort and Grep. Values = [ Text | KeyValueText | Sequence ]
+export SPARK_API="rdd"  # Spark API ("rdd" or "dataset") used for those benchmarks that support both
 export BENCHMARK_WAIT_SECONDS=10	# Waiting time (seconds) before each execution of each workload
 export BENCHMARK_SETUP="" # Command to run before each execution of each workload
 export BENCHMARK_CLEANUP="" # Command to run after each execution of each workload
