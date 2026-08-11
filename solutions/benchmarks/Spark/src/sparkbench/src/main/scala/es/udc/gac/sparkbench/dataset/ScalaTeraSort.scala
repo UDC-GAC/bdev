@@ -13,9 +13,11 @@ import es.udc.gac.sparkbench.IOCommon
 
 object ScalaTeraSort {
 
-
-  implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.by((_: Array[Byte]).toIterable)
-
+  //implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.by((_: Array[Byte]).toIterable)
+  
+  implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.fromLessThan {
+    case (a, b) => (new BytesWritable(a).compareTo(new BytesWritable(b))) < 0
+  }
 
   def main(args: Array[String]) {
     
