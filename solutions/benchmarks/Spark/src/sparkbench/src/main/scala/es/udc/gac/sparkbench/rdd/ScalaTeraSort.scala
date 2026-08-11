@@ -12,11 +12,10 @@ import Ordering.Implicits._
 object ScalaTeraSort {
 
   //implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.fromLessThan{case (a, b)=> a.compareTo(b)<0}
-
-  implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.by((_: Array[Byte]).toIterable)
-  //implicit val ArrayByteOrdering = new Ordering[Array[Byte]] {
-  //  override def compare(a: Array[Byte], b: Array[Byte]) = a.compareTo(b)
-  //}
+  
+  implicit def ArrayByteOrdering: Ordering[Array[Byte]] = Ordering.fromLessThan {
+    case (a, b) => (new BytesWritable(a).compareTo(new BytesWritable(b))) < 0
+  }
 
   def main(args: Array[String]) {
     
