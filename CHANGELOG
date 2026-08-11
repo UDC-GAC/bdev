@@ -45,7 +45,7 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (frameworks-conf.sh)
 
-		- Add Spark implementation using Dataset API for some benchmarks
+		- Add Spark implementations using the Dataset API for some benchmarks
 
 		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (frameworks-conf.sh)
 
