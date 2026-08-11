@@ -1,5 +1,5 @@
 #!/bin/sh
-export SOL_BENCH_DIR=$SOLUTIONS_BENCH_DIR/Hadoop
+export SOL_BENCH_DIR=$BENCHMARKS_DIR/Hadoop
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs
