@@ -40,6 +40,6 @@ object ScalaGrep {
       .map{ case (line: String, count: BigInt) => (count.toString(),line)}
 
     io.save_dataset(save_file, sorted, session, format)
-    sc.stop()
+    session.stop()
   }
 }
