@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
 import org.apache.hadoop.io.LongWritable
 import org.apache.log4j.{ Level, Logger }
@@ -12,6 +12,7 @@ import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark.broadcast.Broadcast
 import scopt.OptionParser
 import org.apache.spark.SparkContext._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaNaiveDenseKMeans {
 
@@ -56,7 +57,7 @@ object ScalaNaiveDenseKMeans {
   def run(params: Params) {
     val conf = new SparkConf().setAppName("SparkBench ScalaNaiveDenseKMeans")
     val sc = new SparkContext(conf)
-    val io = new IOCommon(sc)
+    val io = new IOCommon()
 
     val data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
     val centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
@@ -125,8 +126,8 @@ object ScalaNaiveDenseKMeans {
     val clusteredPoints =
       samples.map(p => selectNearestCenter(p, broadcasted_centroids))
 
-    io.save(params.output, clusteredPoints, "Text")
-    //sc.stop()
+    io.save_rdd(params.output, clusteredPoints, "Text")
+    sc.stop()
   }
 
   def selectNearestCenter(p: Point, centroids: Broadcast[Array[Centroid]]): (Int, Point) = {
