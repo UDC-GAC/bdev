@@ -95,7 +95,7 @@ object ScalaMLlibDenseKMeans {
 
     val result = samples.map(p => (model.predict(p), p))
 
-    io.save_rdd(params.output, result, "Text")
+    io.save_rdd(params.output, result, sc, "Text")
     sc.stop()
   }
 }
