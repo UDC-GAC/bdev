@@ -1,8 +1,9 @@
-package es.udc.gac.sparkbench
+package es.udc.gac.sparkbench.rdd
 
-import org.apache.spark.{ SparkConf, SparkContext }
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark._
 import org.apache.spark.rdd._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaSort {
 
@@ -23,12 +24,12 @@ object ScalaSort {
       format = args(2)
 
     val parallel = sc.getConf.getInt("spark.default.parallelism", sc.defaultParallelism)
-    val io = new IOCommon(sc)
-    val data = io.load(filename, format)
+    val io = new IOCommon()
+    val data = io.load_rdd(filename, format)
     val partitioner = new HashPartitioner(parallel)
     val sorted = data.repartitionAndSortWithinPartitions(partitioner = partitioner)
 
-    io.save[String, String](save_file, sorted, format)
-    //sc.stop()
+    io.save_rdd[String, String](save_file, sorted, format)
+    sc.stop()
   }
 }
