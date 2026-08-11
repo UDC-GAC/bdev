@@ -107,7 +107,6 @@ object ScalaMLlibDenseKMeans {
 
 
     result.write.text(params.output)
-
-    //sc.stop()
+    session.stop()
   }
 }
