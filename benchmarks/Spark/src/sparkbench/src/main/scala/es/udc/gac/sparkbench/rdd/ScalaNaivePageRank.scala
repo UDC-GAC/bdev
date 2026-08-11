@@ -30,7 +30,7 @@ object ScalaNaivePageRank {
     val initial_rank = 1.0 / number_nodes
 
     val io = new IOCommon()
-    val data = io.load_rdd(filename, "KeyValueText")
+    val data = io.load_rdd(filename, sc, "KeyValueText")
 
     val links = data.distinct().groupByKey().cache()
     var ranks = links.mapValues(v => initial_rank)
