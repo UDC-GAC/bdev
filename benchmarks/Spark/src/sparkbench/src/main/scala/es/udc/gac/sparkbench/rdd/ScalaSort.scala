@@ -25,7 +25,7 @@ object ScalaSort {
 
     val parallel = sc.getConf.getInt("spark.default.parallelism", sc.defaultParallelism)
     val io = new IOCommon()
-    val data = io.load_rdd(filename, format)
+    val data = io.load_rdd(filename, sc, format)
     val partitioner = new HashPartitioner(parallel)
     val sorted = data.repartitionAndSortWithinPartitions(partitioner = partitioner)
 
