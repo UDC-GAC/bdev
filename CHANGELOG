@@ -65,6 +65,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Update resource monitoring tool to dool v1.3.8
 
+		- Update iLO scripts to version 6.00
+
 		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
 
 		- Simplified tool configuration and removed experiment directory
