@@ -34,6 +34,6 @@ object ScalaWordCount {
     //val result = words_grouped.map( { case (word: String, count: BigInt) => word + "\t" + count.toString() } )
 
     io.save_dataset(save_file, words_grouped, session, format)
-    //sc.stop()
+    session.stop()
   }
 }
