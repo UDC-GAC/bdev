@@ -119,6 +119,14 @@ if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
 
+case "$SPARK_API" in
+    rdd|dataset)
+        ;;
+    *)
+        m_exit "SPARK_API must be 'rdd' or 'dataset'"
+        ;;
+esac
+
 if [ -z "$TMP_DIR" ]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
 fi
