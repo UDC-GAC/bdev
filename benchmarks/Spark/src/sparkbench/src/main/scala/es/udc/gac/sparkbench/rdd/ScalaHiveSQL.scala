@@ -40,6 +40,6 @@ object ScalaHiveSQL{
         hiveContext.sql(x)
     }
 
-    //sc.stop()
+    sc.stop()
   }
 }
