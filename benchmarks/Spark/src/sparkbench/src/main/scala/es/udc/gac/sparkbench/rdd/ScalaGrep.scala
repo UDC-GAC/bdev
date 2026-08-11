@@ -25,7 +25,7 @@ object ScalaGrep {
       format = args(3)
     
     val io = new IOCommon()
-    val data = io.load_rdd(filename, format)
+    val data = io.load_rdd(filename, sc, format)
 
     val searched = data.filter{ case (x,y) => regex.pattern.matcher(y).matches }
 
