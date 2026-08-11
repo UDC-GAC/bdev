@@ -63,7 +63,7 @@ object ScalaNaivePageRank {
       i = i + 1
     }
 
-    io.save_rdd[String, Double](save_file, ranks, "Text")
+    io.save_rdd[String, Double](save_file, ranks, sc, "Text")
     sc.stop()
   }
 }
