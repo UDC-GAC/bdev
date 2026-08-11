@@ -145,6 +145,6 @@ object ScalaMLlibSparseNaiveBayes {
     println(s"Test accuracy = $accuracy.")
 
     model.save(params.output)
-    //sc.stop()
+    session.stop()
   }
 }
