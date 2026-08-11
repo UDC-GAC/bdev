@@ -35,7 +35,7 @@ object ScalaGraphXPageRank {
     // Run PageRank until convergence
     val ranks: RDD[(VertexId, Double)] = PageRank.runUntilConvergence(graph, converge_threshold, 1 - mixing_c).vertices
 
-    io.save_rdd[VertexId, Double](save_file, ranks, "Text")
+    io.save_rdd[VertexId, Double](save_file, ranks, sc, "Text")
     sc.stop()
   }
 }
