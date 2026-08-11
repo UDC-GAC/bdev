@@ -84,6 +84,6 @@ object ScalaNaivePageRank {
 
 
     io.save_dataset(save_file, result, session, "Text")
-    //sc.stop()
+    session.stop()
   }
 }
