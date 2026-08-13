@@ -946,7 +946,7 @@ function run_benchmark()
     fi
 
     if [[ $exit_code -ne 0 ]]; then
-        m_warn "The execution ahs failed (exit code: $exit_code)"
+        m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
         ELAPSED_TIME="FAILED"
         return $exit_code
     fi
