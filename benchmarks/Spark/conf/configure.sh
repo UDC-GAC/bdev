@@ -7,7 +7,7 @@ if [ $SPARK_SERIES == "2" ]; then
 elif [ $SPARK_SERIES == "3" ] || [ $SPARK_SERIES == "4" ]; then
 	if [ $SPARK_MAJOR_VERSION == "3.0" ] || [ $SPARK_MAJOR_VERSION == "3.1" ]; then
 		export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
-	elif [ $SPARK_MAJOR_VERSION == "4.0" ]
+	elif [ $SPARK_MAJOR_VERSION == "4.0" ]; then
 		export SPARK_BENCH_JAR_NAME=sparkbench-4.0_${SPARK_SCALA_VERSION}.jar
 	else
 		export SPARK_BENCH_JAR_NAME=sparkbench-3.2_${SPARK_SCALA_VERSION}.jar
