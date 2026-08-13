@@ -71,6 +71,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
 
+		- Fix failure detection when running benchmarks
+
 		- Simplified tool configuration and removed experiment directory
 
 		- Several code refactorings, minor changes and bug fixes
