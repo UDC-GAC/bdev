@@ -59,19 +59,19 @@ fi
 
 if [[ "$BENCHMARK" == "tpcx_hs" ]]; then
 	export HADOOP_BENCH_DIR=$SOL_BENCH_DIR/bin
-	export HADOOP_TCPX_HS_JAR_NAME=tpcx-hs-hadoop.jar
-	export HADOOP_TCPX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TCPX_HS_JAR_NAME}
+	export HADOOP_TPCX_HS_JAR_NAME=tpcx-hs-hadoop.jar
+	export TPCX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TPCX_HS_JAR_NAME}
 
 	# Download TPCx-HS jar file
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
 	m_echo "Downloading $HADOOP_TCPX_HS_JAR_NAME from $URL"
 
-    wget -q -O $HADOOP_TCPX_HS_JAR $URL/$HADOOP_TCPX_HS_JAR_NAME
+    wget -q -O $TPCX_HS_JAR $URL/$HADOOP_TCPX_HS_JAR_NAME
 
     if [ $? != 0 ]; then
-		rm $HADOOP_TCPX_HS_JAR >& /dev/null
+		rm $TPCX_HS_JAR >& /dev/null
 		m_exit "Error when downloading $HADOOP_TCPX_HS_JAR_NAME"
     fi
 else
-	m_echo "Using $HADOOP_TCPX_HS_JAR"
+	m_echo "Using $TPCX_HS_JAR"
 fi
