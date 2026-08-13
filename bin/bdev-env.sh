@@ -224,11 +224,11 @@ export JPS=$(readlink -f ${JPS})
 export PYTHON_BIN=$(which python3 2> /dev/null || which python 2> /dev/null)
 
 if [ "x$PYTHON_BIN" == "x" ]; then
-	m_exit "Missing python command. $APP_NAME requires Python 3"
+	m_exit "Missing python command. $APP_NAME v$APP_VERSION requires Python 3"
 fi
 
 if [ ! -f "$PYTHON_BIN" ]; then
-    m_exit "Missing python command: $PYTHON_BIN. $APP_NAME requires Python 3"
+    m_exit "Missing python command: $PYTHON_BIN. $APP_NAME v$APP_VERSION requires Python 3"
 elif [ ! -x "$PYTHON_BIN" ]; then
     m_exit "python command is not executable: $PYTHON_BIN"
 fi
@@ -236,7 +236,7 @@ fi
 PYTHON_MAJOR_VERSION=$($PYTHON_BIN -c 'import sys; print(sys.version_info[0])' 2>/dev/null)
 
 if [ "$PYTHON_MAJOR_VERSION" != "3" ]; then
-    m_exit "APP_NAME requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
+    m_exit "$APP_NAME v$APP_VERSION requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
 fi
 
 export PYTHON_BIN=$(readlink -f ${PYTHON_BIN})
