@@ -584,6 +584,7 @@ function begin_report(){
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
+	REPORT="$REPORT \t Python \t\t\t\t\t $PYTHON_BIN \n"
 	if [[ -n $ETH_INTERFACE ]]
 	then
 		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
@@ -768,8 +769,8 @@ function start_benchmark(){
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
 			### MARK start of workload
-			${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-			${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 		fi
 	fi
 
@@ -786,8 +787,8 @@ function end_benchmark(){
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
 		### MARK end of workload
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 		fi
 	fi
 
