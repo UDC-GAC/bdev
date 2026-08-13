@@ -44,7 +44,7 @@ else
 	m_echo "Using $SPARK_BENCH_JAR"
 fi
 
-if [ "$GEN_TPCX_HS" == "tpcx_hs" ]; then
+if [ "$GEN_TPCX_HS" == "true" ]; then
 	export TPCX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TPCX_HS_JAR_NAME
 
 	# Download TPCx-HS jar file
