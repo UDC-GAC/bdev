@@ -204,8 +204,8 @@ else
         	m_exit "java command is not executable: $JAVA"
 		fi
 
-        export JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
-        export LOAD_JAVA_COMMAND="export JAVA_HOME=$JAVA_HOME"
+        export BDEV_JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
+        export LOAD_JAVA_COMMAND="export JAVA_HOME=$BDEV_JAVA_HOME"
 		export JPS=$(which jps 2> /dev/null)
 
         if [ "x$JPS" == "x" ]; then
@@ -213,7 +213,7 @@ else
         fi
 		if [ ! -f "$JPS" ]; then
         	m_exit "Missing jps command: $JPS"
-		elif [ ! -x "$JAVA" ]; then
+		elif [ ! -x "$JPS" ]; then
         	m_exit "jps command is not executable: $JPS"
 		fi
     fi
@@ -221,12 +221,13 @@ fi
 
 # Check expect command
 export EXPECT=$(which expect 2> /dev/null)
+
 if [ "x$EXPECT" == "x" ]; then
 	m_warn "Missing expect command (required when using timeouts)"
 fi
-if [ ! -f "$JPS" ]; then
+if [ ! -f "$EXPECT" ]; then
     m_exit "Missing expect command: $EXPECT (required when using timeouts)"
-elif [ ! -x "$JAVA" ]; then
+elif [ ! -x "$EXPECT" ]; then
     m_exit "expect command is not executable: $EXPECT (required when using timeouts)"
 fi
 		
