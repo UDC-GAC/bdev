@@ -25,7 +25,6 @@ object ScalaMLlibDenseKMeans {
 
   def main(args: Array[String]) {
     val defaultParams = Params()
-    val io = new IOCommon()
     
     val parser = new OptionParser[Params]("ScalaMLlibDenseKMeans") {
       opt[Int]("numIterations")
@@ -56,11 +55,10 @@ object ScalaMLlibDenseKMeans {
   }
 
   def run(params: Params) {
-
     val session = SparkSession.builder().appName("SparkBench ScalaMLlibDenseKMeans").getOrCreate()
     import session.implicits._
-
     val sc = session.sparkContext
+    val io = new IOCommon()
 
     // Prepare input data
     val data = sc.
@@ -76,29 +74,16 @@ object ScalaMLlibDenseKMeans {
       select($"_1".as("key"),$"_2".as("features")).
       as[(Long, Vector)]
 
-    // Read centers as RDD
+    // Read the centers only to determine the size of K
+    // Spark ML does not allow injecting these centers as an initial model
     val centersRDD = sc.sequenceFile[LongWritable, Kluster](params.centers)
-
-    // Convert vectors to the moder API (spark.ml)
-    val initCenters = centersRDD.map {
-      case (k, v) =>
-        val center = v.getCenter()
-        val vector = new Array[Double](center.size)
-        for (i <- 0 until center.size) {
-          vector(i) = center.get(i)
-        }
-        Vectors.dense(vector)
-    }.collect()
-
-    val initModel = new KMeansModel("init_model", initCenters)
-    val k = initCenters.length
+    val k = centersRDD.count().toInt 
     val numSamples = data.count()
 
     println(s"numSamples = $numSamples, k = $k, iters = ${params.numIterations}, cd = ${params.convergenceDelta}")
 
     val kmeansEstimator = new KMeans()
       .setK(k)
-      .setInitialModel(initModel)
       .setTol(params.convergenceDelta)
       .setMaxIter(params.numIterations)
       .setFeaturesCol("features")
