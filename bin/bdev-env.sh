@@ -185,38 +185,33 @@ fi
 
 export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
-# Check modules environment
+# Check JVM
 if [ "$ENABLE_MODULES" == "true" ]; then
-    if [ -z $LOAD_JAVA_COMMAND ]; then
-    	export LOAD_JAVA_COMMAND="module load ${MODULE_JAVA}"
-    fi
+	module load ${MODULE_JAVA}
 else
-    if [ -z $LOAD_JAVA_COMMAND ]; then
-        JAVA=$(which java 2> /dev/null)
+    JAVA=$(which java 2> /dev/null)
+fi
 
-        if [ "x$JAVA" == "x" ]; then
-            m_exit "Missing java command"
-        fi
+if [ "x$JAVA" == "x" ]; then
+    m_exit "Missing java command"
+fi
 
-		if [ ! -f "$JAVA" ]; then
-        	m_exit "Missing java command: $JAVA"
-		elif [ ! -x "$JAVA" ]; then
-        	m_exit "java command is not executable: $JAVA"
-		fi
+if [ ! -f "$JAVA" ]; then
+    m_exit "Missing java command: $JAVA"
+elif [ ! -x "$JAVA" ]; then
+    m_exit "java command is not executable: $JAVA"
+fi
 
-        export BDEV_JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
-        export LOAD_JAVA_COMMAND="export JAVA_HOME=$BDEV_JAVA_HOME"
-		export JPS=$(which jps 2> /dev/null)
+export BDEV_JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
+export JPS=$(which jps 2> /dev/null)
 
-        if [ "x$JPS" == "x" ]; then
-            m_exit "Missing jps command"
-        fi
-		if [ ! -f "$JPS" ]; then
-        	m_exit "Missing jps command: $JPS"
-		elif [ ! -x "$JPS" ]; then
-        	m_exit "jps command is not executable: $JPS"
-		fi
-    fi
+if [ "x$JPS" == "x" ]; then
+    m_exit "Missing jps command"
+fi
+if [ ! -f "$JPS" ]; then
+    m_exit "Missing jps command: $JPS"
+elif [ ! -x "$JPS" ]; then
+    m_exit "jps command is not executable: $JPS"
 fi
 
 # Check expect command
