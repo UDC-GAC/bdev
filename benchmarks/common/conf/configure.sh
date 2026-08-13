@@ -161,6 +161,7 @@ export HIVE_OPTS="--hiveconf javax.jdo.option.ConnectionURL=jdbc:derby:${BENCHMA
 
 function init_hive_metastore () {
     rm -rf ${BENCHMARK_OUTPUT_DIR}/metastore_db
+	mkdir -p ${BENCHMARK_OUTPUT_DIR}
 
     ${HIVE_HOME}/bin/schematool \
         -dbType derby \
