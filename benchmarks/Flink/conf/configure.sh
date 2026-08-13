@@ -23,8 +23,8 @@ fi
 
 if [ "$BENCHMARK" == "tpcx_hs" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
-		export FINK_TCPX_HS_JAR=$SPARK_BENCH_DIR/$FLINK_TCPX_HS_JAR_NAME
 		export FLINK_TCPX_HS_JAR_NAME=tpcx-hs-flink-1.14.0_${FLINK_SCALA_VERSION}.jar
+		export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TCPX_HS_JAR_NAME
 	else
         m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
@@ -33,12 +33,12 @@ if [ "$BENCHMARK" == "tpcx_hs" ]; then
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
 	m_echo "Downloading $FLINK_TCPX_HS_JAR_NAME from $URL"
 
-    wget -q -O $FINK_TCPX_HS_JAR $URL/$FLINK_TCPX_HS_JAR_NAME
+    wget -q -O $TPCX_HS_JAR $URL/$FLINK_TCPX_HS_JAR_NAME
 
     if [ $? != 0 ]; then
-		rm $FINK_TCPX_HS_JAR >& /dev/null
+		rm $TPCX_HS_JAR >& /dev/null
 		m_exit "Error when downloading $FLINK_TCPX_HS_JAR_NAME"
     fi
 else
-	m_echo "Using $FINK_TCPX_HS_JAR"
+	m_echo "Using $TPCX_HS_JAR"
 fi
