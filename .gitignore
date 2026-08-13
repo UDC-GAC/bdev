@@ -1,6 +1,6 @@
 BDEv_OUT
 frameworks/dist
-benchmarks/common/bin/tpcx*
+benchmarks/Hadoop/bin/*.jar
 benchmarks/Spark/bin/*.jar
 benchmarks/Flink/bin/*.jar
 benchmarks/Spark/src/sparkbench/*.jar
