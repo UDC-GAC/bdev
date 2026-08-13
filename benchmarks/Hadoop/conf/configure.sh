@@ -6,10 +6,10 @@ export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]]; then
 	URL="https://archive.apache.org/dist/mahout"
 
-	# Download Mahout 0.11.1 and 0.12.0 compiled for Hadoop 1 from bdev
+	# Download Mahout 0.11.x and 0.12.0 compiled for Hadoop 1 from bdev
 	if [[ $MAHOUT_HOME == $THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop ]]
 	then
-		if [[ $MAHOUT_VERSION=0.11.1 || $MAHOUT_VERSION=0.12.0 ]]
+		if [[ $MAHOUT_VERSION=0.11.1 || $MAHOUT_VERSION=0.11.2 || $MAHOUT_VERSION=0.12.0 ]]
 		then
 			URL="https://bdev.des.udc.es/dist/mahout"
 		else
