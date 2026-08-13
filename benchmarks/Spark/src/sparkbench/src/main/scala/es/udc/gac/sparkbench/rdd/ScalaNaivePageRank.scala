@@ -47,7 +47,7 @@ object ScalaNaivePageRank {
       }
 
       var previous_ranks = ranks
-      ranks = contribs.reduceByKey(_ + _).mapValues(random_coeff + mixing_c * _)
+      ranks = contribs.reduceByKey(_ + _).mapValues(random_coeff + mixing_c * _).cache()
 
       val changed = ranks.join(previous_ranks).values
         .filter {
@@ -60,6 +60,7 @@ object ScalaNaivePageRank {
         finished = true
       }
 
+      previous_ranks.unpersist()
       i = i + 1
     }
 
