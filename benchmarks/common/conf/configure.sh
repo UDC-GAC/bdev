@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Load storage backend functions
-. $COMMON_SRC_DIR/lib/storage_backend.sh
+. ${COMMON_SRC_DIR}/lib/storage_backend.sh
 
+export JAVA_HOME=${BDEV_JAVA_HOME}
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
 export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
