@@ -1,13 +1,20 @@
 name := "sparkbench"
-version := "4.0"
-//val sparkVersion = "2.4.0"
-//val sparkVersion = "3.0.0"
-//val sparkVersion = "3.2.0"
-val sparkVersion = "4.0.0"
 val hadoopVersion = "2.10.2"
+
+//version := "2.4"
+//val sparkVersion = "2.4.0"
 //crossScalaVersions := Seq("2.11.12", "2.12.21")
+
+//version := "3.0"
+//val sparkVersion = "3.0.0"
 //crossScalaVersions := Seq("2.12.21")
+
+//version := "3.2"
+//val sparkVersion = "3.2.0"
 //crossScalaVersions := Seq("2.12.21", "2.13.18")
+
+version := "4.0"
+val sparkVersion = "4.0.0"
 crossScalaVersions := Seq("2.13.18")
 
 libraryDependencies ++= Seq(
