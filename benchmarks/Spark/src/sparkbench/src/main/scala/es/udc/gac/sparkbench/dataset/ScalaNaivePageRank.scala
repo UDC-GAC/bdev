@@ -54,15 +54,17 @@ object ScalaNaivePageRank {
           val size = urls.size
           urls.map(url => (url, rank / size))
         }}.withColumnRenamed("_1", "key").withColumnRenamed("_2", "contrib").as[(String, Double)]
-      
 
       var previous_ranks = ranks
-      ranks = contribs
+      val newRanks = contribs
         .groupBy("key").agg(sum("contrib").as("value")).as[(String, Double)]
         .map{case (key: String, value: Double) => (key, random_coeff + mixing_c * value)}
         .withColumnRenamed("_1","key").withColumnRenamed("_2", "rank").as[(String, Double)]
-      
-      
+    
+      // Forzamos a Spark a computar este paso aquí mismo y guardarlo en memoria
+      newRanks.cache()
+      newRanks.count()
+      ranks = newRanks
 
       val changed = ranks.alias("ranks").join(previous_ranks.alias("previous_ranks"), Seq("key"))
         .select($"ranks.rank".as("actual_rank"), $"previous_ranks.rank".as("previous_ranks")).as[(Double, Double)]
@@ -74,14 +76,14 @@ object ScalaNaivePageRank {
         println("PageRank converged")
         finished = true
       }
-
+      
+      previous_ranks.unpersist()
       i = i + 1
     }
 
     val result = ranks.
       map{case (key: String, value: Double) => (key, value.toString())}.
       as[(String, String)]
-
 
     io.save_dataset(save_file, result, session, "Text")
     session.stop()
