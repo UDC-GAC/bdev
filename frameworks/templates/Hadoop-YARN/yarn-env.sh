@@ -29,7 +29,7 @@ export YARN_PID_DIR=$tmp_dir/yarn/pid
   #JAVA_HOME=$JAVA_HOME
 #fi
 
-$load_java_command
+export JAVA_HOME=$java_home
  
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
