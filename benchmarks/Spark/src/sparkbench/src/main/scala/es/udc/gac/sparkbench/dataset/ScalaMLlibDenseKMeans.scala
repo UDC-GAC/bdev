@@ -74,22 +74,10 @@ object ScalaMLlibDenseKMeans {
       select($"_1".as("key"),$"_2".as("features")).
       as[(Long, Vector)]
 
-    // Read centers as RDD and convert them to Spark ML Vectors
+    // Read Mahout centersos only to determine the size of K
+    // Spark ML does NOT allow injecting these centers as an initial model (API limit)
     val centersRDD = sc.sequenceFile[LongWritable, Kluster](params.centers)
-    
-    val initCenters = centersRDD.map {
-      case (k, v) =>
-        val center = v.getCenter()
-        val vector = new Array[Double](center.size)
-        for (i <- 0 until center.size) {
-          vector(i) = center.get(i)
-        }
-        Vectors.dense(vector)
-    }.collect()
-
-    // Create the initial model using our "bridge" file (KMeansHelper)
-    val initModel = org.apache.spark.ml.clustering.KMeansHelper.createInitialModel(initCenters)
-    val k = initCenters.length
+    val k = centersRDD.count().toInt 
     val numSamples = data.count()
 
     println(s"numSamples = $numSamples, k = $k, iters = ${params.numIterations}, cd = ${params.convergenceDelta}")
@@ -98,7 +86,6 @@ object ScalaMLlibDenseKMeans {
       .setK(k)
       .setTol(params.convergenceDelta)
       .setMaxIter(params.numIterations)
-      .setInitialModel(initModel)
       .setFeaturesCol("features")
       .setPredictionCol("cluster")
       .setSeed(1L)
