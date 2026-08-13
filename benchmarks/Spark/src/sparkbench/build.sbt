@@ -3,6 +3,7 @@ version := "3.2"
 //val sparkVersion = "2.4.0"
 //val sparkVersion = "3.0.0"
 val sparkVersion = "3.2.0"
+val hadoopVersion = "2.10.2"
 //crossScalaVersions := Seq("2.11.12", "2.12.21")
 crossScalaVersions := Seq("2.12.21", "2.13.18")
 
@@ -11,7 +12,7 @@ libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
-"org.apache.hadoop" % "hadoop-mapreduce-examples" % "2.10.2" % "provided",
+"org.apache.hadoop" % "hadoop-mapreduce-examples" % hadoopVersion % "provided",
 "org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
