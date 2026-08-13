@@ -697,11 +697,8 @@ function begin_report(){
 export -f begin_report
 
 function start_benchmark(){
-
-	if [[ -n "$BENCHMARK_SETUP" ]]
-	then
+	if [[ -n "$BENCHMARK_SETUP" ]]; then
 		m_echo "Setting up $BENCHMARK: $BENCHMARK_SETUP"
-	
 		bash -c "$BENCHMARK_SETUP"
 	fi
 
@@ -709,45 +706,37 @@ function start_benchmark(){
 	CURRENT_TIME=`timestamp`
 	START_TOTAL_TIME=$(($START_TOTAL_TIME+$CURRENT_TIME))
 
-	if [[ $ENABLE_ILO == "true" ]]
-	then
+	if [[ $ENABLE_ILO == "true" ]]; then
 		m_echo "Starting ilo monitors"
 		bash $ILO_HOME/start_ilo_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
-	if [[ $ENABLE_STAT == "true" ]]
-	then
+	if [[ $ENABLE_STAT == "true" ]]; then
 		m_echo "Starting dool monitors"
 		bash $STAT_HOME/start_stat_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
-	if [[ $ENABLE_RAPL == "true" ]]
-	then
+	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Starting rapl monitors"
 		bash $RAPL_HOME/start_rapl_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then
+	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		m_echo "Starting oprofile monitors"
 		bash $OPROFILE_HOME/start_oprofile_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
-        if [[ $ENABLE_BDWATCHDOG == "true" ]]
-        then
+    if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		m_echo "Starting bdwatchdog monitors"
-		if [[ $BDWATCHDOG_ATOP == "true" ]]
-		then
+		if [[ $BDWATCHDOG_ATOP == "true" ]]; then
 			m_echo "Starting atop daemons"
 			bash $BDWATCHDOG_HOME/start_atop_monitor.sh
 		fi
-		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]
-		then
+		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
 			m_echo "Starting turbostat daemons"
 			bash $BDWATCHDOG_HOME/start_turbostat_monitor.sh
 		fi
-		if [[ $BDWATCHDOG_NETHOGS == "true" ]]
-		then
+		if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
 			m_echo "Starting nethogs daemons"
 			bash $BDWATCHDOG_HOME/start_nethogs_monitor.sh
 		fi
@@ -787,48 +776,39 @@ function end_benchmark(){
 
 	m_echo "Finished $BENCHMARK"
 
-	if [[ $WAIT_SECONDS -gt 0 ]]
-        then
+	if [[ $WAIT_SECONDS -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
-                sleep $WAIT_SECONDS
-        fi
+        sleep $WAIT_SECONDS
+    fi
 
-	if [[ $ENABLE_ILO == "true" ]]
-	then
+	if [[ $ENABLE_ILO == "true" ]]; then
 		m_echo "Stopping ilo monitors"
 		bash $ILO_HOME/stop_ilo_monitor.sh
 	fi
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then
+	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		m_echo "Stopping oprofile monitors"
 		bash $OPROFILE_HOME/stop_oprofile_monitor.sh
 	fi
-	if [[ $ENABLE_RAPL == "true" ]]
-	then
+	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Stopping rapl monitors"
 		bash $RAPL_HOME/stop_rapl_monitor.sh
 	fi
-	if [[ $ENABLE_STAT == "true" ]]
-	then
+	if [[ $ENABLE_STAT == "true" ]]; then
 		m_echo "Stopping dool monitors"
 		bash $STAT_HOME/stop_stat_monitor.sh
 	fi
 
-	if [[ $ENABLE_BDWATCHDOG == "true" ]]
-	then
+	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		m_echo "Stopping bdwatchdog monitors"
-		if [[ $BDWATCHDOG_ATOP == "true" ]]
-		then
+		if [[ $BDWATCHDOG_ATOP == "true" ]]; then
 			m_echo "Stopping atop"
 			bash $BDWATCHDOG_HOME/stop_atop_monitor.sh
 		fi
-		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]
-		then
+		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
 			m_echo "Stopping turbostat"
 			bash $BDWATCHDOG_HOME/stop_turbostat_monitor.sh
 		fi
-		if [[ $BDWATCHDOG_NETHOGS == "true" ]]
-		then
+		if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
 			m_echo "Stopping nethogs"
 			bash $BDWATCHDOG_HOME/stop_nethogs_monitor.sh
 		fi
@@ -837,33 +817,27 @@ function end_benchmark(){
 	CURRENT_TIME=`timestamp`
 	END_TOTAL_TIME=$(($END_TOTAL_TIME+$CURRENT_TIME))
 
-	if [[ $ELAPSED_TIME == "TIMEOUT" ]]
-	then
+	if [[ $ELAPSED_TIME == "TIMEOUT" ]]; then
 		m_err "TIMEOUT"
 	else
 		export ELAPSED_TIME=`op "($END_TIME - $START_TIME) / 1000"`
 		export ELAPSED_TOTAL_TIME=`op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000"`
 	fi
 
-	if [[ -n "$BENCHMARK_CLEANUP" ]]
-	then
+	if [[ -n "$BENCHMARK_CLEANUP" ]]; then
 		m_echo "Cleaning up $BENCHMARK: $BENCHMARK_CLEANUP"
-	
 		bash -c "$BENCHMARK_CLEANUP"
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then
+	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		m_echo "Generating Oprofile data"
 		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
 	fi
-	if [[ $ENABLE_RAPL == "true" ]]
-	then
+	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Generating RAPL data"
 		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
 	fi
-	if [[ $ENABLE_STAT == "true" ]]
-	then
+	if [[ $ENABLE_STAT == "true" ]]; then
 		m_echo "Generating dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
