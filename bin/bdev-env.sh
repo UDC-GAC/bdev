@@ -216,18 +216,28 @@ elif [ ! -x "$JPS" ]; then
     m_exit "jps command is not executable: $JPS"
 fi
 
+export JPS=$(readlink -f ${JPS})
+
 # Check Python
-export PYTHON_BIN=$(which python 2> /dev/null)
+export PYTHON_BIN=$(which python3 2> /dev/null || which python 2> /dev/null)
 
 if [ "x$PYTHON_BIN" == "x" ]; then
-    m_exit "Missing python command"
+	m_exit "Missing python command. $APP_NAME requires Python 3"
 fi
 
 if [ ! -f "$PYTHON_BIN" ]; then
-    m_exit "Missing PYTHON_BIN command: $PYTHON_BIN"
+    m_exit "Missing python command: $PYTHON_BIN. $APP_NAME requires Python 3"
 elif [ ! -x "$PYTHON_BIN" ]; then
     m_exit "python command is not executable: $PYTHON_BIN"
 fi
+
+PYTHON_MAJOR_VERSION=$($PYTHON_BIN -c 'import sys; print(sys.version_info[0])' 2>/dev/null)
+
+if [ "$PYTHON_MAJOR_VERSION" != "3" ]; then
+    m_exit "APP_NAME requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
+fi
+
+export PYTHON_BIN=$(readlink -f ${PYTHON_BIN})
 
 # Check expect command
 export EXPECT=$(which expect 2> /dev/null)
@@ -240,7 +250,9 @@ if [ ! -f "$EXPECT" ]; then
 elif [ ! -x "$EXPECT" ]; then
     m_exit "expect command is not executable: $EXPECT (required when using timeouts)"
 fi
-		
+
+export EXPECT=$(readlink -f ${EXPECT})
+
 # Define variables for BDWatchdog binary daemons
 if [ $ENABLE_BDWATCHDOG == "true" ]; then
         if [ $BDWATCHDOG_ATOP == "true" ]; then
