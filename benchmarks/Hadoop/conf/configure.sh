@@ -59,7 +59,7 @@ fi
 
 if [[ "$BENCHMARK" == "tpcx_hs" ]]; then
 	export HADOOP_BENCH_DIR=$SOL_BENCH_DIR/bin
-	export HADOOP_TCPX_HS_JAR_NAME=tpcx-hs-spark-4.0.0_2.13.jar
+	export HADOOP_TCPX_HS_JAR_NAME=tpcx-hs-hadoop.jar
 	export HADOOP_TCPX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TCPX_HS_JAR_NAME}
 
 	# Download TPCx-HS jar file
