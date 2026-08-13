@@ -4,6 +4,9 @@ val flinkVersion = "1.14.0"
 val hadoopVersion = "2.10.2"
 crossScalaVersions := Seq("2.11.12", "2.12.21")
 
+scalacOptions ++= Seq("-target:jvm-1.8")
+javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
@@ -20,7 +23,7 @@ assembly / assemblyShadeRules := Seq(
 
 assembly / assemblyJarName := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
 
-assembly / assemblyOption := (assemblyOption in assembly).value.copy(includeScala = false)
+assembly / assemblyOption := (assemblyOption in assembly).value.withIncludeScala(false)
 
 assembly / assemblyMergeStrategy := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
@@ -40,7 +43,7 @@ assembly / assemblyMergeStrategy := {
   case "META-INF/mimetypes.default" => MergeStrategy.last
   case "plugin.properties" => MergeStrategy.last
   case "log4j.properties" => MergeStrategy.last
-  case "module-info.class" => MergeStrategy.discard
+  case x if x.endsWith("module-info.class") => MergeStrategy.discard
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
