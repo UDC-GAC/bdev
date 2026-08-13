@@ -10,6 +10,7 @@ if [[ $GEN_WORDCOUNT == "true" ]]; then
 		-p ${WORDCOUNT_DATASIZE} \
 		-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "Wordcount data already exists"
@@ -30,6 +31,7 @@ if [[ $GEN_SORT == "true" ]]; then
 			-p ${SORT_DATASIZE} \
 			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
+			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
             m_echo "Sort data already exists"
@@ -54,6 +56,7 @@ if [[ $GEN_GREP == "true" ]]; then
 			-p ${GREP_DATASIZE} \
 			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
+			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
             m_echo "Grep data already exists"
@@ -70,6 +73,7 @@ if [[ $GEN_TERASORT == "true" ]]; then
 		-m ${MAPPERS_NUMBER} \
 		-p ${TERASORT_ROWS_NUMBER}"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "Terasort data already exists"
@@ -85,6 +89,7 @@ if [[ $GEN_TPCX_HS == "true" ]]; then
 		-m ${MAPPERS_NUMBER} \
 		-p ${TPCX_HS_ROWS_NUMBER}"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "TPCx-HS data already exists"
@@ -103,6 +108,7 @@ if [[ $GEN_PAGERANK == "true" ]]; then
 		-pbalance -pbalance \
 		-o text"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "PageRank data already exists"
@@ -125,6 +131,7 @@ if [[ $GEN_CC == "true" ]]; then
 			-pbalance -pbalance \
 			-o text"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
             m_echo "Connected Components data already exists"
@@ -145,6 +152,7 @@ if [[ $GEN_KMEANS == "true" ]]; then
 		-samplesPerFile ${KMEANS_SAMPLES_PER_INPUTFILE} \
 		-sampleDimension ${KMEANS_DIMENSIONS}"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "KMeans data already exists"
@@ -163,6 +171,7 @@ if [[ $GEN_BAYES == "true" ]]; then
 		-g ${BAYES_CLASSES} \
 		-o sequence"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "Bayes data already exists"
@@ -181,6 +190,7 @@ if [[ $GEN_AGGREGATION == "true" ]]; then
 		-v ${AGGREGATION_USERVISITS} \
 		-o sequence"
 
+		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
         m_echo "Aggregation data already exists"
@@ -203,7 +213,8 @@ if [[ $GEN_JOIN == "true" ]]; then
 			-p ${JOIN_PAGES} \
 			-v ${JOIN_USERVISITS} \
 			-o sequence"
-		
+
+			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
         else
             m_echo "Join data already exists"
@@ -234,6 +245,7 @@ if [[ $GEN_SCAN == "true" ]]; then
 			-v ${SCAN_USERVISITS} \
 			-o sequence"
 
+			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
         else
             m_echo "Scan data already exists"
@@ -243,7 +255,7 @@ fi
 
 if [[ $GEN_COMMAND == "true" ]]; then
 	if [[ -n "$PREPARE_COMMAND" ]]; then
-		m_echo "Preparing Command benchmark: $PREPARE_COMMAND"
+		m_echo "Preparing command benchmark: $PREPARE_COMMAND"
 		bash -c "$PREPARE_COMMAND"
 	fi
 fi
