@@ -1,21 +1,29 @@
 name := "sparkbench"
 val hadoopVersion = "2.10.2"
+val sparkVersion = sys.props.getOrElse("spark.version", "4.0.0")
 
-//version := "2.4"
-//val sparkVersion = "2.4.0"
-//crossScalaVersions := Seq("2.11.12", "2.12.21")
+def scalaVersionsForSpark(sv: String): Seq[String] = {
+  if (sv.startsWith("2.")) {
+    Seq("2.11.12", "2.12.21")
+  } else if (sv.startsWith("3.0") || sv.startsWith("3.1")) {
+    Seq("2.12.21")
+  } else if (sv.startsWith("4.")) {
+    Seq("2.13.18")
+  } else {
+    Seq("2.12.21", "2.13.18")
+  }
+}
 
-//version := "3.0"
-//val sparkVersion = "3.0.0"
-//crossScalaVersions := Seq("2.12.21")
+crossScalaVersions := scalaVersionsForSpark(sparkVersion)
 
-//version := "3.2"
-//val sparkVersion = "3.2.0"
-//crossScalaVersions := Seq("2.12.21", "2.13.18")
-
-version := "4.0"
-val sparkVersion = "4.0.0"
-crossScalaVersions := Seq("2.13.18")
+javacOptions ++= {
+  if (sparkVersion.startsWith("4.")) Seq("-source", "17", "-target", "17")
+  else Seq("-source", "1.8", "-target", "1.8")
+}
+scalacOptions ++= {
+  if (sparkVersion.startsWith("4.")) Seq("-release", "17")
+  else Seq("-target:jvm-1.8")
+}
 
 libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
@@ -33,9 +41,9 @@ assembly / assemblyShadeRules := Seq(
   ShadeRule.rename("com.github.scopt.**" -> "shadeSCOPT.@1").inAll
 )
 
-assembly / assemblyJarName := s"${name.value}-${version.value}_${scalaBinaryVersion.value}.jar"
+assembly / assemblyJarName := s"${name.value}-${sparkVersion}_${scalaBinaryVersion.value}.jar"
 
-assembly / assemblyOption := (assemblyOption in assembly).value.copy(includeScala = false)
+assembly / assemblyOption := (assemblyOption in assembly).value.withIncludeScala(false)
 
 assemblyMergeStrategy in assembly := {
   case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
@@ -56,7 +64,7 @@ assemblyMergeStrategy in assembly := {
   case "META-INF/mimetypes.default" => MergeStrategy.last
   case "plugin.properties" => MergeStrategy.last
   case "log4j.properties" => MergeStrategy.last
-  case "module-info.class" => MergeStrategy.discard
+  case x if x.endsWith("module-info.class") => MergeStrategy.discard
   case x =>
     val oldStrategy = (assembly / assemblyMergeStrategy).value
     oldStrategy(x)
