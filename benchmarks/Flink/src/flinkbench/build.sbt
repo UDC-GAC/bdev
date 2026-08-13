@@ -1,13 +1,14 @@
 name := "flinkbench"
 version := "1.15"
 val flinkVersion = "1.15.0"
+val hadoopVersion = "2.10.2"
 crossScalaVersions := Seq("2.11.12", "2.12.21")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
-"org.apache.hadoop" % "hadoop-client" % "2.10.2" % "provided",
+"org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided",
 "org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 )
