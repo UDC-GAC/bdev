@@ -79,7 +79,6 @@ object ScalaMLlibDenseKMeans {
     }.collect()
 
     val initModel = new KMeansModel(initCenters)
-
     val numSamples = samples.count()
     val k = initModel.k
 
