@@ -10,7 +10,7 @@ add_conf_param "ssh_opts" "$SSH_OPTS"
 add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS
-add_conf_param "load_java_command" "$LOAD_JAVA_COMMAND"
+add_conf_param "java_home" $BDEV_JAVA_HOME
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 
 #Hadoop
