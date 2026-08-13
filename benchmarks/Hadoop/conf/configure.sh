@@ -57,11 +57,11 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 	rm $TMP_HIVE_FILE
 fi
 
-export HADOOP_BENCH_DIR=$SOL_BENCH_DIR/bin
-export HADOOP_TCPX_HS_JAR_NAME=tpcx-hs-spark-4.0.0_2.13.jar
-export HADOOP_TCPX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TCPX_HS_JAR_NAME}
-
 if [[ "$BENCHMARK" == "tpcx_hs" ]]; then
+	export HADOOP_BENCH_DIR=$SOL_BENCH_DIR/bin
+	export HADOOP_TCPX_HS_JAR_NAME=tpcx-hs-spark-4.0.0_2.13.jar
+	export HADOOP_TCPX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TCPX_HS_JAR_NAME}
+
 	# Download TPCx-HS jar file
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
 	m_echo "Downloading $HADOOP_TCPX_HS_JAR_NAME from $URL"
