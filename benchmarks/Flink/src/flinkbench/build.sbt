@@ -1,6 +1,6 @@
 name := "flinkbench"
-version := "1.15"
-val flinkVersion = "1.15.0"
+version := "1.0"
+val flinkVersion = "1.14.0"
 val hadoopVersion = "2.10.2"
 crossScalaVersions := Seq("2.11.12", "2.12.21")
 
