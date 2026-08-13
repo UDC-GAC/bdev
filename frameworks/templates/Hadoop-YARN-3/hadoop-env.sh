@@ -44,7 +44,7 @@
 # Generic settings for HADOOP
 ###
 
-$load_java_command
+export JAVA_HOME=$java_home
 
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
