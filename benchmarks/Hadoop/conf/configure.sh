@@ -64,13 +64,13 @@ if [[ "$BENCHMARK" == "tpcx_hs" ]]; then
 
 	# Download TPCx-HS jar file
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
-	m_echo "Downloading $HADOOP_TCPX_HS_JAR_NAME from $URL"
+	m_echo "Downloading $HADOOP_TPCX_HS_JAR_NAME from $URL"
 
-    wget -q -O $TPCX_HS_JAR $URL/$HADOOP_TCPX_HS_JAR_NAME
+    wget -q -O $TPCX_HS_JAR $URL/$HADOOP_TPCX_HS_JAR_NAME
 
     if [ $? != 0 ]; then
 		rm $TPCX_HS_JAR >& /dev/null
-		m_exit "Error when downloading $HADOOP_TCPX_HS_JAR_NAME"
+		m_exit "Error when downloading $HADOOP_TPCX_HS_JAR_NAME"
     fi
 else
 	m_echo "Using $TPCX_HS_JAR"
