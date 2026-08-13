@@ -24,7 +24,7 @@
 # The java implementation to use.
 #export JAVA_HOME=${JAVA_HOME}
 
-$load_java_command
+export JAVA_HOME=$java_home
 
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
