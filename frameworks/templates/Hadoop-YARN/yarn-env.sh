@@ -24,10 +24,10 @@ export YARN_PID_DIR=$tmp_dir/yarn/pid
 
 # some Java parameters
 # export JAVA_HOME=/home/y/libexec/jdk1.6.0/
-if [ "$JAVA_HOME" != "" ]; then
+#if [ "$JAVA_HOME" != "" ]; then
   #echo "run java in $JAVA_HOME"
-  JAVA_HOME=$JAVA_HOME
-fi
+  #JAVA_HOME=$JAVA_HOME
+#fi
 
 $load_java_command
  
