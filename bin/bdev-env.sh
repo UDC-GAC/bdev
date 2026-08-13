@@ -185,8 +185,8 @@ fi
 export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
 if [ "$ENABLE_MODULES" == "true" ]; then
-	module load ${MODULE_JAVA}
-	module load ${MODULE_PYTHON}
+	module load ${MODULES_JAVA}
+	module load ${MODULES_PYTHON}
 fi
 
 # Check JVM
