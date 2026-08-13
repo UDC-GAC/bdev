@@ -25,8 +25,8 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		MY_DATE=`date '+%d-%m-%Y-%H:%M'`
 		MY_SOLUTION=`echo $SOLUTION | cut -d"-" -f1`
 		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 	fi
 fi
 
@@ -79,8 +79,8 @@ done
 if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 	if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
 	### MARK end of experiments
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py end "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py end "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 	fi
 fi
 
