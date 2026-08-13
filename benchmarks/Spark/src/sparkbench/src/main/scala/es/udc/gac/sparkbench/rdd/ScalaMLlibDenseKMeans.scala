@@ -69,18 +69,8 @@ object ScalaMLlibDenseKMeans {
         Vectors.dense(vector)
     }.cache()
 
-    val initCenters = centers.map {
-      case (k, v) =>
-        val center = v.getCenter()
-        var vector: Array[Double] = new Array[Double](center.size)
-        for (i <- 0 until center.size)
-          vector(i) = center.get(i)
-        Vectors.dense(vector)
-    }.collect()
-
-    val initModel = new KMeansModel(initCenters)
     val numSamples = samples.count()
-    val k = initModel.k
+    val k = centers.count().toInt
 
     println(s"numSamples = $numSamples, k = $k, iters = ${params.numIterations}, cd = ${params.convergenceDelta}")
 
@@ -88,7 +78,6 @@ object ScalaMLlibDenseKMeans {
       .setK(k)
       .setEpsilon(params.convergenceDelta)
       .setMaxIterations(params.numIterations)
-      .setInitialModel(initModel)
       .setSeed(1L)
       .run(samples)
 
