@@ -22,7 +22,7 @@
 # remote nodes.
 
 # The java implementation to use.
-export JAVA_HOME=${JAVA_HOME}
+#export JAVA_HOME=${JAVA_HOME}
 
 $load_java_command
 
