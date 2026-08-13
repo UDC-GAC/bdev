@@ -30,7 +30,6 @@ object ScalaNaiveDenseKMeans {
 
     // set up execution environment
     val env: ExecutionEnvironment = ExecutionEnvironment.getExecutionEnvironment
-    env.getConfig.enableObjectReuse()
 
     val io = new IOCommon(env)
 

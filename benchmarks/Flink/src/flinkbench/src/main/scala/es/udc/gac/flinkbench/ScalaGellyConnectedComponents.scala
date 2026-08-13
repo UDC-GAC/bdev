@@ -22,7 +22,6 @@ object ScalaGellyConnectedComponents {
     }
 
     val env = ExecutionEnvironment.getExecutionEnvironment
-    env.getConfig.enableObjectReuse()
 
     val inputPath = args(0)
     val outputPath = args(1)
