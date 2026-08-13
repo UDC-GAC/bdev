@@ -96,5 +96,6 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 
 # Extra options added by BDEv
 export JAVA_HOME=$java_home
+export PYSPARK_PYTHON=$python_bin_path
 export LD_LIBRARY_PATH=$hadoop_home/lib/native:$LD_LIBRARY_PATH
 export SPARK_DIST_CLASSPATH=$($hadoop_home/bin/hadoop classpath)
