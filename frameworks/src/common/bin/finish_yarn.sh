@@ -5,20 +5,20 @@ if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	for slave in $SLAVES
 	do
 		m_echo "Finishing NodeManager:" $slave
-		$SSH_CMD $slave "${LOAD_JAVA_COMMAND}; ${BDEV_BIN_DIR}/kill.sh $JPS NodeManager"
+		$SSH_CMD $slave "${BDEV_BIN_DIR}/kill.sh $JPS NodeManager"
 	done
 
   	m_echo "Finishing ResourceManager:" $MASTERNODE
-	$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${BDEV_BIN_DIR}/kill.sh $JPS ResourceManager"
+	$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS ResourceManager"
 
   	if [[ $TIMELINE_SERVER == "true" ]]; then
 		m_echo "Finishing ApplicationHistoryServer:" $MASTERNODE
-		$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${BDEV_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
+		$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
 	fi
 
   	if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
 		m_echo "Finishing JobHistoryServer:" $MASTERNODE
-		$SSH_CMD $MASTERNODE "${LOAD_JAVA_COMMAND}; ${BDEV_BIN_DIR}/kill.sh $JPS JobHistoryServer"
+		$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS JobHistoryServer"
   	fi
 else
 	m_echo "Stopping YARN services"
