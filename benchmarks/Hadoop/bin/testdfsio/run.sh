@@ -6,10 +6,8 @@ $TESTDFSIO -read -nrFiles $DFSIO_N_FILES -fileSize $DFSIO_FILE_SIZE"
 
 run_benchmark "$COMMAND"
 
-if [ $(cat $TMPLOGFILE | grep -i -E "job failed|FinalApplicationStatus=FAILED" | wc -l) != "0" ]
-then
-	ELAPSED_TIME="FAILED"
-else
+if [ "$ELAPSED_TIME" != "TIMEOUT" ] && [ "$ELAPSED_TIME" != "FAILED" ]; then
+
 	READ_OUTPUT=`grep "TestDFSIO ----- : read" $TMPLOGFILE -A 8 `
 	READ_THROUGHPUT_LINE=`echo "$READ_OUTPUT" | grep "Throughput"`
 	READ_THROUGHPUT=${READ_THROUGHPUT_LINE##*Throughput mb/sec:}
