@@ -95,5 +95,6 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 # - OPENBLAS_NUM_THREADS=1   Disable multi-threading of OpenBLAS
 
 # Extra options added by BDEv
+$load_java_command
 export LD_LIBRARY_PATH=$hadoop_home/lib/native:$LD_LIBRARY_PATH
 export SPARK_DIST_CLASSPATH=$($hadoop_home/bin/hadoop classpath)
