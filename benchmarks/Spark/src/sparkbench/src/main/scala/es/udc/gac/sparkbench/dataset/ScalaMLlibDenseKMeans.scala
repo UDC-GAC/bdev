@@ -12,6 +12,7 @@ import scopt.OptionParser
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.ml.clustering
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaMLlibDenseKMeans {
 
@@ -108,7 +109,7 @@ object ScalaMLlibDenseKMeans {
     val result = kmeansEstimator
       .fit(data)
       .transform(data)
-      .as[(Long, linalg.Vector, Int)] // (key, features, cluster)
+      .as[(Long, Vector, Int)] // (key, features, cluster)
       .map(row => (row._3, row._2))   // row._3 is cluster, row._2 is features (Vector)
     
     io.save_dataset(params.output, result, session, "Text")
