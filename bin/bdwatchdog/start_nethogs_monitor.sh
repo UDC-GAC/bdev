@@ -13,6 +13,6 @@ for SLAVE in $MASTERNODE $SLAVENODES
 do
 	echo "Starting nethogs daemon in ${SLAVE}" >> ${BDW_LOG_DIR}/nethogs_log 2>&1
 	$SSH_CMD $SLAVE ". ${BDW_LOG_DIR}/config.sh; \
-	${BDWATCHDOG_HOME}/nethogs-config.sh; \
-	${PYTHON_BIN} ${BDWATCHDOG_DAEMONS_DIR}/nethogs.py start" >> ${BDW_LOG_DIR}/nethogs_log 2>&1
+		${BDWATCHDOG_HOME}/nethogs-config.sh; \
+		${PYTHON_BIN} ${BDWATCHDOG_DAEMONS_DIR}/nethogs.py start" >> ${BDW_LOG_DIR}/nethogs_log 2>&1
 done
