@@ -66,7 +66,6 @@ export BDWATCHDOG_SRC_DIR=$THIRD_PARTY_DIR/BDWatchdog
 export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
-export PYTHONPATH=${BDWATCHDOG_SRC_DIR}
 
 # Load functions
 . $BDEV_BIN_DIR/functions.sh
@@ -185,11 +184,12 @@ fi
 
 export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
-# Check JVM
 if [ "$ENABLE_MODULES" == "true" ]; then
 	module load ${MODULE_JAVA}
+	module load ${MODULE_PYTHON}
 fi
 
+# Check JVM
 export JAVA=$(which java 2> /dev/null)
 
 if [ "x$JAVA" == "x" ]; then
@@ -203,6 +203,8 @@ elif [ ! -x "$JAVA" ]; then
 fi
 
 export BDEV_JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
+
+# Check jps command
 export JPS=$(which jps 2> /dev/null)
 
 if [ "x$JPS" == "x" ]; then
@@ -212,6 +214,19 @@ if [ ! -f "$JPS" ]; then
     m_exit "Missing jps command: $JPS"
 elif [ ! -x "$JPS" ]; then
     m_exit "jps command is not executable: $JPS"
+fi
+
+# Check Python
+export PYTHON_BIN=$(which python 2> /dev/null)
+
+if [ "x$PYTHON_BIN" == "x" ]; then
+    m_exit "Missing python command"
+fi
+
+if [ ! -f "$PYTHON_BIN" ]; then
+    m_exit "Missing PYTHON_BIN command: $PYTHON_BIN"
+elif [ ! -x "$PYTHON_BIN" ]; then
+    m_exit "python command is not executable: $PYTHON_BIN"
 fi
 
 # Check expect command
