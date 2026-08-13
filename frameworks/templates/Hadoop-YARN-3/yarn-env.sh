@@ -29,7 +29,7 @@ export YARN_CONF_DIR=$sol_conf_dir
 export YARN_LOG_DIR=$sol_log_dir
 export YARN_PID_DIR=$tmp_dir/yarn/pid
 
-$load_java_command
+export JAVA_HOME=$java_home
 
 if [ "$JAVA_HOME" = "" ]; then
   echo "Error: JAVA_HOME is not set."
