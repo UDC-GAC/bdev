@@ -775,7 +775,6 @@ function start_benchmark(){
 		fi
 	fi
 
-	m_echo "Starting $BENCHMARK"
 	CURRENT_TIME=`timestamp`
 	START_TIME=$(($START_TIME+$CURRENT_TIME))
 }
