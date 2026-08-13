@@ -164,11 +164,12 @@ function prepare_sql () {
 function init_hive_metastore () {
 	mkdir -p ${BENCHMARK_OUTPUT_DIR}
 
-    ${HIVE_HOME}/bin/schematool \
+	${HIVE_HOME}/bin/schematool \
         -dbType derby \
         -initSchema \
-        --hiveconf javax.jdo.option.ConnectionURL="jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true" \
-        --hiveconf hive.metastore.schema.verification=false
+        -url "jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true" \
+        -userName APP \
+        -passWord mine
 }
 
 export -f init_hive_metastore
