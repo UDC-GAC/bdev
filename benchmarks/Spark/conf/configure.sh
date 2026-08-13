@@ -45,18 +45,18 @@ else
 fi
 
 if [ "$BENCHMARK" == "tpcx_hs" ]; then
-	export SPARK_TCPX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TCPX_HS_JAR_NAME
+	export TCPX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TCPX_HS_JAR_NAME
 
 	# Download TPCx-HS jar file
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
 	m_echo "Downloading $SPARK_TCPX_HS_JAR_NAME from $URL"
 
-    wget -q -O $SPARK_TCPX_HS_JAR $URL/$SPARK_TCPX_HS_JAR_NAME
+    wget -q -O $TCPX_HS_JAR $URL/$SPARK_TCPX_HS_JAR_NAME
 
     if [ $? != 0 ]; then
-		rm $SPARK_TCPX_HS_JAR >& /dev/null
+		rm $TCPX_HS_JAR >& /dev/null
 		m_exit "Error when downloading $SPARK_TCPX_HS_JAR_NAME"
     fi
 else
-	m_echo "Using $SPARK_TCPX_HS_JAR"
+	m_echo "Using $TCPX_HS_JAR"
 fi
