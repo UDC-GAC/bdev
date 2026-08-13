@@ -188,9 +188,9 @@ export SSH_CMD="$SSH_CMD $SSH_OPTS"
 # Check JVM
 if [ "$ENABLE_MODULES" == "true" ]; then
 	module load ${MODULE_JAVA}
-else
-    JAVA=$(which java 2> /dev/null)
 fi
+
+export JAVA=$(which java 2> /dev/null)
 
 if [ "x$JAVA" == "x" ]; then
     m_exit "Missing java command"
