@@ -3,12 +3,14 @@
 if [[ $GEN_WORDCOUNT == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_WORDCOUNT}"; then
 		m_echo "Generating Wordcount data: ${WORDCOUNT_DATASIZE} bytes"
-		
-		OPTIONS="-t randomtext \
-		-n ${INPUT_WORDCOUNT} \
-		-m ${MAPPERS_NUMBER} \
-		-p ${WORDCOUNT_DATASIZE} \
-		-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
+
+		OPTIONS=(
+    		-t randomtext
+    		-n "$INPUT_WORDCOUNT"
+    		-m "$MAPPERS_NUMBER"
+    		-p "$WORDCOUNT_DATASIZE"
+    		-outFormat "$EXAMPLES_OUTPUT_FORMAT"
+		)
 
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
@@ -24,13 +26,15 @@ if [[ $GEN_SORT == "true" ]]; then
 	else
 	    if ! storage_dir_exists "${INPUT_SORT}"; then
 			m_echo "Generating Sort data: ${SORT_DATASIZE} bytes"
-			
-			OPTIONS="-t randomtext \
-			-n ${INPUT_SORT} \
-			-m ${MAPPERS_NUMBER} \
-			-p ${SORT_DATASIZE} \
-			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
+			OPTIONS=(
+				-t randomtext
+				-n "${INPUT_SORT}"
+				-m "${MAPPERS_NUMBER}"
+				-p "${SORT_DATASIZE}"
+				-outFormat "${EXAMPLES_OUTPUT_FORMAT}"
+			)
+			
 			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
@@ -49,13 +53,15 @@ if [[ $GEN_GREP == "true" ]]; then
 	else
 	    if ! storage_dir_exists "${INPUT_GREP}"; then
 			m_echo "Generating Grep data: ${GREP_DATASIZE} bytes"
-			
-			OPTIONS="-t randomtext \
-			-n ${INPUT_GREP} \
-			-m ${MAPPERS_NUMBER} \
-			-p ${GREP_DATASIZE} \
-			-outFormat ${EXAMPLES_OUTPUT_FORMAT}"
 
+			OPTIONS=(
+				-t randomtext
+				-n "${INPUT_GREP}"
+				-m "${MAPPERS_NUMBER}"
+				-p "${GREP_DATASIZE}"
+				-outFormat "${EXAMPLES_OUTPUT_FORMAT}"
+			)
+			
 			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
@@ -67,12 +73,14 @@ fi
 if [[ $GEN_TERASORT == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_TERASORT}"; then
 		m_echo "Generating Terasort data: ${TERASORT_DATASIZE} bytes"
-		
-		OPTIONS="-t teragen \
-		-n ${INPUT_TERASORT} \
-		-m ${MAPPERS_NUMBER} \
-		-p ${TERASORT_ROWS_NUMBER}"
 
+		OPTIONS=(
+			-t teragen
+			-n "${INPUT_TERASORT}"
+			-m "${MAPPERS_NUMBER}"
+			-p "${TERASORT_ROWS_NUMBER}"
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -84,11 +92,13 @@ if [[ $GEN_TPCX_HS == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_TPCX_HS}"; then
 		m_echo "Generating TPCx-HS data: ${TPCX_HS_DATASIZE} bytes"
 
-		OPTIONS="-t hsgen \
-		-n ${INPUT_TPCX_HS} \
-		-m ${MAPPERS_NUMBER} \
-		-p ${TPCX_HS_ROWS_NUMBER}"
-
+		OPTIONS=(
+			-t hsgen
+			-n "${INPUT_TPCX_HS}"
+			-m "${MAPPERS_NUMBER}"
+			-p "${TPCX_HS_ROWS_NUMBER}"
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -99,15 +109,17 @@ fi
 if [[ $GEN_PAGERANK == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_PAGERANK}"; then
 		m_echo "Generating PageRank data: ${PAGERANK_PAGES} pages"
-		
-		OPTIONS="-t pagerank \
-		-n ${INPUT_PAGERANK} \
-		-m ${MAPPERS_NUMBER} \
-		-r ${REDUCERS_NUMBER} \
-		-p ${PAGERANK_PAGES} \
-		-pbalance -pbalance \
-		-o text"
 
+		OPTIONS=(
+			-t pagerank
+			-n "${INPUT_PAGERANK}"
+			-m "${MAPPERS_NUMBER}"
+			-r "${REDUCERS_NUMBER}"
+			-p "${PAGERANK_PAGES}"
+			-pbalance -pbalance
+			-o text
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -122,17 +134,19 @@ if [[ $GEN_CC == "true" ]]; then
 	else
 	    if ! storage_dir_exists "${INPUT_CC}"; then
 			m_echo "Generating Connected Components data: ${CC_PAGES} pages"
-			
-			OPTIONS="-t pagerank \
-			-n ${INPUT_CC} \
-			-m ${MAPPERS_NUMBER} \
-			-r ${REDUCERS_NUMBER} \
-			-p ${CC_PAGES} \
-			-pbalance -pbalance \
-			-o text"
 
-		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
-		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
+			OPTIONS=(
+				-t pagerank
+				-n "${INPUT_CC}"
+				-m "${MAPPERS_NUMBER}"
+				-r "${REDUCERS_NUMBER}"
+				-p "${CC_PAGES}"
+				-pbalance -pbalance
+				-o text
+			)
+			
+			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
+			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
 	    else
             m_echo "Connected Components data already exists"
         fi
@@ -142,16 +156,18 @@ fi
 if [[ $GEN_KMEANS == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_KMEANS}"; then
 		m_echo "Generating KMeans data: ${KMEANS_NUM_OF_CLUSTERS} clusters, ${KMEANS_DIMENSIONS} dimensions, ${KMEANS_NUM_OF_SAMPLES} samples"
-		
-		OPTIONS="-t kmeans \
-		-compress false \
-		-sampleDir ${INPUT_KMEANS}/samples \
-		-clusterDir ${INPUT_KMEANS}/cluster \
-		-numClusters ${KMEANS_NUM_OF_CLUSTERS} \
-		-numSamples ${KMEANS_NUM_OF_SAMPLES} \
-		-samplesPerFile ${KMEANS_SAMPLES_PER_INPUTFILE} \
-		-sampleDimension ${KMEANS_DIMENSIONS}"
 
+		OPTIONS=(
+			-t kmeans
+			-compress false
+			-sampleDir "${INPUT_KMEANS}/samples"
+			-clusterDir "${INPUT_KMEANS}/cluster"
+			-numClusters "${KMEANS_NUM_OF_CLUSTERS}"
+			-numSamples "${KMEANS_NUM_OF_SAMPLES}"
+			-samplesPerFile "${KMEANS_SAMPLES_PER_INPUTFILE}"
+			-sampleDimension "${KMEANS_DIMENSIONS}"
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -162,15 +178,17 @@ fi
 if [[ $GEN_BAYES == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_BAYES}"; then
 		m_echo "Generating Bayes data: ${BAYES_PAGES} pages, ${BAYES_CLASSES} classes"
-	
-		OPTIONS="-t bayes \
-		-n ${INPUT_BAYES} \
-		-m ${MAPPERS_NUMBER} \
-		-r ${REDUCERS_NUMBER} \
-		-p ${BAYES_PAGES} \
-		-g ${BAYES_CLASSES} \
-		-o sequence"
 
+		OPTIONS=(
+			-t bayes
+			-n "${INPUT_BAYES}"
+			-m "${MAPPERS_NUMBER}"
+			-r "${REDUCERS_NUMBER}"
+			-p "${BAYES_PAGES}"
+			-g "${BAYES_CLASSES}"
+			-o sequence
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -181,15 +199,17 @@ fi
 if [[ $GEN_AGGREGATION == "true" ]]; then
 	if ! storage_dir_exists "${INPUT_AGGREGATION}"; then
 		m_echo "Generating Aggregation data: ${AGGREGATION_PAGES} pages, ${AGGREGATION_USERVISITS} uservisits"
-		
-		OPTIONS="-t hive \
-		-n ${INPUT_AGGREGATION} \
-		-m ${MAPPERS_NUMBER} \
-		-r ${REDUCERS_NUMBER} \
-		-p ${AGGREGATION_PAGES} \
-		-v ${AGGREGATION_USERVISITS} \
-		-o sequence"
 
+		OPTIONS=(
+			-t hive
+			-n "${INPUT_AGGREGATION}"
+			-m "${MAPPERS_NUMBER}"
+			-r "${REDUCERS_NUMBER}"
+			-p "${AGGREGATION_PAGES}"
+			-v "${AGGREGATION_USERVISITS}"
+			-o sequence
+		)
+		
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 		${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
     else
@@ -206,14 +226,17 @@ if [[ $GEN_JOIN == "true" ]]; then
 	else
 		if ! storage_dir_exists "${INPUT_JOIN}"; then
 			m_echo "Generating Join data: ${JOIN_PAGES} pages, ${JOIN_USERVISITS} uservisits"
-			OPTIONS="-t hive \
-			-n ${INPUT_JOIN} \
-			-m ${MAPPERS_NUMBER} \
-			-r ${REDUCERS_NUMBER} \
-			-p ${JOIN_PAGES} \
-			-v ${JOIN_USERVISITS} \
-			-o sequence"
 
+			OPTIONS=(
+				-t hive
+				-n "${INPUT_JOIN}"
+				-m "${MAPPERS_NUMBER}"
+				-r "${REDUCERS_NUMBER}"
+				-p "${JOIN_PAGES}"
+				-v "${JOIN_USERVISITS}"
+				-o sequence
+			)
+			
 			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
         else
@@ -236,15 +259,17 @@ if [[ $GEN_SCAN == "true" ]]; then
 	else
 		if ! storage_dir_exists "${INPUT_SCAN}"; then
 			m_echo "Generating Scan data: ${SCAN_PAGES} pages, ${SCAN_USERVISITS} uservisits"
-			
-			OPTIONS="-t hive \
-			-n ${INPUT_SCAN} \
-			-m ${MAPPERS_NUMBER} \
-			-r ${REDUCERS_NUMBER} \
-			-p ${SCAN_PAGES} \
-			-v ${SCAN_USERVISITS} \
-			-o sequence"
 
+			OPTIONS=(
+				-t hive
+				-n "${INPUT_SCAN}"
+				-m "${MAPPERS_NUMBER}"
+				-r "${REDUCERS_NUMBER}"
+				-p "${SCAN_PAGES}"
+				-v "${SCAN_USERVISITS}"
+				-o sequence
+			)
+			
 			m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}"
 			${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS}
         else
