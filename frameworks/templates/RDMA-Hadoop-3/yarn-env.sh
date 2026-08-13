@@ -31,6 +31,11 @@ export YARN_PID_DIR=$tmp_dir/yarn/pid
 
 $load_java_command
 
+if [ "$JAVA_HOME" = "" ]; then
+  echo "Error: JAVA_HOME is not set."
+  exit 1
+fi
+
 export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 export YARN_NODEMANAGER_HEAPSIZE=$nodemanager_d_heapsize
 export YARN_TIMELINE_HEAPSIZE=$yarn_timeline_d_heapsize
