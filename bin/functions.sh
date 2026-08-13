@@ -926,13 +926,14 @@ function run_benchmark()
 {
 	start_benchmark
 
-	m_echo "Running $*"
 	local exit_code=0
 	
 	if [[ $TIMEOUT != 0 ]]; then
+		m_echo "Running ${BENCHMARK} with timeout ${TIMEOUT}: $*"
 		run_command_timeout "$*"
 		exit_code=$?
 	else
+		m_echo "Running ${BENCHMARK}: $*"
 		run_command "$*"
 		exit_code=$?
 	fi
