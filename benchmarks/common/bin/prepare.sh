@@ -116,7 +116,7 @@ if [[ $GEN_PAGERANK == "true" ]]; then
 			-m "${MAPPERS_NUMBER}"
 			-r "${REDUCERS_NUMBER}"
 			-p "${PAGERANK_PAGES}"
-			-pbalance -pbalance
+			-pbalance
 			-o text
 		)
 		
@@ -141,7 +141,7 @@ if [[ $GEN_CC == "true" ]]; then
 				-m "${MAPPERS_NUMBER}"
 				-r "${REDUCERS_NUMBER}"
 				-p "${CC_PAGES}"
-				-pbalance -pbalance
+				-pbalance
 				-o text
 			)
 			
