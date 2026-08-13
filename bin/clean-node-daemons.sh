@@ -12,7 +12,7 @@ if [[ \"x$DAEMON_PIDS\" != \"x\" ]]; then
 	kill -9 $DAEMON_PIDS
 fi
 
-DOOL_PID=`ps -elf | grep ${PYTHON3_BIN} | grep ${DOOL_COMMAND_NAME} | grep -v "export" | awk '{print $4}'`
+DOOL_PID=`ps -elf | grep ${PYTHON_BIN} | grep ${DOOL_COMMAND_NAME} | grep -v "export" | awk '{print $4}'`
 
 if [[ \"x$DOOL_PID\" != \"x\" ]]; then
 	DOOL_PID=`echo $DOOL_PID`
