@@ -4,16 +4,21 @@ export SORT_PARTITIONS=$(($SPARK_EXECUTORS * $SPARK_CORES_PER_EXECUTOR))
 
 if [ $SPARK_SERIES == "2" ]; then
 	export SPARK_BENCH_JAR_NAME=sparkbench-2.4_${SPARK_SCALA_VERSION}.jar
-elif [ $SPARK_SERIES == "3" ] || [ $SPARK_SERIES == "4" ]; then
-	if [ $SPARK_MAJOR_VERSION == "3.0" ] || [ $SPARK_MAJOR_VERSION == "3.1" ]; then
-		export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
-	elif [ $SPARK_MAJOR_VERSION == "4.0" ]; then
-		export SPARK_BENCH_JAR_NAME=sparkbench-4.0_${SPARK_SCALA_VERSION}.jar
-	else
-		export SPARK_BENCH_JAR_NAME=sparkbench-3.2_${SPARK_SCALA_VERSION}.jar
-	fi
 else
-	m_exit "Spark version is not supported: $SPARK_VERSION"
+	case "$SPARK_MAJOR_VERSION" in
+   		3.0|3.1)
+        	export SPARK_BENCH_JAR_NAME=sparkbench-3.0_${SPARK_SCALA_VERSION}.jar
+        	;;
+    	3.2|3.3|3.4|3.5)
+        	export SPARK_BENCH_JAR_NAME=sparkbench-3.2_${SPARK_SCALA_VERSION}.jar
+        	;;
+    	4.0|4.1|4.2)
+		    export SPARK_BENCH_JAR_NAME=sparkbench-4.0_${SPARK_SCALA_VERSION}.jar
+        	;;
+		*)
+			m_exit "Spark version is not supported: $SPARK_VERSION"
+        	;;
+	esac
 fi
 
 export SPARK_BENCH_DIR=$SOL_BENCH_DIR/bin
