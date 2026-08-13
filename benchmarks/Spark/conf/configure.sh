@@ -44,9 +44,9 @@ else
 	m_echo "Using $SPARK_BENCH_JAR"
 fi
 
-export SPARK_TCPX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TCPX_HS_JAR_NAME
-
 if [ "$BENCHMARK" == "tpcx_hs" ]; then
+	export SPARK_TCPX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TCPX_HS_JAR_NAME
+
 	# Download TPCx-HS jar file
 	URL=https://bdev.des.udc.es/dist/tpcx-hs
 	m_echo "Downloading $SPARK_TCPX_HS_JAR_NAME from $URL"
