@@ -171,6 +171,8 @@ function init_hive_metastore () {
         --hiveconf hive.metastore.schema.verification=false
 }
 
+export -f init_hive_metastore
+
 function prepare_sql_aggregation () {
 	prepare_sql
 	HIVE_SQL_FILE=$1
