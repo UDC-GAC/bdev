@@ -185,7 +185,9 @@ fi
 export SSH_CMD="$SSH_CMD $SSH_OPTS"
 
 if [ "$ENABLE_MODULES" == "true" ]; then
+	m_echo "Loading modules: ${MODULES_JAVA}"
 	module load ${MODULES_JAVA}
+	m_echo "Loading modules: ${MODULES_PYTHON}"
 	module load ${MODULES_PYTHON}
 fi
 
