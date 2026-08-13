@@ -14,5 +14,5 @@ export MEMORY_PER_NODE=$((`grep MemTotal /proc/meminfo | awk '{print $2}'`/1024)
 export MEMORY_PER_NODE_FACTOR=0.95	# Percentage of the total memory per node available for allocation
 export MEMORY_ALLOC_PER_NODE=`op_int "$MEMORY_PER_NODE * $MEMORY_PER_NODE_FACTOR"`	# Memory per node available for allocation
 export ENABLE_MODULES=false 	# Enable use of modules environment
-export MODULE_JAVA=java 	# Java module
-export MODULE_PYTHON=python 	# Python module
+export MODULES_JAVA="java" 	# Modules to load Java
+export MODULES_PYTHON="python" 	# Modules to load Python
