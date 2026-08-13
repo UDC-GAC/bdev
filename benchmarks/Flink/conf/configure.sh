@@ -20,8 +20,7 @@ else
 	m_echo "Using $FLINK_BENCH_JAR"
 fi
 	
-
-if [ "$BENCHMARK" == "tpcx_hs" ]; then
+if [ "$GEN_TPCX_HS" == "tpcx_hs" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
 		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.14.0_${FLINK_SCALA_VERSION}.jar
 		export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TPCX_HS_JAR_NAME
