@@ -51,6 +51,7 @@ function m_start_message()
 		m_echo "NFS mount point: $NFS_MOUNT_POINT"
 	fi
 	m_echo "JVM: $BDEV_JAVA_HOME"
+	m_echo "Python: $PYTHON_BIN"
 }
 
 export -f m_start_message
