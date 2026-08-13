@@ -57,7 +57,7 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 	rm $TMP_HIVE_FILE
 fi
 
-if [[ "$GEN_TPCX_HS" == "tpcx_hs" ]]; then
+if [[ "$GEN_TPCX_HS" == "true" ]]; then
 	export HADOOP_BENCH_DIR=$SOL_BENCH_DIR/bin
 	export HADOOP_TPCX_HS_JAR_NAME=tpcx-hs-hadoop.jar
 	export TPCX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TPCX_HS_JAR_NAME}
