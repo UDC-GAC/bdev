@@ -761,17 +761,16 @@ function start_benchmark(){
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
 
-	if [[ $WAIT_SECONDS -gt 0 ]]
-	then
+	if [[ $WAIT_SECONDS -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
 		sleep $WAIT_SECONDS
 	fi
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-		### MARK start of workload
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+			### MARK start of workload
+			${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+			${PYTHON3_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 		fi
 	fi
 
