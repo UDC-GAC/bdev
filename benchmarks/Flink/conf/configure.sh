@@ -27,17 +27,19 @@ if [ "$GEN_TPCX_HS" == "true" ]; then
 	else
         m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
-	
-	# Download TPCx-HS jar file
-	URL=https://bdev.des.udc.es/dist/tpcx-hs
-	m_echo "Downloading $FLINK_TPCX_HS_JAR_NAME from $URL"
 
-    wget -q -O $TPCX_HS_JAR $URL/$FLINK_TPCX_HS_JAR_NAME
+	if [ ! -f $TPCX_HS_JAR ]; then
+		# Download TPCx-HS jar file
+		URL=https://bdev.des.udc.es/dist/tpcx-hs
+		m_echo "Downloading $FLINK_TPCX_HS_JAR_NAME from $URL"
 
-    if [ $? != 0 ]; then
-		rm $TPCX_HS_JAR >& /dev/null
-		m_exit "Error when downloading $FLINK_TPCX_HS_JAR_NAME"
-    fi
-else
-	m_echo "Using $TPCX_HS_JAR"
+    	wget -q -O $TPCX_HS_JAR $URL/$FLINK_TPCX_HS_JAR_NAME
+
+    	if [ $? != 0 ]; then
+			rm $TPCX_HS_JAR >& /dev/null
+			m_exit "Error when downloading $FLINK_TPCX_HS_JAR_NAME"
+    	fi
+	else
+		m_echo "Using $TPCX_HS_JAR"
+	fi
 fi
