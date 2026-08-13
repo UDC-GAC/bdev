@@ -880,26 +880,46 @@ function end_benchmark(){
 
 export -f end_benchmark
 
-################################################################################
-# Executes command with a timeout
-# Params:
-#   $* commands to execute
-# Returns 1 if timed out 0 otherwise
 function run_command_timeout()
 {
-	CMD="/bin/sh -c \"$*\""
+	local CMD="$*"
 
-	$EXPECT -c \
-	"set echo -noecho; set timeout $TIMEOUT; spawn -noecho $CMD; expect timeout { exit 1 } eof { exit 0 }"
-
-	if [[ $? == 1 ]] ; then ELAPSED_TIME="TIMEOUT" ; fi
+    $EXPECT -c "
+        set timeout $TIMEOUT
+        spawn -noecho bash -c \"$CMD 2>&1 | tee $TMPLOGFILE\"
+        expect {
+            timeout { exit 124 } 
+            eof {
+				# capture the exit code of the spawn process
+                catch wait result
+				# exit code is in the 4th position of the 'result' list
+                exit [lindex \$result 3]
+            }
+        }
+    "
+	
+    local exit_code=$?
+    
+	#124 is the standard POSIX code for Timeout ('timeout' command)
+	if [[ $exit_code == 124 ]] ; then 
+        ELAPSED_TIME="TIMEOUT"
+        return 124
+    fi
+    
+    return $exit_code
 }
 
 export -f run_command_timeout
 
 function run_command()
 {
-	/bin/sh -c "$*"
+	local CMD="$*"	
+	# Execute the command and send everything to tee
+    eval "$CMD" 2>&1 | tee "$TMPLOGFILE"
+    # Capture the error from the command that was BEFORE the 'tee'
+	local exit_code=${PIPESTATUS[0]}
+	
+    return $exit_code	
 }
 
 export -f run_command
@@ -908,26 +928,41 @@ function run_benchmark()
 {
 	start_benchmark
 
-	if [[ $TIMEOUT != 0 ]]
-	then
-		run_command_timeout "{ $*; } 2>&1 | tee $TMPLOGFILE"
+	m_echo "Running $*"
+	local exit_code=0
+	
+	if [[ $TIMEOUT != 0 ]]; then
+		run_command_timeout "$*"
+		exit_code=$?
 	else
-		run_command "$* 2>&1 | tee $TMPLOGFILE"
+		run_command "$*"
+		exit_code=$?
 	fi
 
 	end_benchmark
+
+    if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
+        m_warn "Time limit exceeded ($TIMEOUT s)"
+        return $exit_code
+    fi
+
+    if [[ $exit_code -ne 0 ]]; then
+        m_warn "The execution ahs failed (exit code: $exit_code)"
+        ELAPSED_TIME="FAILED"
+        return $exit_code
+    fi
+
+    return 0
 }
 
 export -f run_benchmark
 
 function save_elapsed_time()
 {
-	if [[ "$ELAPSED_TIME" == "FAILED" ]]
-	then
+	if [[ "$ELAPSED_TIME" == "FAILED" ]]; then
 		m_err "${BENCHMARK} failed"
 	else
-		if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]
-		then
+		if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
 			m_err "${BENCHMARK} timed out"
 			FINISH="true"
 		else
