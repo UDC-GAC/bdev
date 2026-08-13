@@ -50,7 +50,7 @@ function m_start_message()
 	if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
 		m_echo "NFS mount point: $NFS_MOUNT_POINT"
 	fi
-	m_echo "JVM: $LOAD_JAVA_COMMAND"
+	m_echo "JVM: $BDEV_JAVA_HOME"
 }
 
 export -f m_start_message
@@ -583,8 +583,7 @@ function begin_report(){
 	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
-	REPORT="$REPORT \t JVM \t\t\t\t\t $LOAD_JAVA_COMMAND \n"
-	REPORT="$REPORT \t JAVA_HOME \t\t\t\t $JAVA_HOME \n"
+	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
 	if [[ -n $ETH_INTERFACE ]]
 	then
 		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
