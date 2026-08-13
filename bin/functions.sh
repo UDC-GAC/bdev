@@ -584,15 +584,13 @@ function begin_report(){
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
-	REPORT="$REPORT \t Python \t\t\t\t\t $PYTHON_BIN \n"
-	if [[ -n $ETH_INTERFACE ]]
-	then
+	REPORT="$REPORT \t Python \t\t\t\t $PYTHON_BIN \n"
+	if [[ -n $ETH_INTERFACE ]]; then
 		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
 	else
 		REPORT="$REPORT \t ETH interface  \t\t\t Not specified \n"
 	fi
-	if [[ -n $IPOIB_INTERFACE ]]
-	then
+	if [[ -n $IPOIB_INTERFACE ]]; then
 		REPORT="$REPORT \t IPoIB interface  \t\t\t $IPOIB_INTERFACE \n"
 	else
 		REPORT="$REPORT \t IPoIB interface  \t\t\t Not specified \n"
@@ -667,28 +665,22 @@ function begin_report(){
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
-	if [[ $ENABLE_PLOT == "true" ]]
-	then
-		if [[ ! -f "$PLOT_DIR" ]]
-		then
+	if [[ $ENABLE_PLOT == "true" ]]; then
+		if [[ ! -f "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_legend.sh $PLOT_DIR >> $PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then
-		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]
-		then
+	if [[ $ENABLE_OPROFILE == "true" ]]; then
+		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_legend.sh $OPROFILE_PLOT_DIR >> $OPROFILE_PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_ILO == "true" ]]
-	then
-        	if [[ ! -f "$ILO_DIR" ]]
-	        then
+	if [[ $ENABLE_ILO == "true" ]]; then
+        	if [[ ! -f "$ILO_DIR" ]]; then
         	        mkdir -p $ILO_DIR
 	        fi
 
