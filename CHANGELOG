@@ -75,6 +75,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Simplified tool configuration and removed experiment directory
 
+		- Fix Java detection and improve JAVA_HOME configuration
+
 		- Several code refactorings, minor changes and bug fixes
 
 
