@@ -886,7 +886,7 @@ function run_command_timeout()
 
     $EXPECT -c "
         set timeout $TIMEOUT
-        spawn -noecho bash -c \"$CMD 2>&1 | tee $TMPLOGFILE\"
+        spawn -noecho bash -c \"set -o pipefail; $CMD 2>&1 | tee $TMPLOGFILE\"
         expect {
             timeout { exit 124 } 
             eof {
@@ -915,10 +915,8 @@ function run_command()
 {
 	local CMD="$*"	
 	# Execute the command and send everything to tee
-    eval "$CMD" 2>&1 | tee "$TMPLOGFILE"
-    # Capture the error from the command that was BEFORE the 'tee'
-	local exit_code=${PIPESTATUS[0]}
-	
+	bash -c "set -o pipefail; $CMD 2>&1 | tee \"$TMPLOGFILE\""
+	local exit_code=$?	
     return $exit_code	
 }
 
