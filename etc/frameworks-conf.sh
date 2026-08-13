@@ -12,7 +12,7 @@ export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
 export SPARK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.5.0
-export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
+export SPARK_SCALA_VERSION=2.13	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_MEMORY_OVERHEAD_FACTOR=0.1 # Percentage of the driver memory for non-heap memory

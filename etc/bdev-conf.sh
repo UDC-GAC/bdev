@@ -9,6 +9,9 @@ export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
 export OUT_DIR=$PWD/${APP_NAME}_OUT	# Default report output directory
 export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 export ENABLE_PLOT=false	# Enable plot generation
+export ENABLE_MODULES=false     # Enable use of modules environment
+export MODULES_JAVA="java"      # Modules to load Java
+export MODULES_PYTHON="python"  # Modules to load Python
 
 # Monitors
 export ENABLE_STAT=false	# Enable built-in resource monitoring using dool
