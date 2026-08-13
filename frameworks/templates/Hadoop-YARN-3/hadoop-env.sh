@@ -46,6 +46,11 @@
 
 $load_java_command
 
+if [ "$JAVA_HOME" = "" ]; then
+  echo "Error: JAVA_HOME is not set."
+  exit 1
+fi
+
 export HADOOP_CONF_DIR=$sol_conf_dir
 export HADOOP_LOG_DIR=$sol_log_dir
 export HADOOP_SECURE_LOG_DIR=$sol_log_dir
