@@ -65,14 +65,7 @@ object ScalaNaiveDenseKMeans {
 
     val raw_data = sc.sequenceFile[LongWritable, VectorWritable](params.input)
     val raw_centers = sc.sequenceFile[LongWritable, Kluster](params.centers)
-    val raw_initCenters = raw_centers.map {
-      case (k, v) =>
-        val center = v.getCenter()
-        var vector: Array[Double] = new Array[Double](center.size)
-        for (i <- 0 until center.size)
-          vector(i) = center.get(i)
-        new Centroid(v.getId(), vector)
-    }
+
     val raw_samples = raw_data.map {
       case (k, v) =>
         var vector: Array[Double] = new Array[Double](v.get().size)
@@ -81,10 +74,17 @@ object ScalaNaiveDenseKMeans {
         new Point(vector)
     }.cache()
     
+    val raw_initCenters = raw_centers.map {
+      case (k, v) =>
+        val center = v.getCenter()
+        var vector: Array[Double] = new Array[Double](center.size)
+        for (i <- 0 until center.size)
+          vector(i) = center.get(i)
+        new Centroid(v.getId(), vector)
+    }
+
     val samples = raw_samples.toDS()
     val initCenters = raw_initCenters.toDS()
-
-
     val numSamples = samples.count()
     val k = initCenters.count()
     val maxIterations = params.numIterations
@@ -107,12 +107,10 @@ object ScalaNaiveDenseKMeans {
       println("Iteration " + i)
 
       val broadcasted_centroids = sc.broadcast(currentCentroids.collect())
-
       val newCentroids = samples
         .map(p => selectNearestCenterOpt(p, broadcasted_centroids)).as[(Int, (Point, Long))]
         .groupByKey(_._1).reduceGroups((a,b) => (a._1,(a._2._1.add(b._2._1), a._2._2 + b._2._2)))
         .map { case (k, v) => new Centroid(k, v._2._1.div(v._2._2)) }
-
 
       val changed = currentCentroids.map(c => (c.id, c)).as("current")
         .join(newCentroids.map(c => (c.id, c)).as("new"))
@@ -120,7 +118,6 @@ object ScalaNaiveDenseKMeans {
         .filter((value: (Centroid, Centroid)) =>
             value._1.squaredDistance(value._2) > converge_delta
         )
-      
       
       currentCentroids = newCentroids
 
