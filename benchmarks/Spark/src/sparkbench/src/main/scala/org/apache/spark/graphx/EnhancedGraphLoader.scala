@@ -19,6 +19,8 @@ package org.apache.spark.graphx
 
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.Dataset
 import org.apache.spark.graphx.impl.{ EdgePartitionBuilder, GraphImpl }
 import org.apache.spark.rdd._
 import org.apache.spark.graphx._
