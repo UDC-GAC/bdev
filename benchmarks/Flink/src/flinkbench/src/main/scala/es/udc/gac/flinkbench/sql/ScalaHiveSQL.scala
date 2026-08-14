@@ -26,7 +26,9 @@ object ScalaHiveSQL {
     hiveConf.set("hive.exec.local.scratchdir", s"$tmp_dir/hive")
     hiveConf.set("derby.stream.error.file", s"$bench_output_dir/derby_flink.log")
     hiveConf.set("hive.stats.autogather", "false")
-
+    hiveConf.set("hive.metastore.schema.verification", "false")
+    hiveConf.set("datanucleus.schema.autoCreateAll", "true")
+    
     val settings = EnvironmentSettings.newInstance()
       .inBatchMode()
       .build()
