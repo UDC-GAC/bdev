@@ -47,8 +47,7 @@ object EnhancedGraphLoader {
 	*
 	* @param sc SparkContext
 	* @param path the path to the file (e.g., /home/data/file or hdfs://file)
-	* @param canonicalOrientation whether to orient edges in the positive
-	*        direction
+	* @param canonicalOrientation whether to orient edges in the positive direction
 	* @param numEdgePartitions the number of partitions for the edge RDD
 	* Setting this value to -1 will use the default parallelism.
 	* @param edgeStorageLevel the desired storage level for the edge partitions
@@ -64,13 +63,13 @@ object EnhancedGraphLoader {
 		{
 				val startTime = System.currentTimeMillis
 
-						// Parse the edge data table directly into edge partitions
-						val lines =
-						if (numEdgePartitions > 0) {
-							sc.textFile(path, numEdgePartitions).coalesce(numEdgePartitions)
-						} else {
-							sc.textFile(path)
-						}
+				// Parse the edge data table directly into edge partitions
+				val lines =
+					if (numEdgePartitions > 0) {
+						sc.textFile(path, numEdgePartitions).coalesce(numEdgePartitions)
+					} else {
+						sc.textFile(path)
+					}
 				val edges = lines.mapPartitionsWithIndex { (pid, iter) =>
 				val builder = new EdgePartitionBuilder[Int, Int]
 						iter.foreach { line =>
@@ -90,47 +89,32 @@ object EnhancedGraphLoader {
 				}
 				Iterator((pid, builder.toEdgePartition))
 				}.persist(edgeStorageLevel).setName("GraphLoader.edgeListFile - edges (%s)".format(path))
-						edges.count()
-
-						println("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
-
-						GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel,
-						vertexStorageLevel = vertexStorageLevel)
+				
+				edges.count()
+				println("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
+				GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel, vertexStorageLevel = vertexStorageLevel)
 		} // end of edgeListFile
 
 	/**
-	 * Loads a graph from an edge list formatted file where each line contains two integers: a source
-	 * id and a target id. Skips lines that begin with `#`.
+	 * Loads a graph from an RDD where each element contains two strings: a source
+	 * id and a target id.
 	 *
 	 * If desired the edges can be automatically oriented in the positive
 	 * direction (source Id < target Id) by setting `canonicalOrientation` to
 	 * true.
 	 *
-	 * @example Loads a file in the following format:
-	 * {{{
-	* # Comment Line
-	* # Source Id <\t> Target Id
-	* 1   -5
-	* 1    2
-	* 2    7
-	* 1    8
-	* }}}
-	*
-	* @param lines RDD to read
-	* @param canonicalOrientation whether to orient edges in the positive
-	*        direction
-	* @param numEdgePartitions the number of partitions for the edge RDD
-	* Setting this value to -1 will use the default parallelism.
-	* @param edgeStorageLevel the desired storage level for the edge partitions
-	* @param vertexStorageLevel the desired storage level for the vertex partitions
-	*/
+	 * @param lines RDD to read
+	 * @param canonicalOrientation whether to orient edges in the positive direction
+	 * @param edgeStorageLevel the desired storage level for the edge partitions
+	 * @param vertexStorageLevel the desired storage level for the vertex partitions
+	 */
 	def edgeListRDD(
 			lines: RDD[(String, String)],
 			canonicalOrientation: Boolean = false,
-			numEdgePartitions: Int = -1,
 			edgeStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
 			vertexStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY): Graph[Int, Int] =
 		{
+				val startTime = System.currentTimeMillis
 				val edges = lines.mapPartitionsWithIndex { (pid, iter) =>
 				val builder = new EdgePartitionBuilder[Int, Int]
 						iter.foreach {
@@ -145,9 +129,51 @@ object EnhancedGraphLoader {
 				}
 				Iterator((pid, builder.toEdgePartition))
 				}.persist(edgeStorageLevel).setName("GraphLoader.edgeListRDD - edges")
-						edges.count()
+				
+				edges.count()
+				println("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
+				GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel, vertexStorageLevel = vertexStorageLevel)
+		} // end of edgeListRDD
 
-						GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel,
-						vertexStorageLevel = vertexStorageLevel)
-		} // end of edgeListFile
+	/**
+	 * Loads a graph from a Dataset where each row contains two strings: a source
+	 * id and a target id.
+	 *
+	 * If desired the edges can be automatically oriented in the positive
+	 * direction (source Id < target Id) by setting `canonicalOrientation` to
+	 * true.
+	 *
+	 * @param lines Dataset to read
+	 * @param canonicalOrientation whether to orient edges in the positive direction
+	 * @param edgeStorageLevel the desired storage level for the edge partitions
+	 * @param vertexStorageLevel the desired storage level for the vertex partitions
+	 */
+	def edgeListDataset(
+			lines: Dataset[(String, String)],
+			canonicalOrientation: Boolean = false,
+			edgeStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
+			vertexStorageLevel: StorageLevel = StorageLevel.MEMORY_ONLY): Graph[Int, Int] =
+		{
+				val startTime = System.currentTimeMillis
+				// GraphX ​​requires RDDs, so we extract the underlying RDD from the dataset
+				val rddLines = lines.rdd
+				val edges = rddLines.mapPartitionsWithIndex { (pid, iter) =>
+				val builder = new EdgePartitionBuilder[Int, Int]
+						iter.foreach {
+						case (k, v) =>
+						val srcId = k.toLong
+						val dstId = v.toLong
+						if (canonicalOrientation && srcId > dstId) {
+							builder.add(dstId, srcId, 1)
+						} else {
+							builder.add(srcId, dstId, 1)
+						}
+				}
+				Iterator((pid, builder.toEdgePartition))
+				}.persist(edgeStorageLevel).setName("GraphLoader.edgeListDataset - edges")
+						
+				edges.count()
+				println("It took %d ms to load the edges".format(System.currentTimeMillis - startTime))
+				GraphImpl.fromEdgePartitions(edges, defaultVertexAttr = 1, edgeStorageLevel = edgeStorageLevel, vertexStorageLevel = vertexStorageLevel)
+		} // end of edgeListDataset
 }
