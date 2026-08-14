@@ -2,6 +2,7 @@ package es.udc.gac.flinkbench.sql
 
 import org.apache.flink.table.api.{EnvironmentSettings, SqlDialect, TableEnvironment}
 import org.apache.flink.table.catalog.hive.HiveCatalog
+import org.apache.hadoop.hive.conf.HiveConf
 
 object ScalaHiveSQL {
 
@@ -18,12 +19,13 @@ object ScalaHiveSQL {
     val bench_output_dir = System.getenv("BENCHMARK_OUTPUT_DIR")
     val hive_tmp_dir = System.getenv("HIVE_TMP_DIR")
     val tmp_dir = System.getenv("TMP_DIR")
-
-    System.setProperty("javax.jdo.option.ConnectionURL", s"jdbc:derby:;databaseName=$bench_output_dir/metastore_db_flink;create=true")
-    System.setProperty("hive.exec.scratchdir", hive_tmp_dir)
-    System.setProperty("hive.exec.local.scratchdir", s"$tmp_dir/hive")
-    System.setProperty("derby.stream.error.file", s"$bench_output_dir/derby_flink.log")
-    System.setProperty("hive.stats.autogather", "false")
+    val hiveConf = new HiveConf()
+    
+    hiveConf.set("javax.jdo.option.ConnectionURL", s"jdbc:derby:;databaseName=$bench_output_dir/metastore_db_flink;create=true")
+    hiveConf.set("hive.exec.scratchdir", hive_tmp_dir)
+    hiveConf.set("hive.exec.local.scratchdir", s"$tmp_dir/hive")
+    hiveConf.set("derby.stream.error.file", s"$bench_output_dir/derby_flink.log")
+    hiveConf.set("hive.stats.autogather", "false")
 
     val settings = EnvironmentSettings.newInstance()
       .inBatchMode()
@@ -33,8 +35,16 @@ object ScalaHiveSQL {
 
     val catalogName = "myhive"
     val defaultDatabase = "default"
-     //hiveConfDir = null to take properties from System.getProperty/Classpath
-    val hiveCatalog = new HiveCatalog(catalogName, defaultDatabase, null)
+    val hiveVersion = "3.1.3"
+    
+    val hiveCatalog = new HiveCatalog(
+      catalogName,
+      defaultDatabase,
+      null: String,
+      hiveConf,
+      hiveVersion,
+      true // <-- allowEmbedded
+    )
     
     tableEnv.registerCatalog(catalogName, hiveCatalog)
     tableEnv.useCatalog(catalogName)
