@@ -39,7 +39,6 @@ function resolve_hive_issues() {
 }
 
 export PEGASUS_JAR=$THIRD_PARTY_DIR/pegasus-2.0/pegasus-2.0.jar
-export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 
 if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]]; then
 	URL="https://archive.apache.org/dist/mahout"
