@@ -35,8 +35,8 @@ if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]];
 fi
 
 if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true" ) ]]; then
-	if [[ "${HADOOP_HIVE_VERSION}" == 4.* ]]; then
-		m_exit "Hive 4.x is not supported: $HADOOP_HIVE_VERSION"
+	if [[ "${HIVE_VERSION}" == 4.* ]]; then
+		m_exit "Hive 4.x is not supported: $HIVE_VERSION"
 	fi
 	
 	if [[ ! -d $HIVE_HOME ]]; then
