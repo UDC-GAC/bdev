@@ -204,6 +204,7 @@ function prepare_sql_join () {
 
 	cat <<EOF > ${HIVE_SQL_FILE}
 USE DEFAULT;
+SET hive.auto.convert.join = false;
 
 CREATE EXTERNAL TABLE rankings_join_input (pageURL STRING, pageRank INT, avgDuration INT) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/rankings';
 CREATE EXTERNAL TABLE uservisits_join_input (sourceIP STRING,destURL STRING,visitDate STRING,adRevenue DOUBLE,userAgent STRING,countryCode STRING,languageCode STRING,searchWord STRING,duration INT ) ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' STORED AS SEQUENCEFILE LOCATION '$INPUT_JOIN/uservisits';
