@@ -60,9 +60,8 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 		rm $TMP_HIVE_FILE
 	fi
 
-	#Replace old Guava jar
-	rm $HIVE_HOME/lib/guava-*.jar
-	cp $HADOOP_HOME/share/hadoop/common/lib/guava-*.jar  $HIVE_HOME/lib
+	# Manage Guava jar for Hive
+	resolve_hive_guava_conflict
 fi
 
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
@@ -85,3 +84,29 @@ if [[ "$GEN_TPCX_HS" == "true" ]]; then
 		m_echo "Using $TPCX_HS_JAR"
 	fi
 fi
+
+function resolve_hive_guava_conflict() {
+    local HIVE_LIB="${HIVE_HOME}/lib"
+    local HADOOP_LIB="${HADOOP_HOME}/share/hadoop/common/lib"
+    local BACKUP_FILE=$(ls ${HIVE_LIB}/guava-*-original.bak 2>/dev/null | head -n 1)
+
+    if [[ -z "${BACKUP_FILE}" ]]; then
+        local ORIGINAL_JAR=$(ls ${HIVE_LIB}/guava-*.jar 2>/dev/null | grep -v 'original.bak' | head -n 1)
+        
+        if [[ -z "${ORIGINAL_JAR}" ]]; then
+            m_exit "No guava.jar was found in $HIVE_LIB"
+        fi
+        
+        mv "${ORIGINAL_JAR}" "${ORIGINAL_JAR}-original.bak"
+        BACKUP_FILE="${ORIGINAL_JAR}-original.bak"
+    fi
+
+    rm -f ${HIVE_LIB}/guava-*.jar
+
+    if [[ "${HADOOP_SERIES}" == 3 ]]; then
+        cp ${HADOOP_LIB}/guava-*.jar ${HIVE_LIB}/
+    else
+        local RESTORED_JAR="${BACKUP_FILE%-original.bak}"
+        cp "${BACKUP_FILE}" "${RESTORED_JAR}"
+    fi
+}
