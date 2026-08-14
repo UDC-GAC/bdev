@@ -1,10 +1,11 @@
 #!/bin/bash
 
-function resolve_hive_guava_conflict() {
+function resolve_hive_issues() {
     local HIVE_LIB="${HIVE_HOME}/lib"
     local HADOOP_LIB="${HADOOP_HOME}/share/hadoop/common/lib"
     local BACKUP_FILE=$(ls ${HIVE_LIB}/guava-*-original.bak 2>/dev/null | head -n 1)
-
+	local COMMONS_COLLECTIONS_JAR=commons-collections-3.2.2.jar
+	
     if [[ -z "${BACKUP_FILE}" ]]; then
         local ORIGINAL_JAR=$(ls ${HIVE_LIB}/guava-*.jar 2>/dev/null | grep -v 'original.bak' | head -n 1)
         
@@ -24,6 +25,10 @@ function resolve_hive_guava_conflict() {
         local RESTORED_JAR="${BACKUP_FILE%-original.bak}"
         cp "${BACKUP_FILE}" "${RESTORED_JAR}"
     fi
+
+	if [[ ! -f ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR ]]; then
+		wget -q -O ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR https://bdev.des.udc.es/dist/$COMMONS_COLLECTIONS_JAR
+	fi
 }
 
 export PEGASUS_JAR=$THIRD_PARTY_DIR/pegasus-2.0/pegasus-2.0.jar
@@ -86,8 +91,8 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 		rm $TMP_HIVE_FILE
 	fi
 
-	# Manage Guava jar for Hive
-	resolve_hive_guava_conflict
+	# Manage Hive issues (Guava, commons-collections)
+	resolve_hive_issues
 fi
 
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
