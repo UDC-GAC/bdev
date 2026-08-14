@@ -1,6 +1,9 @@
 #!/bin/sh
 
 export SORT_PARTITIONS=$FLINK_PARALLELISM
+# Hardcode last scala version supported by Flink 1.x
+# From Flink 2.x onwards, Flink is scala-free
+export FLINK_SCALA_VERSION=2.12
 export FLINK_BENCH_JAR_NAME=flinkbench-1.0_${FLINK_SCALA_VERSION}.jar
 export FLINK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
@@ -22,7 +25,7 @@ fi
 	
 if [ "$GEN_TPCX_HS" == "true" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
-		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.14.0_${FLINK_SCALA_VERSION}.jar
+		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
 		export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TPCX_HS_JAR_NAME
 	else
         m_exit "Flink version is not supported: $FLINK_VERSION"
