@@ -47,16 +47,18 @@ if [ "$GEN_TPCX_HS" == "true" ]; then
 	fi
 fi
 
-if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
-	export FLINK_HIVE_VERSION=3.1.2
-else
-	export FLINK_HIVE_VERSION=3.1.3
+if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "true" ]; then
+	if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
+		export FLINK_HIVE_VERSION=3.1.2
+	else
+		export FLINK_HIVE_VERSION=3.1.3
+	fi
+
+	HIVE_LIB="${HIVE_HOME}/lib"
+
+	for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar; do
+    	if [ -f "$f" ]; then
+        	cp ${f} ${FLINK_HOME}/lib
+    	fi
+	done
 fi
-
-HIVE_LIB="${HIVE_HOME}/lib"
-
-for jar in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar; do
-    if [ -f "$jar" ]; then
-        export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${jar}"
-    fi
-done
