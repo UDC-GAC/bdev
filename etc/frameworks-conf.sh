@@ -73,7 +73,6 @@ export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY - $SPAR
 
 # Flink (common)
 export FLINK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.5.0
-export FLINK_SCALA_VERSION=2.12	# Scala version used by your Flink distribution
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories used to store local data in each node
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # Relative path to store archives of completed jobs
