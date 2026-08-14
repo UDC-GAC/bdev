@@ -58,11 +58,11 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 		tar -xzf $TMP_HIVE_FILE -C $THIRD_PARTY_DIR
 		mv $TMP_HIVE_DIR $HIVE_HOME
 		rm $TMP_HIVE_FILE
-
-		#Replace old Guava jar
-		rm $HIVE_HOME/lib/guava-*.jar
-		cp $HADOOP_HOME/share/hadoop/common/lib/guava-*.jar  $HIVE_HOME/lib
 	fi
+
+	#Replace old Guava jar
+	rm $HIVE_HOME/lib/guava-*.jar
+	cp $HADOOP_HOME/share/hadoop/common/lib/guava-*.jar  $HIVE_HOME/lib
 fi
 
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
