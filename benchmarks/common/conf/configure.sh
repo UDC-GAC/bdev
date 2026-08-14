@@ -147,7 +147,9 @@ done
 
 function prepare_sql () {
     unset HIVE_OPTS
-    
+    unset HADOOP_CLIENT_OPTS
+	
+	export HADOOP_CLIENT_OPTS="-Djavax.jdo.option.ConnectionURL=jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true"
     export HIVE_OPTS="--hiveconf hive.execution.engine=mr \
 		--hiveconf javax.jdo.option.ConnectionURL='jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true' \
         --hiveconf hive.exec.scratchdir=${HIVE_TMP_DIR} \
