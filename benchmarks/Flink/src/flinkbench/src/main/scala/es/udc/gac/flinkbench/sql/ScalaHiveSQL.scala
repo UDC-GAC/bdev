@@ -20,7 +20,7 @@ object ScalaHiveSQL {
     val hive_tmp_dir = System.getenv("HIVE_TMP_DIR")
     val tmp_dir = System.getenv("TMP_DIR")
     val hiveConf = new HiveConf()
-    
+        
     hiveConf.set("javax.jdo.option.ConnectionURL", s"jdbc:derby:;databaseName=$bench_output_dir/metastore_db_flink;create=true")
     hiveConf.set("hive.exec.scratchdir", hive_tmp_dir)
     hiveConf.set("hive.exec.local.scratchdir", s"$tmp_dir/hive")
@@ -35,7 +35,9 @@ object ScalaHiveSQL {
 
     val catalogName = "myhive"
     val defaultDatabase = "default"
-    val hiveVersion = "3.1.3"
+    val hiveVersion = Option(System.getenv("HIVE_VERSION"))
+        .orElse(Option(System.getProperty("hive.version")))
+        .getOrElse("3.1.3")
     
     val constructor = classOf[HiveCatalog].getDeclaredConstructor(
       classOf[String],
