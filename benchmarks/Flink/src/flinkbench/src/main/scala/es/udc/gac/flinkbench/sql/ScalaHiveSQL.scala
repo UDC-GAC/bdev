@@ -2,7 +2,6 @@ package es.udc.gac.flinkbench.sql
 
 import org.apache.flink.table.api.{EnvironmentSettings, SqlDialect, TableEnvironment}
 import org.apache.flink.table.catalog.hive.HiveCatalog
-import org.apache.hadoop.hive.conf.HiveConf
 
 object ScalaFlinkHiveSQL {
 
