@@ -2,6 +2,7 @@ name := "flinkbench"
 version := "1.0"
 val flinkVersion = "1.14.0"
 val hadoopVersion = "2.10.2"
+val hiveVersion  = "3.1.3"
 crossScalaVersions := Seq("2.11.12", "2.12.21")
 
 scalacOptions ++= Seq("-target:jvm-1.8")
@@ -11,8 +12,12 @@ libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-gelly-scala" % flinkVersion % "provided",
 "org.apache.flink" %% "flink-hadoop-compatibility" % flinkVersion % "provided",
+"org.apache.flink" % "flink-table-api-java" % flinkVersion % "provided",
+"org.apache.flink" % "flink-table-planner-loader" % flinkVersion % "provided",  
+"org.apache.flink" % "flink-connector-hive" % flinkVersion % "provided",
+"org.apache.hive" % "hive-exec" % hiveVersion % "provided"
 "org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided",
-"org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
+"org.apache.mahout" % "mahout-mr" % "0.12" excludeAll (
   ExclusionRule("org.apache.hadoop")
 )
 )
