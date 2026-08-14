@@ -42,6 +42,7 @@ export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.Seque
 export MAHOUT_VERSION=$HADOOP_MAHOUT_VERSION
 export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
 export HIVE_VERSION=$HADOOP_HIVE_VERSION
+export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 
 if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]
 then
