@@ -23,12 +23,6 @@ else
 	m_echo "Using $FLINK_BENCH_JAR"
 fi
 
-if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
-	export FLINK_HIVE_VERSION=3.1.2
-else
-	export FLINK_HIVE_VERSION=3.1.3
-fi
-		
 if [ "$GEN_TPCX_HS" == "true" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
 		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
@@ -52,3 +46,17 @@ if [ "$GEN_TPCX_HS" == "true" ]; then
 		m_echo "Using $TPCX_HS_JAR"
 	fi
 fi
+
+if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
+	export FLINK_HIVE_VERSION=3.1.2
+else
+	export FLINK_HIVE_VERSION=3.1.3
+fi
+
+HIVE_LIB="${HIVE_HOME}/lib"
+
+for jar in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar; do
+    if [ -f "$jar" ]; then
+        export HADOOP_CLASSPATH="${HADOOP_CLASSPATH}:${jar}"
+    fi
+done
