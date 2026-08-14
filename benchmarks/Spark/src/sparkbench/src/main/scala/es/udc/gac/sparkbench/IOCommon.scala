@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Dataset, SparkSession}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.functions.monotonically_increasing_id
 
 class IOCommon() extends java.io.Serializable {
 
@@ -38,8 +39,9 @@ class IOCommon() extends java.io.Serializable {
 	
     input_format match {
       case "Text" => 
-        session.read.textFile(filename).select($"value", rank().as("index")).as[(String, String)]
-
+  		session.read.textFile(filename)
+			.select(monotonically_increasing_id().cast("string").as("index"), $"value").as[(String, String)]
+	
       case _ =>
         val internalRdd = load_rdd(filename, session.sparkContext, input_format)
         session.createDataFrame(internalRdd).toDF("index", "value").as[(String, String)]
