@@ -59,6 +59,7 @@ else
 	m_err "Unknown examples format $EXAMPLES_DATA_FORMAT"
 fi
 
+export RGEN_BASE_PATH="${STORAGE_BACKEND_URI}/RGen"
 export INPUT_WORDCOUNT="${STORAGE_BACKEND_URI}/Input/WordCount"
 export INPUT_SORT="${STORAGE_BACKEND_URI}/Input/Sort"
 export INPUT_GREP="${STORAGE_BACKEND_URI}/Input/Grep"
