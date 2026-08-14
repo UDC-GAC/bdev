@@ -2,6 +2,7 @@ package es.udc.gac.flinkbench.sql
 
 import org.apache.flink.table.api.{EnvironmentSettings, SqlDialect, TableEnvironment}
 import org.apache.flink.table.catalog.hive.HiveCatalog
+import org.apache.flink.table.module.hive.HiveModule
 import org.apache.hadoop.hive.conf.HiveConf
 
 object ScalaHiveSQL {
@@ -60,6 +61,7 @@ object ScalaHiveSQL {
     tableEnv.registerCatalog(catalogName, hiveCatalog)
     tableEnv.useCatalog(catalogName)
     // Enable Hive dialect
+    tableEnv.loadModule("hive", new HiveModule(hiveVersion))
     tableEnv.getConfig.setSqlDialect(SqlDialect.HIVE)
 
     val _sql = scala.io.Source.fromFile(sql_file).mkString
