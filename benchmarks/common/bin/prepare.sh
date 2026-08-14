@@ -229,6 +229,7 @@ if [[ $GEN_JOIN == "true" ]]; then
 
 			OPTIONS=(
 				-t hive
+				-b "${RGEN_BASE_PATH}"
 				-n "${INPUT_JOIN}"
 				-m "${MAPPERS_NUMBER}"
 				-r "${REDUCERS_NUMBER}"
