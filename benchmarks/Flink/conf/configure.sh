@@ -22,17 +22,17 @@ if [ ! -f $FLINK_BENCH_JAR ]; then
 else
 	m_echo "Using $FLINK_BENCH_JAR"
 fi
-	
+
+if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
+	export FLINK_HIVE_VERSION=3.1.2
+else
+	export FLINK_HIVE_VERSION=3.1.3
+fi
+		
 if [ "$GEN_TPCX_HS" == "true" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
 		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
 		export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TPCX_HS_JAR_NAME
-	
-		if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
-			export FLINK_HIVE_VERSION=3.1.2
-		else
-			export FLINK_HIVE_VERSION=3.1.3
-		fi
 	else
         m_exit "Flink version is not supported: $FLINK_VERSION"
 	fi
