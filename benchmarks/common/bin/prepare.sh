@@ -6,6 +6,7 @@ if [[ $GEN_WORDCOUNT == "true" ]]; then
 
 		OPTIONS=(
     		-t randomtext
+			-b "${RGEN_BASE_PATH}"
     		-n "${INPUT_WORDCOUNT}"
     		-m "${MAPPERS_NUMBER}"
     		-p "${WORDCOUNT_DATASIZE}"
@@ -29,6 +30,7 @@ if [[ $GEN_SORT == "true" ]]; then
 
 			OPTIONS=(
 				-t randomtext
+				-b "${RGEN_BASE_PATH}"
 				-n "${INPUT_SORT}"
 				-m "${MAPPERS_NUMBER}"
 				-p "${SORT_DATASIZE}"
@@ -56,6 +58,7 @@ if [[ $GEN_GREP == "true" ]]; then
 
 			OPTIONS=(
 				-t randomtext
+				-b "${RGEN_BASE_PATH}"
 				-n "${INPUT_GREP}"
 				-m "${MAPPERS_NUMBER}"
 				-p "${GREP_DATASIZE}"
@@ -76,6 +79,7 @@ if [[ $GEN_TERASORT == "true" ]]; then
 
 		OPTIONS=(
 			-t teragen
+			-b "${RGEN_BASE_PATH}"
 			-n "${INPUT_TERASORT}"
 			-m "${MAPPERS_NUMBER}"
 			-p "${TERASORT_ROWS_NUMBER}"
@@ -94,6 +98,7 @@ if [[ $GEN_TPCX_HS == "true" ]]; then
 
 		OPTIONS=(
 			-t hsgen
+			-b "${RGEN_BASE_PATH}"
 			-n "${INPUT_TPCX_HS}"
 			-m "${MAPPERS_NUMBER}"
 			-p "${TPCX_HS_ROWS_NUMBER}"
@@ -112,6 +117,7 @@ if [[ $GEN_PAGERANK == "true" ]]; then
 
 		OPTIONS=(
 			-t pagerank
+			-b "${RGEN_BASE_PATH}"
 			-n "${INPUT_PAGERANK}"
 			-m "${MAPPERS_NUMBER}"
 			-r "${REDUCERS_NUMBER}"
@@ -137,6 +143,7 @@ if [[ $GEN_CC == "true" ]]; then
 
 			OPTIONS=(
 				-t pagerank
+				-b "${RGEN_BASE_PATH}"
 				-n "${INPUT_CC}"
 				-m "${MAPPERS_NUMBER}"
 				-r "${REDUCERS_NUMBER}"
@@ -159,6 +166,7 @@ if [[ $GEN_KMEANS == "true" ]]; then
 
 		OPTIONS=(
 			-t kmeans
+			-b "${RGEN_BASE_PATH}"
 			-compress false
 			-sampleDir "${INPUT_KMEANS}/samples"
 			-clusterDir "${INPUT_KMEANS}/cluster"
@@ -181,6 +189,7 @@ if [[ $GEN_BAYES == "true" ]]; then
 
 		OPTIONS=(
 			-t bayes
+			-b "${RGEN_BASE_PATH}"
 			-n "${INPUT_BAYES}"
 			-m "${MAPPERS_NUMBER}"
 			-r "${REDUCERS_NUMBER}"
@@ -202,6 +211,7 @@ if [[ $GEN_AGGREGATION == "true" ]]; then
 
 		OPTIONS=(
 			-t hive
+			-b "${RGEN_BASE_PATH}"
 			-n "${INPUT_AGGREGATION}"
 			-m "${MAPPERS_NUMBER}"
 			-r "${REDUCERS_NUMBER}"
@@ -263,6 +273,7 @@ if [[ $GEN_SCAN == "true" ]]; then
 
 			OPTIONS=(
 				-t hive
+				-b "${RGEN_BASE_PATH}"
 				-n "${INPUT_SCAN}"
 				-m "${MAPPERS_NUMBER}"
 				-r "${REDUCERS_NUMBER}"
