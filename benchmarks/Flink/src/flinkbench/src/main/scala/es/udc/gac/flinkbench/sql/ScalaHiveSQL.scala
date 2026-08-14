@@ -3,7 +3,7 @@ package es.udc.gac.flinkbench.sql
 import org.apache.flink.table.api.{EnvironmentSettings, SqlDialect, TableEnvironment}
 import org.apache.flink.table.catalog.hive.HiveCatalog
 
-object ScalaFlinkHiveSQL {
+object ScalaHiveSQL {
 
   def main(args: Array[String]): Unit = {
 
