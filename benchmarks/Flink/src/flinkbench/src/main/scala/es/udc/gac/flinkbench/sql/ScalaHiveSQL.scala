@@ -37,14 +37,22 @@ object ScalaHiveSQL {
     val defaultDatabase = "default"
     val hiveVersion = "3.1.3"
     
-    val hiveCatalog = new HiveCatalog(
+    val constructor = classOf[HiveCatalog].getDeclaredConstructor(
+      classOf[String],
+      classOf[String],
+      classOf[HiveConf],
+      classOf[String],
+      java.lang.Boolean.TYPE
+    )
+    constructor.setAccessible(true)
+
+    val hiveCatalog = constructor.newInstance(
       catalogName,
       defaultDatabase,
-      null: String,
       hiveConf,
       hiveVersion,
-      true // <-- allowEmbedded
-    )
+      java.lang.Boolean.TRUE
+    ).asInstanceOf[HiveCatalog]
     
     tableEnv.registerCatalog(catalogName, hiveCatalog)
     tableEnv.useCatalog(catalogName)
