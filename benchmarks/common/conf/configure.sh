@@ -148,15 +148,16 @@ done
 function prepare_sql () {
 	# hive.exec.scratchdir is an HDFS path
 	unset  HIVE_OPTS
-	export HIVE_OPTS="--hiveconf javax.jdo.option.ConnectionURL=jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db\;create=true \
+	export HIVE_OPTS="--hiveconf hive.execution.engine=mr \
+		--hiveconf javax.jdo.option.ConnectionURL=jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db\;create=true \
 		--hiveconf hive.exec.scratchdir=${HIVE_TMP_DIR} \
 		--hiveconf hive.exec.local.scratchdir=${TMP_DIR}/hive \
 		--hiveconf hive.input.format=org.apache.hadoop.hive.ql.io.HiveInputFormat \
 		--hiveconf hive.stats.autogather=false  \
 		--hiveconf derby.stream.error.file=${BENCHMARK_OUTPUT_DIR}/derby.log \
-    	--hiveconf hive.log.dir=${TMP_DIR}/hive \
-   		--hiveconf $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
-    	--hiveconf $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER"
+		--hiveconf hive.log.dir=${TMP_DIR}/hive \
+		--hiveconf $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
+		--hiveconf $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER"
 
 	rm -rf ${BENCHMARK_OUTPUT_DIR}/metastore_db
 }
