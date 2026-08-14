@@ -1,4 +1,4 @@
-package es.udc.gac.sparkbench.rdd
+package es.udc.gac.sparkbench.sql
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.hive.HiveContext
