@@ -27,7 +27,14 @@ function resolve_hive_issues() {
     fi
 
 	if [[ ! -f ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR ]]; then
-		wget -q -O ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR https://bdev.des.udc.es/dist/$COMMONS_COLLECTIONS_JAR
+		URL=https://bdev.des.udc.es/dist
+		m_echo "Downloading $COMMONS_COLLECTIONS_JAR from $URL"
+		wget -q -O ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR $URL/$COMMONS_COLLECTIONS_JAR
+
+		if [ $? != 0 ]; then
+			rm ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR >& /dev/null
+			m_exit "Error when downloading $COMMONS_COLLECTIONS_JAR"
+    	fi
 	fi
 }
 
@@ -104,7 +111,6 @@ if [[ "$GEN_TPCX_HS" == "true" ]]; then
 		# Download TPCx-HS jar file
 		URL=https://bdev.des.udc.es/dist/tpcx-hs
 		m_echo "Downloading $HADOOP_TPCX_HS_JAR_NAME from $URL"
-
     	wget -q -O $TPCX_HS_JAR $URL/$HADOOP_TPCX_HS_JAR_NAME
 
     	if [ $? != 0 ]; then
