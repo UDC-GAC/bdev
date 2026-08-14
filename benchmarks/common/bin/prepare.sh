@@ -6,10 +6,10 @@ if [[ $GEN_WORDCOUNT == "true" ]]; then
 
 		OPTIONS=(
     		-t randomtext
-    		-n "$INPUT_WORDCOUNT"
-    		-m "$MAPPERS_NUMBER"
-    		-p "$WORDCOUNT_DATASIZE"
-    		-outFormat "$EXAMPLES_OUTPUT_FORMAT"
+    		-n "${INPUT_WORDCOUNT}"
+    		-m "${MAPPERS_NUMBER}"
+    		-p "${WORDCOUNT_DATASIZE}"
+    		-outFormat "${EXAMPLES_OUTPUT_FORMAT}"
 		)
 
 		m_echo "Running: ${HADOOP_EXECUTABLE} jar ${DATAGEN_JAR} ${OPTIONS[*]}"
