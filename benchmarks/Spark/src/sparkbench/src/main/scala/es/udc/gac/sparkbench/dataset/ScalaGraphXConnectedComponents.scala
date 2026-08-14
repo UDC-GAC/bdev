@@ -4,6 +4,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.graphx._
 import org.apache.spark.graphx.lib._
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.rdd.RDD
 import es.udc.gac.sparkbench.IOCommon
 
 object ScalaGraphXConnectedComponents {
