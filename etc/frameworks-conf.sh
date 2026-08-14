@@ -105,9 +105,8 @@ export FLINK_YARN_JOBMANAGER_MEMORY=$APP_MASTER_MEMORY	# Memory allocated to the
 export FLINK_YARN_TASKMANAGER_MEMORY=`op_int "(($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $FLINK_TASKMANAGERS_PER_NODE) - $NODEMANAGER_INCREMENT_ALLOCATION"` # Memory allocated to each TaskManager
 
 # Apache Mahout
-export MAHOUT_HEAPSIZE=1024		# Heap size for Mahout master process
+export MAHOUT_HEAPSIZE=4000		# Heap size for Mahout master process
 export HADOOP_MAHOUT_VERSION=0.12.0	# Mahout version for Hadoop YARN
 
 # Apache Hive
 export HADOOP_HIVE_VERSION=3.1.3	# Hive version for Hadoop YARN
-export HIVE_TMP_DIR=/hive/tmp		# Relative directory to store temporary files
