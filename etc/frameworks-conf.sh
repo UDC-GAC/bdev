@@ -109,5 +109,5 @@ export MAHOUT_HEAPSIZE=1024		# Heap size for Mahout master process
 export HADOOP_MAHOUT_VERSION=0.12.0	# Mahout version for Hadoop YARN
 
 # Apache Hive
-export HADOOP_HIVE_VERSION=1.2.1	# Hive version for Hadoop YARN
+export HADOOP_HIVE_VERSION=3.1.3	# Hive version for Hadoop YARN
 export HIVE_TMP_DIR=/hive/tmp		# Relative directory to store temporary files
