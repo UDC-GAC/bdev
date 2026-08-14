@@ -35,8 +35,7 @@ object ScalaHiveSQL {
 
     val catalogName = "myhive"
     val defaultDatabase = "default"
-    val hiveVersion = Option(System.getenv("HIVE_VERSION"))
-        .orElse(Option(System.getProperty("hive.version")))
+    val hiveVersion = Option(System.getenv("FLINK_HIVE_VERSION"))
         .getOrElse("3.1.3")
     
     val constructor = classOf[HiveCatalog].getDeclaredConstructor(
