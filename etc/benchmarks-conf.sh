@@ -54,15 +54,15 @@ export BAYES_CLASSES=10		# Number of classes in the data set
 export BAYES_NGRAMS=1		# Size of NGrams to create
 
 #Aggregation
-export AGGREGATION_PAGES=120		# Number of pages in the data set (nodes of the graph)
+export AGGREGATION_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export AGGREGATION_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Join
-export JOIN_PAGES=120		# Number of pages in the data set (nodes of the graph)
+export JOIN_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export JOIN_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Scan
-export SCAN_PAGES=120		# Number of pages in the data set (nodes of the graph)
+export SCAN_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Command
