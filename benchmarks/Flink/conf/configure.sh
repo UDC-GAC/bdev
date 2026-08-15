@@ -48,12 +48,6 @@ if [ "$GEN_TPCX_HS" == "true" ]; then
 fi
 
 if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "true" ]; then
-	if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
-		export FLINK_HIVE_VERSION=3.1.2
-	else
-		export FLINK_HIVE_VERSION=3.1.3
-	fi
-
 	cp $FLINK_HOME/opt/flink-table-planner*.jar $FLINK_HOME/lib
 	
 	HIVE_LIB="${HIVE_HOME}/lib"
