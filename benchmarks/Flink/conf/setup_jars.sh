@@ -48,13 +48,13 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	fi
 	
 	if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ] || [ $FLINK_MAJOR_VERSION == "1.17" ]; then
-		FLINK_HIVE_VERSION=3.1.2
+		export FLINK_HIVE_VERSION=3.1.2
 		# Remove the isolated loader from lib/ so it stops interfering
 		mv "$FLINK_LIB"/flink-table-planner-loader-*.jar "$FLINK_OPT"/ 2>/dev/null || true
 		# Copy the real planner
 		find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
 	else
-		FLINK_HIVE_VERSION=3.1.3
+		export FLINK_HIVE_VERSION=3.1.3
 		# In 1.18+: The loader must be in lib/
 		if ls "$FLINK_OPT"/flink-table-planner-loader-*.jar 1>/dev/null 2>&1; then
 			mv "$FLINK_OPT"/flink-table-planner-loader-*.jar "$FLINK_LIB/"
