@@ -61,19 +61,9 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		export FLINK_HIVE_VERSION=3.1.2
 		# Remove the isolated loader from lib/ so it stops interfering
 		mv "$FLINK_LIB"/flink-table-planner-loader-*.jar "$FLINK_OPT"/ 2>/dev/null || true
+		
 		# Copy the real planner
 		find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
-
-		FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
-		FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-		FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-		HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
-		
-		for f in "$HIVE_LIB"/hive-exec-*.jar "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar "$HIVE_LIB"/libfb303-*.jar "$HIVE_LIB"/libthrift-*.jar "$HIVE_LIB"/antlr-runtime-*.jar; do
-    		if [ -f "$f" ]; then
-        		HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
-    		fi
-		done
 	else
 		export FLINK_HIVE_VERSION=3.1.3
 		# In 1.18+: The loader must be in lib/
@@ -82,18 +72,18 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		fi
 		
 		find "$FLINK_LIB" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -delete 2>/dev/null || true
-
-		FLINK_SQL_CONNECTOR_HIVE_JAR="flink-sql-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
-		FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-		FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-		HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
-		
-		for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar "$HIVE_LIB"/libfb303-*.jar "$HIVE_LIB"/libthrift-*.jar "$HIVE_LIB"/antlr-runtime-*.jar; do
-    		if [ -f "$f" ]; then
-        		HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
-    		fi
-		done
 	fi
+
+	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+	FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
+	FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
+	HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
+		
+	for f in "$HIVE_LIB"/hive-exec-*.jar "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar "$HIVE_LIB"/libfb303-*.jar "$HIVE_LIB"/libthrift-*.jar "$HIVE_LIB"/antlr-runtime-*.jar; do
+    	if [ -f "$f" ]; then
+        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+    	fi
+	done
 
 	export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
 
