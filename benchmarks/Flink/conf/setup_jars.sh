@@ -120,7 +120,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	for f in "$HIVE_LIB"/*.jar; do
     	filename=$(basename "$f")
    		if [ "$filename" != "hive-exec-*.jar" ] && [ "$filename" != calcite-* ]; then
-        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$filename"
     	fi
 	done
 
