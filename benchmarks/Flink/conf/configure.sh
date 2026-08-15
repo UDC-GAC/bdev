@@ -12,10 +12,9 @@ export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
 export FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
 export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
 export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-export FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+export FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
 export FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-export FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-
+export FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
 
 if [ ! -f $FLINK_BENCH_JAR ]; then
     # Download flinkbench jar file
@@ -80,7 +79,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
 
 	if [ ! -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]; then
-    	m_echo "Flink SQL connector for Hive $FLINK_HIVE_VERSION not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
+    	m_echo "Flink SQL connector for Hive not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
     	m_echo "Downloading $FLINK_SQL_CONNECTOR_HIVE_URL..."
 
     	TMP_JAR="${FLINK_SQL_CONNECTOR_HIVE_PATH}.tmp"
