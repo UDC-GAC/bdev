@@ -68,7 +68,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		HIVE_LIB="${HIVE_HOME}/lib"	
 		# We built a string with all the JARs separated by ':', EXCLUDING calcite
 		HIVE_FILTERED_CLASSPATH=$(find "$HIVE_LIB" -maxdepth 1 -name "*.jar" ! -name "calcite-*.jar" | tr '\n' ':' | sed 's/:$//')
-		export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$HIVE_FILTERED_CLASSPATH"
+		#export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$HIVE_FILTERED_CLASSPATH"
 	else
 		m_exit "HIVE_HOME does not exist or is not a directory: $HIVE_HOME"
 	fi
