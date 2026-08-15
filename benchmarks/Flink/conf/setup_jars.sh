@@ -89,6 +89,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	fi
 	
 	if [ -d $HIVE_HOME ]; then
+		$HIVE_LIB="${HIVE_HOME}/lib"
 		HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
 		
 		for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar; do
