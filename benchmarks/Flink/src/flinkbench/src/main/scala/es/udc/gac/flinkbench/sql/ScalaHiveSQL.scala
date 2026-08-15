@@ -63,7 +63,8 @@ object ScalaHiveSQL {
     tableEnv.registerCatalog(catalogName, hiveCatalog)
     tableEnv.useCatalog(catalogName)
     // Enable Hive dialect
-    tableEnv.loadModule("hive", new HiveModule(hiveVersion))
+    tableEnv.loadModule("hive", new HiveModule(hiveVersion))    
+    tableEnv.useModules("hive", "core")
     tableEnv.getConfig.setSqlDialect(SqlDialect.HIVE)
 
     val _sql = scala.io.Source.fromFile(sql_file).mkString    
