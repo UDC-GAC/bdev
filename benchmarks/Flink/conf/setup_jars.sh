@@ -5,33 +5,6 @@
 export FLINK_SCALA_VERSION=2.12
 export FLINK_LIB="$FLINK_HOME/lib"
 export FLINK_OPT="$FLINK_HOME/opt"
-export FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
-export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
-
-if [ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]; then
-    m_echo "Flink Hadoop compatibility JAR not found: $FLINK_HADOOP_COMPATIBILITY_PATH"
-    m_echo "Downloading $FLINK_HADOOP_COMPATIBILITY_URL..."
-
-    TMP_JAR="${FLINK_HADOOP_COMPATIBILITY_PATH}.tmp"
-
-    if ! wget -q -O "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" || [ ! -s "$TMP_JAR" ]; then
-        rm -f "$TMP_JAR"
-        m_exit "Could not download $FLINK_HADOOP_COMPATIBILITY_JAR. Please download it manually and copy it to ${FLINK_LIB}"
-    fi
-
-    if ! mv "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_PATH"; then
-    	rm -f "$TMP_JAR"
-        m_exit "Could not install $FLINK_HADOOP_COMPATIBILITY_JAR into $FLINK_LIB"
-    fi
-fi
-
-if [ ! -f $MAPREDUCE_JAR_FILE ]; then
-	m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
-else
-	cp -f $MAPREDUCE_JAR_FILE $FLINK_LIB
-fi
 
 if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "true" ]; then
 	if [ $FLINK_SERIES == "1" ]; then
