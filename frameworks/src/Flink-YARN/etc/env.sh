@@ -75,9 +75,6 @@ else
 	cp -f $FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
 fi
 
-# Setup required jars
-. ${SOL_BENCH_DIR}/conf/setup_jars.sh
-
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
