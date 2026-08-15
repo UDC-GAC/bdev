@@ -13,6 +13,7 @@ export FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JA
 export FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
 export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
 
+
 if [ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]; then
     m_echo "Flink Hadoop compatibility JAR not found: $FLINK_HADOOP_COMPATIBILITY_PATH"
     m_echo "Downloading $FLINK_HADOOP_COMPATIBILITY_URL..."
@@ -57,5 +58,18 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
         	rm -f "$TMP_JAR"
         	m_exit "Could not install $FLINK_SQL_CONNECTOR_HIVE_JAR into $FLINK_LIB"
     	fi
+	fi
+
+	if [ -z $HIVE_HOME ]; then
+		m_exit "HIVE_HOME is not defined or is empty"
+	fi
+	
+	if [ -d $HIVE_HOME ]; then
+		HIVE_LIB="${HIVE_HOME}/lib"	
+		# We built a string with all the JARs separated by ':', EXCLUDING calcite
+		HIVE_FILTERED_CLASSPATH=$(find "$HIVE_LIB" -maxdepth 1 -name "*.jar" ! -name "calcite-*.jar" | tr '\n' ':' | sed 's/:$//')
+		export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$HIVE_FILTERED_CLASSPATH"
+	else
+		m_exit "HIVE_HOME does not exist or is not a directory: $HIVE_HOME"
 	fi
 fi
