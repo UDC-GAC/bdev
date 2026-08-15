@@ -75,9 +75,6 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
             filename=$(basename "$f")
             
             case "$filename" in
-                hive-exec-*-core.jar)
-                    HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
-                    ;;
                 hive-exec-*.jar|calcite-*)
                     ;;
                 *)
