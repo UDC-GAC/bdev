@@ -96,7 +96,7 @@ object ScalaHiveSQL {
             try {
               java.sql.DriverManager.getConnection("jdbc:derby:;shutdown=true")
             } catch {
-              case _: Exception => Derby throws an exception when shutting down properly
+              case _: Exception => // Derby throws an exception when shutting down properly
             }
             
             println("[Flink SQL] waiting for the job to finish...")
