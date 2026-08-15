@@ -4,9 +4,14 @@ export SORT_PARTITIONS=$FLINK_PARALLELISM
 # Hardcode last scala version supported by Flink 1.x
 # From Flink 2.x onwards, Flink is scala-free
 export FLINK_SCALA_VERSION=2.12
+export FLINK_LIB="$FLINK_HOME/lib"
 export FLINK_BENCH_JAR_NAME=flinkbench-1.0_${FLINK_SCALA_VERSION}.jar
 export FLINK_BENCH_DIR=$SOL_BENCH_DIR/bin
 export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
+export FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
+export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
+export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
 
 if [ ! -f $FLINK_BENCH_JAR ]; then
     # Download flinkbench jar file
@@ -21,6 +26,23 @@ if [ ! -f $FLINK_BENCH_JAR ]; then
     fi
 else
 	m_echo "Using $FLINK_BENCH_JAR"
+fi
+
+if [ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]; then
+    m_echo "Flink Hadoop compatibility JAR not found: $FLINK_HADOOP_COMPATIBILITY_PATH"
+    m_echo "Downloading $FLINK_HADOOP_COMPATIBILITY_URL..."
+
+    TMP_JAR="${FLINK_HADOOP_COMPATIBILITY_PATH}.tmp"
+
+    if ! wget -q -O "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" || [ ! -s "$TMP_JAR" ]; then
+        rm -f "$TMP_JAR"
+        m_exit "Could not download $FLINK_HADOOP_COMPATIBILITY_JAR. Please download it manually and copy it to ${FLINK_LIB}"
+    fi
+
+    if ! mv "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_PATH"; then
+    	rm -f "$TMP_JAR"
+        m_exit "Could not install $FLINK_HADOOP_COMPATIBILITY_JAR into $FLINK_LIB"
+    fi
 fi
 
 if [ "$GEN_TPCX_HS" == "true" ]; then
