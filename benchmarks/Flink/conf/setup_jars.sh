@@ -77,16 +77,28 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
 	FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
 	FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
+	HIVE_EXEC_CORE_JAR=hive-exec-${FLINK_HIVE_VERSION}-core.jar
+	HIVE_EXEC_CORE_PATH="${FLINK_LIB}/${HIVE_EXEC_CORE_JAR}"
+	HIVE_EXEC_CORE_URL="https://repo1.maven.org/maven2/org/apache/hive/hive-exec/${FLINK_HIVE_VERSION}/${HIVE_EXEC_CORE_JAR}"
 	HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
-		
-	for f in "$HIVE_LIB"/hive-exec-*.jar "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar "$HIVE_LIB"/libfb303-*.jar "$HIVE_LIB"/libthrift-*.jar "$HIVE_LIB"/antlr-runtime-*.jar; do
-    	if [ -f "$f" ]; then
-        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+
+	if [ ! -f "$HIVE_EXEC_CORE_PATH" ]; then
+	    m_echo "Hive exec core jar not found: $HIVE_EXEC_CORE_PATH"
+    	m_echo "Downloading $HIVE_EXEC_CORE_URL..."
+
+		TMP_JAR="${HIVE_EXEC_CORE_PATH}.tmp"
+
+    	if ! wget -q -O "$TMP_JAR" "$HIVE_EXEC_CORE_URL" || [ ! -s "$TMP_JAR" ]; then
+        	rm -f "$TMP_JAR"
+        	m_exit "Could not download $HIVE_EXEC_CORE_JAR. Please download it manually and copy it to ${FLINK_LIB}"
     	fi
-	done
 
-	export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
-
+    	if ! mv "$TMP_JAR" "$HIVE_EXEC_CORE_PATH"; then
+    		rm -f "$TMP_JAR"
+        	m_exit "Could not install $HIVE_EXEC_CORE_JAR into $FLINK_LIB"
+    	fi
+	fi
+	
 	if [ ! -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]; then
     	m_echo "Flink SQL connector for Hive not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
     	m_echo "Downloading $FLINK_SQL_CONNECTOR_HIVE_URL..."
@@ -103,4 +115,14 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
         	m_exit "Could not install $FLINK_SQL_CONNECTOR_HIVE_JAR into $FLINK_LIB"
     	fi
 	fi
+
+	# Set classpath
+	for f in "$HIVE_LIB"/*.jar; do
+    	filename=$(basename "$f")
+   		if [ "$filename" != "hive-exec-*.jar" ] && [ "$filename" != calcite-* ]; then
+        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+    	fi
+	done
+
+	export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
 fi
