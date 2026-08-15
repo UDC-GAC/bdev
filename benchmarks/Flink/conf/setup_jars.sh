@@ -63,9 +63,9 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		find "$FLINK_LIB" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -delete 2>/dev/null || true
 	fi
 	
-	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-sql-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
 	FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-	FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-hive-${FLINK_HIVE_VERSION}_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
+	FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
 	
 	if [ ! -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]; then
     	m_echo "Flink SQL connector for Hive $FLINK_HIVE_VERSION not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
@@ -92,7 +92,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		HIVE_LIB="${HIVE_HOME}/lib"
 		HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
 		
-		for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar; do
+		for f in "$HIVE_LIB"/hive-exec-*.jar "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"/transaction-api-*.jar; do
     		if [ -f "$f" ]; then
         		HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
     		fi
