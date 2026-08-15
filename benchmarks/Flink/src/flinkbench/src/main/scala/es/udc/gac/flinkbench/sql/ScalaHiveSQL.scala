@@ -40,7 +40,9 @@ object ScalaHiveSQL {
     val defaultDatabase = "default"
     val hiveVersion = Option(System.getenv("FLINK_HIVE_VERSION"))
         .getOrElse("3.1.3")
-    
+
+    println(s"[Flink SQL] Hive version $hiveVersion")
+
     val constructor = classOf[HiveCatalog].getDeclaredConstructor(
       classOf[String],
       classOf[String],
@@ -64,16 +66,27 @@ object ScalaHiveSQL {
     tableEnv.loadModule("hive", new HiveModule(hiveVersion))
     tableEnv.getConfig.setSqlDialect(SqlDialect.HIVE)
 
-    val _sql = scala.io.Source.fromFile(sql_file).mkString
+    val _sql = scala.io.Source.fromFile(sql_file).mkString    
     _sql.split(';').foreach { statement =>
       val query = statement.trim
-      if (query.nonEmpty) {        
-        // .await() is required to wait for the INSERT to finish before continuing
-        val tableResult = tableEnv.executeSql(query)
-        tableResult.await() 
+      if (query.nonEmpty) {
+        if (query.toUpperCase.startsWith("SET ")) {
+          val parts = query.substring(4).split("=", 2)
+          if (parts.length == 2) {
+            val key = parts(0).trim
+            val value = parts(1).trim.replace("'", "").replace("\"", "")
+            tableEnv.getConfig.getConfiguration.setString(key, value)
+          }
+        } else {
+          println(s"[Flink SQL] Running: \n$query")
+          // .await() is required to wait for the INSERT to finish before continuing
+          val tableResult = tableEnv.executeSql(query)
+          tableResult.await()
+        }
+        
       }
     }
-
+    
     println(s"[Flink Hive SQL] Benchmark $bench_name finished")
   }
 }
