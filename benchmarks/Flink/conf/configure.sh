@@ -56,7 +56,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 
 	HIVE_LIB="${HIVE_HOME}/lib"
 
-	for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar; do
+	for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"//transaction-api-*.jar; do
     	if [ -f "$f" ]; then
         	cp ${f} ${FLINK_HOME}/lib
     	fi
