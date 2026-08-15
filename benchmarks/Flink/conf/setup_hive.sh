@@ -87,4 +87,8 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
         done
 
 	export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
+
+	# For Flink on YARN
+	echo "containerized.master.env.HADOOP_CLASSPATH: \"$HADOOP_CLASSPATH\"" >> "$FLINK_CONFIG_YAML_FILE"
+	echo "containerized.taskmanager.env.HADOOP_CLASSPATH: \"$HADOOP_CLASSPATH\"" >> "$FLINK_CONFIG_YAML_FILE"
 fi
