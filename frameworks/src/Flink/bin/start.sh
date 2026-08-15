@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Setup required jars for Hive
-. ${SOL_BENCH_DIR}/conf/setup_hive.sh
-
 $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 
 #Setup local temporary directories on all nodes
@@ -12,6 +9,9 @@ for j in `cat ${SLAVESFILE}`; do
         $SSH_CMD $j "rm -rf ${FLINK_LOCAL_DIRS}/*"
         $SSH_CMD $j "mkdir -p ${FLINK_LOCAL_DIRS}"
 done
+
+# Setup required jars for Hive
+. ${SOL_BENCH_DIR}/conf/setup_hive.sh
 
 #Save Hadoop classpath to a file
 echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
