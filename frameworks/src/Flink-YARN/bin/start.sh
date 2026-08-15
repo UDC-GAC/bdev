@@ -17,8 +17,8 @@ done
 # Save Hadoop classpath to a file
 echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 # Set Hadoop classpath in config file
-echo "containerized.master.env.HADOOP_CLASSPATH: \"$HADOOP_CLASSPATH\"" >> "$FLINK_CONFIG_YAML_FILE"
-echo "containerized.taskmanager.env.HADOOP_CLASSPATH: \"$HADOOP_CLASSPATH\"" >> "$FLINK_CONFIG_YAML_FILE"
+echo "containerized.master.env.HADOOP_CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
+echo "containerized.taskmanager.env.HADOOP_CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
 
 m_echo "Starting the Flink cluster on YARN (Session Mode)"
 $FLINK_HOME/bin/yarn-session.sh -d \
