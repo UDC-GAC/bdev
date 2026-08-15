@@ -36,6 +36,12 @@ if [ $FLINK_SERIES == "1" ]; then
 		[ $FLINK_MAJOR_VERSION != "1.16" ] &&
 		[ $FLINK_MAJOR_VERSION != "1.15" ]; then
 		m_exit "Flink version is not supported: $FLINK_VERSION"
+	else
+		if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
+			export FLINK_HIVE_VERSION=3.1.2
+		else
+			export FLINK_HIVE_VERSION=3.1.3
+		fi
 	fi
 else
         m_exit "Flink version is not supported: $FLINK_VERSION"
