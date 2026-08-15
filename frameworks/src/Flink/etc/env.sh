@@ -76,7 +76,7 @@ else
 fi
 
 # Setup required jars
-. ${SOL_BENCH_DIR}/conf/setup.jars.sh
+. ${SOL_BENCH_DIR}/conf/setup_jars.sh
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
