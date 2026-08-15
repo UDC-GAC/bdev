@@ -89,13 +89,21 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
     	fi
 	fi
 
-	# Set classpath
+	# Set classpath excluding problematic jars
 	for f in "$HIVE_LIB"/*.jar; do
-    	filename=$(basename "$f")
-   		if [ "$filename" != "hive-exec-*.jar" ] && [ "$filename" != calcite-* ]; then
-        	HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$filename"
-    	fi
-	done
+            filename=$(basename "$f")
+            
+            case "$filename" in
+                hive-exec-*-core.jar)
+                    HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+                    ;;
+                hive-exec-*.jar|calcite-*)
+                    ;;
+                *)
+                    HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+                    ;;
+            esac
+        done
 
 	export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
 fi
