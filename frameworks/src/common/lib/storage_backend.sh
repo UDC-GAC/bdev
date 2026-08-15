@@ -20,7 +20,7 @@ function storage_mkdir() {
     local target_dir=$1
 
     # Checks
-    if [ -z "${target_dir}" ]; then
+    if [[ -z "${target_dir}" ]]; then
         m_exit "storage_mkdir: Missing arguments. Usage: storage_mkdir <target_dir>"
     fi
     
@@ -29,9 +29,45 @@ function storage_mkdir() {
            "${HDFS_CMD[@]}" -mkdir -p "${target_dir}"
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_dir#file:}"
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local clean_path="${target_dir#file://}"
+            clean_path="${clean_path#file:}"
             mkdir -p "${clean_path}"
+            ;;
+        *)
+            m_exit "Storage backend not supported: $STORAGE_BACKEND"
+            ;;
+    esac
+}
+
+function storage_ls() {
+    local recursive=""
+    local target_path=""
+
+    # Argument parsing
+    if [[ "$1" == "-r" || "$1" == "-R" ]]; then
+        # Force uppercase -R since both HDFS and POSIX ls use -R for recursive (-r is reverse)
+        recursive="-R"
+        target_path="$2"
+    else
+        target_path="$1"
+    fi
+
+    # Checks
+    if [[ -z "${target_path}" ]]; then
+        m_exit "storage_ls: A valid path has not been specified"
+    fi
+
+    case "${STORAGE_BACKEND,,}" in
+        hdfs)
+            # We leave the $recursive variable without quotes so that bash can evaluate whether to inject the flag or not
+            "${HDFS_CMD[@]}" -ls $recursive "${target_path}"
+            ;;
+        nfs)
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            clean_path="${clean_path#file:}"
+            ls $recursive "${clean_path}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -44,7 +80,7 @@ function storage_copy_from_local() {
     local target_dir=$2
 
     # Checks
-    if [ -z "${local_file}" ] || [ -z "${target_dir}" ]; then
+    if [[ -z "${local_file}" ]] || [[ -z "${target_dir}" ]]; then
         m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <local_file> <target_dir>"
     fi
     
@@ -53,9 +89,11 @@ function storage_copy_from_local() {
             "${HDFS_CMD[@]}" -put "${local_file}" "${target_dir}"
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local local_clean_path="${local_file#file:}"
-            local target_clean_path="${target_dir#file:}"
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local local_clean_path="${local_file#file://}"
+            local_clean_path="${local_clean_path#file:}"
+            local target_clean_path="${target_dir#file://}"
+            target_clean_path="${target_clean_path#file:}"
             cp -r "${local_clean_path}" "${target_clean_path}"
             ;;
         *)
@@ -69,7 +107,7 @@ function storage_copy_to_local() {
     local local_dir=$2
 
     # Checks
-    if [ -z "${remote_file}" ] || [ -z "${local_dir}" ]; then
+    if [[ -z "${remote_file}" ]] || [[ -z "${local_dir}" ]]; then
         m_exit "storage_copy_to_local: Missing arguments. Usage: storage_copy_to_local <remote_file> <local_dir>"
     fi
     
@@ -78,9 +116,11 @@ function storage_copy_to_local() {
             "${HDFS_CMD[@]}" -get "${remote_file}" "${local_dir}"
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local remote_clean_path="${remote_file#file:}"
-            local local_clean_path="${local_dir#file:}"
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local remote_clean_path="${remote_file#file://}"
+            remote_clean_path="${remote_clean_path#file:}"
+            local local_clean_path="${local_dir#file://}"
+            local_clean_path="${local_clean_path#file:}"
             # We add -r in case you are downloading an entire directory (HDFS -get does this by default)
             cp -r "${remote_clean_path}" "${local_clean_path}"
             ;;
@@ -93,7 +133,7 @@ function storage_copy_to_local() {
 function storage_dir_exists() {
     local target_path="$1"
 
-    if [ -z "${target_path}" ]; then
+    if [[ -z "${target_path}" ]]; then
         m_exit "storage_dir_exists: Missing path to check"
     fi
 
@@ -104,11 +144,12 @@ function storage_dir_exists() {
             return $?
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file:}"
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            clean_path="${clean_path#file:}"
             
             # Native POSIX test
-            if [ -d "${clean_path}" ]; then
+            if [[ -d "${clean_path}" ]]; then
                 return 0 # It exists
             else
                 return 1 # It does not exist
@@ -133,7 +174,7 @@ function storage_rm() {
     fi
 
     # Checks
-    if [ -z "${target_path}" ]; then
+    if [[ -z "${target_path}" ]]; then
         m_exit "storage_rm: A valid path has not been specified"
     fi
 
@@ -143,10 +184,11 @@ function storage_rm() {
             "${HDFS_CMD[@]}" -rm $recursive -skipTrash "${target_path}" 2>/dev/null
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file:}"
-
-            if [ -z "${clean_path}" ] || [ "${clean_path}" == "/" ] || [ "${clean_path}" == "${NFS_MOUNT_POINT}" ]; then
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            clean_path="${clean_path#file:}"
+            
+            if [[ -z "${clean_path}" ]] || [[ "${clean_path}" == "/" ]] || [[ "${clean_path}" == "${NFS_MOUNT_POINT}" ]]; then
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
             fi
             
@@ -178,7 +220,7 @@ function storage_chmod() {
     fi
 
     # Checks
-    if [ -z "${mode}" ] || [ -z "${target_path}" ]; then
+    if [[ -z "${mode}" ]] || [[ -z "${target_path}" ]]; then
         m_exit "storage_chmod: Missing arguments. Usage: storage_chmod [-R] <mode> <path>"
     fi
 
@@ -187,8 +229,9 @@ function storage_chmod() {
             "${HDFS_CMD[@]}" -chmod $recursive "${mode}" "${target_path}"
             ;;
         nfs)
-            # Remove 'file://' prefix if it exists in the input variable
-            local clean_path="${target_path#file:}"
+            # Remove 'file://' or 'file:' prefix if it exists in the input variable
+            local clean_path="${target_path#file://}"
+            clean_path="${clean_path#file:}"
             
             if [ -n "$recursive" ]; then
                 chmod -R "${mode}" "${clean_path}"
