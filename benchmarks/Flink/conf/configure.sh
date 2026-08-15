@@ -13,6 +13,12 @@ export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILIT
 export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
 export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
 
+if [ ! -f $MAPREDUCE_JAR_FILE ]; then
+	m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
+else
+	cp -f $MAPREDUCE_JAR_FILE $FLINK_LIB
+fi
+
 if [ ! -f $FLINK_BENCH_JAR ]; then
     # Download flinkbench jar file
     URL=https://bdev.des.udc.es/dist/flinkbench
