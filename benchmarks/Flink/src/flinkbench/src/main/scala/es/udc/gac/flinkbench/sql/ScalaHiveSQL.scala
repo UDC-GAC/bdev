@@ -67,7 +67,9 @@ object ScalaHiveSQL {
     tableEnv.useModules("hive", "core")
     tableEnv.getConfig.setSqlDialect(SqlDialect.HIVE)
 
-    val _sql = scala.io.Source.fromFile(sql_file).mkString    
+    // Run SQL queries filtering incompatible commands
+    val _rawSql = scala.io.Source.fromFile(sql_file).mkString
+    val _sql = _rawSql.replaceAll("(?m)^--.*", "")
     _sql.split(';').foreach { statement =>
       val query = statement.trim
       if (query.nonEmpty) {
@@ -80,11 +82,20 @@ object ScalaHiveSQL {
           }
         } else {
           println(s"[Flink SQL] Running: \n$query")
-          // .await() is required to wait for the INSERT to finish before continuing
           val tableResult = tableEnv.executeSql(query)
-          tableResult.await()
+          
+          if (query.toUpperCase.startsWith("INSERT")) {
+            // Job submitted. Releasing Derby lock for JobManager
+            // We force Derby to shut down in this client process
+            try {
+              java.sql.DriverManager.getConnection("jdbc:derby:;shutdown=true")
+            } catch {
+              case _: Exception => 
+              // Derby always throws an SQL exception (08006) when it shuts down successfully. This is expected.
+            }            
+            tableResult.await() 
+          }
         }
-        
       }
     }
     
