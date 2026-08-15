@@ -75,14 +75,6 @@ else
 	cp -f $FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
 fi
 
-# Copy MapReduce jar
-export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
-if [ ! -f $MAPREDUCE_JAR_FILE ]; then
-	m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
-else
-	cp -f $MAPREDUCE_JAR_FILE $SOL_LIB_DIR
-fi
-
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
 add_conf_param "flink_default_parallelism" $FLINK_PARALLELISM
