@@ -43,7 +43,7 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
 
 	if [ ! -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]; then
-    	m_echo "Flink SQL connector for Hive not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
+    	m_echo "Flink SQL connector for Hive $FLINK_HIVE_VERSION not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
     	m_echo "Downloading $FLINK_SQL_CONNECTOR_HIVE_URL..."
 
     	TMP_JAR="${FLINK_SQL_CONNECTOR_HIVE_PATH}.tmp"
@@ -64,10 +64,15 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 	fi
 	
 	if [ -d $HIVE_HOME ]; then
-		HIVE_LIB="${HIVE_HOME}/lib"	
-		# We built a string with all the JARs separated by ':', EXCLUDING calcite
-		HIVE_FILTERED_CLASSPATH=$(find "$HIVE_LIB" -maxdepth 1 -name "*.jar" ! -name "calcite-*.jar" | tr '\n' ':' | sed 's/:$//')
-		#export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$HIVE_FILTERED_CLASSPATH"
+		HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
+		
+		for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"//transaction-api-*.jar; do
+    		if [ -f "$f" ]; then
+        		HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
+    		fi
+		done
+	
+		export HADOOP_CLASSPATH=$HIVE_FILTERED_CLASSPATH
 	else
 		m_exit "HIVE_HOME does not exist or is not a directory: $HIVE_HOME"
 	fi
