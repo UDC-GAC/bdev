@@ -70,9 +70,9 @@ object ScalaHiveSQL {
     // Run SQL queries filtering incompatible commands
     val _rawSql = scala.io.Source.fromFile(sql_file).mkString
     val _sql = _rawSql.replaceAll("(?m)^--.*", "")
-    
+
     _sql.split(';').foreach { statement =>
-      var query = statement.trim
+      val query = statement.trim
       if (query.nonEmpty) {
         if (query.toUpperCase.startsWith("SET ")) {
           val parts = query.substring(4).split("=", 2)
@@ -81,18 +81,23 @@ object ScalaHiveSQL {
             val value = parts(1).trim.replace("'", "").replace("\"", "")
             tableEnv.getConfig.getConfiguration.setString(key, value)
           }
-        } else {
-          // If it's a table, we tell the JobManager NOT to use Derby at completion
-          if (query.toUpperCase.startsWith("CREATE EXTERNAL TABLE")) {
-            query = query + " TBLPROPERTIES ('sink.partition-commit.policy.kind'='success-file')"
+        } else if (query.toUpperCase.startsWith("INSERT")) {    
+          println("[Flink SQL] Compiling execution plan...")
+          val plan = tableEnv.compilePlanSql(query)
+          
+          try {
+            java.sql.DriverManager.getConnection("jdbc:derby:;shutdown=true")
+          } catch {
+            case _: Exception => // Derby throws an exception when shutting down properly
           }
           
-          println(s"[Flink SQL] Running: \n$query")
-          val tableResult = tableEnv.executeSql(query)
-          if (query.toUpperCase.startsWith("INSERT")) {
-            println("[Flink SQL] Job submitted. Waiting...")
-            tableResult.await() 
-          }
+          println("[Flink SQL] Submitting Job...")
+          val tableResult = plan.execute()
+          tableResult.await()
+        } else {
+          // DDL (CREATE TABLE) o USE. Se ejecutan rápido y en local.
+          println(s"[Flink SQL] Running DDL: \n$query")
+          tableEnv.executeSql(query)
         }
       }
     }
