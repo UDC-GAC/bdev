@@ -54,6 +54,8 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		export FLINK_HIVE_VERSION=3.1.3
 	fi
 
+	cp $FLINK_HOME/opt/flink-table-planner*.jar $FLINK_HOME/lib
+	
 	HIVE_LIB="${HIVE_HOME}/lib"
 
 	for f in "$HIVE_LIB"/datanucleus-*.jar "$HIVE_LIB"/javax.jdo-*.jar "$HIVE_LIB"/derby-*.jar "$HIVE_LIB"//transaction-api-*.jar; do
