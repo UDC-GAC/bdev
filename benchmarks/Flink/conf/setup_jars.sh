@@ -7,19 +7,6 @@ export FLINK_LIB="$FLINK_HOME/lib"
 export FLINK_OPT="$FLINK_HOME/opt"
 
 if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "true" ]; then
-	if [ $FLINK_SERIES == "1" ]; then
-		if [ $FLINK_MAJOR_VERSION != "1.20" ] &&
-			[ $FLINK_MAJOR_VERSION != "1.19" ] &&
-			[ $FLINK_MAJOR_VERSION != "1.18" ] &&
-			[ $FLINK_MAJOR_VERSION != "1.17" ] &&
-			[ $FLINK_MAJOR_VERSION != "1.16" ] &&
-			[ $FLINK_MAJOR_VERSION != "1.15" ]; then
-			m_exit "Flink version is not supported: $FLINK_VERSION"
-		fi
-	else
-        m_exit "Flink version is not supported: $FLINK_VERSION"
-	fi
-
 	if [ -z $HIVE_HOME ]; then
 		m_exit "HIVE_HOME is not defined or is empty"
 	fi
@@ -30,21 +17,10 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
 		m_exit "HIVE_HOME does not exist or is not a directory: $HIVE_HOME"
 	fi
 		
-	if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ] || [ $FLINK_MAJOR_VERSION == "1.17" ]; then
+	if [ $FLINK_MAJOR_VERSION == "1.15" ] || [ $FLINK_MAJOR_VERSION == "1.16" ]; then
 		export FLINK_HIVE_VERSION=3.1.2
-		# Remove the isolated loader from lib/ so it stops interfering
-		mv "$FLINK_LIB"/flink-table-planner-loader-*.jar "$FLINK_OPT"/ 2>/dev/null || true
-		
-		# Copy the real planner
-		find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
 	else
 		export FLINK_HIVE_VERSION=3.1.3
-		# In 1.18+: The loader must be in lib/
-		if ls "$FLINK_OPT"/flink-table-planner-loader-*.jar 1>/dev/null 2>&1; then
-			mv "$FLINK_OPT"/flink-table-planner-loader-*.jar "$FLINK_LIB/"
-		fi
-		
-		find "$FLINK_LIB" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -delete 2>/dev/null || true
 	fi
 
 	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
@@ -88,6 +64,11 @@ if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "
         	m_exit "Could not install $FLINK_SQL_CONNECTOR_HIVE_JAR into $FLINK_LIB"
     	fi
 	fi
+
+	# Remove the isolated loader from lib/ so it stops interfering
+	mv "$FLINK_LIB"/flink-table-planner-loader-*.jar "$FLINK_OPT"/ 2>/dev/null || true	
+	# Copy the real planner
+	find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;
 
 	# Set classpath excluding problematic jars
 	for f in "$HIVE_LIB"/*.jar; do
