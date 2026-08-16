@@ -37,7 +37,7 @@ export YARN_KILLALL_SCRIPT=$BDEV_BIN_DIR/yarn-killall.sh
 
 #ILO
 export ILO_HOME=$BDEV_BIN_DIR/ilo
-export ILO_SCRIPTS=$THIRD_PARTY_DIR/ilo-5.30.0
+export ILO_SCRIPTS=$THIRD_PARTY_DIR/ilo-6.00.0
 export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
 export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
 
