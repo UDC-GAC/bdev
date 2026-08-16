@@ -10,7 +10,7 @@ import org.apache.flink.util.Collector
 
 import scala.collection.JavaConverters._
 
-object ScalaPageRank {
+object ScalaNaivePageRank {
 
   def main(args: Array[String]) {
     if (args.size < 4) {
