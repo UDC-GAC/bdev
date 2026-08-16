@@ -32,8 +32,14 @@ object ScalaNaivePageRank {
     val io = new IOCommon()
     val data = io.load_rdd(filename, sc, "KeyValueText")
 
-    val links = data.distinct().groupByKey().cache()
+    val numPartitions = data.partitions.length
+    val partitioner = new HashPartitioner(numPartitions)
+    val links = data.distinct().groupByKey(partitioner).cache()    
+    
+    links.count()
+    
     var ranks = links.mapValues(v => initial_rank)
+    
     var finished = false
 
     var i = 0
@@ -47,8 +53,13 @@ object ScalaNaivePageRank {
       }
 
       var previous_ranks = ranks
-      ranks = contribs.reduceByKey(_ + _).mapValues(random_coeff + mixing_c * _).cache()
-
+      ranks = contribs
+        .reduceByKey(partitioner, _ + _)
+        .mapValues(random_coeff + mixing_c * _)
+        .cache()
+      
+      ranks.count()
+      
       val changed = ranks.join(previous_ranks).values
         .filter {
           case (actual_rank, previous_rank) =>
