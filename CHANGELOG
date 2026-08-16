@@ -71,6 +71,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Update iLO scripts to version 6.00
 
+		- Update RAPL-based power monitoring tool to PAPI v7.2.0
+
 		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
 
 		- Fix failure detection when running benchmarks
