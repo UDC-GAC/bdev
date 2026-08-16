@@ -2,9 +2,11 @@ package es.udc.gac.flinkbench.dataset
 
 import java.lang.Iterable
 
+import org.apache.flink.api.common.functions.GroupReduceFunction
 import org.apache.flink.api.scala._
 import org.apache.flink.util.Collector
 
+import scala.collection.JavaConverters._
 import es.udc.gac.flinkbench.IOCommon
 
 object ScalaConnectedComponents {
@@ -19,7 +21,6 @@ object ScalaConnectedComponents {
 
     val inputPath = args(0)
     val outputPath = args(1)
-
     val number_nodes = args(2).toDouble
     var max_iter = args(3).toInt
 
@@ -27,39 +28,50 @@ object ScalaConnectedComponents {
       max_iter = 2048
 
     val io = new IOCommon(env)
-    val data = io.load(inputPath, "KeyValueText")
+    val data = io.load(inputPath, "KeyValueText").map { p => (p._1.toLong, p._2.toLong) }
 
-    val vertices = data.map { p => p._1 }.distinct()
-      .map { n => (n.toLong, n.toLong) }
+    val edges = data.groupBy(1)
+      .reduceGroup(new GroupReduceFunction[(Long, Long), (Long, Array[Long])] {
+        override def reduce(in: Iterable[(Long, Long)], out: Collector[(Long, Array[Long])]): Unit = {
+          val edgesList = in.asScala.toSeq
+          if (edgesList.nonEmpty) {
+            out.collect((edgesList.head._2, edgesList.map(_._1).toArray))
+          }
+        }
+      }).rebalance()
 
-    val edges = data
-      .flatMap { edge => Seq((edge._1.toLong, edge._2.toLong),
-          (edge._2.toLong, edge._1.toLong)) }
-      .rebalance()
-      
+    val vertices = env.generateSequence(0, number_nodes - 1).map { n => (n, n) }
+    
     // open a delta iteration
     val verticesWithComponents = vertices
-      .iterateDelta(vertices, max_iter, Array("_1")) { (s, ws) =>
+      .iterateDelta(vertices, max_iter, Array(0)) { (s, ws) =>
 
-        // apply the step logic: join with the edges
+        // The "dst" sends its current component to all "src" that pointed to it
         val allNeighbors = ws.join(edges).where(0).equalTo(0) {
-          (vertex, edge) => (edge._2, vertex._2)
-        }.withForwardedFieldsFirst("_2->_2").withForwardedFieldsSecond("_2->_1")
+          (vertex, adj, out: Collector[(Long, Long)]) =>
+            val currentComp = vertex._2
+            for (target <- adj._2) {
+              out.collect((target, currentComp)) // (src, component_received)
+            }
+        }
 
-        // select the minimum neighbor
+        // Each node keeps the min() (select the minimum neighbor)
         val minNeighbors = allNeighbors.groupBy(0).min(1)
 
         // update if the component of the candidate is smaller
         val updatedComponents = minNeighbors.join(s).where(0).equalTo(0) {
           (newVertex, oldVertex, out: Collector[(Long, Long)]) =>
-            if (newVertex._2 < oldVertex._2) out.collect(newVertex)
-        }.withForwardedFieldsFirst("*")
-
+            if (newVertex._2 < oldVertex._2) {
+              out.collect(newVertex)
+            }
+        }.withForwardedFieldsFirst("_1")
+        
         // delta and new workset are identical
         (updatedComponents, updatedComponents)
     }
 
-    io.save(outputPath, verticesWithComponents, "Text")
+    val result = verticesWithComponents.map(v => (v._1.toString, v._2.toString))
+    io.save(outputPath, result, "Text")
 
     env.execute("FlinkBench ScalaConnectedComponents")
   }
