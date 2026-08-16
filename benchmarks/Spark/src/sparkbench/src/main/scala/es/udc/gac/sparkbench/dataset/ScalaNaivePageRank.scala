@@ -36,7 +36,14 @@ object ScalaNaivePageRank {
       load_dataset(filename, session, "KeyValueText").
       withColumnRenamed("index", "key")
 
-    val links = data.distinct().groupBy("key").agg(collect_list("value").as("urls")).as[(String, List[String])]
+    val links = data.distinct()
+      .groupBy("key").agg(collect_list("value").as("urls"))
+      .repartition($"key")
+      .as[(String, List[String])]
+      .cache()
+    
+    links.count()
+    
     var ranks = links.
       map{ case (a: String, b: List[String]) => (a, initial_rank)}.
       withColumnRenamed("_1", "key").withColumnRenamed("_2", "rank").
@@ -61,7 +68,6 @@ object ScalaNaivePageRank {
         .map{case (key: String, value: Double) => (key, random_coeff + mixing_c * value)}
         .withColumnRenamed("_1","key").withColumnRenamed("_2", "rank").as[(String, Double)]
     
-      // Forzamos a Spark a computar este paso aquí mismo y guardarlo en memoria
       newRanks.cache()
       newRanks.count()
       ranks = newRanks
