@@ -1,4 +1,4 @@
-package es.udc.gac.flinkbench
+package es.udc.gac.flinkbench.dataset
 
 import java.lang.Long
 

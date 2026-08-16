@@ -1,4 +1,4 @@
-package es.udc.gac.flinkbench
+package es.udc.gac.flinkbench.dataset
 
 import org.apache.flink.hadoopcompatibility.scala.HadoopInputs
 import org.apache.hadoop.io.LongWritable

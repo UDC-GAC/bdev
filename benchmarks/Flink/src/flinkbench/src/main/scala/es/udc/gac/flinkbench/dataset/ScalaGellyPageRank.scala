@@ -1,4 +1,4 @@
-package es.udc.gac.flinkbench
+package es.udc.gac.flinkbench.dataset
 
 import org.apache.flink.api.scala._
 import org.apache.flink.api.java.{DataSet => JavaDataSet}
