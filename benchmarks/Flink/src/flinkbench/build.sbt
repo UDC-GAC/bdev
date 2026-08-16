@@ -4,7 +4,7 @@ val flinkVersion = "1.15.0"
 val hadoopVersion = "2.10.2"
 crossScalaVersions := Seq("2.12.21")
 
-scalacOptions ++= Seq("-target:jvm-1.8")
+scalacOptions ++= Seq("-target:jvm-1.8", "-Ydelambdafy:inline")
 javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
 
 libraryDependencies ++= Seq(

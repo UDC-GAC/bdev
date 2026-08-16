@@ -2,6 +2,8 @@ package es.udc.gac.flinkbench.dataset
 
 import org.apache.flink.api.scala._
 
+import es.udc.gac.flinkbench.IOCommon
+
 object ScalaWordCount {
 
   def main(args: Array[String]){

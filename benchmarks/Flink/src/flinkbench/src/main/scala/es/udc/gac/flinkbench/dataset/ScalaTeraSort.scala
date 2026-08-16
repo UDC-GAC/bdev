@@ -14,6 +14,7 @@ import org.apache.hadoop.mapred.JobConf
 import org.apache.hadoop.mapreduce.Job
 
 import es.udc.gac.flinkbench.terasort._
+import es.udc.gac.flinkbench.IOCommon
 
 class OptimizedFlinkTeraPartitioner(underlying:TotalOrderPartitioner) extends Partitioner[OptimizedText] {
   def partition(key:OptimizedText, numPartitions:Int):Int = {

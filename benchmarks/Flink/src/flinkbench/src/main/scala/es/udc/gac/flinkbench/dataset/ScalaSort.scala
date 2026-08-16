@@ -3,6 +3,8 @@ package es.udc.gac.flinkbench.dataset
 import org.apache.flink.api.scala._
 import org.apache.flink.api.common.operators.Order
 
+import es.udc.gac.flinkbench.IOCommon
+
 object ScalaSort {
 
   def main(args: Array[String]){

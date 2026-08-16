@@ -12,6 +12,8 @@ import org.apache.flink.types.NullValue
 
 import scala.collection.JavaConverters._
 
+import es.udc.gac.flinkbench.IOCommon
+
 object ScalaGellyPageRank {
 
   def main(args: Array[String]) {

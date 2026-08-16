@@ -4,6 +4,6 @@ storage_rm -R ${OUTPUT_KMEANS}
 
 run_benchmark "$FLINK_HOME/bin/flink \
 	${DEPLOY_ARGS} \
-	--class es.udc.gac.flinkbench.ScalaNaiveDenseKMeans $FLINK_BENCH_JAR \
+	--class es.udc.gac.flinkbench.dataset.ScalaNaiveDenseKMeans $FLINK_BENCH_JAR \
 	--input ${INPUT_KMEANS}/samples --centers ${INPUT_KMEANS}/cluster --output ${OUTPUT_KMEANS} \
 	--numIterations ${KMEANS_MAX_ITERATIONS} --convergenceDelta ${KMEANS_CONVERGENCE_DELTA}"

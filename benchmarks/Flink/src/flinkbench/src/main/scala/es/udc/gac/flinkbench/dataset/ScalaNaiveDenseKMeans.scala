@@ -16,6 +16,8 @@ import org.apache.flink.util.Collector
 
 import scala.collection.JavaConverters._
 
+import es.udc.gac.flinkbench.IOCommon
+
 object ScalaNaiveDenseKMeans {
 
   def main(args: Array[String]) {

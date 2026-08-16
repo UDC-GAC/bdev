@@ -12,6 +12,7 @@ import org.apache.flink.graph.Edge
 import org.apache.flink.graph.Vertex
 import org.apache.flink.types.NullValue
 
+import es.udc.gac.flinkbench.IOCommon
 
 object ScalaGellyConnectedComponents {
 

@@ -5,6 +5,8 @@ import java.lang.Iterable
 import org.apache.flink.api.scala._
 import org.apache.flink.util.Collector
 
+import es.udc.gac.flinkbench.IOCommon
+
 object ScalaConnectedComponents {
 
   def main(args: Array[String]) {
