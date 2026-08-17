@@ -185,7 +185,7 @@ public class TeraInputFormat extends FileInputFormat<Text,Text> {
     }
     writer.close();
     long t3 = System.currentTimeMillis();
-    System.out.println("Computing parititions took " + (t3 - t2) + "ms");
+    System.out.println("Computing partitions took " + (t3 - t2) + "ms");
   }
   
   static class SamplerThreadGroup extends ThreadGroup{
