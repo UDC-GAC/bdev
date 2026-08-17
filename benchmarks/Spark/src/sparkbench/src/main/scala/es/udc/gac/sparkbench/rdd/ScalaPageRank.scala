@@ -7,12 +7,12 @@ import org.apache.spark.graphx._
 import org.apache.spark.graphx.lib._
 import es.udc.gac.sparkbench.IOCommon
 
-object ScalaNaivePageRank {
+object ScalaPageRank {
 
   def main(args: Array[String]) {
 
     if (args.length < 4) {
-      System.err.println("Usage: ScalaNaivePageRank <INPUT_PATH> <OUTPUT_PATH> <PAGES> <MAX_ITERATIONS>")
+      System.err.println("Usage: ScalaPageRank <INPUT_PATH> <OUTPUT_PATH> <PAGES> <MAX_ITERATIONS>")
       System.exit(1)
     }
 

@@ -9,12 +9,12 @@ import es.udc.gac.sparkbench.IOCommon
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object ScalaNaivePageRank {
+object ScalaPageRank {
 
   def main(args: Array[String]) {
 
     if (args.length < 4) {
-      System.err.println("Usage: ScalaNaivePageRank <INPUT_PATH> <OUTPUT_PATH> <PAGES> <MAX_ITERATIONS>")
+      System.err.println("Usage: ScalaPageRank <INPUT_PATH> <OUTPUT_PATH> <PAGES> <MAX_ITERATIONS>")
       System.exit(1)
     }
 
