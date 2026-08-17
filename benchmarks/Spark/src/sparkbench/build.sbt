@@ -13,6 +13,7 @@ def scalaVersionsForSpark(sv: String): Seq[String] = {
   }
 }
 
+scalaVersion := scalaVersionsForSpark(sparkVersion).head
 crossScalaVersions := scalaVersionsForSpark(sparkVersion)
 
 javacOptions ++= {
@@ -42,7 +43,9 @@ libraryDependencies ++= Seq(
 "org.apache.mahout" % "mahout-mr" % "0.12.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
-"com.github.scopt" %% "scopt" % "3.7.1"
+"org.codehaus.jackson" % "jackson-core-asl"   % "1.9.13",
+"org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.13",
+"com.github.scopt" %% "scopt" % "4.1.0"
 )
 
 assembly / assemblyShadeRules := Seq(
