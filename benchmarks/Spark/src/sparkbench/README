@@ -4,4 +4,4 @@ Benchmarking suite for Apache Spark
 
 # Compile and build assembled jar
 
-sbt -Dspark.version=4.0.0 +assembly
+sbt -Dspark.version=4.0.0 clean +assembly
