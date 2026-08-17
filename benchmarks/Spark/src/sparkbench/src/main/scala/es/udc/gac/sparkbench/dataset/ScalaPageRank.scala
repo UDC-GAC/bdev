@@ -23,7 +23,7 @@ object ScalaPageRank {
 
     val filename = args(0)
     val save_file = args(1)
-    val number_nodes = args(2).toDouble
+    val number_nodes = args(2).toLong
     val max_iter = args(3).toInt
 
     val converge_threshold = (1.0 / number_nodes) / 10
@@ -32,51 +32,59 @@ object ScalaPageRank {
     val initial_rank = 1.0 / number_nodes
 
     val io = new IOCommon()
-    val data = io.
-      load_dataset(filename, session, "KeyValueText").
-      withColumnRenamed("index", "key")
+    val data = io.load_dataset(filename, session, "KeyValueText").
+      .select($"index".cast("long").as("src"), $"value".cast("long").as("dst"))
 
+    // "nosym": Information flows from the destination to the source
+    // We convert the input to (dst, src) instead of (src, dst)
     val links = data.distinct()
-      .groupBy("key").agg(collect_list("value").as("urls"))
-      .repartition($"key")
-      .as[(String, List[String])]
+      .groupBy("src")
+      .agg(collect_list("dst").as("urls"))
+      .withColumnRenamed("src", "node")
+      .repartition($"node")
       .cache()
     
     links.count()
-    
-    var ranks = links.
-      map{ case (a: String, b: List[String]) => (a, initial_rank)}.
-      withColumnRenamed("_1", "key").withColumnRenamed("_2", "rank").
-      as[(String, Double)]
+
+    var ranks = session.range(number_nodes)
+      .withColumnRenamed("id", "node")
+      .withColumn("rank", lit(initial_rank))
+      .repartition($"node")
+      .cache()
+
+    ranks.count()
     
     var finished = false
-
     var i = 0
+    
     while (i < max_iter && !finished) {
       println("Iteration " + i)
-      val contribs = links
-        .join(ranks, Seq("key")).as[(String, List[String], Double)]
-        .select($"urls", $"rank").as[(List[String], Double)]
-        .flatMap{ case (urls: List[String], rank: Double) => {
-          val size = urls.size
-          urls.map(url => (url, rank / size))
-        }}.withColumnRenamed("_1", "key").withColumnRenamed("_2", "contrib").as[(String, Double)]
+
+      val contribs = links.join(ranks, Seq("node"))
+        .select(
+          explode($"urls").as("dst"), 
+          ($"rank" / size($"urls")).as("contrib")
+        )
 
       var previous_ranks = ranks
+
       val newRanks = contribs
-        .groupBy("key").agg(sum("contrib").as("value")).as[(String, Double)]
-        .map{case (key: String, value: Double) => (key, random_coeff + mixing_c * value)}
-        .withColumnRenamed("_1","key").withColumnRenamed("_2", "rank").as[(String, Double)]
+        .groupBy("dst")
+        .agg(sum("contrib").as("incoming_sum"))
+        .join(previous_ranks, $"dst" === $"node", "right_outer")
+        .select(
+          $"node",
+          (coalesce($"incoming_sum", lit(0.0)) * mixing_c + random_coeff).as("rank")
+        )
+        .localCheckpoint()
+        .cache()
     
-      newRanks.cache()
       newRanks.count()
       ranks = newRanks
 
-      val changed = ranks.alias("ranks").join(previous_ranks.alias("previous_ranks"), Seq("key"))
-        .select($"ranks.rank".as("actual_rank"), $"previous_ranks.rank".as("previous_ranks")).as[(Double, Double)]
-        .filter((data: (Double, Double)) =>
-          Math.abs(data._2 - data._1) > converge_threshold
-        )
+      val changed = ranks.alias("curr")
+        .join(previous_ranks.alias("prev"), Seq("node"))
+        .filter(abs($"curr.rank" - $"prev.rank") > converge_threshold)
 
       if (changed.isEmpty) {
         println("PageRank converged")
@@ -87,10 +95,14 @@ object ScalaPageRank {
       i = i + 1
     }
 
-    val result = ranks.
-      map{case (key: String, value: Double) => (key, value.toString())}.
-      as[(String, String)]
+    if (!finished) {
+        println("Reached maximum number of iterations")
+    }
 
+    val result = ranks
+      .select($"node".cast("string").as("_1"), $"rank".cast("string").as("_2"))
+      .as[(String, String)]
+    
     io.save_dataset(save_file, result, session, "Text")
     session.stop()
   }
