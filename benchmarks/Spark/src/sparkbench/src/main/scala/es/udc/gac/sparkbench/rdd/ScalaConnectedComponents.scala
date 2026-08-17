@@ -31,11 +31,12 @@ object ScalaConnectedComponents {
 
     // "nosym": Information flows from the destination to the source
     // We convert the input to (dst, src) instead of (src, dst)
-    val edges = raw_data.map { case (src, dst) => (dst.toLong, src.toLong) }
+    val edges = raw_data.map { case (src, dst) => (dst.toLong, src.toLong) }.distinct()
 
     val links = edges.groupByKey(partitioner).cache()
     links.count()
 
+    // "new": Explicit initialization of the entire universe
     var components = sc.range(0, number_nodes, 1, numPartitions)
       .map(n => (n, n))
       .partitionBy(partitioner)
@@ -59,6 +60,7 @@ object ScalaConnectedComponents {
       // Each node keeps the min() (select the minimum neighbor)
       components = propagated.union(previous_components)
         .reduceByKey(partitioner, (a, b) => math.min(a, b))
+        .localCheckpoint()
         .cache()
 
       components.count()
@@ -78,6 +80,10 @@ object ScalaConnectedComponents {
       i = i + 1
     }
 
+    if (!finished) {
+        println("Reached maximum number of iterations")
+    }
+    
     val result = components.map { case (node, comp) => (node.toString, comp.toString) }
     io.save_rdd[String, String](save_file, result, sc, "Text")
     

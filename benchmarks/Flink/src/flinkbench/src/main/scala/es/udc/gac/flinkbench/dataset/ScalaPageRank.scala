@@ -24,73 +24,65 @@ object ScalaPageRank {
 
     val inputPath = args(0)
     val outputPath = args(1)
-
-    val number_nodes = args(2).toDouble
+    val number_nodes = args(2).toLong
     val max_iter = args(3).toInt
 
     val converge_threshold = (1.0 / number_nodes) / 10
-    val mixing_c = 0.85f
+    val mixing_c = 0.85
     val random_coeff = (1.0 - mixing_c) / number_nodes
     val initial_rank = 1.0 / number_nodes
 
     val io = new IOCommon(env)
-    val data = io.load(inputPath, "KeyValueText")
+	val data = io.load(inputPath, "KeyValueText").map { p => (p._1.toLong, p._2.toLong) }
 
-    val links = data.distinct().groupBy(0)
-      .reduceGroup(new GroupReduceFunction[(String, String), (String, List[String])] {
-        override def reduce(in: Iterable[(String, String)], out: Collector[(String, List[String])]): Unit = {
-          var outputId = "-1"
-          val outputList = in.asScala map { t => outputId = t._1; t._2 }
-          out.collect((outputId, outputList.toList))
-	}
+	// "nosym": Natural direct flow (src -> dst)
+	val links = data.distinct().groupBy(0)
+      .reduceGroup(new GroupReduceFunction[(Long, Long), (Long, Array[Long])] {
+        override def reduce(in: Iterable[(Long, Long)], out: Collector[(Long, Array[Long])]): Unit = {
+          val edgesList = in.asScala.toSeq
+          if (edgesList.nonEmpty) {
+            out.collect((edgesList.head._1, edgesList.map(_._2).toArray))
+          }
+        }
       }).rebalance()
 
-    // assign initial ranks to pages
-    val initialRanks = links.flatMap {
-      (adj, out: Collector[(String, Double)]) =>
-        {
-          val targets = adj._2
-          val rankPerTarget = initial_rank * mixing_c / targets.length
+	// "new": Explicit initialization of the entire universe
+    val initialRanks = env.generateSequence(0L, number_nodes - 1L).map(n => (n, initial_rank))
 
-          // dampen fraction to targets
+	// iterateWithTermination exactly emulates the Bulk iteration of Pegasus and Spark
+	val finalRanks = initialRanks.iterateWithTermination(max_iter) { currentRanks =>
+
+		val contribs = currentRanks.join(links).where(0).equalTo(0) {
+        (rank, adj, out: Collector[(Long, Double)]) =>
+          val targets = adj._2
+          val rankPerTarget = rank._2 / targets.length
           for (target <- targets) {
             out.collect((target, rankPerTarget))
           }
+      	}
 
-          // random jump to self
-          out.collect((adj._1, random_coeff))
-        }
-    }.groupBy(0).sum(1)
+      	val summedContribs = contribs.groupBy(0).sum(1)
+		
+      	val newRanks = summedContribs.rightOuterJoin(currentRanks).where(0).equalTo(0) {
+        	(sumOpt, current, out: Collector[(Long, Double)]) =>
+          		val incoming = if (sumOpt == null) 0.0 else sumOpt._2
+          		val newRank = incoming * mixing_c + random_coeff
+          		out.collect((current._1, newRank))
+      	}.withForwardedFieldsSecond("_1")
 
-    val initialDeltas = initialRanks
-      .map { (page) => (page._1, page._2 - initial_rank) }.withForwardedFields("_1")
+      	val changed = newRanks.join(currentRanks).where(0).equalTo(0) {
+        	(newR, oldR, out: Collector[(Long, Double)]) =>
+          	if (Math.abs(oldR._2 - newR._2) > converge_threshold) {
+            	out.collect(newR)
+          	}
+      	}
 
-    val finalRanks = initialRanks
-      .iterateDelta(initialDeltas, max_iter, Array(0)) {
-       (solutionSet, workset) =>
-       {
-          val deltas = workset.join(links).where(0).equalTo(0) {
-            (lastDeltas, adj, out: Collector[(String, Double)]) =>
-              {
-                val targets = adj._2
-                val deltaPerTarget = mixing_c * lastDeltas._2 / targets.length
-
-                for (target <- targets) {
-                  out.collect((target, deltaPerTarget))
-                }
-              }
-          }.groupBy(0).sum(1)
-           .filter(x => Math.abs(x._2) > converge_threshold)
-
-          val rankUpdates = solutionSet.join(deltas).where(0).equalTo(0) {
-            (current, delta) => (current._1, current._2 + delta._2)
-          }.withForwardedFieldsFirst("_1")
-
-          (rankUpdates, deltas)
-       }
+      	// If "changed" is empty, Flink automatically stops the cluster
+      	(newRanks, changed)
     }
 
-    io.save(outputPath, finalRanks, "Text")
+	val result = finalRanks.map(v => (v._1.toString, v._2))
+    io.save(outputPath, result, "Text")
 
     env.execute("FlinkBench ScalaPageRank")
   }
