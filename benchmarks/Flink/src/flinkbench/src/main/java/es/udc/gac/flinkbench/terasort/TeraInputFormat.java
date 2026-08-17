@@ -294,13 +294,6 @@ public class TeraInputFormat extends FileInputFormat<Text,Text> {
     lastResult = super.getSplits(job);
     t2 = System.currentTimeMillis();
     System.out.println("Spent " + (t2 - t1) + "ms computing base-splits.");
-    if (job.getConfiguration().getBoolean(TeraScheduler.USE, true)) {
-      TeraScheduler scheduler = new TeraScheduler(
-        lastResult.toArray(new FileSplit[0]), job.getConfiguration());
-      lastResult = scheduler.getNewFileSplits();
-      t3 = System.currentTimeMillis(); 
-      System.out.println("Spent " + (t3 - t2) + "ms computing TeraScheduler splits.");
-    }
     return lastResult;
   }
 }
