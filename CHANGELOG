@@ -43,6 +43,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Add Flink SQL benchmarks implementations (scan, join and aggregation) using the Table API
 
+		- Update Flink implementations for PageRank and ConnectedComponents to avoid using the deprecated Graph API (Gelly)
+
 		- Max value for Flink network memory size now also supports an auto-calculated value
 
 		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (frameworks-conf.sh)
