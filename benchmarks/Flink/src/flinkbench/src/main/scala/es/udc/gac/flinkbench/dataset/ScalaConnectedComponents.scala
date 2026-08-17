@@ -40,7 +40,7 @@ object ScalaConnectedComponents {
         }
       }).rebalance()
 
-    val vertices = env.generateSequence(0, number_nodes - 1).map { n => (n, n) }
+    val vertices = env.generateSequence(0L, number_nodes.toLong - 1L).map { n => (n, n) }
     
     // open a delta iteration
     val verticesWithComponents = vertices
