@@ -2,9 +2,7 @@ name := "flinkbench"
 version := "1.0"
 val flinkVersion = "1.15.0"
 val hadoopVersion = "2.10.2"
-
 scalaVersion := "2.12.21"
-crossScalaVersions := Seq("2.12.21")
 
 javacOptions ++= Seq("--release", "8", "-encoding", "UTF-8")
 scalacOptions ++= Seq("-release", "8", "-encoding", "UTF-8")
