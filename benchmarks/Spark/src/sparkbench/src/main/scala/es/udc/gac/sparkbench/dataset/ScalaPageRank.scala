@@ -35,8 +35,7 @@ object ScalaPageRank {
     val data = io.load_dataset(filename, session, "KeyValueText").
       .select($"index".cast("long").as("src"), $"value".cast("long").as("dst"))
 
-    // "nosym": Information flows from the destination to the source
-    // We convert the input to (dst, src) instead of (src, dst)
+    // "nosym": Natural direct flow (src -> dst)
     val links = data.distinct()
       .groupBy("src")
       .agg(collect_list("dst").as("urls"))
