@@ -11,8 +11,8 @@ export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations
 export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.5.0
-export SPARK_SCALA_VERSION=2.13	# Scala version used by your Spark distribution
+export SPARK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
+export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=`op_int "$CONTAINER_MEMORY * $SPARK_DRIVER_CORES"` # Amount of memory allocated to the driver
 export SPARK_DRIVER_MEMORY_OVERHEAD_FACTOR=0.1 # Percentage of the driver memory for non-heap memory
@@ -72,7 +72,7 @@ export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHE
 export SPARK_YARN_EXECUTOR_HEAPSIZE=`op_int "$SPARK_YARN_EXECUTOR_MEMORY - $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD"` # Executor heapsize
 
 # Flink (common)
-export FLINK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.5.0
+export FLINK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
 export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories used to store local data in each node
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # Relative path to store archives of completed jobs
