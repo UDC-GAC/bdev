@@ -42,6 +42,7 @@ object ScalaPageRank {
     val links = data.distinct().groupByKey(partitioner).cache()
     links.count()
 
+    // "new": Explicit initialization of the entire universe
     var ranks = sc.range(0L, number_nodes, 1, numPartitions)
       .map(n => (n, initial_rank))
       .partitionBy(partitioner)
