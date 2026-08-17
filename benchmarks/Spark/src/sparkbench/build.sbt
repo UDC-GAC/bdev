@@ -17,12 +17,23 @@ def scalaVersionsForSpark(sv: String): Seq[String] = {
 crossScalaVersions := scalaVersionsForSpark(sparkVersion)
 
 javacOptions ++= {
-  if (sparkVersion.startsWith("4.")) Seq("-source", "17", "-target", "17")
-  else Seq("-source", "1.8", "-target", "1.8")
+  if (sparkVersion.startsWith("4.")) {
+    Seq("-source", "17", "-target", "17", "-encoding", "UTF-8")
+  } else {
+    Seq("--release", "8", "-encoding", "UTF-8")
+  }
 }
+
 scalacOptions ++= {
-  if (sparkVersion.startsWith("4.")) Seq("-release", "17")
-  else Seq("-target:jvm-1.8")
+  if (sparkVersion.startsWith("4.")) {
+    Seq("-release", "17", "-encoding", "UTF-8")
+  } else {
+    if (scalaBinaryVersion.value == "2.12") {
+      Seq("-release", "8", "-encoding", "UTF-8")
+    } else {
+      Seq("-target:jvm-1.8", "-encoding", "UTF-8")
+    }
+  }
 }
 
 libraryDependencies ++= Seq(
