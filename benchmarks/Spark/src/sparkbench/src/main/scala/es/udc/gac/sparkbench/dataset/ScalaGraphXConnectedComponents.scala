@@ -24,7 +24,7 @@ object ScalaGraphXConnectedComponents {
 
     val filename = args(0)
     val save_file = args(1)
-    val number_nodes = args(2).toDouble
+    val number_nodes = args(2).toLong
     var maxIterations = args(3).toInt
 
     if (maxIterations > 2048)
