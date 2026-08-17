@@ -79,6 +79,10 @@ object ScalaConnectedComponents {
       i = i + 1
     }
 
+    if (!finished) {
+        println("Reached maximum number of iterations")
+    }
+    
     val result = components.map { case (node, comp) => (node.toString, comp.toString) }
     io.save_rdd[String, String](save_file, result, sc, "Text")
     
