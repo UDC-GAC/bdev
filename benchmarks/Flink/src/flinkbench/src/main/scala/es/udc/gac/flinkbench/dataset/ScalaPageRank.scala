@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
 
 import es.udc.gac.flinkbench.IOCommon
 
-object ScalaNaivePageRank {
+object ScalaPageRank {
 
   def main(args: Array[String]) {
     if (args.size < 4) {
