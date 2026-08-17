@@ -97,6 +97,7 @@ object ScalaPageRank {
     }
 
     val result = ranks.map { case (node, rank) => (node.toString, rank) }
+    
     io.save_rdd[String, Double](save_file, result, sc, "Text")
     sc.stop()
   }
