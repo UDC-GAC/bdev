@@ -40,6 +40,7 @@ object ScalaConnectedComponents {
 
     edges.count()
 
+    // "new": Explicit initialization of the entire universe
     var components = session.range(number_nodes)
       .withColumnRenamed("id", "key")
       .withColumn("component", $"key")
