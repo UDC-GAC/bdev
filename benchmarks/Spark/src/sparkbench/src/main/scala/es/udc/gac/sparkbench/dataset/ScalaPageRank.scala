@@ -46,6 +46,7 @@ object ScalaPageRank {
     
     links.count()
 
+    // "new": Explicit initialization of the entire universe
     var ranks = session.range(number_nodes)
       .withColumnRenamed("id", "node")
       .withColumn("rank", lit(initial_rank))
