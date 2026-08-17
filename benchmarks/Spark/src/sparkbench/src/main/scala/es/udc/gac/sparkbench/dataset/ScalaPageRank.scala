@@ -1,13 +1,8 @@
 package es.udc.gac.sparkbench.dataset
 
-import org.apache.spark.{ SparkConf, SparkContext }
-import org.apache.spark._
-import org.apache.spark.rdd._
-import org.apache.spark.graphx._
-import org.apache.spark.graphx.lib._
-import es.udc.gac.sparkbench.IOCommon
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import es.udc.gac.sparkbench.IOCommon
 
 object ScalaPageRank {
 
@@ -27,12 +22,12 @@ object ScalaPageRank {
     val max_iter = args(3).toInt
 
     val converge_threshold = (1.0 / number_nodes) / 10
-    val mixing_c = 0.85f
+    val mixing_c = 0.85
     val random_coeff = (1.0 - mixing_c) / number_nodes
     val initial_rank = 1.0 / number_nodes
 
     val io = new IOCommon()
-    val data = io.load_dataset(filename, session, "KeyValueText").
+    val data = io.load_dataset(filename, session, "KeyValueText")
       .select($"index".cast("long").as("src"), $"value".cast("long").as("dst"))
 
     // "nosym": Natural direct flow (src -> dst)
