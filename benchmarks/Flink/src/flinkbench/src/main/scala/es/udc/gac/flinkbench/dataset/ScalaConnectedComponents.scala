@@ -21,7 +21,7 @@ object ScalaConnectedComponents {
 
     val inputPath = args(0)
     val outputPath = args(1)
-    val number_nodes = args(2).toDouble
+    val number_nodes = args(2).toLong
     var max_iter = args(3).toInt
 
     if (max_iter > 2048)
@@ -40,9 +40,9 @@ object ScalaConnectedComponents {
         }
       }).rebalance()
 
-    val vertices = env.generateSequence(0L, number_nodes.toLong - 1L).map { n => (n, n) }
+    val vertices = env.generateSequence(0L, number_nodes - 1L).map { n => (n, n) }
     
-    // open a delta iteration
+    // open a delta iteration (Native cyclic graph)
     val verticesWithComponents = vertices
       .iterateDelta(vertices, max_iter, Array(0)) { (s, ws) =>
 
@@ -53,7 +53,7 @@ object ScalaConnectedComponents {
             for (target <- adj._2) {
               out.collect((target, currentComp)) // (src, component_received)
             }
-        }
+        }.withForwardedFieldsFirst("_2")
 
         // Each node keeps the min() (select the minimum neighbor)
         val minNeighbors = allNeighbors.groupBy(0).min(1)
