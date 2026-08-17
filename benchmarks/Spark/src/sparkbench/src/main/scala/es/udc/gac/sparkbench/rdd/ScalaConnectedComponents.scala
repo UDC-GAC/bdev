@@ -36,6 +36,7 @@ object ScalaConnectedComponents {
     val links = edges.groupByKey(partitioner).cache()
     links.count()
 
+    // "new": Explicit initialization of the entire universe
     var components = sc.range(0, number_nodes, 1, numPartitions)
       .map(n => (n, n))
       .partitionBy(partitioner)
