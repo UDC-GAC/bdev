@@ -1,6 +1,6 @@
 package es.udc.gac.sparkbench.rdd
 
-import org.apache.hadoop.examples.terasort.{TeraInputFormat,TeraOutputFormat}
+import es.udc.gac.sparkbench.terasort.{TeraInputFormat,TeraOutputFormat}
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.io.BytesWritable
 import org.apache.spark._

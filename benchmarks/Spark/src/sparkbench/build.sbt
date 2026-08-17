@@ -1,5 +1,4 @@
 name := "sparkbench"
-val hadoopVersion = "2.10.2"
 val sparkVersion = sys.props.getOrElse("spark.version", "4.0.0")
 
 def scalaVersionsForSpark(sv: String): Seq[String] = {
@@ -40,9 +39,6 @@ libraryDependencies ++= Seq(
 "org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
 "org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
-("org.apache.hadoop" % "hadoop-mapreduce-examples" % hadoopVersion)
-    .exclude("org.apache.hadoop", "*")
-    .exclude("com.google.guava", "*"),
 "org.apache.mahout" % "mahout-mr" % "0.12.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
