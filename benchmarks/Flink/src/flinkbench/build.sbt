@@ -17,6 +17,8 @@ libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-connector-hive" % flinkVersion % "provided",
 "org.apache.hadoop" % "hadoop-client" % hadoopVersion % "provided",
 "org.apache.hive" % "hive-exec" % "3.1.3" % "provided",
+"org.codehaus.jackson" % "jackson-core-asl"   % "1.9.13",
+"org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.13",
 "org.apache.mahout" % "mahout-mr" % "0.12.2" excludeAll (
   ExclusionRule("org.apache.hadoop")
 )
