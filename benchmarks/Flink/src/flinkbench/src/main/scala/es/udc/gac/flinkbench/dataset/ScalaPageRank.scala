@@ -28,15 +28,14 @@ object ScalaPageRank {
     val max_iter = args(3).toInt
 
     val converge_threshold = (1.0 / number_nodes) / 10
-    val mixing_c = 0.85f
+    val mixing_c = 0.85
     val random_coeff = (1.0 - mixing_c) / number_nodes
     val initial_rank = 1.0 / number_nodes
 
     val io = new IOCommon(env)
 	val data = io.load(inputPath, "KeyValueText").map { p => (p._1.toLong, p._2.toLong) }
 
-	// "nosym": Information flows from the destination to the source
-    // We convert the input to (dst, src) instead of (src, dst)
+	// "nosym": Natural direct flow (src -> dst)
 	val links = data.distinct().groupBy(0)
       .reduceGroup(new GroupReduceFunction[(Long, Long), (Long, Array[Long])] {
         override def reduce(in: Iterable[(Long, Long)], out: Collector[(Long, Array[Long])]): Unit = {
