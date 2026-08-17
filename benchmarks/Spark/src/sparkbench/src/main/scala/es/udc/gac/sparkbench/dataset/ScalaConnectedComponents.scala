@@ -67,6 +67,7 @@ object ScalaConnectedComponents {
         .groupBy("key")
         .agg(min("component").as("component"))
         .localCheckpoint()
+        .cache()
 
       newComponents.count()
       components = newComponents
