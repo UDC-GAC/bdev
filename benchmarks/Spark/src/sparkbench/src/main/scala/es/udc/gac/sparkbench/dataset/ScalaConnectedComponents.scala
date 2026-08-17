@@ -1,0 +1,106 @@
+package es.udc.gac.sparkbench.dataset
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+import es.udc.gac.sparkbench.IOCommon
+
+object ScalaConnectedComponents {
+
+  def main(args: Array[String]) {
+
+    if (args.length < 4) {
+      System.err.println("Usage: ScalaConnectedComponents <INPUT_PATH> <OUTPUT_PATH> <PAGES> <MAX_ITERATIONS>")
+      System.exit(1)
+    }
+
+    val session = SparkSession.builder().appName("SparkBench ScalaConnectedComponents").getOrCreate()
+    import session.implicits._
+
+    val filename = args(0)
+    val save_file = args(1)
+    val number_nodes = args(2).toLong
+    var max_iter = args(3).toInt
+
+    if (max_iter > 2048)
+      max_iter = 2048
+
+    val io = new IOCommon()
+    
+    val data = io.load_dataset(filename, session, "KeyValueText")
+      .select($"index".cast("long").as("src"), $"value".cast("long").as("dst"))
+
+    // "nosym": Information flows from the destination to the source
+    // We convert the input to (dst, src) instead of (src, dst)
+    val edges = data.distinct()
+      .groupBy("dst")
+      .agg(collect_list("src").as("srcs"))
+      .withColumnRenamed("dst", "key")
+      .repartition($"key")
+      .as[(Long, List[Long])]
+      .cache()
+
+    edges.count()
+
+    var components = session.range(number_nodes)
+      .withColumnRenamed("id", "key")
+      .withColumn("component", $"key")
+      .repartition($"key")
+      .as[(Long, Long)]
+      .cache()
+
+    components.count()
+
+    var finished = false
+    var i = 0
+
+    while (i < max_iter && !finished) {
+      println("Iteration " + i)
+
+      // The "dst" sends its current component to all "src" that pointed to it
+      val propagated = edges
+        .join(components, Seq("key"))
+        .as[(Long, List[Long], Long)]
+        .flatMap { case (dst, srcs, comp) =>
+          srcs.map(src => (src, comp))
+        }
+        .withColumnRenamed("_1", "key")
+        .withColumnRenamed("_2", "component")
+        .as[(Long, Long)]
+
+      var previous_components = components
+
+      // Each node keeps the min() (select the minimum neighbor)
+      val newComponents = propagated.union(previous_components)
+        .groupBy("key")
+        .agg(min("component").as("component"))
+        .repartition($"key")
+        .as[(Long, Long)]
+        .cache()
+
+      newComponents.count()
+      components = newComponents
+
+      // Check if there were any changes (if any node has reduced its ID)
+      val changed = components.alias("curr")
+        .join(previous_components.alias("prev"), Seq("key"))
+        .select($"curr.component".as("c_curr"), $"prev.component".as("c_prev"))
+        .as[(Long, Long)]
+        .filter($"c_curr" < $"c_prev")
+
+      if (changed.isEmpty) {
+        println("Connected Components converged")
+        finished = true
+      }
+
+      previous_components.unpersist()
+      i = i + 1
+    }
+
+    val result = components
+      .map { case (key, comp) => (key.toString(), comp.toString()) }
+      .as[(String, String)]
+
+    io.save_dataset(save_file, result, session, "Text")
+    session.stop()
+  }
+}
