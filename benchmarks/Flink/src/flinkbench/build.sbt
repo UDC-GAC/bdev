@@ -7,7 +7,7 @@ scalaVersion := "2.12.21"
 crossScalaVersions := Seq("2.12.21")
 
 javacOptions ++= Seq("--release", "8", "-encoding", "UTF-8")
-scalacOptions ++= Seq("-release", "8", "-Xdelambdafy:inline", "-encoding", "UTF-8")
+scalacOptions ++= Seq("-release", "8", "-encoding", "UTF-8")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
