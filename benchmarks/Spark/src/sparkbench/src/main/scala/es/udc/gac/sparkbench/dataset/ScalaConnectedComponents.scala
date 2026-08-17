@@ -36,7 +36,6 @@ object ScalaConnectedComponents {
       .agg(collect_list("src").as("srcs"))
       .withColumnRenamed("dst", "key")
       .repartition($"key")
-      .as[(Long, List[Long])]
       .cache()
 
     edges.count()
@@ -45,7 +44,6 @@ object ScalaConnectedComponents {
       .withColumnRenamed("id", "key")
       .withColumn("component", $"key")
       .repartition($"key")
-      .as[(Long, Long)]
       .cache()
 
     components.count()
@@ -59,13 +57,7 @@ object ScalaConnectedComponents {
       // The "dst" sends its current component to all "src" that pointed to it
       val propagated = edges
         .join(components, Seq("key"))
-        .as[(Long, List[Long], Long)]
-        .flatMap { case (dst, srcs, comp) =>
-          srcs.map(src => (src, comp))
-        }
-        .withColumnRenamed("_1", "key")
-        .withColumnRenamed("_2", "component")
-        .as[(Long, Long)]
+        .select(explode($"srcs").as("key"), $"component")
 
       var previous_components = components
 
@@ -73,9 +65,7 @@ object ScalaConnectedComponents {
       val newComponents = propagated.union(previous_components)
         .groupBy("key")
         .agg(min("component").as("component"))
-        .repartition($"key")
-        .as[(Long, Long)]
-        .cache()
+        .localCheckpoint()
 
       newComponents.count()
       components = newComponents
@@ -83,9 +73,7 @@ object ScalaConnectedComponents {
       // Check if there were any changes (if any node has reduced its ID)
       val changed = components.alias("curr")
         .join(previous_components.alias("prev"), Seq("key"))
-        .select($"curr.component".as("c_curr"), $"prev.component".as("c_prev"))
-        .as[(Long, Long)]
-        .filter($"c_curr" < $"c_prev")
+        .filter($"curr.component" < $"prev.component")
 
       if (changed.isEmpty) {
         println("Connected Components converged")
@@ -96,8 +84,12 @@ object ScalaConnectedComponents {
       i = i + 1
     }
 
+    if (!finished) {
+        println("Reached maximum number of iterations")
+    }
+
     val result = components
-      .map { case (key, comp) => (key.toString(), comp.toString()) }
+      .select($"key".cast("string"), $"component".cast("string"))
       .as[(String, String)]
 
     io.save_dataset(save_file, result, session, "Text")
