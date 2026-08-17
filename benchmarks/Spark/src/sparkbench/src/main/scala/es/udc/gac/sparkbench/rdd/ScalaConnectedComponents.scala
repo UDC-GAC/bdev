@@ -31,7 +31,7 @@ object ScalaConnectedComponents {
 
     // "nosym": Information flows from the destination to the source
     // We convert the input to (dst, src) instead of (src, dst)
-    val edges = raw_data.map { case (src, dst) => (dst.toLong, src.toLong) }
+    val edges = raw_data.map { case (src, dst) => (dst.toLong, src.toLong) }.distinct()
 
     val links = edges.groupByKey(partitioner).cache()
     links.count()
