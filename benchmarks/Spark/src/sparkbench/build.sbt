@@ -33,7 +33,7 @@ libraryDependencies ++= Seq(
 ("org.apache.hadoop" % "hadoop-mapreduce-examples" % hadoopVersion)
     .exclude("org.apache.hadoop", "*")
     .exclude("com.google.guava", "*")
-"org.apache.mahout" % "mahout-mr" % "0.11.2" excludeAll (
+"org.apache.mahout" % "mahout-mr" % "0.12" excludeAll (
   ExclusionRule("org.apache.hadoop")
 ),
 "com.github.scopt" %% "scopt" % "3.7.1"
