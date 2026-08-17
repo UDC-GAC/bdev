@@ -25,14 +25,13 @@ javacOptions ++= {
 }
 
 scalacOptions ++= {
-  if (sparkVersion.startsWith("4.")) {
-    Seq("-release", "17", "-encoding", "UTF-8")
+  val targetJvm = if (sparkVersion.startsWith("4.")) "17" else "8"
+  val encoding = Seq("-encoding", "UTF-8")
+
+  if (scalaBinaryVersion.value == "2.11") {
+    Seq("-target:jvm-1.8") ++ encoding
   } else {
-    if (scalaBinaryVersion.value == "2.12") {
-      Seq("-release", "8", "-encoding", "UTF-8")
-    } else {
-      Seq("-target:jvm-1.8", "-encoding", "UTF-8")
-    }
+    Seq("-release", targetJvm) ++ encoding
   }
 }
 
