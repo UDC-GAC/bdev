@@ -59,6 +59,7 @@ object ScalaConnectedComponents {
       // Each node keeps the min() (select the minimum neighbor)
       components = propagated.union(previous_components)
         .reduceByKey(partitioner, (a, b) => math.min(a, b))
+        .localCheckpoint()
         .cache()
 
       components.count()
