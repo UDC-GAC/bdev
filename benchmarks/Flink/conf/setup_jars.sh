@@ -20,16 +20,6 @@ HIVE_EXEC_CORE_PATH="${FLINK_LIB}/${HIVE_EXEC_CORE_JAR}"
 HIVE_EXEC_CORE_URL="https://repo1.maven.org/maven2/org/apache/hive/hive-exec/${FLINK_HIVE_VERSION}/${HIVE_EXEC_CORE_JAR}"
 HIVE_FILTERED_CLASSPATH=$HADOOP_CLASSPATH
 
-if [ $GEN_PAGERANK == "true" ] || [ $GEN_CC == "true" ]; then
-	if ! ls "$FLINK_LIB"/flink-gelly*.jar >/dev/null 2>&1; then
-    	if ls "$FLINK_OPT"/flink-gelly*.jar >/dev/null 2>&1; then
-        	cp "$FLINK_OPT"/flink-gelly*.jar "$FLINK_LIB/"
-    	else
-        	m_exit "Flink Gelly jars not found in $FLINK_OPT. Revise your Flink installation"
-    	fi
-	fi
-fi
-
 if [ $GEN_AGGREGATION == "true" ] || [ $GEN_JOIN == "true" ] || [ $GEN_SCAN == "true" ]; then
 	if [ -z $HIVE_HOME ]; then
 		m_exit "HIVE_HOME is not defined or is empty"
