@@ -2,10 +2,11 @@ name := "flinkbench"
 version := "1.0"
 val flinkVersion = "1.15.0"
 val hadoopVersion = "2.10.2"
+
 crossScalaVersions := Seq("2.12.21")
 
-scalacOptions ++= Seq("-target:jvm-1.8", "-Ydelambdafy:inline")
-javacOptions ++= Seq("-source", "1.8", "-target", "1.8")
+javacOptions ++= Seq("--release", "8", "-encoding", "UTF-8")
+scalacOptions ++= Seq("-release", "8", "-encoding", "UTF-8")
 
 libraryDependencies ++= Seq(
 "org.apache.flink" %% "flink-scala" % flinkVersion % "provided",
