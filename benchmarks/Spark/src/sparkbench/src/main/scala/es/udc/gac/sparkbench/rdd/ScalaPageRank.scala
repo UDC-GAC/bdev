@@ -35,8 +35,7 @@ object ScalaPageRank {
     val numPartitions = raw_data.partitions.length
     val partitioner = new HashPartitioner(numPartitions)
 
-    // "nosym": Information flows from the destination to the source
-    // We convert the input to (dst, src) instead of (src, dst)
+    // "nosym": Natural direct flow (src -> dst)
     val edges = raw_data.map { case (src, dst) => (src.toLong, dst.toLong) }.distinct()
     
     val links = data.distinct().groupByKey(partitioner).cache()
