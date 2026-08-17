@@ -23,10 +23,10 @@ object ScalaGraphXPageRank {
 
     val filename = args(0)
     val save_file = args(1)
-    val number_nodes = args(2).toDouble
+    val number_nodes = args(2).toLong
 
     val converge_threshold = (1.0 / number_nodes) / 10
-    val mixing_c = 0.85f
+    val mixing_c = 0.85
 
     val io = new IOCommon()
     val data = io.load_dataset(filename, session, "KeyValueText")
