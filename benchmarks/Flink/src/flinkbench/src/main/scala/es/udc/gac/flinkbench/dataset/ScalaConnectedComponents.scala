@@ -30,6 +30,8 @@ object ScalaConnectedComponents {
     val io = new IOCommon(env)
     val data = io.load(inputPath, "KeyValueText").map { p => (p._1.toLong, p._2.toLong) }
 
+    // "nosym": Information flows from the destination to the source
+    // We convert the input to (dst, src) instead of (src, dst)
     val edges = data.groupBy(1)
       .reduceGroup(new GroupReduceFunction[(Long, Long), (Long, Array[Long])] {
         override def reduce(in: Iterable[(Long, Long)], out: Collector[(Long, Array[Long])]): Unit = {
@@ -40,6 +42,7 @@ object ScalaConnectedComponents {
         }
       }).rebalance()
 
+    // "new": Explicit initialization of the entire universe
     val vertices = env.generateSequence(0L, number_nodes - 1L).map { n => (n, n) }
     
     // open a delta iteration (Native cyclic graph)
