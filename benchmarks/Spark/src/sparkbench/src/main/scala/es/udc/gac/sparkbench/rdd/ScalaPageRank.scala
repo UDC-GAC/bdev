@@ -1,10 +1,7 @@
 package es.udc.gac.sparkbench.rdd
 
-import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark._
-import org.apache.spark.rdd._
-import org.apache.spark.graphx._
-import org.apache.spark.graphx.lib._
+import org.apache.spark.{ SparkConf, SparkContext }
+import org.apache.spark.HashPartitioner
 import es.udc.gac.sparkbench.IOCommon
 
 object ScalaPageRank {
@@ -25,7 +22,7 @@ object ScalaPageRank {
     val max_iter = args(3).toInt
 
     val converge_threshold = (1.0 / number_nodes) / 10
-    val mixing_c = 0.85f
+    val mixing_c = 0.85
     val random_coeff = (1.0 - mixing_c) / number_nodes
     val initial_rank = 1.0 / number_nodes
 
@@ -38,7 +35,7 @@ object ScalaPageRank {
     // "nosym": Natural direct flow (src -> dst)
     val edges = raw_data.map { case (src, dst) => (src.toLong, dst.toLong) }.distinct()
     
-    val links = data.distinct().groupByKey(partitioner).cache()
+    val links = edges.groupByKey(partitioner).cache()
     links.count()
 
     // "new": Explicit initialization of the entire universe
