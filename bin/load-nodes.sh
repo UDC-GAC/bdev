@@ -6,8 +6,6 @@ elif [[ -z "$COMPUTE_NODES" ]]; then
 	m_exit "Missing HOSTFILE"
 fi
 
-export IP_COMMAND=`which ip`
-export RESOLVEIP_COMMAND=`which getent`
 export NODE_FILE=$REPORT_DIR/hostfile
 export COMPUTE_NODES=`get_nodes_by_hostname $NODE_FILE $COMPUTE_NODES`
 
