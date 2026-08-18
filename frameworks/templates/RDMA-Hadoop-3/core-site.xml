@@ -29,4 +29,8 @@
     <name>hadoop.roce.enabled</name>
     <value>$rdma_hadoop_roce_enabled</value>
   </property>
+  <property>
+	<name>hadoop.rdma.dev.name</name>
+	<value>$rdma_hadoop_net_device</value>
+  </property>
 </configuration>
