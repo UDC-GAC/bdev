@@ -17,7 +17,6 @@ add_conf_param "master" $MASTERNODE
 add_conf_param "ip_master" $MASTERIP
 add_conf_param "net_interface" $NET_INTERFACE
 add_conf_param "hostfile" $FILE
-add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 
 #Hadoop
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
@@ -33,6 +32,8 @@ else
 	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
 fi
 
+export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
+add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 add_conf_param "hadoop_default_fs" $HADOOP_DEFAULT_FS
 add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "yarn_app_staging_dir" $YARN_APP_STAGING_DIR
