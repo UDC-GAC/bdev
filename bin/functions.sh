@@ -336,7 +336,7 @@ function set_network_configuration()
 		load_nodes ${COMPUTE_NODES}
 		export NET_INTERFACE=default
 		export FILE=$NODE_FILE
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]; then
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
 		if [[ -n ${ETH_COMPUTE_NODES} ]]; then
 			load_nodes ${ETH_COMPUTE_NODES}
 			export NET_INTERFACE=$ETH_INTERFACE
@@ -374,7 +374,7 @@ function set_network_configuration()
 		export RDMA_HADOOP_ROCE_ENABLED=false
 	fi
 	
-	export MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
+	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE)
 }
 
 export -f set_network_configuration
@@ -399,7 +399,8 @@ function set_directory_configuration()
 
 export -f set_directory_configuration
 
-function timestamp(){
+function timestamp()
+{
     nanosec=`date +%s%N`
     echo `expr $nanosec / 1000000`
 }
