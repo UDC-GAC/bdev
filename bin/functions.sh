@@ -437,6 +437,11 @@ function set_solution()
             m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
         fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
+	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
+		if [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
+			m_warn "RDMA-Hadoop-3 requires the use of the IPoIB interface but Ethernet has been configured. Changing it to use $IPOIB_INTERFACE"
+			export $SOLUTION_NET_INTERFACE="ipoib"
+		fi
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
