@@ -360,6 +360,10 @@ function set_network_configuration()
 		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 	fi
 
+	if [[ -z ${FILE} ]]; then
+		m_exit "Invalid hostfile for $SOLUTION using $SOLUTION_NET_INTERFACE. Revise network settings"
+	fi
+	
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
 		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
 		export RDMA_HADOOP_IB_ENABLED=true
