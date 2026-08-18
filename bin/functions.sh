@@ -361,7 +361,11 @@ function set_network_configuration()
 	fi
 
 	if [[ -z ${FILE} ]]; then
-		m_exit "Invalid hostfile for $SOLUTION using $SOLUTION_NET_INTERFACE. Revise network settings"
+		m_exit "Invalid hostfile for $SOLUTION. Revise network settings"
+	fi
+
+	if [[ -z ${NET_INTERFACE} ]]; then
+		m_exit "Invalid network interface for $SOLUTION. Revise network settings"
 	fi
 	
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
