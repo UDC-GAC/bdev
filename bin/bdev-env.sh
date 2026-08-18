@@ -268,6 +268,34 @@ fi
 
 export EXPECT=$(readlink -f ${EXPECT})
 
+# Check ip command
+export IP_COMMAND=$(which ip 2> /dev/null)
+
+if [ "x$IP_COMMAND" == "x" ]; then
+	m_warn "Missing ip command"
+fi
+if [ ! -f "$IP_COMMAND" ]; then
+    m_exit "Missing ip command: $IP_COMMAND"
+elif [ ! -x "$IP_COMMAND" ]; then
+    m_exit "ip command is not executable: $IP_COMMAND "
+fi
+
+export IP_COMMAND=$(readlink -f ${IP_COMMAND})
+
+# Check getent command
+export RESOLVEIP_COMMAND=$(which getent 2> /dev/null)
+
+if [ "x$RESOLVEIP_COMMAND" == "x" ]; then
+	m_warn "Missing getent command"
+fi
+if [ ! -f "$RESOLVEIP_COMMAND" ]; then
+    m_exit "Missing getent command: $RESOLVEIP_COMMAND"
+elif [ ! -x "$RESOLVEIP_COMMAND" ]; then
+    m_exit "getent command is not executable: $RESOLVEIP_COMMAND "
+fi
+
+export RESOLVEIP_COMMAND=$(readlink -f ${RESOLVEIP_COMMAND})
+
 # Define variables for BDWatchdog binary daemons
 if [ $ENABLE_BDWATCHDOG == "true" ]; then
         if [ $BDWATCHDOG_ATOP == "true" ]; then
