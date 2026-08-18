@@ -108,6 +108,7 @@ add_conf_param "scheduler_fair_max_assign" $SCHEDULER_FAIR_MAX_ASSIGN
 add_conf_param "scheduler_fair_continuous_scheduling" $SCHEDULER_FAIR_CONTINUOUS
 
 #RDMA-HADOOP
+add_conf_param "rdma_hadoop_net_device" $RDMA_INTERFACE
 add_conf_param "rdma_hadoop_ib_enabled" $RDMA_HADOOP_IB_ENABLED
 add_conf_param "rdma_hadoop_roce_enabled" $RDMA_HADOOP_ROCE_ENABLED
 add_conf_param "rdma_hadoop_dfs_replication_parallel" $RDMA_HADOOP_DFS_REPLICATION_PARALLEL
