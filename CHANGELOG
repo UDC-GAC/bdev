@@ -58,6 +58,10 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Fix Spark memory configuration for Driver and AppMaster on YARN
 
+		- Improve network configuration for RDMA-Hadoop-3; RDMA interface can now be configured for IB and RoCE networks (system-conf.sh)
+
+		- Add RDMA-Hadoop-3 parameter to configure the packet size for RDMA write (frameworks-conf.sh)
+
 		- Support for starting the Secondary NameNode for HDFS
 
 		- Add cleanup phase for YARN applications
