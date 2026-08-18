@@ -412,37 +412,30 @@ function set_solution()
 	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
 	SOLUTION_NUM=$1
 
-	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]
-	then
+	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
 		SOLUTION_NAME="Spark"
-	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]
-	then
+	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]; then
 		SOLUTION_NAME="Flink"
 	fi
 
 	export SOLUTION_HOME=${FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
 	export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
 
-	if [[ ! -d $SOLUTION_HOME ]]
-	then
+	if [[ ! -d $SOLUTION_HOME ]]; then
 		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
 	else
 		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
 	fi
 
-	if [[ "$SOLUTION_NAME" == "Spark" ]]
-        then
-                if [[ ! -d $SPARK_HADOOP_HOME ]]
-                then
-                        m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
-                fi
+	if [[ "$SOLUTION_NAME" == "Spark" ]]; then
+        if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $SPARK_HADOOP_HOME ]]; then
+            m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
+        fi
 		HADOOP_VERSION=`echo ${SPARK_HADOOP_HOME##*/}`
-	elif [[ "$SOLUTION_NAME" == "Flink" ]]
-        then
-                if [[ ! -d $FLINK_HADOOP_HOME ]]
-                then
-                        m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
-                fi
+	elif [[ "$SOLUTION_NAME" == "Flink" ]]; then
+        if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $FLINK_HADOOP_HOME ]]; then
+            m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
+        fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
