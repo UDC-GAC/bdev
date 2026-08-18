@@ -3,8 +3,6 @@
 ## Configuration parameters for the frameworks
 
 # RDMA-Hadoop-3
-export RDMA_HADOOP_IB_ENABLED=true # Enable RDMA connections through InfiniBand (IB)
-export RDMA_HADOOP_ROCE_ENABLED=false # Enable RDMA connections through RDMA over Converged Ethernet (RoCE)
 export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
 export RDMA_HADOOP_DFS_REPLICATION_PARALLEL=false # Enable parallel replication
 export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations
