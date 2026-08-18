@@ -13,12 +13,12 @@ if [[ -z "${COMPUTE_NODES}" ]]; then
 	m_exit "Nodes: Revise network settings"
 fi
 
-export NUM_NODES=`echo $COMPUTE_NODES | wc -w`
+export NUM_NODES=$(echo $COMPUTE_NODES | wc -w)
 m_echo "Nodes ($NUM_NODES): "$COMPUTE_NODES
 
 if [[ ! -z $ETHERNET_INTERFACE ]]; then
-	export NODE_FILE_ETHERNET=$REPORT_DIR/hostfile.eth
-	export ETHERNET_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES`
+	export NODE_FILE_ETHERNET=$REPORT_DIR/hostfile.ethernet
+	export ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface $NODE_FILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES)
 	
 	if [[ -z "${ETHERNET_COMPUTE_NODES}" ]]; then
 		export ETHERNET_COMPUTE_NODES=""
@@ -31,7 +31,7 @@ fi
 
 if [[ ! -z $IPOIB_INTERFACE ]]; then
 	export NODE_FILE_IPOIB=$REPORT_DIR/hostfile.ipoib
-       	export IPOIB_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_IPOIB $IPOIB_INTERFACE $COMPUTE_NODES`
+       	export IPOIB_COMPUTE_NODES=$(get_nodes_by_interface $NODE_FILE_IPOIB $IPOIB_INTERFACE $COMPUTE_NODES)
 	
 	if [[ -z "${IPOIB_COMPUTE_NODES}" ]]; then
 		export IPOIB_COMPUTE_NODES=""
