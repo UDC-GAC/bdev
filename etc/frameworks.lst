@@ -9,9 +9,9 @@
 #Hadoop-YARN		3.2.4		IPoIB
 #Hadoop-YARN		3.3.6		ETHERNET
 #Hadoop-YARN		3.3.6		IPoIB
-#Hadoop-YARN		3.4.3		ETHERNET
+Hadoop-YARN		3.4.3		ETHERNET
 #Hadoop-YARN		3.4.3		IPoIB
-Hadoop-YARN		3.5.0		ETHERNET
+#Hadoop-YARN		3.5.0		ETHERNET
 #Hadoop-YARN		3.5.0		IPoIB
 #RDMA-Hadoop-3		0.9.1		IB
 #RDMA-Hadoop-3		0.9.1		RoCE
