@@ -1,7 +1,12 @@
 #!/bin/sh
 
-#Configuration parameters
+# Load storage backend functions
+. $COMMON_SRC_DIR/lib/storage_backend.sh
+
+# Initialize arrays for configuration parameters
 ini_conf_params
+
+# Add configuration parameters
 add_conf_param "bdev_home" $BDEV_HOME
 add_conf_param "bdev_bin_dir" $BDEV_BIN_DIR
 add_conf_param "enable_hostnames" $ENABLE_HOSTNAMES
@@ -18,7 +23,10 @@ add_conf_param "ip_master" $MASTERIP
 add_conf_param "net_interface" $NET_INTERFACE
 add_conf_param "hostfile" $FILE
 
-#Hadoop
+export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
+add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
+
+# Storage backend
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
     export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
@@ -32,8 +40,7 @@ else
 	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
 fi
 
-export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
-add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
+# Hadoop
 add_conf_param "hadoop_default_fs" $HADOOP_DEFAULT_FS
 add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "yarn_app_staging_dir" $YARN_APP_STAGING_DIR
