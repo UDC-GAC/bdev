@@ -13,6 +13,10 @@ add_conf_param "local_dirs" $LOCAL_DIRS
 add_conf_param "java_home" $BDEV_JAVA_HOME
 add_conf_param "java_jpms_opts" "$JAVA_JPMS_OPTS"
 add_conf_param "python_bin_path" $PYTHON_BIN
+add_conf_param "master" $MASTERNODE
+add_conf_param "ip_master" $MASTERIP
+add_conf_param "net_interface" $NET_INTERFACE
+add_conf_param "hostfile" $FILE
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
 
 #Hadoop
