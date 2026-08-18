@@ -336,7 +336,7 @@ function set_network_configuration()
 		load_nodes ${COMPUTE_NODES}
 		export NET_INTERFACE=default
 		export FILE=$NODE_FILE
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]; then
 		if [[ -n ${ETH_COMPUTE_NODES} ]]; then
 			load_nodes ${ETH_COMPUTE_NODES}
 			export NET_INTERFACE=$ETH_INTERFACE
@@ -346,7 +346,7 @@ function set_network_configuration()
 			export NET_INTERFACE=default
 			export FILE=$NODE_FILE
 		fi
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
 		if [[ -n ${IPOIB_COMPUTE_NODES} ]]; then
 			load_nodes ${IPOIB_COMPUTE_NODES}
 			export NET_INTERFACE=$IPOIB_INTERFACE
@@ -360,7 +360,11 @@ function set_network_configuration()
 		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 	fi
 
-	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
+	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
+		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
+	else
+		m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
+	fi
 	export MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
 }
 
@@ -439,17 +443,13 @@ function set_solution()
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
 		if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-			m_info "RDMA-Hadoop-3 configured to use InfiniBand"
-			export SOLUTION_NET_INTERFACE="ipoib"
+			m_info "RDMA-Hadoop-3 configured to use InfiniBand (RDMA)"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
 			m_info "RDMA-Hadoop-3 configured to use RDMA over Ethernet (RoCE)"
-			export SOLUTION_NET_INTERFACE="ipoib"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
-			export SOLUTION_NET_INTERFACE="eth"
-			m_info "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet"
+			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
-			export SOLUTION_NET_INTERFACE="eth"
-			m_info "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB)"
+			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
 		fi
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
