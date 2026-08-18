@@ -367,19 +367,20 @@ function set_network_configuration()
 	if [[ -z ${NET_INTERFACE} ]]; then
 		m_exit "Invalid network interface for $SOLUTION. Revise network settings"
 	fi
-	
+
+	export RDMA_HADOOP_IB_ENABLED=false
+	export RDMA_HADOOP_ROCE_ENABLED=false
+		
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-		m_echo "Using $RDMA_INTERFACE interface for InfiniBand and hostfile: $FILE"
+		m_echo "Using RDMA interface $RDMA_INTERFACE for InfiniBand and hostfile: $FILE"
 		export RDMA_HADOOP_IB_ENABLED=true
-		export RDMA_HADOOP_ROCE_ENABLED=false
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		m_echo "Using $RDMA_INTERFACE interface for RoCE and hostfile: $FILE"
-		export RDMA_HADOOP_IB_ENABLED=false
+		m_echo "Using RDMA interface $RDMA_INTERFACE for RoCE and hostfile: $FILE"
 		export RDMA_HADOOP_ROCE_ENABLED=true
-	else
-		m_echo "Using $NET_INTERFACE interface for $SOLUTION_NET_INTERFACE and hostfile: $FILE"
-		export RDMA_HADOOP_IB_ENABLED=false
-		export RDMA_HADOOP_ROCE_ENABLED=false
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+		m_echo "Using network interface $NET_INTERFACE for TCP/IP over Ethernet and hostfile: $FILE"
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+		m_echo "Using network interface $NET_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $FILE"
 	fi
 	
 	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE)
@@ -460,11 +461,7 @@ function set_solution()
         fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
-		if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-			m_echo "RDMA-Hadoop-3 configured to use InfiniBand (RDMA)"
-		elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-			m_echo "RDMA-Hadoop-3 configured to use RDMA over Ethernet (RoCE)"
-		elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+		if [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
