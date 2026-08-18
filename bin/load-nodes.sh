@@ -22,7 +22,7 @@ if [[ ! -z $ETHERNET_INTERFACE ]]; then
 	
 	if [[ -z "${ETHERNET_COMPUTE_NODES}" ]]; then
 		export ETHERNET_COMPUTE_NODES=""
-		rm $NODE_FILE_ETH >& /dev/null
+		rm $NODE_FILE_ETHERNET >& /dev/null
 		m_warn "Ethernet ($ETHERNET_INTERFACE): interface will be ignored"
 	else
 		m_echo "Ethernet ($ETHERNET_INTERFACE): "$ETHERNET_COMPUTE_NODES
