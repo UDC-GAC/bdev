@@ -5,9 +5,6 @@
 # RDMA-Hadoop-3
 export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
 export RDMA_HADOOP_DFS_CLIENT_WRITE_PACKET_SIZE=524800  # Packet size (in bytes) for RDMA write
-export RDMA_HADOOP_DFS_REPLICATION_PARALLEL=false # Enable parallel replication
-export RDMA_HADOOP_DFS_SSD_USED=false	# Enable SSD-oriented optimizations
-export RDMA_HADOOP_DISK_SHUFFLE_ENABLED="true" # Enable disk-based shuffle
 
 # Spark (common)
 export SPARK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
