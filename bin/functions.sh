@@ -335,37 +335,33 @@ function set_network_configuration()
 	if [[ "${SOLUTION}" == "NONE" ]]; then
 		load_nodes ${COMPUTE_NODES}
 		export NET_INTERFACE=default
-		FILE=$NODE_FILE
+		export FILE=$NODE_FILE
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
 		if [[ -n ${ETH_COMPUTE_NODES} ]]; then
 			load_nodes ${ETH_COMPUTE_NODES}
 			export NET_INTERFACE=$ETH_INTERFACE
-			FILE=$NODE_FILE_ETH
+			export FILE=$NODE_FILE_ETH
 		else
 			load_nodes ${COMPUTE_NODES}
 			export NET_INTERFACE=default
-			FILE=$NODE_FILE
+			export FILE=$NODE_FILE
 		fi
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 		if [[ -n ${IPOIB_COMPUTE_NODES} ]]; then
 			load_nodes ${IPOIB_COMPUTE_NODES}
 			export NET_INTERFACE=$IPOIB_INTERFACE
-			FILE=$NODE_FILE_IPOIB
+			export FILE=$NODE_FILE_IPOIB
 		else
 			load_nodes ${COMPUTE_NODES}
 			export NET_INTERFACE=default
-			FILE=$NODE_FILE
+			export FILE=$NODE_FILE
 		fi
 	else
 		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 	fi
 
 	m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
-	MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
-	add_conf_param "master" $MASTERNODE
-	add_conf_param "ip_master" $MASTERIP
-	add_conf_param "net_interface" $NET_INTERFACE
-	add_conf_param "hostfile" $FILE
+	export MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
 }
 
 export -f set_network_configuration
