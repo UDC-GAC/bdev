@@ -456,7 +456,7 @@ function set_solution()
 			m_echo "RDMA-Hadoop-3 configured to use InfiniBand (RDMA)"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
 			m_echo "RDMA-Hadoop-3 configured to use RDMA over Ethernet (RoCE)"
-		elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
+		elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
