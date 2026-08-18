@@ -440,7 +440,7 @@ function set_solution()
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
 		if [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
 			m_warn "RDMA-Hadoop-3 requires the use of the IPoIB interface but Ethernet has been configured. Changing it to use $IPOIB_INTERFACE"
-			export $SOLUTION_NET_INTERFACE="ipoib"
+			export SOLUTION_NET_INTERFACE="ipoib"
 		fi
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
