@@ -7,7 +7,7 @@ elif [[ -z "$COMPUTE_NODES" ]]; then
 fi
 
 export NODE_FILE=$REPORT_DIR/hostfile
-export COMPUTE_NODES=`get_nodes_by_hostname $NODE_FILE $COMPUTE_NODES`
+export COMPUTE_NODES=$(get_nodes_by_hostname $NODE_FILE $COMPUTE_NODES)
 
 if [[ -z "${COMPUTE_NODES}" ]]; then
 	m_exit "Nodes: Revise network settings"
@@ -16,16 +16,16 @@ fi
 export NUM_NODES=`echo $COMPUTE_NODES | wc -w`
 m_echo "Nodes ($NUM_NODES): "$COMPUTE_NODES
 
-if [[ ! -z $ETH_INTERFACE ]]; then
-	export NODE_FILE_ETH=$REPORT_DIR/hostfile.eth
-	export ETH_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETH $ETH_INTERFACE $COMPUTE_NODES`
+if [[ ! -z $ETHERNET_INTERFACE ]]; then
+	export NODE_FILE_ETHERNET=$REPORT_DIR/hostfile.eth
+	export ETH_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES`
 	
 	if [[ -z "${ETH_COMPUTE_NODES}" ]]; then
 		export ETH_COMPUTE_NODES=""
 		rm $NODE_FILE_ETH >& /dev/null
-		m_warn "Ethernet ($ETH_INTERFACE): interface will be ignored"
+		m_warn "Ethernet ($ETHERNET_INTERFACE): interface will be ignored"
 	else
-		m_echo "Ethernet ($ETH_INTERFACE): "$ETH_COMPUTE_NODES
+		m_echo "Ethernet ($ETHERNET_INTERFACE): "$ETH_COMPUTE_NODES
 	fi
 fi
 
@@ -42,7 +42,7 @@ if [[ ! -z $IPOIB_INTERFACE ]]; then
 	fi
 fi
 
-if [[ ! -n ${ETH_COMPUTE_NODES} ]] && [[ ! -n "${IPOIB_COMPUTE_NODES}" ]]; then
+if [[ ! -n ${ETHERNET_COMPUTE_NODES} ]] && [[ ! -n "${IPOIB_COMPUTE_NODES}" ]]; then
 	m_warn "No valid interface has been configured. Using default configuration"
 fi
 
