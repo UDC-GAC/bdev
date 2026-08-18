@@ -369,15 +369,15 @@ function set_network_configuration()
 	fi
 	
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
+		m_echo "Using $RDMA_INTERFACE interface for InfiniBand and hostfile: $FILE"
 		export RDMA_HADOOP_IB_ENABLED=true
 		export RDMA_HADOOP_ROCE_ENABLED=false
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
+		m_echo "Using $RDMA_INTERFACE interface for RoCE and hostfile: $FILE"
 		export RDMA_HADOOP_IB_ENABLED=false
 		export RDMA_HADOOP_ROCE_ENABLED=true
 	else
-		m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
+		m_echo "Using $NET_INTERFACE interface for $SOLUTION_NET_INTERFACE and hostfile: $FILE"
 		export RDMA_HADOOP_IB_ENABLED=false
 		export RDMA_HADOOP_ROCE_ENABLED=false
 	fi
