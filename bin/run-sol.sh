@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Init and load configuration parameters
-. ${BDEV_BIN_DIR}/conf-params.sh
-
 #Set network configuration
 set_network_configuration
+
+# Init and load configuration parameters
+. ${BDEV_BIN_DIR}/conf-params.sh
 
 #Read solution environment
 m_echo "Reading environment: ${SOLUTION_DIR}/etc/env.sh"
