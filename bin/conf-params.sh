@@ -112,6 +112,7 @@ add_conf_param "rdma_hadoop_net_device" $RDMA_INTERFACE
 add_conf_param "rdma_hadoop_ib_enabled" $RDMA_HADOOP_IB_ENABLED
 add_conf_param "rdma_hadoop_roce_enabled" $RDMA_HADOOP_ROCE_ENABLED
 add_conf_param "rdma_hadoop_dfs_replication_parallel" $RDMA_HADOOP_DFS_REPLICATION_PARALLEL
+add_conf_param "rdma_hadoop_dfs_client_write_packet_size" $RDMA_HADOOP_DFS_CLIENT_WRITE_PACKET_SIZE
 add_conf_param "rdma_hadoop_dfs_memory_percentage" $RDMA_HADOOP_DFS_MEMORY_PERCENTAGE
 add_conf_param "rdma_hadoop_dfs_ssd_used" $RDMA_HADOOP_DFS_SSD_USED
 add_conf_param "rdma_hadoop_disk_shuffle_enabled" $RDMA_HADOOP_DISK_SHUFFLE_ENABLED
