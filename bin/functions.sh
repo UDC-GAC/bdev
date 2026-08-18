@@ -466,7 +466,7 @@ function set_solution()
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
 		fi
-		HADOOP_VERSION=`echo ${SOLUTION##*/}`
+		HADOOP_VERSION=$SOLUTION_VERSION
 	else
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
