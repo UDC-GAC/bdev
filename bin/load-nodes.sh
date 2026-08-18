@@ -18,14 +18,14 @@ m_echo "Nodes ($NUM_NODES): "$COMPUTE_NODES
 
 if [[ ! -z $ETHERNET_INTERFACE ]]; then
 	export NODE_FILE_ETHERNET=$REPORT_DIR/hostfile.eth
-	export ETH_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES`
+	export ETHERNET_COMPUTE_NODES=`get_nodes_by_interface $NODE_FILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES`
 	
-	if [[ -z "${ETH_COMPUTE_NODES}" ]]; then
-		export ETH_COMPUTE_NODES=""
+	if [[ -z "${ETHERNET_COMPUTE_NODES}" ]]; then
+		export ETHERNET_COMPUTE_NODES=""
 		rm $NODE_FILE_ETH >& /dev/null
 		m_warn "Ethernet ($ETHERNET_INTERFACE): interface will be ignored"
 	else
-		m_echo "Ethernet ($ETHERNET_INTERFACE): "$ETH_COMPUTE_NODES
+		m_echo "Ethernet ($ETHERNET_INTERFACE): "$ETHERNET_COMPUTE_NODES
 	fi
 fi
 
