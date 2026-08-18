@@ -247,7 +247,7 @@ export -f load_nodes
 function get_nodes_by_hostname() 
 {
 	NODE_FILE=${1}
-        NODES=${*:2}
+    NODES=${*:2}
 	OUT_NODES=""
 	touch $NODE_FILE
         for NODE in $NODES
