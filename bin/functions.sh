@@ -360,11 +360,20 @@ function set_network_configuration()
 		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
 	fi
 
-	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
+	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
 		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
+		export RDMA_HADOOP_IB_ENABLED=true
+		export RDMA_HADOOP_ROCE_ENABLED=false
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
+		m_echo "Using $RDMA_INTERFACE interface and hostfile: $FILE"
+		export RDMA_HADOOP_IB_ENABLED=false
+		export RDMA_HADOOP_ROCE_ENABLED=true
 	else
 		m_echo "Using $NET_INTERFACE interface and hostfile: $FILE"
+		export RDMA_HADOOP_IB_ENABLED=false
+		export RDMA_HADOOP_ROCE_ENABLED=false
 	fi
+	
 	export MASTERIP=`$BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE`
 }
 
