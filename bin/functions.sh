@@ -336,10 +336,10 @@ function set_network_configuration()
 		load_nodes ${COMPUTE_NODES}
 		export NET_INTERFACE=default
 		export FILE=$NODE_FILE
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
-		if [[ -n ${ETH_COMPUTE_NODES} ]]; then
-			load_nodes ${ETH_COMPUTE_NODES}
-			export NET_INTERFACE=$ETH_INTERFACE
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+		if [[ -n ${ETHERNET_COMPUTE_NODES} ]]; then
+			load_nodes ${ETHERNET_COMPUTE_NODES}
+			export NET_INTERFACE=$ETHERNET_INTERFACE
 			export FILE=$NODE_FILE_ETH
 		else
 			load_nodes ${COMPUTE_NODES}
@@ -599,15 +599,20 @@ function begin_report(){
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
 	REPORT="$REPORT \t Python \t\t\t\t $PYTHON_BIN \n"
-	if [[ -n $ETH_INTERFACE ]]; then
-		REPORT="$REPORT \t ETH interface  \t\t\t $ETH_INTERFACE \n"
+	if [[ -n $ETHERNET_INTERFACE ]]; then
+		REPORT="$REPORT \t Ethernet interface  \t\t\t $ETHERNET_INTERFACE \n"
 	else
-		REPORT="$REPORT \t ETH interface  \t\t\t Not specified \n"
+		REPORT="$REPORT \t Ethernet interface  \t\t\t Not specified \n"
 	fi
 	if [[ -n $IPOIB_INTERFACE ]]; then
 		REPORT="$REPORT \t IPoIB interface  \t\t\t $IPOIB_INTERFACE \n"
 	else
 		REPORT="$REPORT \t IPoIB interface  \t\t\t Not specified \n"
+	fi
+	if [[ -n $RDMA_INTERFACE ]]; then
+		REPORT="$REPORT \t RDMA interface  \t\t\t $RDMA_INTERFACE \n"
+	else
+		REPORT="$REPORT \t RDMA interface  \t\t\t Not specified \n"
 	fi
 	REPORT="$REPORT \t Cores per node \t\t\t $CORES_PER_NODE \n"
 	REPORT="$REPORT \t Total memory per node (MB) \t\t $MEMORY_PER_NODE \n"
