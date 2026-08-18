@@ -453,9 +453,9 @@ function set_solution()
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
 		if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-			m_info "RDMA-Hadoop-3 configured to use InfiniBand (RDMA)"
+			m_echo "RDMA-Hadoop-3 configured to use InfiniBand (RDMA)"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-			m_info "RDMA-Hadoop-3 configured to use RDMA over Ethernet (RoCE)"
+			m_echo "RDMA-Hadoop-3 configured to use RDMA over Ethernet (RoCE)"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "eth" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
