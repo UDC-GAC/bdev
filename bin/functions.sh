@@ -340,7 +340,7 @@ function set_network_configuration()
 		if [[ -n ${ETHERNET_COMPUTE_NODES} ]]; then
 			load_nodes ${ETHERNET_COMPUTE_NODES}
 			export NET_INTERFACE=$ETHERNET_INTERFACE
-			export FILE=$NODE_FILE_ETH
+			export FILE=$NODE_FILE_ETHERNET
 		else
 			load_nodes ${COMPUTE_NODES}
 			export NET_INTERFACE=default
