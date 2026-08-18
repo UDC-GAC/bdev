@@ -102,4 +102,8 @@
     <name>dfs.rdma.memory.percentage</name>
     <value>$rdma_hadoop_dfs_memory_percentage</value>
   </property>
+    <property>
+    <name>dfs.rdma.client-write-packet-size</name>
+    <value>$rdma_hadoop_dfs_client_write_packet_size</value>
+  </property>
 </configuration>
