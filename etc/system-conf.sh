@@ -5,7 +5,7 @@
 export TMP_DIR=/tmp/$USER/$APP_NAME	# Directory to store temporary files
 export LOCAL_DIRS=$TMP_DIR 	# Comma-separated list of directories to store local data in each node
 export LOOPBACK_IP=127.0.0.1	# IP of the loopback network interface
-export ETH_INTERFACE=eth0 	# Ethernet network interface for TCP/IP 
+export ETHERNET_INTERFACE=eth0 	# Ethernet network interface for TCP/IP 
 export IPOIB_INTERFACE=ib0 	# Network interface for IP over InfiniBand (IPoIB)
 export RDMA_INTERFACE=mlx5_0  # RDMA interface for InfiniBand/RoCE (only for RDMA-Hadoop-3)
 export CPUS_PER_NODE=`grep "^physical id" /proc/cpuinfo | sort -u | wc -l`	# CPUs per node
