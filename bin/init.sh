@@ -9,7 +9,6 @@ m_echo "Initializing"
 
 # Load storage backend functions
 . $COMMON_SRC_DIR/lib/storage_backend.sh
-export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 
 . $CLEAN_DAEMONS_SCRIPT
 
