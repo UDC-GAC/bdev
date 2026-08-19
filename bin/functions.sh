@@ -913,7 +913,7 @@ export -f run_command
 
 function run_benchmark()
 {
-	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} == "null" ]]; then
+	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} == "null" ]]; then
 		m_warn "expect command is missing. Timeout cannot be set"
 	fi
 	
@@ -921,8 +921,8 @@ function run_benchmark()
 
 	local exit_code=0
 	
-	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} != "null" ]]; then
-		m_echo "Running ${BENCHMARK} (timeout ${TIMEOUT}s): $*"
+	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} != "null" ]]; then
+		m_echo "Running ${BENCHMARK} (timeout ${TIMEOUT} seconds): $*"
 		run_command_timeout "$*"
 		exit_code=$?
 	else
@@ -934,7 +934,7 @@ function run_benchmark()
 	end_benchmark
 
     if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-        m_warn "Time limit exceeded ($TIMEOUT s)"
+        m_warn "Timeou exceeded (${TIMEOUT} seconds)"
         return $exit_code
     fi
 
