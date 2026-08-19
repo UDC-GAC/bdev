@@ -913,7 +913,7 @@ export -f run_command
 
 function run_benchmark()
 {
-	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} != "null" ]]; then
+	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} == "null" ]]; then
 		m_warn "expect command is missing. Timeout cannot be set"
 	fi
 	
