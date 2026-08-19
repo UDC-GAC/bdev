@@ -174,8 +174,9 @@ fi
 # Check ssh command
 SSH_CMD=$(which ssh 2> /dev/null)
 if [ "x$SSH_CMD" == "x" ]; then
-        m_exit "Missing ssh command"
+    m_exit "Missing ssh command"
 fi
+
 if [ ! -f "$SSH_CMD" ]; then
 	m_exit "Missing ssh command: $SSH_CMD"
 elif [ ! -x "$SSH_CMD" ]; then
@@ -225,6 +226,7 @@ export JPS=$(which jps 2> /dev/null)
 if [ "x$JPS" == "x" ]; then
     m_exit "Missing jps command"
 fi
+
 if [ ! -f "$JPS" ]; then
     m_exit "Missing jps command: $JPS"
 elif [ ! -x "$JPS" ]; then
@@ -259,21 +261,26 @@ export EXPECT=$(which expect 2> /dev/null)
 
 if [ "x$EXPECT" == "x" ]; then
 	m_warn "Missing expect command (required when using timeouts)"
-fi
-if [ ! -f "$EXPECT" ]; then
-    m_exit "Missing expect command: $EXPECT (required when using timeouts)"
-elif [ ! -x "$EXPECT" ]; then
-    m_exit "expect command is not executable: $EXPECT (required when using timeouts)"
+	export EXPECT=null
 fi
 
-export EXPECT=$(readlink -f ${EXPECT})
+if [ ! -f "$EXPECT" ]; then
+    m_warn "Missing expect command: $EXPECT (required when using timeouts)"
+	export EXPECT=null
+elif [ ! -x "$EXPECT" ]; then
+    m_warn "expect command is not executable: $EXPECT (required when using timeouts)"
+	export EXPECT=null
+else
+	export EXPECT=$(readlink -f ${EXPECT})
+fi
 
 # Check ip command
 export IP_COMMAND=$(which ip 2> /dev/null)
 
 if [ "x$IP_COMMAND" == "x" ]; then
-	m_warn "Missing ip command"
+	m_exit "Missing ip command"
 fi
+
 if [ ! -f "$IP_COMMAND" ]; then
     m_exit "Missing ip command: $IP_COMMAND"
 elif [ ! -x "$IP_COMMAND" ]; then
@@ -286,8 +293,9 @@ export IP_COMMAND=$(readlink -f ${IP_COMMAND})
 export RESOLVEIP_COMMAND=$(which getent 2> /dev/null)
 
 if [ "x$RESOLVEIP_COMMAND" == "x" ]; then
-	m_warn "Missing getent command"
+	m_exit "Missing getent command"
 fi
+
 if [ ! -f "$RESOLVEIP_COMMAND" ]; then
     m_exit "Missing getent command: $RESOLVEIP_COMMAND"
 elif [ ! -x "$RESOLVEIP_COMMAND" ]; then
