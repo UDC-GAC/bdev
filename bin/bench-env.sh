@@ -72,12 +72,10 @@ case "$BENCHMARK" in
 
 esac
 
-if [ -z $TIMEOUT ]
-then
+if [ -z $TIMEOUT ]; then
 	TIMEOUT=$DEFAULT_TIMEOUT
 fi
 
-if [ -n "$TIMEOUT" ] && [ "$TIMEOUT" != "0" ]
-then
+if [ -n "$TIMEOUT" ] && [ "$TIMEOUT" != "0" ] && [ "$EXPECT" != null ]; then
 	m_echo "Timeout set to $TIMEOUT seconds"
 fi
