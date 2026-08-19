@@ -913,11 +913,15 @@ export -f run_command
 
 function run_benchmark()
 {
+	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} != "null" ]]; then
+		m_warn "expect command is missing. Timeout cannot be set"
+	fi
+	
 	start_benchmark
 
 	local exit_code=0
 	
-	if [[ $TIMEOUT != 0 ]]; then
+	if [[ ${TIMEOUT:-} != 0 ]] && ${EXPECT:-} != "null" ]]; then
 		m_echo "Running ${BENCHMARK} (timeout ${TIMEOUT}s): $*"
 		run_command_timeout "$*"
 		exit_code=$?
