@@ -13,7 +13,7 @@ object ScalaPageRank {
       System.exit(1)
     }
 
-    val session = SparkSession.builder().appName("SparkBench ScalaNaivePageRank").getOrCreate()
+    val session = SparkSession.builder().appName("SparkBench ScalaPageRank").getOrCreate()
     import session.implicits._
 
     val filename = args(0)
