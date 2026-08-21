@@ -66,6 +66,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Support for starting the Secondary NameNode for HDFS
 
+		- Allow to set the number of cores per mapper/reducer (mapreduce.sh)
+		
 		- Add cleanup phase for YARN applications
 
 		- HDFS and YARN services are now stopped using the Hadoop scripts
