@@ -59,7 +59,7 @@ do
 		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
-			m_echo "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
+			m_warn "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
 			break
 		fi
 
