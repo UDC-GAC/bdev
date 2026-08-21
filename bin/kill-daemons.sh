@@ -10,4 +10,4 @@ do
 		$BDEV_BIN_DIR/clean-node-daemons.sh"
 done
 
-m_echo "Cleanup finished"
+m_echo "Cleanup done"
