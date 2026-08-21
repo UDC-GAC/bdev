@@ -74,6 +74,8 @@ BDEv 4.0 - 2026-XX-XX
 
 		- Improve Hadoop deployment by waiting for HDFS safe mode readiness
 
+		- Update RGen data generator to support local file system (file:/) and to include bug fixes
+
 		- Update resource monitoring tool to dool v1.3.8
 
 		- Update iLO scripts to version 6.00
