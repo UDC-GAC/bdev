@@ -13,7 +13,7 @@ object ScalaPageRank {
       System.exit(1)
     }
 
-    val conf = new SparkConf().setAppName("SparkBench ScalaNaivePageRank")
+    val conf = new SparkConf().setAppName("SparkBench ScalaPageRank")
     val sc = new SparkContext(conf)
 
     val filename = args(0)
