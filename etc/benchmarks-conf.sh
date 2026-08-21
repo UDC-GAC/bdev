@@ -33,11 +33,11 @@ export DFSIO_N_FILES=32		# Number of files to generate
 export DFSIO_FILE_SIZE=10	# Size of each file (MBytes)
 
 #PageRank
-export PAGERANK_PAGES=50		# Number of pages in the data set (nodes of the graph)
+export PAGERANK_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export PAGERANK_MAX_ITERATIONS=1	# Maximum number of iterations
 
 #Connected Components
-export CC_PAGES=50		# Number of pages in the data set (nodes of the graph)
+export CC_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export CC_MAX_ITERATIONS=1	# Maximum number of iterations
 
 #K-Means
@@ -49,7 +49,7 @@ export KMEANS_CONVERGENCE_DELTA=0.5	# Convergence delta
 export KMEANS_MAX_ITERATIONS=1		# Maximum number of iterations
 
 #Bayes
-export BAYES_PAGES=25000	# Number of pages in the data set
+export BAYES_PAGES=2500		# Number of pages in the data set
 export BAYES_CLASSES=10		# Number of classes in the data set
 export BAYES_NGRAMS=1		# Size of NGrams to create
 
