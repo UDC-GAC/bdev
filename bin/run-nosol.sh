@@ -41,7 +41,7 @@ do
 	do
 		. $BDEV_BIN_DIR/bench-env.sh
 		# Starting workload
-		m_echo "Running ${BENCHMARK}, logging to ${BENCHMARK_OUTPUT_DIR}"
+		m_echo "Running ${BENCHMARK^}, logging to ${BENCHMARK_OUTPUT_DIR}"
 
 		START_TOTAL_TIME=0
 		END_TOTAL_TIME=0
@@ -59,7 +59,7 @@ do
 		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
-			m_warn "${BENCHMARK} benchmark is not currently supported by ${SOLUTION}"
+			m_warn "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
 			break
 		fi
 
