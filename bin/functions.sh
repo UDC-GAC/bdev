@@ -922,7 +922,7 @@ function run_benchmark()
 	local exit_code=0
 	
 	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} != "null" ]]; then
-		m_echo "Running ${BENCHMARK} (timeout ${TIMEOUT} seconds): $*"
+		m_echo "Running ${BENCHMARK^} (timeout ${TIMEOUT} seconds): $*"
 		run_command_timeout "$*"
 		exit_code=$?
 	else
