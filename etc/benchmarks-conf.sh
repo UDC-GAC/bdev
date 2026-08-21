@@ -49,7 +49,7 @@ export KMEANS_CONVERGENCE_DELTA=0.5	# Convergence delta
 export KMEANS_MAX_ITERATIONS=1		# Maximum number of iterations
 
 #Bayes
-export BAYES_PAGES=2500		# Number of pages in the data set
+export BAYES_PAGES=25000	# Number of pages in the data set
 export BAYES_CLASSES=10		# Number of classes in the data set
 export BAYES_NGRAMS=1		# Size of NGrams to create
 
