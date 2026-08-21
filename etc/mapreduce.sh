@@ -16,10 +16,10 @@ fi
 
 export MAP_MEMORY_RATIO=1	# Percentage of the container memory allocated per map task
 export REDUCE_MEMORY_RATIO=1	# Percentage of the container memory allocated per reduce task
-export MAP_MEMORY=`op_int "$CONTAINER_MEMORY * $MAP_MEMORY_RATIO"`	 # Amount of memory to request from YARN per map task (MB)
-export REDUCE_MEMORY=`op_int "$CONTAINER_MEMORY	* $REDUCE_MEMORY_RATIO"` # Amount of memory to request from YARN per reduce task (MB)
 export MAP_HEAPSIZE_FACTOR=0.90	# Percentage of the mapper memory allocated to heap
 export REDUCE_HEAPSIZE_FACTOR=0.90	# Percentage of the reducer memory allocated to heap
+export MAP_MEMORY=`op_int "$CONTAINER_MEMORY * $MAP_MEMORY_RATIO"`	 # Amount of memory to request from YARN per map task (MB)
+export REDUCE_MEMORY=`op_int "$CONTAINER_MEMORY	* $REDUCE_MEMORY_RATIO"` # Amount of memory to request from YARN per reduce task (MB)
 export MAP_HEAPSIZE=`op_int "$MAP_MEMORY * $MAP_HEAPSIZE_FACTOR"`		# Heap size per map task (MB)
 export REDUCE_HEAPSIZE=`op_int "$REDUCE_MEMORY * $REDUCE_HEAPSIZE_FACTOR"`	# Heap size per reduce task (MB)
 CALC_SORT_MB=$(( $MAP_HEAPSIZE / 4 ))
