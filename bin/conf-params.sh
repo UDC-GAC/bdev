@@ -46,6 +46,8 @@ add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "yarn_app_staging_dir" $YARN_APP_STAGING_DIR
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
 add_conf_param "reducers_per_node" $REDUCERS_PER_NODE
+add_conf_param "cores_per_mapper" $CORES_PER_MAPPER
+add_conf_param "cores_per_reducer" $CORES_PER_REDUCER
 add_conf_param "map_memory_mb" $MAP_MEMORY
 add_conf_param "reduce_memory_mb" $REDUCE_MEMORY
 add_conf_param "map_heapsize" $MAP_HEAPSIZE

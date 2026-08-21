@@ -4,14 +4,15 @@
 
 export MR_JOBHISTORY_SERVER=false		# Start the MapReduce JobHistoryServer
 export MR_JOBHISTORY_SERVER_D_HEAPSIZE=1024	# JobHistoryServer daemon heapsize (MB)
+export CORES_PER_MAPPER=1
+export CORES_PER_REDUCER=1
 
-if [[ $CORES_PER_NODE == 1 ]]
-then
+if [ $NODEMANAGER_VCORES = 1 ]; then
 	export MAPPERS_PER_NODE=1 	# Maximum number of map tasks per node
 	export REDUCERS_PER_NODE=1 	# Maximum number of reduce tasks per node
 else
-	export MAPPERS_PER_NODE=$(( $CORES_PER_NODE / 2 )) 	# Maximum number of map tasks per node
-	export REDUCERS_PER_NODE=$(( $CORES_PER_NODE / 2 )) 	# Maximum number of reduce tasks per node
+	export MAPPERS_PER_NODE=$((( $NODEMANAGER_VCORES / 2) / CORES_PER_MAPPER ))	# Maximum number of map tasks per node
+	export REDUCERS_PER_NODE=$((( $NODEMANAGER_VCORES / 2 ) / CORES_PER_REDUCER ))	# Maximum number of reduce tasks per node
 fi
 
 export MAP_MEMORY_RATIO=1	# Percentage of the container memory allocated per map task
