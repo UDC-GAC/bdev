@@ -87,7 +87,7 @@ if [ ! -d $REPORT_DIR ]; then
 	mkdir -p $REPORT_DIR/etc
 fi
 
-m_echo "Running $APP_NAME v$APP_VERSION"
+m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
 if [ ! -d "$BDEV_EXPERIMENT_DIR" ]; then
