@@ -110,17 +110,7 @@ fi
 unset IFS
 
 export YARNHOSTNAME=`$bdev_bin_dir/$hostname_script $hostfile $loopback_ip`
-export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME}"
-
-JAVA_BIN="${JAVA_HOME:+$JAVA_HOME/bin/}java"
-JAVA_VER_STR=$("$JAVA_BIN" -version 2>&1 | head -n 1 | cut -d '"' -f 2)
-JAVA_MAJOR_VER=$(echo "$JAVA_VER_STR" | awk -F '.' '{print ($1 == "1") ? $2 : $1}')
-
-if [ -n "$JAVA_MAJOR_VER" ] && [ "$JAVA_MAJOR_VER" -ge 9 ] 2>/dev/null; then
-    _ADD_OPENS="--add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED"
-
-    export YARN_OPTS="$YARN_OPTS $java_jpms_opts"
-fi
+export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME} $java_jpms_opts"
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"

@@ -22,7 +22,7 @@ export HADOOP_JOB_HISTORYSERVER_HEAPSIZE=$mr_jobhistory_d_heapsize
 
 export HADOOP_MAPRED_ROOT_LOGGER=INFO,RFA
 
-#export HADOOP_JOB_HISTORYSERVER_OPTS=
+export HADOOP_JOB_HISTORYSERVER_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME} $java_jpms_opts"
 export HADOOP_MAPRED_LOG_DIR=$sol_log_dir # Where log files are stored.  $HADOOP_MAPRED_HOME/logs by default.
 #export HADOOP_JHS_LOGGER=INFO,RFA # Hadoop JobSummary logger.
 export HADOOP_MAPRED_PID_DIR=$tmp_dir/hadoop/pid # The pid files are stored. /tmp by default.

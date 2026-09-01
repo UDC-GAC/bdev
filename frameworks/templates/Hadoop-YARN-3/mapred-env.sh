@@ -38,7 +38,7 @@
 # Specify the JVM options to be used when starting the HistoryServer.
 # These options will be appended to the options specified as HADOOP_OPTS
 # and therefore may override any similar flags set in HADOOP_OPTS
-#export MAPRED_HISTORYSERVER_OPTS=
+export MAPRED_HISTORYSERVER_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME} $java_jpms_opts"
 
 # Specify the log4j settings for the JobHistoryServer
 # Java property: hadoop.root.logger
