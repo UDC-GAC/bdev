@@ -5,7 +5,7 @@ if [ $# -ne 2 ]; then
        exit -1
 fi
 
-DAEMON_PIDS=`$1 | egrep $2 | cut -f 1 -d " "`
+DAEMON_PIDS=`$1 | grep -E $2 | cut -f 1 -d " "`
 DAEMON_PIDS=`echo $DAEMON_PIDS`
 
 if [ ! -z "$DAEMON_PIDS" ]; then

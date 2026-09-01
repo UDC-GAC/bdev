@@ -15,7 +15,7 @@ do
 
 	for SOLUTION in $SOLUTIONS
 	do
-		LINE=`echo "$REPORT_CONTENTS" | grep $SOLUTION | egrep "^\s*$CLUSTER_SIZE"`
+		LINE=`echo "$REPORT_CONTENTS" | grep $SOLUTION | grep -E "^\s*$CLUSTER_SIZE"`
 		SOLUTION_TIMES=`echo "$LINE" | cut -f 4`
 
 		avg $SOLUTION_TIMES
