@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 export APP_NAME=BDEv
 export APP_VERSION=4.0-dev
 
-if [ -z $BDEV_HOME ]; then
+if [[ -z $BDEV_HOME ]]; then
         echo "Error: BDEV_HOME must be set"
 	exit -1
 fi
@@ -11,15 +11,6 @@ fi
 export BDEV_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
 export BDEV_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
-
-if [ -z $BDEV_EXPERIMENT_DIR ]; then
-	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
-fi
-
-if [ -z "$FRAMEWORKS_DIR" ]; then
-	export FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
-fi
-
 export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
 export BENCHMARKS_DIR=$BDEV_HOME/benchmarks
 export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
@@ -67,13 +58,23 @@ export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 
-# Load functions
+# Load BDEv functions
 . $BDEV_BIN_DIR/functions.sh
+
+if [[ -z $BDEV_EXPERIMENT_DIR ]]; then
+	PRINT_EXP_DIR_WARNING=true
+	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
+fi
+
+if [[ -z "$FRAMEWORKS_DIR" ]]; then
+	export FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
+fi
+
 # Load BDEv and system configuration files
 . $BDEV_EXPERIMENT_DIR/bdev-conf.sh
 . $BDEV_EXPERIMENT_DIR/system-conf.sh
 
-export REPORT_DIR=${OUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
+export REPORT_DIR=${OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
@@ -82,32 +83,36 @@ export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo
 
-if [ ! -d $REPORT_DIR ]; then
-    mkdir -p $REPORT_DIR
+if [[ ! -d $REPORT_DIR ]]; then
+	mkdir -p $REPORT_DIR
 	mkdir -p $REPORT_DIR/etc
 fi
 
 m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
-if [ ! -d "$BDEV_EXPERIMENT_DIR" ]; then
+if [[ "$PRINT_EXP_DIR_WARNING" == "true" ]]; then
+	m_warn "BDEV_EXPERIMENT_DIR not defined, using default directory: $BDEV_CONF_DIR"
+fi
+
+if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
 	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
 fi
 
-if [ ! -d "$FRAMEWORKS_DIR" ]; then
+if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
 	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
 fi
 
 export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
 m_echo "Configuration directory: $BDEV_EXPERIMENT_DIR"
 
-if [ -z "$STORAGE_BACKEND" ]; then
+if [[ -z "$STORAGE_BACKEND" ]]; then
 	export STORAGE_BACKEND=hdfs
 	m_warn "STORAGE_BACKEND is not defined or is empty. Setting it to \"hdfs\""
 fi
 
-if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
-    if [ ! -d "$NFS_MOUNT_POINT" ]; then
+if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
+    if [[ ! -d "$NFS_MOUNT_POINT" ]]; then
         m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
     fi
     
@@ -118,11 +123,11 @@ if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
 
-if [ -z "$TMP_DIR" ]; then
+if [[ -z "$TMP_DIR" ]]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
 fi
 
-if [ -z "$LOCAL_DIRS" ]; then
+if [[ -z "$LOCAL_DIRS" ]]; then
 	export LOCAL_DIRS=${TMP_DIR}
 	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
 else
@@ -158,54 +163,53 @@ export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
 export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
 
 # Check if we are under a SLURM environment
-if [ -n "$SLURM_JOB_ID" ]; then
-    export SLURM_ENV="true"
+if [[ -n "$SLURM_JOB_ID" ]]; then
+	export SLURM_ENV="true"
 fi
 
 # Setup hostfile
-if [ -z $HOSTFILE ]; then
-	if [ "$SLURM_ENV" == "true" ]; then
+if [[ -z $HOSTFILE ]]; then
+	if [[ "$SLURM_ENV" == "true" ]]; then
 		COMPUTE_NODES=`scontrol show hostname $SLURM_JOB_NODELIST`
 	else
 		HOSTFILE=$HOSTFILE_DEFAULT
 	fi
 fi
 
-# Check ssh command
-SSH_CMD=$(which ssh 2> /dev/null)
-if [ "x$SSH_CMD" == "x" ]; then
-    m_exit "Missing ssh command"
-fi
-
-if [ ! -f "$SSH_CMD" ]; then
-	m_exit "Missing ssh command: $SSH_CMD"
-elif [ ! -x "$SSH_CMD" ]; then
-	m_exit "ssh command is not executable: $SSH_CMD"
-fi
-
-export SSH_CMD="$SSH_CMD $SSH_OPTS"
-
-if [ "$ENABLE_MODULES" == "true" ]; then
+if [[ "$ENABLE_MODULES" == "true" ]]; then
 	m_echo "Loading modules: ${MODULES_JAVA}"
 	module load ${MODULES_JAVA}
 	m_echo "Loading modules: ${MODULES_PYTHON}"
 	module load ${MODULES_PYTHON}
 fi
 
-# Check JVM
-export JAVA=$(which java 2> /dev/null)
-
-if [ "x$JAVA" == "x" ]; then
-    m_exit "Missing java command"
+# Check ssh command
+require_binary SSH_CMD ssh
+export SSH_CMD="$SSH_CMD $SSH_OPTS"
+# Check java command
+require_binary JAVA java
+export BDEV_JAVA_HOME=$(dirname $(dirname "${JAVA}"))
+# Check jps command
+if [[[ -x "${BDEV_JAVA_HOME}/bin/jps" ]]]; then
+	export JPS="${BDEV_JAVA_HOME}/bin/jps"
+else
+	m_exit "Missing jps command (not found in ${BDEV_JAVA_HOME}/bin)"
 fi
+# Check ip command
+require_binary IP_COMMAND ip
+# Check getent command
+require_binary RESOLVEIP_COMMAND getent
+# Check expect command
+require_binary --warn EXPECT expect
+# Check Python
+require_binary PYTHON_BIN python3 python
 
-if [ ! -f "$JAVA" ]; then
-    m_exit "Missing java command: $JAVA"
-elif [ ! -x "$JAVA" ]; then
-    m_exit "java command is not executable: $JAVA"
+# Check Python version
+PYTHON_MAJOR_VERSION=$($PYTHON_BIN -c 'import sys; print(sys.version_info[0])' 2>/dev/null)
+
+if [[ "$PYTHON_MAJOR_VERSION" != "3" ]]; then
+	m_exit "$APP_NAME v$APP_VERSION requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
 fi
-
-export BDEV_JAVA_HOME=$(dirname $(dirname $(readlink -f ${JAVA})))
 
 # Check java version
 # Java 8 spits out: version "1.8.0_412" -> We keep "8"
@@ -214,131 +218,47 @@ JAVA_VER_STRING=$("$JAVA" -version 2>&1 | awk -F '"' '/version/ {print $2}')
 JAVA_MAJOR_VER=$(echo "$JAVA_VER_STRING" | awk -F '.' '{if ($1 == 1) print $2; else print $1}')
 
 #Define the JPMS options exclusive to Java 9+
-if [ "$JAVA_MAJOR_VER" -le 8 ]; then
-    export JAVA_JPMS_OPTS=""
+if [[ "$JAVA_MAJOR_VER" -le 8 ]]; then
+	export JAVA_JPMS_OPTS=""
 else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
-# Check jps command
-export JPS=$(which jps 2> /dev/null)
-
-if [ "x$JPS" == "x" ]; then
-    m_exit "Missing jps command"
-fi
-
-if [ ! -f "$JPS" ]; then
-    m_exit "Missing jps command: $JPS"
-elif [ ! -x "$JPS" ]; then
-    m_exit "jps command is not executable: $JPS"
-fi
-
-export JPS=$(readlink -f ${JPS})
-
-# Check Python
-export PYTHON_BIN=$(which python3 2> /dev/null || which python 2> /dev/null)
-
-if [ "x$PYTHON_BIN" == "x" ]; then
-	m_exit "Missing python command. $APP_NAME v$APP_VERSION requires Python 3"
-fi
-
-if [ ! -f "$PYTHON_BIN" ]; then
-    m_exit "Missing python command: $PYTHON_BIN. $APP_NAME v$APP_VERSION requires Python 3"
-elif [ ! -x "$PYTHON_BIN" ]; then
-    m_exit "python command is not executable: $PYTHON_BIN"
-fi
-
-PYTHON_MAJOR_VERSION=$($PYTHON_BIN -c 'import sys; print(sys.version_info[0])' 2>/dev/null)
-
-if [ "$PYTHON_MAJOR_VERSION" != "3" ]; then
-    m_exit "$APP_NAME v$APP_VERSION requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
-fi
-
-export PYTHON_BIN=$(readlink -f ${PYTHON_BIN})
-
-# Check expect command
-export EXPECT=$(which expect 2> /dev/null)
-
-if [ "x$EXPECT" == "x" ]; then
-	m_warn "Missing expect command (required when using timeouts)"
-	export EXPECT=null
-fi
-
-if [ ! -f "$EXPECT" ]; then
-    m_warn "Missing expect command: $EXPECT (required when using timeouts)"
-	export EXPECT=null
-elif [ ! -x "$EXPECT" ]; then
-    m_warn "expect command is not executable: $EXPECT (required when using timeouts)"
-	export EXPECT=null
-else
-	export EXPECT=$(readlink -f ${EXPECT})
-fi
-
-# Check ip command
-export IP_COMMAND=$(which ip 2> /dev/null)
-
-if [ "x$IP_COMMAND" == "x" ]; then
-	m_exit "Missing ip command"
-fi
-
-if [ ! -f "$IP_COMMAND" ]; then
-    m_exit "Missing ip command: $IP_COMMAND"
-elif [ ! -x "$IP_COMMAND" ]; then
-    m_exit "ip command is not executable: $IP_COMMAND "
-fi
-
-export IP_COMMAND=$(readlink -f ${IP_COMMAND})
-
-# Check getent command
-export RESOLVEIP_COMMAND=$(which getent 2> /dev/null)
-
-if [ "x$RESOLVEIP_COMMAND" == "x" ]; then
-	m_exit "Missing getent command"
-fi
-
-if [ ! -f "$RESOLVEIP_COMMAND" ]; then
-    m_exit "Missing getent command: $RESOLVEIP_COMMAND"
-elif [ ! -x "$RESOLVEIP_COMMAND" ]; then
-    m_exit "getent command is not executable: $RESOLVEIP_COMMAND "
-fi
-
-export RESOLVEIP_COMMAND=$(readlink -f ${RESOLVEIP_COMMAND})
-
 # Define variables for BDWatchdog binary daemons
-if [ $ENABLE_BDWATCHDOG == "true" ]; then
-        if [ $BDWATCHDOG_ATOP == "true" ]; then
+if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+        if [[ $BDWATCHDOG_ATOP == "true" ]]; then
             export ATOP_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop
-			if [ ! -f "$ATOP_BIN" ] || [ ! -x "$ATOP_BIN" ]; then
+			if [[ ! -f "$ATOP_BIN" ] || [ ! -x "$ATOP_BIN" ]]; then
                 m_exit "atop is enabled but the binary $ATOP_BIN is not found or is not executable"
             fi
         fi
-        if [ $BDWATCHDOG_TURBOSTAT == "true" ]; then
+        if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
 			export TURBOSTAT_BIN=$TURBOSTAT_BIN_DIR/turbostat
-            if [ ! -f "$TURBOSTAT_BIN" ] || [ ! -x "$TURBOSTAT_BIN" ]; then
+            if [[ ! -f "$TURBOSTAT_BIN" ] || [ ! -x "$TURBOSTAT_BIN" ]]; then
                  m_exit "turbostat is enabled but the binary $TURBOSTAT_BIN is not found or is not executable"
             fi
         fi
-        if [ $BDWATCHDOG_NETHOGS == "true" ]; then
+        if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
             export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
-			if [ ! -f "$NETHOGS_BIN" ] || [ ! -x "$NETHOGS_BIN" ]; then
+			if [[ ! -f "$NETHOGS_BIN" ] || [ ! -x "$NETHOGS_BIN" ]]; then
                 m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
             fi
         fi
 fi
 
-if [ ${ENABLE_HOSTNAMES} == "true" ]; then
+if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
 	export HOSTNAME_SCRIPT=get_hostname.sh
 else
 	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
-if [ ${SCHEDULER_CLASS} == "capacity" ]; then
+if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
 	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
 else
-	if [ ${SCHEDULER_CLASS} == "fair" ]; then
+	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
 		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
 	else
-		if [ ${SCHEDULER_CLASS} == "fifo" ]; then
+		if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
 			export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
 		else
 			m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"

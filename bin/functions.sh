@@ -1055,3 +1055,62 @@ function is_nfs() {
 }
 
 export -f is_nfs
+
+function require_binary() {
+    local behavior="exit"
+
+    if [[ "$1" == "--warn" || "$1" == "-w" ]]; then
+        behavior="warn"
+        shift
+    fi
+
+    local var_name="$1"
+    shift # We move the arguments to keep only the list of binaries
+    local commands=("$@")
+    local bin_path=""
+    local found_cmd=""
+
+    # Search for the first existing command (supports fallbacks)
+    for cmd in "${commands[@]}"; do
+        bin_path=$(which "${cmd}" 2>/dev/null)
+        if [[ -n "${bin_path}" ]]; then
+            found_cmd="${cmd}"
+            break
+        fi
+    done
+
+    # Error handling if the binary is not found
+    if [[ -z "${bin_path}" ]]; then
+        if [[ "$behavior" == "warn" ]]; then
+            m_warn "Missing optional command. Could not find any of: ${commands[*]}"
+            return 1
+        else
+            m_exit "Missing command. $APP_NAME v$APP_VERSION requires one of: ${commands[*]}"
+        fi
+    fi
+
+    # Resolve the pure absolute path (untangle module symlinks)
+    bin_path=$(readlink -f "${bin_path}")
+
+    # Validate the actual physical file
+    if [[ ! -f "${bin_path}" ]]; then
+        if [[ "$behavior" == "warn" ]]; then
+            m_warn "Missing optional command: ${bin_path} (resolved from ${found_cmd})"
+            return 1
+        else
+            m_exit "Missing command: ${bin_path} (resolved from ${found_cmd})"
+        fi
+    elif [[ ! -x "${bin_path}" ]]; then
+        if [[ "$behavior" == "warn" ]]; then
+            m_warn "Optional command is not executable: ${bin_path}"
+            return 1
+        else
+            m_exit "Command is not executable: ${bin_path}"
+        fi
+    fi
+
+    export "${var_name}=${bin_path}"
+    return 0
+}
+
+export -f require_binary
