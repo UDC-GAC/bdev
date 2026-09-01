@@ -1083,6 +1083,7 @@ function require_binary() {
     if [[ -z "${bin_path}" ]]; then
         if [[ "$behavior" == "warn" ]]; then
             m_warn "Missing optional command. Could not find any of: ${commands[*]}"
+            export "${var_name}=null"
             return 1
         else
             m_exit "Missing command. $APP_NAME v$APP_VERSION requires one of: ${commands[*]}"
@@ -1096,6 +1097,7 @@ function require_binary() {
     if [[ ! -f "${bin_path}" ]]; then
         if [[ "$behavior" == "warn" ]]; then
             m_warn "Missing optional command: ${bin_path} (resolved from ${found_cmd})"
+            export "${var_name}=null"
             return 1
         else
             m_exit "Missing command: ${bin_path} (resolved from ${found_cmd})"
@@ -1103,6 +1105,7 @@ function require_binary() {
     elif [[ ! -x "${bin_path}" ]]; then
         if [[ "$behavior" == "warn" ]]; then
             m_warn "Optional command is not executable: ${bin_path}"
+            export "${var_name}=null"
             return 1
         else
             m_exit "Command is not executable: ${bin_path}"
