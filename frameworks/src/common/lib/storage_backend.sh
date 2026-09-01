@@ -55,7 +55,7 @@ function storage_ls() {
 
     # Checks
     if [[ -z "${target_path}" ]]; then
-        m_exit "storage_ls: A valid path has not been specified"
+	m_exit "storage_ls: Missing arguments. Usage: storage_ls [-r|-R] <path>"
     fi
 
     case "${STORAGE_BACKEND,,}" in
@@ -175,7 +175,7 @@ function storage_rm() {
 
     # Checks
     if [[ -z "${target_path}" ]]; then
-        m_exit "storage_rm: A valid path has not been specified"
+	m_exit "storage_rm: Missing arguments. Usage: storage_rm [-r|-R] <path>"
     fi
 
     case "${STORAGE_BACKEND,,}" in
@@ -221,7 +221,7 @@ function storage_chmod() {
 
     # Checks
     if [[ -z "${mode}" ]] || [[ -z "${target_path}" ]]; then
-        m_exit "storage_chmod: Missing arguments. Usage: storage_chmod [-R] <mode> <path>"
+        m_exit "storage_chmod: Missing arguments. Usage: storage_chmod [-r|-R] <mode> <path>"
     fi
 
     case "${STORAGE_BACKEND,,}" in
