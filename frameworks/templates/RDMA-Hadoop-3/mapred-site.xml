@@ -25,15 +25,15 @@
   </property>
   <property>
     <name>mapreduce.map.java.opts</name>
-    <value>-Xmx$map_heapsizeM</value>
+    <value>-Xmx$map_heapsizeM $java_jpms_opts</value>
   </property>
   <property>
     <name>mapreduce.reduce.java.opts</name>
-    <value>-Xmx$reduce_heapsizeM</value>
+    <value>-Xmx$reduce_heapsizeM $java_jpms_opts</value>
   </property>
   <property>
     <name>yarn.app.mapreduce.am.command-opts</name>
-    <value>-Xmx$app_master_heapsizeM -Dhadoop.conf.dir=${HADOOP_CONF_DIR}</value>
+    <value>-Xmx$app_master_heapsizeM -Dhadoop.conf.dir=${HADOOP_CONF_DIR} $java_jpms_opts</value>
   </property>
   <property>
     <name>yarn.app.mapreduce.am.resource.mb</name>
@@ -78,6 +78,10 @@
   <property>
     <name>yarn.app.mapreduce.am.staging-dir</name>
     <value>$yarn_app_staging_dir</value>
+  </property>
+  <property>
+    <name>ipc.client.connect.max.retries</name>
+    <value>0</value>
   </property>
   <property>
    <name>mapreduce.application.classpath</name>

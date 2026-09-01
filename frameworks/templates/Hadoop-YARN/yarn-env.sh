@@ -119,7 +119,7 @@ JAVA_MAJOR_VER=$(echo "$JAVA_VER_STR" | awk -F '.' '{print ($1 == "1") ? $2 : $1
 if [ -n "$JAVA_MAJOR_VER" ] && [ "$JAVA_MAJOR_VER" -ge 9 ] 2>/dev/null; then
     _ADD_OPENS="--add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED"
 
-    export YARN_OPTS="$YARN_OPTS $_ADD_OPENS"
+    export YARN_OPTS="$YARN_OPTS $java_jpms_opts"
 fi
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
