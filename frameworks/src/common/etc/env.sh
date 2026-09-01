@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "${HADOOP_HOME:-}" ]; then
 	m_exit "HADOOP_HOME is not defined or is empty"

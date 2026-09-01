@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 m_echo "Flink configuration"
 . $OLD_GEN_CONFIG_SCRIPT

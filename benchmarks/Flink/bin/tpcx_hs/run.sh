@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 storage_rm -R ${OUTPUT_TPCX_HS}
 

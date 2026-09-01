@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -d "${BDW_LOG_DIR}" ]; then
 	mkdir -p ${BDW_LOG_DIR}

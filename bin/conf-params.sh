@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Load storage backend functions
 . $COMMON_SRC_DIR/lib/storage_backend.sh

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "#!/bin/sh"
 echo "export PYTHONPATH=${BDWATCHDOG_SRC_DIR}"

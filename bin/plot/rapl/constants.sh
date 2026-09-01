@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export PALETTE_FILE="$PLOT_HOME/palette.plt"
 export SCRIPT_HEADER='#!/bin/bash

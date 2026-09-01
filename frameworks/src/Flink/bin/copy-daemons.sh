@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 m_echo "Flink daemons"
 . $OLD_COPY_DAEMONS_SCRIPT
 

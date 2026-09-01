@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "stop" | $FLINK_HOME/bin/yarn-session.sh -id $YARN_APP_ID
 

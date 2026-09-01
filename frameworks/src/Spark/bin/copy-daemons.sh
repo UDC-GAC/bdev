@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 m_echo "Spark daemons"
 . $OLD_COPY_DAEMONS_SCRIPT
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 export SOL_BENCH_DIR=$BENCHMARKS_DIR/Flink
 export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Flink
 export SOL_DAEMONS_DIR=$DAEMONS_DIR/Flink

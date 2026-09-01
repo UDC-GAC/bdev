@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Configuration parameters for the host system characteristics
 

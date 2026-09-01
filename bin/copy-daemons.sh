@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -z $SOL_DAEMONS_DIR ]
 then

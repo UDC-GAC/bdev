@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 export SOL_BENCH_DIR=$BENCHMARKS_DIR/Spark
 export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Spark
 export SOL_SBIN_DIR=$SOLUTION_HOME/sbin

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Avoid cleanup if solution does not exist
 SCRIPT=$FLINK_HOME/bin/stop-cluster.sh

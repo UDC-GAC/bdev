@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${i}
 mkdir -p $BENCHMARK_OUTPUT_DIR

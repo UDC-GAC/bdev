@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export FORCE_DELETE_HDFS=false
 bash $YARN_KILLALL_SCRIPT

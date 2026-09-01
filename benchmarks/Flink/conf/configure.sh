@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export SORT_PARTITIONS=$FLINK_PARALLELISM
 # Hardcode last scala version supported by Flink 1.x

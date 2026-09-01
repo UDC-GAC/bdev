@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Hardcode last scala version supported by Flink 1.x
 # From Flink 2.x onwards, Flink is scala-free

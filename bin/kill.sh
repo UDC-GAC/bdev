@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ $# -ne 2 ]; then
        echo "$0 JPS_CMD JAVA_APP"

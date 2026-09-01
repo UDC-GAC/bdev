@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 TESTDFSIO="${HADOOP_EXECUTABLE} org.apache.hadoop.fs.TestDFSIO"
 COMMAND="$TESTDFSIO -write -nrFiles $DFSIO_N_FILES -fileSize $DFSIO_FILE_SIZE ;

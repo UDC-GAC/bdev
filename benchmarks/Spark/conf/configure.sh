@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export SORT_PARTITIONS=$(($SPARK_EXECUTORS * $SPARK_CORES_PER_EXECUTOR))
 

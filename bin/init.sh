@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 m_start_message
 

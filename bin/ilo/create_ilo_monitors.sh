@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export NODE_NUMBER=1
 for SLAVE in $SLAVES

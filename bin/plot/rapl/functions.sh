@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function plot_dat_file_lines(){
 	DAT_FILES=`ls ${FILE_PREFIX}*.csv`

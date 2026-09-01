@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -v FINISH_YARN ] && [ "$FINISH_YARN" == "true" ]; then
 	export FINISH_YARN_FORCE=true

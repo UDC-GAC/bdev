@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Avoid cleanup if solution does not exist
 SCRIPT=$SPARK_HOME/sbin/stop-all.sh

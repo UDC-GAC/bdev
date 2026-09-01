@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 for SLAVE in $MASTERNODE $SLAVENODES
 do
