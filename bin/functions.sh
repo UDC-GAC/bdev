@@ -243,12 +243,11 @@ function get_nodes_by_hostname() {
 	local NODE_FILE="$1"
 	local NODES="${*:2}"
 	local OUT_NODES=""
-	local CURRENT_HOSTNAME=$(hostname -s)
 	touch $NODE_FILE
 	
         for NODE in $NODES
         do
-        	if [[ "$NODE" == "localhost" || "$NODE" == "$LOOPBACK_IP" || "$NODE" == "$CURRENT_HOSTNAME" ]]; then
+        	if [[ "$NODE" == "localhost" || "$NODE" == "$LOOPBACK_IP" ]]; then
         		OUT="$LOOPBACK_IP $NODE"
         	else
 			OUT=$($RESOLVEIP_COMMAND hosts "$NODE")
