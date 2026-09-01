@@ -26,15 +26,13 @@ m_echo "Starting Resourcemanager and Nodemanagers"
 $SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start resourcemanager"
 $HADOOP_HOME/sbin/yarn-daemons.sh --config $HADOOP_CONF_DIR start nodemanager
 
-if [[ $TIMELINE_SERVER == "true" ]]
-then
-    #YARN Timeline server
+if [[ $TIMELINE_SERVER == "true" ]]; then
+	#YARN Timeline server
 	m_echo "Starting YARN Timeline server"
 	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start timelineserver"
 fi
 
-if [[ $MR_JOBHISTORY_SERVER == "true" ]]
-then
+if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
 	#MapReduce history server
 	m_echo "Starting MapReduce history server"
 	$SSH_CMD $MASTERNODE "$HADOOP_HOME/sbin/mr-jobhistory-daemon.sh --config $HADOOP_CONF_DIR start historyserver"
