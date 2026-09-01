@@ -46,4 +46,4 @@ if [[ ! -n "${ETHERNET_COMPUTE_NODES}" && ! -n "${IPOIB_COMPUTE_NODES}" ]]; then
 	m_warn "No valid interface has been configured. Using default configuration"
 fi
 
-load_nodes "$COMPUTE_NODES"
+load_nodes $COMPUTE_NODES
