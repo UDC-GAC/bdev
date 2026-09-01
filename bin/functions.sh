@@ -270,7 +270,7 @@ function get_nodes_by_hostname() {
                 echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
         done
 
-        echo "$OUT_NODES"
+        echo "${OUT_NODES# }"
 }
 
 export -f get_nodes_by_hostname
@@ -320,7 +320,7 @@ function get_nodes_by_interface() {
                 echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
         done
 
-        echo "$OUT_NODES"
+        echo "${OUT_NODES# }"
 
         if [[ $SUCCESS -ne 1 ]]; then
                 m_warn "IP to hostname resolution failed for $INTERFACE"
