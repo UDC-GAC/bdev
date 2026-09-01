@@ -80,10 +80,6 @@
     <value>$yarn_app_staging_dir</value>
   </property>
   <property>
-    <name>ipc.client.connect.max.retries</name>
-    <value>0</value>
-  </property>
-  <property>
    <name>mapreduce.application.classpath</name>
     <value>
       $HADOOP_CONF_DIR,
