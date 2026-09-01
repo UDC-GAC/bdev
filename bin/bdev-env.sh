@@ -190,7 +190,7 @@ export SSH_CMD="$SSH_CMD $SSH_OPTS"
 require_binary JAVA java
 export BDEV_JAVA_HOME=$(dirname $(dirname "${JAVA}"))
 # Check jps command
-if [[[ -x "${BDEV_JAVA_HOME}/bin/jps" ]]]; then
+if [[ -x "${BDEV_JAVA_HOME}/bin/jps" ]]; then
 	export JPS="${BDEV_JAVA_HOME}/bin/jps"
 else
 	m_exit "Missing jps command (not found in ${BDEV_JAVA_HOME}/bin)"
@@ -228,19 +228,19 @@ fi
 if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         if [[ $BDWATCHDOG_ATOP == "true" ]]; then
             export ATOP_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop
-			if [[ ! -f "$ATOP_BIN" ] || [ ! -x "$ATOP_BIN" ]]; then
+	    if [[ ! -f "$ATOP_BIN" || ! -x "$ATOP_BIN" ]]; then
                 m_exit "atop is enabled but the binary $ATOP_BIN is not found or is not executable"
             fi
         fi
         if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
-			export TURBOSTAT_BIN=$TURBOSTAT_BIN_DIR/turbostat
-            if [[ ! -f "$TURBOSTAT_BIN" ] || [ ! -x "$TURBOSTAT_BIN" ]]; then
+	    export TURBOSTAT_BIN=$TURBOSTAT_BIN_DIR/turbostat
+            if [[ ! -f "$TURBOSTAT_BIN" || ! -x "$TURBOSTAT_BIN" ]]; then
                  m_exit "turbostat is enabled but the binary $TURBOSTAT_BIN is not found or is not executable"
             fi
         fi
         if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
             export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
-			if [[ ! -f "$NETHOGS_BIN" ] || [ ! -x "$NETHOGS_BIN" ]]; then
+	    if [[ ! -f "$NETHOGS_BIN" || ! -x "$NETHOGS_BIN" ]]; then
                 m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
             fi
         fi
@@ -256,12 +256,12 @@ if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
 	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
 else
 	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
-		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+	    export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
 	else
-		if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
-			export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
-		else
-			m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
-		fi
+	    if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
+		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
+	    else
+		m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
+	    fi
 	fi
 fi
