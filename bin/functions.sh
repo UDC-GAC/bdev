@@ -39,8 +39,7 @@ function m_exit() {
 
 export -f m_exit
 
-function m_start_message()
-{
+function m_start_message() {
 	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
 	m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
@@ -56,28 +55,26 @@ function m_start_message()
 
 export -f m_start_message
 
-function m_stop_message()
-{
+function m_stop_message() {
 	m_echo "$APP_NAME v$APP_VERSION finished"
 	m_echo "Report summary stored at $REPORT_FILE"
 }
 
 export -f m_stop_message
 
-function op(){
+function op() {
 	echo "scale=4; ($*)/1 " | bc
 }
 
 export -f op
 
-function op_int(){
+function op_int() {
 	echo "scale=0; ($*)/1 " | bc
 }
 
 export -f op_int
 
 function read_list() {
-
 	values=""
 	while read line || [[ -n "$line" ]]
 	do
@@ -91,7 +88,6 @@ function read_list() {
 export -f read_list
 
 function read_solutions() {
-
 	values=""
 	while read line || [[ -n "$line" ]]
 	do
@@ -227,35 +223,35 @@ function get_conf_value() {
 
 export -f get_conf_value
 
-function load_nodes() 
-{
-	export MASTERNODE=`echo $@ | cut -d " " -f 1`
-	MAX_NODES=1
-	SLAVENODES=""
-	for HOST in `echo $@ | cut -d " " -f 2-`
-	do
-		SLAVENODES="$SLAVENODES $HOST"
-		MAX_NODES=$(( $MAX_NODES + 1 ))
-	done
-	export SLAVENODES
-	export MAX_NODES
-	export CLUSTER_SIZES=`echo $CLUSTER_SIZES | sed -e "s/MAX/$MAX_NODES/gI"`
+function load_nodes()  {
+	export MASTERNODE="$1"
+    	shift
+    	
+    	if [[ $# -eq 0 ]]; then
+        	export SLAVENODES="$MASTERNODE"
+    	else
+        	export SLAVENODES="$*"
+    	fi
+    	
+    	export MAX_NODES=$(( $(echo "$SLAVENODES" | wc -w) + 1 ))
+    	export CLUSTER_SIZES=$(echo "$CLUSTER_SIZES" | sed -e "s/MAX/$MAX_NODES/gI")    	
 }
 
 export -f load_nodes
 
-function get_nodes_by_hostname() 
-{
-	NODE_FILE=${1}
-    NODES=${*:2}
-	OUT_NODES=""
+function get_nodes_by_hostname() {
+	local NODE_FILE="$1"
+	local NODES="${*:2}"
+	local OUT_NODES=""
+	local CURRENT_HOSTNAME=$(hostname -s)
 	touch $NODE_FILE
+	
         for NODE in $NODES
         do
-        	if [[ $NODE == "localhost" ]] || [[ $NODE == $LOOPBACK_IP ]]; then
-        		OUT=`echo $LOOPBACK_IP localhost`
+        	if [[ "$NODE" == "localhost" || "$NODE" == "$LOOPBACK_IP" || "$NODE" == "$CURRENT_HOSTNAME" ]]; then
+        		OUT="$LOOPBACK_IP $NODE"
         	else
-			OUT=`$RESOLVEIP_COMMAND hosts $NODE`
+			OUT=$($RESOLVEIP_COMMAND hosts "$NODE")
 		fi
 		
 		if [[ -z "${OUT}" ]]; then
@@ -263,65 +259,69 @@ function get_nodes_by_hostname()
 			OUT_NODES=""
 			return 1
 		fi
-		NODE_IP=`echo $OUT | awk '{print $1}'`
-		NODE_NAME=`echo $OUT | awk '{print $2}'`
+		local NODE_IP=$(echo "$OUT" | awk '{print $1}')
+		local NODE_NAME=$(echo "$OUT" | awk '{print $2}')
 
-		if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+		if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
 			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
 		else
 			OUT_NODES="${OUT_NODES} ${NODE_IP}"
 		fi
 
-                echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
+                echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
         done
 
-        echo $OUT_NODES
+        echo "$OUT_NODES"
 }
 
 export -f get_nodes_by_hostname
 
-function get_nodes_by_interface() 
-{
-	NODE_FILE=${1}
-	INTERFACE=${2}
-	NODES=${*:3}
-	OUT_NODES=""
+function get_nodes_by_interface() {
+	local NODE_FILE="$1"
+	local INTERFACE="$2"
+	local NODES="${*:3}"
+	local OUT_NODES=""
+	local SUCCESS=1
 	touch $NODE_FILE
-        SUCCESS=1
+
         for NODE in $NODES
         do
-                INTERFACE_DATA=`$SSH_CMD $NODE "$IP_COMMAND a s $INTERFACE" | grep inet`
-                if [[ ! $? -eq 0 ]]; then
+        	local INTERFACE_DATA
+        	if ! INTERFACE_DATA=$($SSH_CMD "$NODE" "$IP_COMMAND a s $INTERFACE" 2>/dev/null | grep 'inet '); then
                         m_err "$INTERFACE interface not found or not configured for $NODE"
 			OUT_NODES=""
 			return 1
                 fi
-                INTERFACE_IP=`echo $INTERFACE_DATA | awk '{print $2}' | cut -d '/' -f 1 | head -n 1`
+                
+                local INTERFACE_IP=$(echo "$INTERFACE_DATA" | awk '{print $2}' | cut -d '/' -f 1 | head -n 1)
                 if [[ -z "${INTERFACE_IP}" ]]; then
                         m_err "IP not found for $NODE using $INTERFACE interface"
 			OUT_NODES=""
 			return 1
                 fi
-                OUT=`$RESOLVEIP_COMMAND hosts $INTERFACE_IP`
+                
+                local OUT
+                OUT=$($RESOLVEIP_COMMAND hosts "$INTERFACE_IP")
+                
                 if [[ -z "${OUT}" ]]; then
                         SUCCESS=0
-                        NODE_IP=$INTERFACE_IP
-                        NODE_NAME=$NODE
+                        NODE_IP="$INTERFACE_IP"
+                        NODE_NAME="$NODE"
                 else
-                        NODE_IP=`echo $OUT | awk '{print $1}'`
-                        NODE_NAME=`echo $OUT | awk '{print $2}'`
+                        NODE_IP=$(echo "$OUT" | awk '{print $1}')
+                        NODE_NAME=$(echo "$OUT" | awk '{print $2}')
                 fi
 
-                if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+                if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
                         OUT_NODES="${OUT_NODES} ${NODE_NAME}"
                 else
                         OUT_NODES="${OUT_NODES} ${NODE_IP}"
                 fi
 
-                echo "$NODE_NAME $NODE_IP" >> $NODE_FILE
+                echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
         done
 
-        echo $OUT_NODES
+        echo "$OUT_NODES"
 
         if [[ $SUCCESS -ne 1 ]]; then
                 m_warn "IP to hostname resolution failed for $INTERFACE"
@@ -330,8 +330,7 @@ function get_nodes_by_interface()
 
 export -f get_nodes_by_interface
 
-function set_network_configuration()
-{
+function set_network_configuration() {
 	if [[ "${SOLUTION}" == "NONE" ]]; then
 		load_nodes ${COMPUTE_NODES}
 		export NET_INTERFACE=default
@@ -388,8 +387,7 @@ function set_network_configuration()
 
 export -f set_network_configuration
 
-function set_directory_configuration()
-{
+function set_directory_configuration() {
 	if [[ -z "${SOL_CONF_DIR:-}" ]]; then
 		m_exit "SOL_CONF_DIR is not defined or is empty"
 	fi
@@ -408,16 +406,14 @@ function set_directory_configuration()
 
 export -f set_directory_configuration
 
-function timestamp()
-{
+function timestamp() {
     nanosec=`date +%s%N`
     echo `expr $nanosec / 1000000`
 }
 
 export -f timestamp
 
-function set_cluster_size()
-{
+function set_cluster_size() {
 	export CLUSTER_SIZE
 	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
@@ -426,8 +422,7 @@ function set_cluster_size()
 
 export -f set_cluster_size
 
-function set_solution()
-{
+function set_solution() {
 	export SOLUTION
 	export SOLUTION_NAME=`echo $SOLUTION | cut -d '_' -f 1`
 	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
@@ -486,8 +481,7 @@ function set_solution()
 
 export -f set_solution
 
-function set_nosolution()
-{
+function set_nosolution() {
 	export SOLUTION_HOME=""
         export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
 	mkdir -p $SOLUTION_REPORT_DIR
@@ -496,59 +490,47 @@ function set_nosolution()
 
 export -f set_nosolution
 
-function start_solution(){
-
-	if [[ -n "$FRAMEWORK_SETUP" ]]
-	then
+function start_solution() {
+	if [[ -n "$FRAMEWORK_SETUP" ]]; then
 		m_echo "Setting up $SOLUTION: $FRAMEWORK_SETUP"
-	
 		bash -c "$FRAMEWORK_SETUP"
 	fi
 }
 
 export -f start_solution
 
-function end_solution(){
-
-	if [[ -n "$FRAMEWORK_CLEANUP" ]]
-	then
+function end_solution() {
+	if [[ -n "$FRAMEWORK_CLEANUP" ]]; then
 		m_echo "Cleaning up $SOLUTION: $FRAMEWORK_CLEANUP"
-	
 		bash -c "$FRAMEWORK_CLEANUP"
 	fi
 }
 
 export -f end_solution
 
-function write_report(){
+function write_report() {
 	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
 	printf "\n" >> $REPORT_FILE
 
-	if [[ $ENABLE_PLOT == "true" ]]
-	then
+	if [[ $ENABLE_PLOT == "true" ]]; then
 		m_echo "Generating performance graphs"
-		if [[ ! -f "$PLOT_DIR" ]]
-		then
+		if [[ ! -f "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_benchmarks.sh >> $PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_RAPL == "true" ]]
-	then
+	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Generating rapl graphs"
-		if [[ ! -f "$RAPL_PLOT_DIR" ]]
-		then
+		if [[ ! -f "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p $RAPL_PLOT_DIR
 		fi
 		bash $RAPL_PLOT_HOME/plot_benchmarks.sh >> $RAPL_PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]
-	then
+	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		m_echo "Generating oprofile graphs"
-		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]
-		then
+		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
 		bash $OPROFILE_PLOT_HOME/plot_benchmarks.sh >> $OPROFILE_PLOT_DIR/log 2>&1
@@ -557,7 +539,7 @@ function write_report(){
 
 export -f write_report
 
-function begin_report(){
+function begin_report() {
 	REPORT="$APP_NAME v$APP_VERSION report \n"
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
@@ -565,10 +547,9 @@ function begin_report(){
 	REPORT="$REPORT \t Frameworks directory  \t\t\t $FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
-	if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
+	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
 	fi
-	REPORT="$REPORT \t Storage backend URI  \t\t\t $STORAGE_BACKEND_URI \n"
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
@@ -687,6 +668,7 @@ function begin_report(){
 	REPORT="$REPORT \t Flink YARN JobManager memory (MB) \t $FLINK_YARN_JOBMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN TaskManager memory (MB) \t $FLINK_YARN_TASKMANAGER_MEMORY \n"
 	REPORT="$REPORT \n Benchmarks: \n"
+	
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
@@ -720,14 +702,14 @@ function begin_report(){
 
 export -f begin_report
 
-function start_benchmark(){
+function start_benchmark() {
 	if [[ -n "$BENCHMARK_SETUP" ]]; then
 		m_echo "Setting up $BENCHMARK: $BENCHMARK_SETUP"
 		bash -c "$BENCHMARK_SETUP"
 	fi
 
 	WAIT_SECONDS=0
-	CURRENT_TIME=`timestamp`
+	CURRENT_TIME=$(timestamp)
 	START_TOTAL_TIME=$(($START_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_ILO == "true" ]]; then
@@ -750,7 +732,7 @@ function start_benchmark(){
 		bash $OPROFILE_HOME/start_oprofile_monitor.sh
 		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
 	fi
-    if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+    	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		m_echo "Starting bdwatchdog monitors"
 		if [[ $BDWATCHDOG_ATOP == "true" ]]; then
 			m_echo "Starting atop daemons"
@@ -786,8 +768,8 @@ function start_benchmark(){
 
 export -f start_benchmark
 
-function end_benchmark(){
-	CURRENT_TIME=`timestamp`
+function end_benchmark() {
+	CURRENT_TIME=$(timestamp)
 	END_TIME=$(($END_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
@@ -802,8 +784,8 @@ function end_benchmark(){
 
 	if [[ $WAIT_SECONDS -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
-        sleep $WAIT_SECONDS
-    fi
+       		sleep $WAIT_SECONDS
+    	fi
 
 	if [[ $ENABLE_ILO == "true" ]]; then
 		m_echo "Stopping ilo monitors"
@@ -869,9 +851,8 @@ function end_benchmark(){
 
 export -f end_benchmark
 
-function run_command_timeout()
-{
-	local CMD="$*"
+function run_command_timeout() {
+    local CMD="$*"
 
     $EXPECT -c "
         set timeout $TIMEOUT
@@ -900,19 +881,17 @@ function run_command_timeout()
 
 export -f run_command_timeout
 
-function run_command()
-{
+function run_command() {
 	local CMD="$*"	
 	# Execute the command and send everything to tee
 	bash -c "set -o pipefail; $CMD 2>&1 | tee \"$TMPLOGFILE\""
-	local exit_code=$?	
-    return $exit_code	
+	local exit_code=$?
+	return $exit_code	
 }
 
 export -f run_command
 
-function run_benchmark()
-{
+function run_benchmark() {
 	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} == "null" ]]; then
 		m_warn "expect command is missing. Timeout cannot be set"
 	fi
@@ -933,24 +912,23 @@ function run_benchmark()
 
 	end_benchmark
 
-    if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-        m_warn "Timeou exceeded (${TIMEOUT} seconds)"
-        return $exit_code
-    fi
+    	if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
+        	m_warn "Timeou exceeded (${TIMEOUT} seconds)"
+	        return $exit_code
+    	fi
 
-    if [[ $exit_code -ne 0 ]]; then
-        m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
-        ELAPSED_TIME="FAILED"
-        return $exit_code
-    fi
+    	if [[ $exit_code -ne 0 ]]; then
+        	m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
+	        ELAPSED_TIME="FAILED"
+        	return $exit_code
+    	fi
 
-    return 0
+    	return 0
 }
 
 export -f run_benchmark
 
-function save_elapsed_time()
-{
+function save_elapsed_time() {
 	if [[ "$ELAPSED_TIME" == "FAILED" ]]; then
 		m_err "${BENCHMARK} failed"
 	else
@@ -973,7 +951,7 @@ function sum () {
 	SUM=0
 	for VALUE in $*
 	do
-		SUM=`op "$SUM + $VALUE"`
+		SUM=$(op "$SUM + $VALUE")
 	done
 	echo $SUM
 }
@@ -987,14 +965,13 @@ function sum_comma () {
 export -f sum_comma
 
 function median () {
-	if [[ ! -n "$*" ]]
-	then
+	if [[ ! -n "$*" ]]; then
 		COUNT=0
 		unset MIDDLE
 	else
 		COUNT=`echo $* | wc -w`
 		MIDDLE=$((1+$COUNT/2))
-		MEDIAN=`echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1`
+		MEDIAN=$(echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1)
 	fi
 }
 
@@ -1005,17 +982,15 @@ function avg () {
 	COUNT=0
 	for VALUE in $*
 	do
-		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]
-		then		
+		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]; then		
 			SUM=`echo "scale=4; $SUM + $VALUE " | bc`
 			COUNT=$(( $COUNT + 1 ))
 		fi
 	done
-	if [ $(echo "$SUM == 0" | bc) -eq 1 ]
-	then
+	if [[ $(echo "$SUM == 0" | bc) -eq 1 ]]; then
 		unset AVG
 	else
-		AVG=`echo "scale=2; $SUM / $COUNT " | bc`
+		AVG=$(echo "scale=2; $SUM / $COUNT " | bc)
 	fi
 }
 
@@ -1028,12 +1003,10 @@ function maxmin () {
 	do
 		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]
 		then	
-			if [[ -z $MAX || `echo $VALUE'>'$MAX | bc -l` == 1 ]];
-			then
+			if [[ -z $MAX || `echo $VALUE'>'$MAX | bc -l` == 1 ]]; then
 				MAX=$VALUE
 			fi
-			if [[ -z $MIN || `echo $VALUE'<'$MIN | bc -l` == 1 ]];
-			then
+			if [[ -z $MIN || `echo $VALUE'<'$MIN | bc -l` == 1 ]]; then
 				MIN=$VALUE
 			fi
 		fi
@@ -1045,11 +1018,11 @@ export -f maxmin
 function is_nfs() {
     local target_path="$1"
 
-	if [ -z "$target_path" ]; then
+    if [ -z "$target_path" ]; then
         return 2
     fi
     
-	# findmnt will return 0 if it finds it, and 1 if it doesn't
+    # findmnt will return 0 if it finds it, and 1 if it doesn't
     findmnt -T "$target_path" -n -t nfs,nfs4 >/dev/null 2>&1
     return $?
 }

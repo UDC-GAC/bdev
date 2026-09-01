@@ -25,10 +25,11 @@ add_conf_param "hostfile" $FILE
 
 export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
+m_echo "Storage backend URI: $STORAGE_BACKEND_URI"
 
 # Storage backend
 if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
-    export HADOOP_DEFAULT_FS="hdfs://${MASTERNODE}:${HDFS_PORT}"
+	export HADOOP_DEFAULT_FS="$STORAGE_BACKEND_URI"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 
 	if [ $HDFS_REPLICATION_FACTOR -gt $SLAVES_NUMBER ]; then
@@ -36,7 +37,7 @@ if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
 		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
 	fi
 else
-    export HADOOP_DEFAULT_FS="file:///"
+	export HADOOP_DEFAULT_FS="file:///"
 	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
 fi
 

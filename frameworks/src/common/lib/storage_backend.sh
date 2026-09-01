@@ -5,7 +5,7 @@ HDFS_CMD=("${HADOOP_HOME}/bin/hdfs" "dfs")
 function get_storage_uri_prefix() {
     case "${STORAGE_BACKEND,,}" in
         hdfs)
-            echo "hdfs://$MASTERNODE:$HDFS_PORT"
+            echo "hdfs://${MASTERNODE}:${HDFS_PORT}"
             ;;
         nfs)
             echo "file:${NFS_MOUNT_POINT}"
