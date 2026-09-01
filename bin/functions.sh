@@ -542,8 +542,9 @@ function begin_report() {
 	REPORT="$APP_NAME v$APP_VERSION report \n"
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
+	REPORT="$REPORT \n Frameworks directory: \n"
+	REPORT="$REPORT \t $FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
-	REPORT="$REPORT \t Frameworks directory  \t\t\t $FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
 	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
