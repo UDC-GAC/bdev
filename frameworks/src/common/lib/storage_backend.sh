@@ -21,7 +21,7 @@ function storage_mkdir() {
 
     # Checks
     if [[ -z "${target_dir}" ]]; then
-        m_exit "storage_mkdir: Missing arguments. Usage: storage_mkdir <target_dir>"
+        m_exit "storage_mkdir: Missing arguments. Usage: storage_mkdir <path>"
     fi
     
     case "${STORAGE_BACKEND,,}" in
@@ -81,7 +81,7 @@ function storage_copy_from_local() {
 
     # Checks
     if [[ -z "${local_file}" ]] || [[ -z "${target_dir}" ]]; then
-        m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <local_file> <target_dir>"
+        m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <src_local_path> <dst_remote_path>"
     fi
     
     case "${STORAGE_BACKEND,,}" in
@@ -108,7 +108,7 @@ function storage_copy_to_local() {
 
     # Checks
     if [[ -z "${remote_file}" ]] || [[ -z "${local_dir}" ]]; then
-        m_exit "storage_copy_to_local: Missing arguments. Usage: storage_copy_to_local <remote_file> <local_dir>"
+        m_exit "storage_copy_to_local: Missing arguments. Usage: storage_copy_to_local <remote_src_path> <local_dst_path>"
     fi
     
     case "${STORAGE_BACKEND,,}" in
@@ -134,7 +134,7 @@ function storage_dir_exists() {
     local target_path="$1"
 
     if [[ -z "${target_path}" ]]; then
-        m_exit "storage_dir_exists: Missing path to check"
+	m_exit "storage_dir_exists: Missing arguments. Usage: storage_dir_exists <path>"
     fi
 
     case "${STORAGE_BACKEND,,}" in
