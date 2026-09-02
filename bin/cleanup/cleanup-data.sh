@@ -6,6 +6,8 @@ for SLAVE in $MASTERNODE $SLAVENODES
 do
 	$SSH_CMD $SLAVE "export TMP_DIR=${TMP_DIR};\
 		export LOCAL_DIRS='${LOCAL_DIRS}';\
+		export LOCAL_DIRS='${SPARK_LOCAL_DIRS}';\
+		export LOCAL_DIRS='${FLINK_LOCAL_DIRS}';\
 		export FORCE_DELETE_HDFS=${FORCE_DELETE_HDFS};\
 		$BDEV_CLEANUP_DIR/data.sh"
 done
