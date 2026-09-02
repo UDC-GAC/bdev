@@ -13,64 +13,62 @@ export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILIT
 export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
 export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
 
-if [ ! -f $MAPREDUCE_JAR_FILE ]; then
-	m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
-else
-	cp -f $MAPREDUCE_JAR_FILE $FLINK_LIB
+if [[ ! -f "$MAPREDUCE_JAR_FILE" ]]; then
+    m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
 fi
 
-if [ ! -f $FLINK_BENCH_JAR ]; then
+if ! cp -f "$MAPREDUCE_JAR_FILE" "$FLINK_LIB"; then
+    m_exit "Could not copy $MAPREDUCE_JAR_FILE to $FLINK_LIB"
+fi
+
+if [[ ! -f "$FLINK_BENCH_JAR" ]]; then
     # Download flinkbench jar file
     URL=https://bdev.des.udc.es/dist/flinkbench
     m_echo "Downloading $FLINK_BENCH_JAR_NAME"
 
-    wget -q -O $FLINK_BENCH_JAR $URL/$FLINK_BENCH_JAR_NAME
-
-    if [[ $? != 0 ]]; then
-		rm $FLINK_BENCH_JAR >& /dev/null
+    if ! wget -q -O "$FLINK_BENCH_JAR" "$URL/$FLINK_BENCH_JAR_NAME"; then
+	rm -f "$FLINK_BENCH_JAR" 2>/dev/null
         m_exit "Error when downloading $FLINK_BENCH_JAR_NAME"
     fi
 else
 	m_echo "Using $FLINK_BENCH_JAR"
 fi
 
-if [ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]; then
+if [[ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]]; then
     m_echo "Flink Hadoop compatibility JAR not found: $FLINK_HADOOP_COMPATIBILITY_PATH"
     m_echo "Downloading $FLINK_HADOOP_COMPATIBILITY_URL..."
 
     TMP_JAR="${FLINK_HADOOP_COMPATIBILITY_PATH}.tmp"
 
-    if ! wget -q -O "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" || [ ! -s "$TMP_JAR" ]; then
-        rm -f "$TMP_JAR"
+    if ! wget -q -O "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" || [[ ! -s "$TMP_JAR" ]]; then
+        rm -f "$TMP_JAR" 2>/dev/null
         m_exit "Could not download $FLINK_HADOOP_COMPATIBILITY_JAR. Please download it manually and copy it to ${FLINK_LIB}"
     fi
 
     if ! mv "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_PATH"; then
-    	rm -f "$TMP_JAR"
+    	rm -f "$TMP_JAR" 2>/dev/null
         m_exit "Could not install $FLINK_HADOOP_COMPATIBILITY_JAR into $FLINK_LIB"
     fi
 fi
 
-if [ "$GEN_TPCX_HS" == "true" ]; then
-	if [ $FLINK_SERIES == "1" ]; then
-		export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
-		export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TPCX_HS_JAR_NAME
-	else
+if [[ "$GEN_TPCX_HS" == "true" ]]; then
+    if [[ "$FLINK_SERIES" == "1" ]]; then
+        export FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
+        export TPCX_HS_JAR=$FLINK_BENCH_DIR/$FLINK_TPCX_HS_JAR_NAME
+    else
         m_exit "Flink version is not supported: $FLINK_VERSION"
-	fi
+    fi
 
-	if [ ! -f $TPCX_HS_JAR ]; then
-		# Download TPCx-HS jar file
-		URL=https://bdev.des.udc.es/dist/tpcx-hs
-		m_echo "Downloading $FLINK_TPCX_HS_JAR_NAME from $URL"
+    if [[ ! -f "$TPCX_HS_JAR" ]]; then
+        # Download TPCx-HS jar file
+        URL=https://bdev.des.udc.es/dist/tpcx-hs
+        m_echo "Downloading $FLINK_TPCX_HS_JAR_NAME from $URL"
 
-    	wget -q -O $TPCX_HS_JAR $URL/$FLINK_TPCX_HS_JAR_NAME
-
-    	if [ $? != 0 ]; then
-			rm $TPCX_HS_JAR >& /dev/null
-			m_exit "Error when downloading $FLINK_TPCX_HS_JAR_NAME"
+        if ! wget -q -O "$TPCX_HS_JAR" "$URL/$FLINK_TPCX_HS_JAR_NAME"; then
+            rm -f "$TPCX_HS_JAR" 2>/dev/null
+            m_exit "Error when downloading $FLINK_TPCX_HS_JAR_NAME"
     	fi
-	else
-		m_echo "Using $TPCX_HS_JAR"
-	fi
+    else
+        m_echo "Using $TPCX_HS_JAR"
+    fi
 fi

@@ -80,7 +80,7 @@ function storage_copy_from_local() {
     local target_dir=$2
 
     # Checks
-    if [[ -z "${local_file}" ]] || [[ -z "${target_dir}" ]]; then
+    if [[ -z "${local_file}" || -z "${target_dir}" ]]; then
         m_exit "storage_copy_from_local: Missing arguments. Usage: storage_copy_from_local <src_local_path> <dst_remote_path>"
     fi
     
@@ -107,7 +107,7 @@ function storage_copy_to_local() {
     local local_dir=$2
 
     # Checks
-    if [[ -z "${remote_file}" ]] || [[ -z "${local_dir}" ]]; then
+    if [[ -z "${remote_file}" || -z "${local_dir}" ]]; then
         m_exit "storage_copy_to_local: Missing arguments. Usage: storage_copy_to_local <remote_src_path> <local_dst_path>"
     fi
     
@@ -192,7 +192,7 @@ function storage_rm() {
                 m_exit "storage_rm: Blocked attempt to delete NFS root"
             fi
             
-            if [ -n "$recursive" ]; then
+            if [[ -n "$recursive" ]]; then
                 rm -rf "${clean_path}"
             else
                 rm -f "${clean_path}"
@@ -220,7 +220,7 @@ function storage_chmod() {
     fi
 
     # Checks
-    if [[ -z "${mode}" ]] || [[ -z "${target_path}" ]]; then
+    if [[ -z "${mode}" || -z "${target_path}" ]]; then
         m_exit "storage_chmod: Missing arguments. Usage: storage_chmod [-r|-R] <mode> <path>"
     fi
 
@@ -233,7 +233,7 @@ function storage_chmod() {
             local clean_path="${target_path#file://}"
             clean_path="${clean_path#file:}"
             
-            if [ -n "$recursive" ]; then
+            if [[ -n "$recursive" ]]; then
                 chmod -R "${mode}" "${clean_path}"
             else
                 chmod "${mode}" "${clean_path}"

@@ -13,7 +13,6 @@ unset ELAPSED_TIME
 unset READ_SIZE
 
 case "$BENCHMARK" in 
-
 	'testdfsio')
 		export TIMEOUT=$TESTDFSIO_TIMEOUT
 	;;
@@ -72,10 +71,10 @@ case "$BENCHMARK" in
 
 esac
 
-if [ -z $TIMEOUT ]; then
-	TIMEOUT=$DEFAULT_TIMEOUT
+if [[ -z $TIMEOUT ]]; then
+	export TIMEOUT=$DEFAULT_TIMEOUT
 fi
 
-if [ -n "$TIMEOUT" ] && [ "$TIMEOUT" != "0" ] && [ "$EXPECT" != null ]; then
+if [[ -n "$TIMEOUT" && "$TIMEOUT" != "0" && "$EXPECT" != null ]]; then
 	m_echo "Timeout set to $TIMEOUT seconds"
 fi

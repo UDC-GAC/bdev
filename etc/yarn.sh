@@ -8,7 +8,7 @@ export APP_MASTER_HEAPSIZE=1024 # Application Master heapsize (MB)
 export TIMELINE_SERVER_D_HEAPSIZE=1024	# YARN Timeline daemon heapsize (MB)
 
 export NODEMANAGER_VCORES=$CORES_PER_NODE	# Number of cores per NodeManager
-export NODEMANAGER_MEMORY=`op_int "$MEMORY_ALLOC_PER_NODE - $NODEMANAGER_D_HEAPSIZE - $DATANODE_D_HEAPSIZE"`	# Memory available per NodeManager
+export NODEMANAGER_MEMORY=$(op_int "$MEMORY_ALLOC_PER_NODE - $NODEMANAGER_D_HEAPSIZE - $DATANODE_D_HEAPSIZE")	# Memory available per NodeManager
 export NODEMANAGER_MIN_ALLOCATION=256		# Minimum memory allocation for containers (MB)
 export NODEMANAGER_INCREMENT_ALLOCATION=128	# Container memory allocations are rounded up to the nearest multiple of this number (MB)
 export NODEMANAGER_PMEM_CHECK=true		# Whether physical memory limits will be enforced for containers
@@ -19,10 +19,10 @@ export NODEMANAGER_MAX_DISK_UTIL_PERCENT=95.0	# Maximum percentage of disk space
 export NODEMANAGER_HEARTBEAT_INTERVAL_MS=5000	# Heartbeat interval in milliseconds for NodeManagers
 export MEMORY_OVERHEAD_MIN=384  # The minimum amount of non-heap memory to be allocated per process (MB)
 export APP_MASTER_MEMORY_OVERHEAD_FACTOR=0.1    # Fraction of Application Master memory to be allocated as non-heap memory
-export APP_MASTER_MEMORY_OVERHEAD=`op_int "$APP_MASTER_HEAPSIZE * $APP_MASTER_MEMORY_OVERHEAD_FACTOR"`  # Overhead of the Application Master memory
+export APP_MASTER_MEMORY_OVERHEAD=$(op_int "$APP_MASTER_HEAPSIZE * $APP_MASTER_MEMORY_OVERHEAD_FACTOR")  # Overhead of the Application Master memory
 export APP_MASTER_MEMORY_OVERHEAD=$(($APP_MASTER_MEMORY_OVERHEAD>$MEMORY_OVERHEAD_MIN?$APP_MASTER_MEMORY_OVERHEAD:$MEMORY_OVERHEAD_MIN))
-export APP_MASTER_MEMORY=`op_int "$APP_MASTER_HEAPSIZE + $APP_MASTER_MEMORY_OVERHEAD + $NODEMANAGER_INCREMENT_ALLOCATION"` # Application Master memory
-export CONTAINER_MEMORY=`op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $NODEMANAGER_VCORES"`     # Memory per YARN container
+export APP_MASTER_MEMORY=$(op_int "$APP_MASTER_HEAPSIZE + $APP_MASTER_MEMORY_OVERHEAD + $NODEMANAGER_INCREMENT_ALLOCATION") # Application Master memory
+export CONTAINER_MEMORY=$(op_int "($NODEMANAGER_MEMORY - $APP_MASTER_MEMORY) / $NODEMANAGER_VCORES")     # Memory per YARN container
 
 export TIMELINE_SERVER=false		# Start the YARN Timeline server, also known as Application History server
 export SCHEDULER_CLASS=fifo		# The class to use as the resource scheduler. Options: fifo, capacity and fair

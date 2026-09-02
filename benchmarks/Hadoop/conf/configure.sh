@@ -38,15 +38,15 @@ if [[ "$GEN_TPCX_HS" == "true" ]]; then
 	export HADOOP_TPCX_HS_JAR_NAME=tpcx-hs-hadoop.jar
 	export TPCX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TPCX_HS_JAR_NAME}
 
-	if [ ! -f $TPCX_HS_JAR ]; then
+	if [[ ! -f $TPCX_HS_JAR ]]; then
 		# Download TPCx-HS jar file
 		URL=https://bdev.des.udc.es/dist/tpcx-hs
 		m_echo "Downloading $HADOOP_TPCX_HS_JAR_NAME from $URL"
     	wget -q -O $TPCX_HS_JAR $URL/$HADOOP_TPCX_HS_JAR_NAME
 
-    	if [ $? != 0 ]; then
-			rm $TPCX_HS_JAR >& /dev/null
-			m_exit "Error when downloading $HADOOP_TPCX_HS_JAR_NAME"
+    	if [[ $? != 0 ]]; then
+		rm $TPCX_HS_JAR >& /dev/null
+		m_exit "Error when downloading $HADOOP_TPCX_HS_JAR_NAME"
     	fi
 	else
 		m_echo "Using $TPCX_HS_JAR"

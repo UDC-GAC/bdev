@@ -4,7 +4,7 @@ function resolve_hive_issues() {
     local HIVE_LIB="${HIVE_HOME}/lib"
     local HADOOP_LIB="${HADOOP_HOME}/share/hadoop/common/lib"
     local BACKUP_FILE=$(ls ${HIVE_LIB}/guava-*-original.bak 2>/dev/null | head -n 1)
-	local COMMONS_COLLECTIONS_JAR=commons-collections-3.2.2.jar
+    local COMMONS_COLLECTIONS_JAR=commons-collections-3.2.2.jar
 	
     if [[ -z "${BACKUP_FILE}" ]]; then
         local ORIGINAL_JAR=$(ls ${HIVE_LIB}/guava-*.jar 2>/dev/null | grep -v 'original.bak' | head -n 1)
@@ -31,7 +31,7 @@ function resolve_hive_issues() {
 		m_echo "Downloading $COMMONS_COLLECTIONS_JAR from $URL"
 		wget -q -O ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR $URL/$COMMONS_COLLECTIONS_JAR
 
-		if [ $? != 0 ]; then
+		if [[ $? != 0 ]]; then
 			rm ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR >& /dev/null
 			m_exit "Error when downloading $COMMONS_COLLECTIONS_JAR"
     	fi
@@ -82,16 +82,13 @@ export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
 export HIVE_VERSION=$HADOOP_HIVE_VERSION
 export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 
-if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]
-then
+if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]; then
 	export EXAMPLES_INPUT_FORMAT=$SEQUENCE_FILE_INPUT_FORMAT
 	export EXAMPLES_OUTPUT_FORMAT=$SEQUENCE_FILE_OUTPUT_FORMAT
-elif [[ "x$EXAMPLES_DATA_FORMAT" == "xKeyValueText" ]] 
-then
+elif [[ "x$EXAMPLES_DATA_FORMAT" == "xKeyValueText" ]]; then
 	export EXAMPLES_INPUT_FORMAT=$KEY_VALUE_TEXT_INPUT_FORMAT
 	export EXAMPLES_OUTPUT_FORMAT=$TEXT_OUTPUT_FORMAT
-elif [[ "x$EXAMPLES_DATA_FORMAT" == "xText" ]] 
-then
+elif [[ "x$EXAMPLES_DATA_FORMAT" == "xText" ]]; then
 	export EXAMPLES_INPUT_FORMAT=$TEXT_INPUT_FORMAT
 	export EXAMPLES_OUTPUT_FORMAT=$TEXT_OUTPUT_FORMAT
 else 
@@ -125,62 +122,40 @@ export OUTPUT_AGGREGATION="${STORAGE_BACKEND_URI}/Output/Aggregation"
 export OUTPUT_JOIN="${STORAGE_BACKEND_URI}/Output/Join"
 export OUTPUT_SCAN="${STORAGE_BACKEND_URI}/Output/Scan"
 
-export GEN_WORDCOUNT="false"
-export GEN_SORT="false"
-export GEN_GREP="false"
-export GEN_TERASORT="false"
-export GEN_TPCX_HS="false"
-export GEN_CC="false"
-export GEN_PAGERANK="false"
-export GEN_KMEANS="false"
-export GEN_BAYES="false"
-export GEN_AGGREGATION="false"
-export GEN_JOIN="false"
-export GEN_SCAN="false"
-export GEN_COMMAND="false"
+export GEN_WORDCOUNT=false
+export GEN_SORT=false
+export GEN_GREP=false
+export GEN_TERASORT=false
+export GEN_TPCX_HS=false
+export GEN_CC=false
+export GEN_PAGERANK=false
+export GEN_KMEANS=false
+export GEN_BAYES=false
+export GEN_AGGREGATION=false
+export GEN_JOIN=false
+export GEN_SCAN=false
+export GEN_COMMAND=false
 
 for BENCHMARK in $BENCHMARKS
 do
-	if [ "$BENCHMARK" == "terasort" ]
-	then
-		export GEN_TERASORT="true"
-	elif [[ "$BENCHMARK" == "wordcount" ]]
-	then
-		export GEN_WORDCOUNT="true"
-	elif [[ "$BENCHMARK" == "sort" ]]
-	then
-		export GEN_SORT="true"
-	elif [[ "$BENCHMARK" == "grep" ]]
-	then
-		export GEN_GREP="true"
-	elif [[ "$BENCHMARK" == "tpcx_hs" ]]
-	then
-		export GEN_TPCX_HS="true"
-	elif [[ "$BENCHMARK" == "pagerank" ]]
-	then
-		export GEN_PAGERANK="true"
-	elif [[ "$BENCHMARK" == "connected_components" ]]
-	then
-		export GEN_CC="true"
-	elif [[ "$BENCHMARK" == "kmeans" ]]
-	then
-		export GEN_KMEANS="true"
-	elif [[ "$BENCHMARK" == "bayes" ]]
-	then
-		export GEN_BAYES="true"
-	elif [[ "$BENCHMARK" == "aggregation" ]]
-	then
-		export GEN_AGGREGATION="true"
-	elif [[ "$BENCHMARK" == "join" ]]
-	then
-		export GEN_JOIN="true"
-	elif [[ "$BENCHMARK" == "scan" ]]
-	then
-		export GEN_SCAN="true"
-	elif [[ "$BENCHMARK" == "command" ]]
-	then
-		export GEN_COMMAND="true"
-	fi
+    case "$BENCHMARK" in
+        terasort)              GEN_TERASORT=true ;;
+        wordcount)             GEN_WORDCOUNT=true ;;
+        sort)                  GEN_SORT=true ;;
+        grep)                  GEN_GREP=true ;;
+        tpcx_hs)               GEN_TPCX_HS=true ;;
+        pagerank)              GEN_PAGERANK=true ;;
+        connected_components)  GEN_CC=true ;;
+        kmeans)                GEN_KMEANS=true ;;
+        bayes)                 GEN_BAYES=true ;;
+        aggregation)           GEN_AGGREGATION=true ;;
+        join)                  GEN_JOIN=true ;;
+        scan)                  GEN_SCAN=true ;;
+        command)               GEN_COMMAND=true ;;
+        *)
+            m_error "Unknown benchmark: $BENCHMARK"
+            ;;
+    esac
 done
 
 # Hive download

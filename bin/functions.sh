@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function get_date {
-	DATE=`date '+%d/%m/%Y %H:%M:%S'`
+	DATE=$(date '+%d/%m/%Y %H:%M:%S')
 }
 
 export -f get_date
@@ -46,7 +46,7 @@ function m_start_message() {
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "Storage backend: $STORAGE_BACKEND"
-	if [ "${STORAGE_BACKEND,,}" == "nfs" ]; then
+	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 		m_echo "NFS mount point: $NFS_MOUNT_POINT"
 	fi
 	m_echo "JVM: $BDEV_JAVA_HOME"
@@ -63,13 +63,13 @@ function m_stop_message() {
 export -f m_stop_message
 
 function op() {
-	echo "scale=4; ($*)/1 " | bc
+	printf '%s\n' "scale=4; ($*)/1" | bc
 }
 
 export -f op
 
 function op_int() {
-	echo "scale=0; ($*)/1 " | bc
+	printf '%s\n' "scale=0; ($*)/1" | bc
 }
 
 export -f op_int
@@ -78,7 +78,7 @@ function read_list() {
 	values=""
 	while read line || [[ -n "$line" ]]
 	do
-		val=`echo "$line" | sed -r -e 's/#.*$//g'`
+		val=$(echo "$line" | sed -r -e 's/#.*$//g')
 		values="$values $val"
 	done < $1 
 
@@ -91,11 +91,10 @@ function read_solutions() {
 	values=""
 	while read line || [[ -n "$line" ]]
 	do
-		sol=`echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $1}'`
-		if [ -n "$sol" ]
-		then
-			version=`echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $2}'`
-			net_if=`echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $3}'`
+		sol=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $1}')
+		if [[ -n "$sol" ]]; then
+			version=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $2}')
+			net_if=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $3}')
 			values="$values ${sol}_${version}_${net_if}"
 		fi
 	done < $1 
@@ -406,8 +405,7 @@ function set_directory_configuration() {
 export -f set_directory_configuration
 
 function timestamp() {
-    nanosec=`date +%s%N`
-    echo `expr $nanosec / 1000000`
+    printf '%s\n' "$(( $(date +%s%N) / 1000000 ))"
 }
 
 export -f timestamp
@@ -691,7 +689,7 @@ function begin_report() {
         	        mkdir -p $ILO_DIR
 	        fi
 
-        	file=`basename ${ILO_POWER_SCRIPT_TEMPLATE}`
+        	file=$(basename ${ILO_POWER_SCRIPT_TEMPLATE})
 	        ilo_script_content="$(cat ${ILO_POWER_SCRIPT_TEMPLATE})"
         	ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/adminname/$ILO_USERNAME/g")
 	        ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/password/$ILO_PASSWD/g")
@@ -774,9 +772,9 @@ function end_benchmark() {
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-		### MARK end of workload
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+			### MARK end of workload
+			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
+			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 		fi
 	fi
 
@@ -820,14 +818,14 @@ function end_benchmark() {
 		fi
 	fi
 
-	CURRENT_TIME=`timestamp`
+	CURRENT_TIME=$(timestamp)
 	END_TOTAL_TIME=$(($END_TOTAL_TIME+$CURRENT_TIME))
 
 	if [[ $ELAPSED_TIME == "TIMEOUT" ]]; then
 		m_err "TIMEOUT"
 	else
-		export ELAPSED_TIME=`op "($END_TIME - $START_TIME) / 1000"`
-		export ELAPSED_TOTAL_TIME=`op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000"`
+		export ELAPSED_TIME=$(op "($END_TIME - $START_TIME) / 1000")
+		export ELAPSED_TOTAL_TIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
 	fi
 
 	if [[ -n "$BENCHMARK_CLEANUP" ]]; then
@@ -870,8 +868,8 @@ function run_command_timeout() {
 	
     local exit_code=$?
     
-	#124 is the standard POSIX code for Timeout ('timeout' command)
-	if [[ $exit_code == 124 ]] ; then 
+    #124 is the standard POSIX code for Timeout ('timeout' command)
+    if [[ $exit_code == 124 ]] ; then 
         ELAPSED_TIME="TIMEOUT"
         return 124
     fi
@@ -958,18 +956,12 @@ function sum () {
 
 export -f sum
 
-function sum_comma () {
-	sum `echo $* | tr "," " "`
-}
-
-export -f sum_comma
-
 function median () {
 	if [[ ! -n "$*" ]]; then
 		COUNT=0
 		unset MIDDLE
 	else
-		COUNT=`echo $* | wc -w`
+		COUNT=$(echo $* | wc -w)
 		MIDDLE=$((1+$COUNT/2))
 		MEDIAN=$(echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1)
 	fi
@@ -983,7 +975,7 @@ function avg () {
 	for VALUE in $*
 	do
 		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]; then		
-			SUM=`echo "scale=4; $SUM + $VALUE " | bc`
+			SUM=$(echo "scale=4; $SUM + $VALUE " | bc)
 			COUNT=$(( $COUNT + 1 ))
 		fi
 	done
@@ -1018,7 +1010,7 @@ export -f maxmin
 function is_nfs() {
     local target_path="$1"
 
-    if [ -z "$target_path" ]; then
+    if [[ -z "$target_path" ]]; then
         return 2
     fi
     

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
+if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	if [[ $FORCE_FORMAT_HDFS == "true" ]]; then
 		#Format HDFS
 		HDFS_FORMAT_LOG=$SOLUTION_REPORT_DIR/hdfs-format.log

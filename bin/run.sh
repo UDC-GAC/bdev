@@ -50,7 +50,7 @@ do
 		    elif [[ $NUM_SOLUTIONS -gt 1 ]]; then
 			    if [[ $LAST_HADOOP_VERSION != "null" ]] && [[ $CURRENT_HADOOP_VERSION != $LAST_HADOOP_VERSION ]]; then
 					export FORCE_FORMAT_HDFS=true
-					if [ "${STORAGE_BACKEND,,}" == "hdfs" ]; then
+					if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 						m_echo "Previous Hadoop version was $LAST_HADOOP_VERSION"
 						m_echo "Current Hadoop version is $CURRENT_HADOOP_VERSION"
 						m_echo "HDFS will be formatted due to differences in Hadoop versions"

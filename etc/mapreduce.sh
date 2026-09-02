@@ -7,7 +7,7 @@ export MR_JOBHISTORY_SERVER_D_HEAPSIZE=1024	# JobHistoryServer daemon heapsize (
 export CORES_PER_MAPPER=1
 export CORES_PER_REDUCER=1
 
-if [ $NODEMANAGER_VCORES = 1 ]; then
+if [[ $NODEMANAGER_VCORES = 1 ]]; then
 	export MAPPERS_PER_NODE=1 	# Maximum number of map tasks per node
 	export REDUCERS_PER_NODE=1 	# Maximum number of reduce tasks per node
 else
@@ -19,10 +19,10 @@ export MAP_MEMORY_RATIO=1	# Percentage of the container memory allocated per map
 export REDUCE_MEMORY_RATIO=1	# Percentage of the container memory allocated per reduce task
 export MAP_HEAPSIZE_FACTOR=0.90	# Percentage of the mapper memory allocated to heap
 export REDUCE_HEAPSIZE_FACTOR=0.90	# Percentage of the reducer memory allocated to heap
-export MAP_MEMORY=`op_int "$CONTAINER_MEMORY * $MAP_MEMORY_RATIO"`	 # Amount of memory to request from YARN per map task (MB)
-export REDUCE_MEMORY=`op_int "$CONTAINER_MEMORY	* $REDUCE_MEMORY_RATIO"` # Amount of memory to request from YARN per reduce task (MB)
-export MAP_HEAPSIZE=`op_int "$MAP_MEMORY * $MAP_HEAPSIZE_FACTOR"`		# Heap size per map task (MB)
-export REDUCE_HEAPSIZE=`op_int "$REDUCE_MEMORY * $REDUCE_HEAPSIZE_FACTOR"`	# Heap size per reduce task (MB)
+export MAP_MEMORY=$(op_int "$CONTAINER_MEMORY * $MAP_MEMORY_RATIO")	 # Amount of memory to request from YARN per map task (MB)
+export REDUCE_MEMORY=$(op_int "$CONTAINER_MEMORY	* $REDUCE_MEMORY_RATIO") # Amount of memory to request from YARN per reduce task (MB)
+export MAP_HEAPSIZE=$(op_int "$MAP_MEMORY * $MAP_HEAPSIZE_FACTOR")		# Heap size per map task (MB)
+export REDUCE_HEAPSIZE=$(op_int "$REDUCE_MEMORY * $REDUCE_HEAPSIZE_FACTOR")	# Heap size per reduce task (MB)
 CALC_SORT_MB=$(( $MAP_HEAPSIZE / 4 ))
 export IO_SORT_MB=$(( CALC_SORT_MB > 2047 ? 2047 : CALC_SORT_MB ))      # The total amount of buffer memory to use while sorting files (MB)
 export IO_SORT_FACTOR=32        # The number of streams to merge at once while sorting files, which determines the number of open file handles

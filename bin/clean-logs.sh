@@ -1,5 +1,4 @@
 #!/bin/bash
-if [ -n "$SOL_LOG_DIR" ]
-then
+if [[ -n "$SOL_LOG_DIR" ]]; then
 	rm -r $SOL_LOG_DIR
 fi

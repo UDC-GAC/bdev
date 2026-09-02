@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -d "${BDW_LOG_DIR}" ]; then
+if [[ ! -d "${BDW_LOG_DIR}" ]]; then
 	mkdir -p ${BDW_LOG_DIR}
 	mkdir -p ${BDW_LOG_DIR}/java_mappings
 
-	if [ ! -f "${BDW_LOG_DIR}/config.sh" ]; then
+	if [[ ! -f "${BDW_LOG_DIR}/config.sh" ]]; then
 		bash ${BDWATCHDOG_HOME}/gen-config.sh > ${BDW_LOG_DIR}/config.sh
 	fi
 fi
