@@ -871,7 +871,7 @@ function run_command_timeout() {
 
     $EXPECT -c "
         set timeout $TIMEOUT
-        spawn -noecho bash -c \"set -o pipefail; $CMD 2>&1 | tee $TMPLOGFILE\"
+        spawn -noecho bash -c \"set -o pipefail; $CMD 2>&1 | tee -a \\\"$TMPLOGFILE\\\"\"
         expect {
             timeout { exit 124 } 
             eof {
@@ -899,7 +899,7 @@ export -f run_command_timeout
 function run_command() {
 	local CMD="$*"	
 	# Execute the command and send everything to tee
-	bash -c "set -o pipefail; $CMD 2>&1 | tee \"$TMPLOGFILE\""
+	bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
 	local exit_code=$?
 	return $exit_code	
 }
@@ -928,7 +928,7 @@ function run_benchmark() {
 	end_benchmark
 
     	if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-        	m_warn "Timeou exceeded (${TIMEOUT} seconds)"
+        	m_warn "Timeout exceeded (${TIMEOUT} seconds)"
 	        return $exit_code
     	fi
 
