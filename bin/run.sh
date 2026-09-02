@@ -28,9 +28,7 @@ do
 		SOLUTION_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
 
-		if [[ $NUM_CLUSTERS -gt 1 ]]; then
-			export FORCE_DELETE_HDFS=true
-		elif [[ $FORMAT_HDFS == "true" ]]; then
+		if [[ $NUM_CLUSTERS -gt 1 || $FORMAT_HDFS == "true" ]]; then
 			export FORCE_DELETE_HDFS=true
 		fi
 
@@ -44,11 +42,11 @@ do
 			export FORCE_FORMAT_HDFS=false
 
 			if [[ $SOLUTION_NUMBER -eq 1 ]]; then
-			    if [[ $FORMAT_HDFS == "true" ]] || [[ $FORCE_DELETE_HDFS == "true" ]]; then
+			    if [[ $FORMAT_HDFS == "true" || $FORCE_DELETE_HDFS == "true" ]]; then
 					export FORCE_FORMAT_HDFS=true
 			    fi
-		    elif [[ $NUM_SOLUTIONS -gt 1 ]]; then
-			    if [[ $LAST_HADOOP_VERSION != "null" ]] && [[ $CURRENT_HADOOP_VERSION != $LAST_HADOOP_VERSION ]]; then
+		    	elif [[ $NUM_SOLUTIONS -gt 1 ]]; then
+			    if [[ $LAST_HADOOP_VERSION != "null" && $CURRENT_HADOOP_VERSION != $LAST_HADOOP_VERSION ]]; then
 					export FORCE_FORMAT_HDFS=true
 					if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 						m_echo "Previous Hadoop version was $LAST_HADOOP_VERSION"
