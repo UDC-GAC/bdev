@@ -123,17 +123,26 @@ if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
 
-if [[ -z "$TMP_DIR" ]]; then
-	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
+if [[ -z "${TMP_DIR:-}" ]]; then
+	m_warn "TMP_DIR is not defined or is empty. Setting it to /tmp"
+	export TMP_DIR=/tmp
 fi
 
-export TMP_DIR="${TMP_DIR}/$USER/$APP_NAME"
+LOCAL_DIRS_USE_TMP_DIR=false
 
-if [[ -z "$LOCAL_DIRS" ]]; then
-	export LOCAL_DIRS=${TMP_DIR}
+if [[ "${LOCAL_DIRS:-}" == "$TMP_DIR" ]]; then
+    LOCAL_DIRS_USE_TMP_DIR=true
+fi
+
+export TMP_DIR="${TMP_DIR}/${USER}/${APP_NAME}"
+
+if [[ "$LOCAL_DIRS_USE_TMP_DIR" == "true" ]]; then
+	export LOCAL_DIRS="$TMP_DIR"
+elif [[ -z "${LOCAL_DIRS:-}" ]]; then
+	export LOCAL_DIRS="$TMP_DIR"
 	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
 else
-	export LOCAL_DIRS="`echo $LOCAL_DIRS | tr "," " "`"
+	export LOCAL_DIRS="${LOCAL_DIRS//,/ }"
 fi
 
 # Copy configuration to REPORT_DIR
