@@ -90,7 +90,7 @@ BDEv 4.0 - 2026-09-02
 
 		- Fix Java detection and improve JAVA_HOME configuration
 
-		- Several code refactorings, minor changes and bug fixes
+		- Multiple refactorings and code modernizations, minor changes and bug fixes
 
 
 BDEv 3.9 - 2024-04-11
