@@ -95,8 +95,4 @@
     <name>dfs.namenode.secondary.http-address</name>
     <value>$master:9868</value>
   </property>
-  <property>
-    <name>dfs.namenode.checkpoint.dir</name>
-    <value>$dfs_name_dir/namesecondary</value>
-  </property>
 </configuration>
