@@ -127,6 +127,8 @@ if [[ -z "$TMP_DIR" ]]; then
 	m_exit "TMP_DIR is not defined or is empty. Revise system-conf.sh"
 fi
 
+export TMP_DIR="${TMP_DIR}/$USER/$APP_NAME"
+
 if [[ -z "$LOCAL_DIRS" ]]; then
 	export LOCAL_DIRS=${TMP_DIR}
 	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
