@@ -112,13 +112,13 @@ if [[ -z "$STORAGE_BACKEND" ]]; then
 fi
 
 if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
-    if [[ ! -d "$NFS_MOUNT_POINT" ]]; then
-        m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
-    fi
+	if [[ ! -d "$NFS_MOUNT_POINT" ]]; then
+	        m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
+	fi
     
-    if ! is_nfs "$NFS_MOUNT_POINT"; then
-        m_exit "NFS_MOUNT_POINT is not a directory mounted using NFS: $NFS_MOUNT_POINT"
-    fi
+	if ! is_nfs "$NFS_MOUNT_POINT"; then
+	        m_exit "NFS_MOUNT_POINT is not a directory mounted using NFS: $NFS_MOUNT_POINT"
+	fi
 
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
 fi
@@ -128,21 +128,20 @@ if [[ -z "${TMP_DIR:-}" ]]; then
 	export TMP_DIR=/tmp
 fi
 
-LOCAL_DIRS_USE_TMP_DIR=false
-
-if [[ "${LOCAL_DIRS:-}" == "$TMP_DIR" ]]; then
-    LOCAL_DIRS_USE_TMP_DIR=true
-fi
-
 export TMP_DIR="${TMP_DIR}/${USER}/${APP_NAME}"
 
-if [[ "$LOCAL_DIRS_USE_TMP_DIR" == "true" ]]; then
-	export LOCAL_DIRS="$TMP_DIR"
-elif [[ -z "${LOCAL_DIRS:-}" ]]; then
+if [[ -z "${LOCAL_DIRS:-}" ]]; then
 	export LOCAL_DIRS="$TMP_DIR"
 	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
 else
-	export LOCAL_DIRS="${LOCAL_DIRS//,/ }"
+	LOCAL_DIRS="${LOCAL_DIRS//,/ }"
+	LOCAL_DIRS_NEW=""
+
+	for dir in $LOCAL_DIRS; do
+		LOCAL_DIRS_NEW+="${dir}/${USER}/${APP_NAME} "
+	done
+
+	export LOCAL_DIRS="${LOCAL_DIRS_NEW% }"
 fi
 
 # Copy configuration to REPORT_DIR
