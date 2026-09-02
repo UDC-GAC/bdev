@@ -34,6 +34,7 @@ function m_exit() {
 	m_err $@
 	bash $CLEANUP_YARN_SCRIPT
 	bash $CLEANUP_PROCESS_SCRIPT
+	m_echo "Exiting $APP_NAME v$APP_VERSION..."
 	exit -1
 }
 
