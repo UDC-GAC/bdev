@@ -118,7 +118,6 @@ add_conf_param "rdma_hadoop_dfs_client_write_packet_size" $RDMA_HADOOP_DFS_CLIEN
 add_conf_param "rdma_hadoop_dfs_memory_percentage" $RDMA_HADOOP_DFS_MEMORY_PERCENTAGE
 
 #SPARK
-export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/spark/local")
 add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
@@ -151,7 +150,6 @@ add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
 add_conf_param "spark_sql_parquet_compression_codec" $SPARK_SQL_PARQUET_COMPRESSION_CODEC
 
 #FLINK
-export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX:-"auto"}
 export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=${FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION:-0.1}
 

@@ -107,6 +107,7 @@ fi
 export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
 m_echo "Configuration directory: $BDEV_EXPERIMENT_DIR"
 
+# Storage backend
 if [[ -z "$STORAGE_BACKEND" ]]; then
 	export STORAGE_BACKEND=hdfs
 	m_warn "STORAGE_BACKEND is not defined or is empty. Setting it to \"hdfs\""
@@ -129,6 +130,7 @@ if [[ -z "${TMP_DIR:-}" ]]; then
 	export TMP_DIR=/tmp
 fi
 
+# TMP_DIR and LOCAL_DIRS
 export TMP_DIR="${TMP_DIR}/${USER}/${APP_NAME}"
 
 if [[ -z "${LOCAL_DIRS:-}" ]]; then
@@ -144,6 +146,9 @@ else
 
 	export LOCAL_DIRS="${LOCAL_DIRS_NEW% }"
 fi
+
+export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/spark/local")
+export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
 
 # Copy configuration to REPORT_DIR
 cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
