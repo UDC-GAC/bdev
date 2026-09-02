@@ -34,7 +34,7 @@ function resolve_hive_issues() {
 		if [[ $? != 0 ]]; then
 			rm ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR >& /dev/null
 			m_exit "Error when downloading $COMMONS_COLLECTIONS_JAR"
-    	fi
+    		fi
 	fi
 }
 
@@ -139,6 +139,7 @@ export GEN_COMMAND=false
 for BENCHMARK in $BENCHMARKS
 do
     case "$BENCHMARK" in
+    	testdfsio)             ;;
         terasort)              GEN_TERASORT=true ;;
         wordcount)             GEN_WORDCOUNT=true ;;
         sort)                  GEN_SORT=true ;;
@@ -153,7 +154,7 @@ do
         scan)                  GEN_SCAN=true ;;
         command)               GEN_COMMAND=true ;;
         *)
-            m_error "Unknown benchmark: $BENCHMARK"
+            m_exit "Unknown benchmark: $BENCHMARK"
             ;;
     esac
 done
@@ -173,16 +174,21 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 		wget -q -O $TMP_HIVE_FILE $URL/hive-$HIVE_VERSION/apache-hive-${HIVE_VERSION}-bin.tar.gz
 
 		if [[ $? != 0 ]]; then
-			rm $TMP_HIVE_FILE
+			rm $TMP_HIVE_FILE >& /dev/null
 			TMP_HIVE_FILE=$THIRD_PARTY_DIR/hive-${HIVE_VERSION}-bin.tar.gz
 			TMP_HIVE_DIR=$THIRD_PARTY_DIR/hive-${HIVE_VERSION}-bin
 			wget -q -O $TMP_HIVE_FILE $URL/hive-$HIVE_VERSION/hive-${HIVE_VERSION}-bin.tar.gz
+			
+			if [[ $? != 0 ]]; then
+				rm $TMP_HIVE_FILE >& /dev/null
+				m_exit "Error when downloading hive-$HIVE_VERSION"
+    			fi
 		fi
 
 		m_echo "Extracting $TMP_HIVE_FILE"
 		tar -xzf $TMP_HIVE_FILE -C $THIRD_PARTY_DIR
 		mv $TMP_HIVE_DIR $HIVE_HOME
-		rm $TMP_HIVE_FILE
+		rm $TMP_HIVE_FILE >& /dev/null
 	fi
 
 	# Manage Hive issues (Guava, commons-collections)
