@@ -7,7 +7,7 @@ export RDMA_HADOOP_DFS_MEMORY_PERCENTAGE=0.7 # Threshold for RAM Disk usage
 export RDMA_HADOOP_DFS_CLIENT_WRITE_PACKET_SIZE=524800  # Packet size (in bytes) for RDMA write
 
 # Spark (common)
-export SPARK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
+export SPARK_HADOOP_HOME=${BDEV_FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
 export SPARK_SCALA_VERSION=2.12	# Scala version used by your Spark distribution
 export SPARK_DRIVER_CORES=1 # Number of cores for the driver
 export SPARK_DRIVER_MEMORY=$((CONTAINER_MEMORY * SPARK_DRIVER_CORES))	# Amount of memory allocated to the driver
@@ -17,7 +17,6 @@ export SPARK_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_DRIVER_MEMORY_OVERHEAD>$MEMORY_O
 export SPARK_DRIVER_HEAPSIZE=$((SPARK_DRIVER_MEMORY - SPARK_EXECUTOR_MEMORY_OVERHEAD)) # Driver heapsize
 export SPARK_MEMORY_FRACTION=0.6 # Fraction of Executor heap space used for execution and storage
 export SPARK_MEMORY_STORAGE_FRACTION=0.5 # Amount of storage memory immune to eviction, expressed as a fraction of SPARK_MEMORY_FRACTION
-export SPARK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories used to store local data in each node
 export SPARK_HISTORY_SERVER=false # Start the Spark HistoryServer
 export SPARK_HISTORY_SERVER_DIR=/spark/history # Relative path to store application event logs
 export SPARK_NETWORK_TIMEOUT=180 # Spark timeout for network communications (in seconds)
@@ -68,8 +67,7 @@ export SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD=$(($SPARK_YARN_EXECUTOR_MEMORY_OVERHE
 export SPARK_YARN_EXECUTOR_HEAPSIZE=$((SPARK_YARN_EXECUTOR_MEMORY - SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD)) # Executor heapsize
 
 # Flink (common)
-export FLINK_HADOOP_HOME=${FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
-export FLINK_LOCAL_DIRS=$LOCAL_DIRS # Comma-separated list of directories used to store local data in each node
+export FLINK_HADOOP_HOME=${BDEV_FRAMEWORKS_DIR}/Hadoop-YARN/3.4.3
 export FLINK_HISTORY_SERVER=false # Start the Flink HistoryServer
 export FLINK_HISTORY_SERVER_DIR=/flink/history # Relative path to store archives of completed jobs
 export FLINK_TASKMANAGERS_PER_NODE=1 # Number of TaskManagers per node

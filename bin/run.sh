@@ -32,7 +32,7 @@ do
 			export FORCE_DELETE_HDFS=true
 		fi
 
-		. $BDEV_BIN_DIR/delete-nodes-data.sh
+		. $CLEANUP_DATA_SCRIPT
 
 		# For each solution
 		for SOLUTION in $SOLUTIONS

@@ -8,6 +8,6 @@ if [[ "$NUM_CLUSTERS" -gt 1 ]]; then
 	export FORCE_DELETE_HDFS=true
 fi
 
-. $CLEAN_DATA_SCRIPT
+. $CLEANUP_DATA_SCRIPT
 
 m_stop_message

@@ -8,4 +8,4 @@ if [ -f "$SCRIPT" ]; then
 fi
 
 $COMMON_SRC_DIR/bin/finish_hdfs.sh
-bash $CLEAN_DAEMONS_SCRIPT
+bash $CLEANUP_PROCESS_SCRIPT

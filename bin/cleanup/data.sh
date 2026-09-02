@@ -10,7 +10,7 @@ if [[ "$FORCE_DELETE_HDFS" == "true" ]]; then
 		rm -rf "$LOCAL_DIR"
 	done
 else
-	# Delete everything inside $TMP_DIR, except for anything named dfs
+	# Delete everything inside $TMP_DIR, except for anything named "dfs"
 	find "$TMP_DIR" -maxdepth 1 -mindepth 1 ! -name dfs -exec rm -rf {} +
 
 	for LOCAL_DIR in $LOCAL_DIRS
@@ -19,4 +19,4 @@ else
 	done
 fi
 
-mkdir -p "$TMP_DIR" $LOCAL_DIRS
+mkdir -p "$TMP_DIR" $LOCAL_DIRS $SPARK_LOCAL_DIRS $FLINK_LOCAL_DIRS

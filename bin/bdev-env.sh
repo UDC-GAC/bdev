@@ -8,9 +8,10 @@ if [[ -z $BDEV_HOME ]]; then
 	exit -1
 fi
 
+export BDEV_START_DATE=$(date +"%d_%m_%Y_%H-%M-%S-%N")
 export BDEV_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
-export BDEV_START_DATE=`date +"%d_%m_%Y_%H-%M-%S-%N"`
+export BDEV_CLEANUP_DIR=$BDEV_HOME/bin/cleanup
 export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
 export BENCHMARKS_DIR=$BDEV_HOME/benchmarks
 export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
@@ -22,9 +23,9 @@ export THIRD_PARTY_DIR=$BDEV_HOME/third-party
 export INIT_SOL_SCRIPT=$BDEV_BIN_DIR/init-sol.sh
 export GEN_CONFIG_SCRIPT=$BDEV_BIN_DIR/gen-config.sh
 export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
-export CLEAN_DAEMONS_SCRIPT=$BDEV_BIN_DIR/kill-daemons.sh
-export CLEAN_DATA_SCRIPT=$BDEV_BIN_DIR/delete-nodes-data.sh
-export YARN_KILLALL_SCRIPT=$BDEV_BIN_DIR/yarn-killall.sh
+export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
+export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
+export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
 
 #ILO
 export ILO_HOME=$BDEV_BIN_DIR/ilo
@@ -66,8 +67,8 @@ if [[ -z $BDEV_EXPERIMENT_DIR ]]; then
 	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
 fi
 
-if [[ -z "$FRAMEWORKS_DIR" ]]; then
-	export FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
+if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
+	export BDEV_FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
 fi
 
 # Load BDEv and system configuration files
@@ -99,8 +100,8 @@ if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
 	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
 fi
 
-if [[ ! -d "$FRAMEWORKS_DIR" ]]; then
-	m_exit "FRAMEWORKS_DIR does not exist or is not a directory: $FRAMEWORKS_DIR"
+if [[ ! -d "$BDEV_FRAMEWORKS_DIR" ]]; then
+	m_exit "BDEV_FRAMEWORKS_DIR does not exist or is not a directory: $BDEV_FRAMEWORKS_DIR"
 fi
 
 export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
@@ -164,28 +165,27 @@ case "$SPARK_API" in
         ;;
 esac
 
-export HOSTFILE_DEFAULT=$BDEV_EXPERIMENT_DIR/hostfile
-export CLUSTER_SIZES=`read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst`
-export BENCHMARKS=`read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst`
-export SOLUTIONS=`read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst`
-export NUM_CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
-export NUM_BENCHMARKS=`echo $BENCHMARKS | wc -w`
-export NUM_SOLUTIONS=`echo $SOLUTIONS | wc -w`
+export CLUSTER_SIZES=$(read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst)
+export BENCHMARKS=$(read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst)
+export SOLUTIONS=$(read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst)
+export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
+export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
+export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")
+export SLURM_ENV="false"
 
 # Check if we are under a SLURM environment
 if [[ -n "$SLURM_JOB_ID" ]]; then
-	export SLURM_ENV="true"
+	SLURM_ENV="true"
 fi
 
-# Setup hostfile
-if [[ -z $HOSTFILE ]]; then
-	if [[ "$SLURM_ENV" == "true" ]]; then
-		COMPUTE_NODES=`scontrol show hostname $SLURM_JOB_NODELIST`
-	else
-		HOSTFILE=$HOSTFILE_DEFAULT
+# Setup default hostfile
+if [[ -z $BDEV_HOSTFILE ]]; then
+	if [[ "$SLURM_ENV" == "false" ]]; then
+		export BDEV_HOSTFILE=$BDEV_EXPERIMENT_DIR/hostfile
 	fi
 fi
-
+		
+# Setup modules
 if [[ "$ENABLE_MODULES" == "true" ]]; then
 	m_echo "Loading modules: ${MODULES_JAVA}"
 	module load ${MODULES_JAVA}

@@ -2,15 +2,6 @@
 
 $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 
-#Setup local temporary directories on all nodes
-rm -rf ${YARN_PROPS_FILE_CUSTOM} ${YARN_PROPS_FILE_DEFAULT}
-rm -rf ${FLINK_LOCAL_DIRS}/*
-mkdir -p ${FLINK_LOCAL_DIRS}
-for j in `cat ${SLAVESFILE}`; do
- 	$SSH_CMD $j "rm -rf ${FLINK_LOCAL_DIRS}/*"
-        $SSH_CMD $j "mkdir -p ${FLINK_LOCAL_DIRS}"
-done
-
 # Setup required jars
 . ${SOL_BENCH_DIR}/conf/setup_jars.sh
 
@@ -21,6 +12,7 @@ echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 echo "containerized.master.env.CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
 echo "containerized.taskmanager.env.CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
 
+rm -f ${YARN_PROPS_FILE_CUSTOM} ${YARN_PROPS_FILE_DEFAULT} 2>/dev/null
 m_echo "Starting the Flink cluster on YARN (Session Mode)"
 $FLINK_HOME/bin/yarn-session.sh -d \
 	-jm $FLINK_YARN_JOBMANAGER_MEMORY \

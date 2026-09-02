@@ -20,8 +20,8 @@ add_conf_param "java_jpms_opts" "$JAVA_JPMS_OPTS"
 add_conf_param "python_bin_path" $PYTHON_BIN
 add_conf_param "master" $MASTERNODE
 add_conf_param "ip_master" $MASTERIP
-add_conf_param "net_interface" $NET_INTERFACE
-add_conf_param "hostfile" $FILE
+add_conf_param "net_interface" $NETWORK_INTERFACE
+add_conf_param "hostfile" $HOSTFILE
 
 export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
@@ -118,9 +118,8 @@ add_conf_param "rdma_hadoop_dfs_client_write_packet_size" $RDMA_HADOOP_DFS_CLIEN
 add_conf_param "rdma_hadoop_dfs_memory_percentage" $RDMA_HADOOP_DFS_MEMORY_PERCENTAGE
 
 #SPARK
-export SPARK_LOCAL_DIRS=$(echo $SPARK_LOCAL_DIRS | tr "," " ")
-export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$SPARK_LOCAL_DIRS" "" "/spark/local")
-
+export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/spark/local")
+add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_daemon_memory" $SPARK_DAEMON_MEMORY
 add_conf_param "spark_driver_cores" $SPARK_DRIVER_CORES
 add_conf_param "spark_driver_memory" $SPARK_DRIVER_HEAPSIZE
@@ -144,17 +143,15 @@ add_conf_param "spark_kryo_buffer_max" $SPARK_KRYO_BUFFER_MAX
 add_conf_param "spark_kryo_registrationRequired" $SPARK_KRYO_REGISTRATION_REQUIRED
 add_conf_param "spark_memory_fraction" $SPARK_MEMORY_FRACTION
 add_conf_param "spark_memory_storage_fraction" $SPARK_MEMORY_STORAGE_FRACTION
-add_conf_param_list "spark_local_dirs" "$SPARK_LOCAL_DIRS"
 add_conf_param "spark_event_log" $SPARK_HISTORY_SERVER
 add_conf_param "spark_history_server_dir" $SPARK_HISTORY_SERVER_DIR
-add_conf_param "spark_sql_aqe"  $SPARK_SQL_AQE
+add_conf_param "spark_sql_aqe" $SPARK_SQL_AQE
 add_conf_param "spark_aqe_coalesce_partitions" $SPARK_AQE_COALESCE_PARTITIONS
 add_conf_param "spark_aqe_partition_size" $SPARK_AQE_PARTITION_SIZE
 add_conf_param "spark_sql_parquet_compression_codec" $SPARK_SQL_PARQUET_COMPRESSION_CODEC
 
 #FLINK
-export FLINK_LOCAL_DIRS=$(echo $FLINK_LOCAL_DIRS | tr "," " ")
-export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$FLINK_LOCAL_DIRS" "" "/flink/local")
+export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
 export FLINK_TASKMANAGER_MEMORY_NETWORK_MAX=${FLINK_TASKMANAGER_MEMORY_NETWORK_MAX:-"auto"}
 export FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION=${FLINK_TASKMANAGER_MEMORY_NETWORK_FRACTION:-0.1}
 

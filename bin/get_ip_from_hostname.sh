@@ -2,33 +2,23 @@
 
 if [[ $# -lt 1 ]]; then
        echo "$0 hostfile [loopback]"
-       exit -1
+       exit 1
 fi
 
-FILE=$1
-IP=""
+INPUT_FILE="$1"
+LOOPBACK_IP="${2:-127.0.0.1}"
+CURRENT_NODE="${HOSTNAME%%.*}"
 
-if [[ $# -eq 2 ]]; then
-	LOOPBACK_IP=$2
-else
-	LOOPBACK_IP=127.0.0.1
-fi
+while read -r NODE_NAME NODE_IP; do
+	NODE="${NODE_NAME%%.*}"
 
-NAME=`echo $HOSTNAME | cut -d "." -f 1`
+	if [[ "$NODE" == "localhost" ]]; then
+		echo "$LOOPBACK_IP"
+		break
+	fi
 
-while read i
-do
-	NODE=`echo $i | awk '{print $1}' | cut -d "." -f 1`
-        if [[ $NODE == "localhost" ]]
-        then
-          echo $LOOPBACK_IP
-          break
-        fi
-        
-        if [[ $NODE == $NAME ]]
-        then
-        	IP=`echo $i | awk '{print $2}'`
-        	echo $IP
-                break
-        fi
-done < $FILE
+	if [[ "$NODE" == "$CURRENT_NODE" ]]; then
+		echo "$NODE_IP"
+		break
+	fi
+done < "$INPUT_FILE"

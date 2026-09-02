@@ -11,7 +11,7 @@ else
     YARN_APPS=$("$YARN_EXECUTABLE" application $YARN_CMD_OTPS -list -appStates RUNNING,ACCEPTED 2>/dev/null | grep "application_" | awk '{print $1}')
     
     if [[ $? -ne 0 ]]; then
-        echo "YARN is not available. No cleaning is done."
+        echo "YARN is not available. No cleanup is done."
     else
         # Comprobar si la variable tiene contenido (si hay apps para matar)
         if [[ -n "$YARN_APPS" ]]; then

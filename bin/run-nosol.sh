@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Set network configuration
-set_network_configuration
+configure_network
 
 # Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh

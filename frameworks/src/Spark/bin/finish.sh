@@ -8,7 +8,7 @@ if [ -f "$SCRIPT" ]; then
 fi
 
 $COMMON_SRC_DIR/bin/finish_hdfs.sh
-bash $CLEAN_DAEMONS_SCRIPT
+bash $CLEANUP_PROCESS_SCRIPT
 
 # Get rid of jar files in user logs
 eval $SPARK_BENCH_JAR_DELETE

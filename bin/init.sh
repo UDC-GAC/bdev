@@ -4,9 +4,9 @@ m_start_message
 
 m_echo "Initializing"
 
-# Load nodes and IPs
-. $BDEV_BIN_DIR/load-nodes.sh
+# Load hostfile
+. $BDEV_BIN_DIR/load-hostfile.sh
 
-. $CLEAN_DAEMONS_SCRIPT
+. $CLEANUP_PROCESS_SCRIPT
 
 begin_report

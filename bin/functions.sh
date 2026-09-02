@@ -32,15 +32,15 @@ export -f m_warn
 
 function m_exit() {
 	m_err $@
-	bash $YARN_KILLALL_SCRIPT
-	bash $CLEAN_DAEMONS_SCRIPT
+	bash $CLEANUP_YARN_SCRIPT
+	bash $CLEANUP_PROCESS_SCRIPT
 	exit -1
 }
 
 export -f m_exit
 
 function m_start_message() {
-	m_echo "Frameworks directory: $FRAMEWORKS_DIR"
+	m_echo "Frameworks directory: $BDEV_FRAMEWORKS_DIR"
 	m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
 	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
@@ -73,6 +73,12 @@ function op_int() {
 }
 
 export -f op_int
+
+function timestamp() {
+    printf '%s\n' "$(( $(date +%s%N) / 1000000 ))"
+}
+
+export -f timestamp
 
 function read_list() {
 	values=""
@@ -222,22 +228,6 @@ function get_conf_value() {
 
 export -f get_conf_value
 
-function load_nodes()  {
-	export MASTERNODE="$1"
-    	shift
-    	
-    	if [[ $# -eq 0 ]]; then
-        	export SLAVENODES="$MASTERNODE"
-    	else
-        	export SLAVENODES="$*"
-    	fi
-    	
-    	export MAX_NODES=$(( $(echo "$SLAVENODES" | wc -w) + 1 ))
-    	export CLUSTER_SIZES=$(echo "$CLUSTER_SIZES" | sed -e "s/MAX/$MAX_NODES/gI")    	
-}
-
-export -f load_nodes
-
 function get_nodes_by_hostname() {
 	local NODE_FILE="$1"
 	local NODES="${*:2}"
@@ -253,7 +243,7 @@ function get_nodes_by_hostname() {
 		fi
 		
 		if [[ -z "${OUT}" ]]; then
-			m_err "Node $NODE could not be revolved"
+			m_err "Hostname for node $NODE could not be revolved"
 			OUT_NODES=""
 			return 1
 		fi
@@ -328,40 +318,70 @@ function get_nodes_by_interface() {
 
 export -f get_nodes_by_interface
 
-function set_network_configuration() {
-	if [[ "${SOLUTION}" == "NONE" ]]; then
-		load_nodes ${COMPUTE_NODES}
-		export NET_INTERFACE=default
-		export FILE=$NODE_FILE
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
-		if [[ -n ${ETHERNET_COMPUTE_NODES} ]]; then
-			load_nodes ${ETHERNET_COMPUTE_NODES}
-			export NET_INTERFACE=$ETHERNET_INTERFACE
-			export FILE=$NODE_FILE_ETHERNET
-		else
-			load_nodes ${COMPUTE_NODES}
-			export NET_INTERFACE=default
-			export FILE=$NODE_FILE
-		fi
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]] || [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		if [[ -n ${IPOIB_COMPUTE_NODES} ]]; then
-			load_nodes ${IPOIB_COMPUTE_NODES}
-			export NET_INTERFACE=$IPOIB_INTERFACE
-			export FILE=$NODE_FILE_IPOIB
-		else
-			load_nodes ${COMPUTE_NODES}
-			export NET_INTERFACE=default
-			export FILE=$NODE_FILE
-		fi
-	else
-		m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
-	fi
+function configure_nodes()  {
+	export MASTERNODE="$1"
+    	shift
+    	
+    	if [[ $# -eq 0 ]]; then
+        	export SLAVENODES="$MASTERNODE"
+        	export MAX_NODES=2
+    	else
+        	export SLAVENODES="$*"
+        	export MAX_NODES=$(( $# + 1 ))
+    	fi
+}
 
-	if [[ -z ${FILE} ]]; then
+export -f configure_nodes
+
+function configure_network() {
+	local nodes
+	local net_interface
+	local file
+	
+	if [[ "${SOLUTION}" == "NONE" ]]; then
+		nodes="$COMPUTE_NODES"
+		net_interface=default
+		file="$HOSFTILE_DEFAULT"
+	else
+		case "$SOLUTION_NET_INTERFACE" in
+		    ethernet)
+                	if [[ -n "${ETHERNET_COMPUTE_NODES:-}" ]]; then
+                    		nodes="$ETHERNET_COMPUTE_NODES"
+                    		net_interface="$ETHERNET_INTERFACE"
+                    		file="$HOSFTILE_ETHERNET"
+                	else
+                    		nodes="$COMPUTE_NODES"
+                    		net_interface=default
+                    		file="$HOSFTILE_DEFAULT"
+                	fi
+                	;;
+            	    ipoib|ib|roce)
+                	if [[ -n "${IPOIB_COMPUTE_NODES:-}" ]]; then
+                    		nodes="$IPOIB_COMPUTE_NODES"
+                    		net_interface="$IPOIB_INTERFACE"
+                    		file="$HOSFTILE_IPOIB"
+                	else
+                    		nodes="$COMPUTE_NODES"
+                    		net_interface=default
+                    		file="$HOSFTILE_DEFAULT"
+                	fi
+                	;;
+
+            	    *)
+                	m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
+                	;;
+        	esac
+        fi
+    
+	configure_nodes ${COMPUTE_NODES}
+	export NETWORK_INTERFACE="$net_interface"
+	export HOSTFILE="$file"
+		
+	if [[ -z ${HOSTFILE} ]]; then
 		m_exit "Invalid hostfile for $SOLUTION. Revise network settings"
 	fi
 
-	if [[ -z ${NET_INTERFACE} ]]; then
+	if [[ -z ${NETWORK_INTERFACE} ]]; then
 		m_exit "Invalid network interface for $SOLUTION. Revise network settings"
 	fi
 
@@ -369,21 +389,21 @@ function set_network_configuration() {
 	export RDMA_HADOOP_ROCE_ENABLED=false
 		
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-		m_echo "Using RDMA interface $RDMA_INTERFACE for InfiniBand and hostfile: $FILE"
+		m_echo "Using RDMA interface $RDMA_INTERFACE for InfiniBand and hostfile: $HOSTFILE"
 		export RDMA_HADOOP_IB_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		m_echo "Using RDMA interface $RDMA_INTERFACE for RoCE and hostfile: $FILE"
+		m_echo "Using RDMA interface $RDMA_INTERFACE for RoCE and hostfile: $HOSTFILE"
 		export RDMA_HADOOP_ROCE_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
-		m_echo "Using network interface $NET_INTERFACE for TCP/IP over Ethernet and hostfile: $FILE"
+		m_echo "Using network interface $NETWORK_INTERFACE for TCP/IP over Ethernet and hostfile: $HOSTFILE"
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
-		m_echo "Using network interface $NET_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $FILE"
+		m_echo "Using network interface $NETWORK_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
 	fi
 	
-	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $FILE)
+	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $HOSTFILE)
 }
 
-export -f set_network_configuration
+export -f configure_network
 
 function set_directory_configuration() {
 	if [[ -z "${SOL_CONF_DIR:-}" ]]; then
@@ -403,12 +423,6 @@ function set_directory_configuration() {
 }
 
 export -f set_directory_configuration
-
-function timestamp() {
-    printf '%s\n' "$(( $(date +%s%N) / 1000000 ))"
-}
-
-export -f timestamp
 
 function set_cluster_size() {
 	export CLUSTER_SIZE
@@ -433,7 +447,7 @@ function set_solution() {
 		SOLUTION_NAME="Flink"
 	fi
 
-	export SOLUTION_HOME=${FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
+	export SOLUTION_HOME=${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
 	export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
 
 	if [[ ! -d $SOLUTION_HOME ]]; then
@@ -541,7 +555,7 @@ function begin_report() {
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Frameworks directory: \n"
-	REPORT="$REPORT \t $FRAMEWORKS_DIR \n"
+	REPORT="$REPORT \t $BDEV_FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
 	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
@@ -579,7 +593,7 @@ function begin_report() {
 	REPORT="$REPORT \t Scan pages \t\t\t\t $SCAN_PAGES \n"
 	REPORT="$REPORT \t Scan uservisits \t\t\t $SCAN_USERVISITS \n"
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
-	REPORT="$REPORT \t Tmp dir  \t\t\t\t $TMP_DIR \n"
+	REPORT="$REPORT \t TMP dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
@@ -658,6 +672,7 @@ function begin_report() {
 	REPORT="$REPORT \t Spark YARN executor memory (MB)   \t $SPARK_YARN_EXECUTOR_MEMORY \n"
 	REPORT="$REPORT \t Spark YARN executor heapsize (MB) \t $SPARK_YARN_EXECUTOR_HEAPSIZE \n"
 	REPORT="$REPORT \t Spark YARN executor overhead (MB) \t $SPARK_YARN_EXECUTOR_MEMORY_OVERHEAD \n"
+	REPORT="$REPORT \t Spark local dirs  \t\t\t $SPARK_LOCAL_DIRS \n"
 	REPORT="$REPORT \t Flink TaskManagers per node   \t\t $FLINK_TASKMANAGERS_PER_NODE \n"
 	REPORT="$REPORT \t Flink TaskManager slots   \t\t $FLINK_TASKMANAGER_SLOTS \n"
 	REPORT="$REPORT \t Flink TaskManager memory network (MB) \t $FLINK_TASKMANAGER_MEMORY_NETWORK_MAX \n"
@@ -665,6 +680,7 @@ function begin_report() {
 	REPORT="$REPORT \t Flink TaskManager memory (MB) \t\t $FLINK_TASKMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN JobManager memory (MB) \t $FLINK_YARN_JOBMANAGER_MEMORY \n"
 	REPORT="$REPORT \t Flink YARN TaskManager memory (MB) \t $FLINK_YARN_TASKMANAGER_MEMORY \n"
+	REPORT="$REPORT \t Flink local dirs  \t\t\t $FLINK_LOCAL_DIRS \n"
 	REPORT="$REPORT \n Benchmarks: \n"
 	
 	echo -e "$REPORT" > $REPORT_FILE
