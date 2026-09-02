@@ -2,7 +2,7 @@
 
 rm -rf /tmp/hsperfdata_$USER
 
-if [[ "FORCE_DELETE_HDFS" == "true" ]]; then
+if [[ "$FORCE_DELETE_HDFS" == "true" ]]; then
 	rm -rf "$TMP_DIR"
 
 	for LOCAL_DIR in $LOCAL_DIRS
@@ -19,4 +19,4 @@ else
 	done
 fi
 
-mkdir -p $TMP_DIR $LOCAL_DIRS
+mkdir -p "$TMP_DIR" $LOCAL_DIRS
