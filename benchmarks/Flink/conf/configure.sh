@@ -11,10 +11,10 @@ export FLINK_BENCH_JAR=$FLINK_BENCH_DIR/$FLINK_BENCH_JAR_NAME
 export FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
 export FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
 export FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-export MAPREDUCE_JAR_FILE=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar
+MAPREDUCE_JAR_FILE=("$HADOOP_HOME"/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar)
 
-if [[ ! -f "$MAPREDUCE_JAR_FILE" ]]; then
-    m_exit "MapReduce jar not found: $MAPREDUCE_JAR_FILE"
+if [[ ! -f "${MAPREDUCE_JAR_FILE[0]}" ]]; then
+    m_exit "MapReduce jar not found: $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar"
 fi
 
 if ! cp -f "$MAPREDUCE_JAR_FILE" "$FLINK_LIB"; then
