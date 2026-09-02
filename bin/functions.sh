@@ -685,7 +685,7 @@ function begin_report() {
 	REPORT="$REPORT \n Benchmarks: \n"
 	
 	echo -e "$REPORT" > $REPORT_FILE
-	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'SOLUTION' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
 	if [[ $ENABLE_PLOT == "true" ]]; then
 		if [[ ! -f "$PLOT_DIR" ]]; then
