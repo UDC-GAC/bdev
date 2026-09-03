@@ -66,8 +66,8 @@ export SCAN_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Command
-#export COMMAND=		# Command to run in batch mode (executable script or a directory containing only scripts)
-#export PREPARE_COMMAND=	# Command to run to set up input datasets
+#export COMMAND=		# Command or executable script to run in batch mode. It can also be a directory containing only executable scripts
+#export PREPARE_COMMAND=	# Command or executable script to run before COMMAND
 
 #TIMEOUT
 #export TESTDFSIO_TIMEOUT=0
