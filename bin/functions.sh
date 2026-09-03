@@ -42,8 +42,12 @@ export -f m_exit
 
 function m_start_message() {
 	m_echo "Frameworks directory: $BDEV_FRAMEWORKS_DIR"
-	m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
-	m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
+	if [[ ${NUM_SOLUTIONS:-0} -gt 0 ]]; then
+		m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
+	fi
+	if [[ ${NUM_BENCHMARKS:-0} -gt 0 ]]; then
+		m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
+	fi
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "Storage backend: $STORAGE_BACKEND"
