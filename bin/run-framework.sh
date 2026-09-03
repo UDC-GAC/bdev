@@ -64,8 +64,6 @@ do
 			break
 		fi
 
-		save_elapsed_time
-
 		if [[ $FINISH == "true" ]]; then
 			break
 		fi

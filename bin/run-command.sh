@@ -32,8 +32,6 @@ fi
 # Run command benchmark
 . ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 
-save_elapsed_time
-
 write_report
 
 cleanup_phase
