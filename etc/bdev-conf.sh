@@ -5,7 +5,7 @@
 export STORAGE_BACKEND=hdfs  # Supported backends: hdfs, nfs
 export NFS_MOUNT_POINT=${NFS_MOUNT_POINT:-""}  #Only required if STORAGE_BACKEND=nfs
 export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostnames for cluster nodes
-export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
+export DEFAULT_TIMEOUT=3600	# Default workload timeout (in seconds)
 export OUTPUT_DIR=$PWD/${APP_NAME}_OUTPUT	# Default report output directory
 export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 export ENABLE_PLOT=false	# Enable plot generation

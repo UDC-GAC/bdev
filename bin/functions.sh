@@ -747,7 +747,7 @@ export -f begin_report
 
 function start_benchmark() {
 	if [[ -n "$BENCHMARK_SETUP" ]]; then
-		m_echo "Setting up $BENCHMARK: $BENCHMARK_SETUP"
+		m_echo "Setting up ${BENCHMARK^}: $BENCHMARK_SETUP"
 		bash -c "$BENCHMARK_SETUP"
 	fi
 
@@ -824,7 +824,7 @@ function end_benchmark() {
 		fi
 	fi
 
-	m_echo "Finished $BENCHMARK"
+	m_echo "Finished ${BENCHMARK^}"
 
 	if [[ $WAIT_SECONDS -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
@@ -871,18 +871,18 @@ function end_benchmark() {
 	if [[ ${TIMEOUT:-0} -gt 0 && $code -eq 124 ]]; then
 		export ELAPSED_TIME="TIMEOUT"
 		export ELAPSED_TOTAL_TIME="TIMEOUT"
-		m_err "${BENCHMARK} timeout exceeded (${TIMEOUT} seconds)"
+		m_err "${BENCHMARK^} timeout exceeded (${TIMEOUT} seconds)"
 	elif [[ $code -ne 0 ]]; then
 		export ELAPSED_TIME="FAILED"
 		export ELAPSED_TOTAL_TIME="FAILED"
-		m_err "${BENCHMARK} execution failed (exit code: $code)"
+		m_err "${BENCHMARK^} execution failed (exit code: $code)"
 	else
 		export ELAPSED_TIME=$(op "($END_TIME - $START_TIME) / 1000")
 		export ELAPSED_TOTAL_TIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
 	fi
 
 	if [[ -n "$BENCHMARK_CLEANUP" ]]; then
-		m_echo "Cleaning up $BENCHMARK: $BENCHMARK_CLEANUP"
+		m_echo "Cleaning up ${BENCHMARK^}: $BENCHMARK_CLEANUP"
 		bash -c "$BENCHMARK_CLEANUP"
 	fi
 
@@ -919,7 +919,7 @@ function run_benchmark() {
 		timeout "${TIMEOUT}s" bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
 		exit_code=$?
 	else
-		m_echo "Running ${BENCHMARK}: $CMD"
+		m_echo "Running ${BENCHMARK^}: $CMD"
 		bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
 		exit_code=$?
 	fi
