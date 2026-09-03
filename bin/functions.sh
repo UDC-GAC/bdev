@@ -1128,7 +1128,6 @@ export -f require_binary
 
 check_disk_space() {
     local DISK_MIN_FREE_PERCENT="${DISK_SPACE_THRESHOLD:-5}"
-    m_echo "Disk space checking (threshold: ${DISK_MIN_FREE_PERCENT}%"
     # Take all arguments passed to the function and replace commas with spaces
     local RAW_DIRS="${*//,/ }"
     local CHECKED_MOUNTS=()

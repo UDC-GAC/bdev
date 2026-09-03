@@ -11,7 +11,11 @@ for arg in "$@"; do
     esac
 done
 
-m_echo "Performing data cleanup"
+if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
+	m_echo "Performing data cleanup and disk space checks (threshold: ${DISK_MIN_FREE_PERCENT}%)"
+else
+	m_echo "Performing data cleanup"
+fi
 
 for NODE in $MASTERNODE $SLAVENODES
 do
