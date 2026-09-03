@@ -606,14 +606,18 @@ function begin_report() {
 	REPORT="$REPORT \n Frameworks directory: \n"
 	REPORT="$REPORT \t $BDEV_FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
-	REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
+	if [[ "$NUM_SOLUTIONS" -gt 0 ]]; then
+		REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
+	fi
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
 	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
 	fi
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
-	REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
+	if [[ "$NUM_BENCHMARKS" -gt 0 ]]; then
+		REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
+	fi
 	REPORT="$REPORT \t Benchmark executions  \t\t\t $NUM_EXECUTIONS \n"
 	REPORT="$REPORT \t TestDFSIO num of files \t\t $DFSIO_N_FILES \n"
 	REPORT="$REPORT \t TestDFSIO file size (MB) \t\t $DFSIO_FILE_SIZE \n"
