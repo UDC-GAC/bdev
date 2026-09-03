@@ -882,89 +882,52 @@ function end_benchmark() {
 		m_echo "Generating Oprofile data"
 		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
 	fi
+	
 	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Generating RAPL data"
 		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
 	fi
+	
 	if [[ $ENABLE_STAT == "true" ]]; then
 		m_echo "Generating dool data"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
+	
+	#124 is the standard POSIX code for GNU timeout
+	if [[ ${TIMEOUT:-0} -gt 0 && $exit_code -eq 124 ]]; then
+		ELAPSED_TIME="TIMEOUT"
+		m_warn "Timeout exceeded (${TIMEOUT} seconds)"
+		return 124
+	fi
+    
+    	if [[ $exit_code -ne 0 ]]; then
+    		ELAPSED_TIME="FAILED"
+        	m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
+        	return $exit_code
+    	fi
 }
 
 export -f end_benchmark
 
-function run_command_timeout() {
-    local CMD="$*"
-
-    $EXPECT -c "
-        set timeout $TIMEOUT
-        spawn -noecho bash -c \"set -o pipefail; $CMD 2>&1 | tee -a \\\"$TMPLOGFILE\\\"\"
-        expect {
-            timeout { exit 124 } 
-            eof {
-				# capture the exit code of the spawn process
-                catch wait result
-				# exit code is in the 4th position of the 'result' list
-                exit [lindex \$result 3]
-            }
-        }
-    "
-	
-    local exit_code=$?
-    
-    #124 is the standard POSIX code for Timeout ('timeout' command)
-    if [[ $exit_code == 124 ]] ; then 
-        ELAPSED_TIME="TIMEOUT"
-        return 124
-    fi
-    
-    return $exit_code
-}
-
-export -f run_command_timeout
-
-function run_command() {
-	local CMD="$*"	
-	# Execute the command and send everything to tee
-	bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
-	local exit_code=$?
-	return $exit_code	
-}
-
-export -f run_command
-
 function run_benchmark() {
-	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} == "null" ]]; then
-		m_warn "expect command is missing. Timeout cannot be set"
-	fi
-	
+	local CMD="$*"
+	local exit_code=0
+	    
 	start_benchmark
 
 	local exit_code=0
 	
-	if [[ ${TIMEOUT:-} != 0 && ${EXPECT:-} != "null" ]]; then
-		m_echo "Running ${BENCHMARK^} (timeout ${TIMEOUT} seconds): $*"
-		run_command_timeout "$*"
+	if [[ ${TIMEOUT:-0} -gt 0 ]]; then
+		m_echo "Running ${BENCHMARK^} (timeout ${TIMEOUT} seconds): $CMD"
+		timeout "${TIMEOUT}s" bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
 		exit_code=$?
 	else
-		m_echo "Running ${BENCHMARK}: $*"
-		run_command "$*"
+		m_echo "Running ${BENCHMARK}: $CMD"
+		bash -c "set -o pipefail; $CMD 2>&1 | tee -a \"$TMPLOGFILE\""
 		exit_code=$?
 	fi
 
 	end_benchmark
-
-    	if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-        	m_warn "Timeout exceeded (${TIMEOUT} seconds)"
-	        return $exit_code
-    	fi
-
-    	if [[ $exit_code -ne 0 ]]; then
-        	m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
-	        ELAPSED_TIME="FAILED"
-        	return $exit_code
-    	fi
 
     	return 0
 }
@@ -1173,3 +1136,18 @@ check_disk_space() {
 }
 
 export -f check_disk_space
+
+get_interactive_shell() {
+    local target="${INTERACTIVE_SHELL:-${SHELL:-/bin/bash}}"
+    local resolved
+    resolved=$(command -v "$target" 2>/dev/null)
+
+    if [[ -n "$resolved" && -x "$resolved" ]]; then
+        echo "$resolved"
+    else
+        m_warn "Configured shell '$target' not found or not executable. Falling back to /bin/bash"
+        echo "/bin/bash"
+    fi
+}
+
+export -f get_interactive_shell

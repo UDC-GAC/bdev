@@ -10,6 +10,7 @@ export BENCHMARK_SETUP="" # Command to run before each execution of each workloa
 export BENCHMARK_CLEANUP="" # Command to run after each execution of each workload
 export FRAMEWORK_SETUP="" # Command to run before each execution of each framework
 export FRAMEWORK_CLEANUP="" # Command to run after each execution of each framework
+export INTERACTIVE_SHELL="/bin/bash"	# Shell to use in interactive command mode. It can be a binary name (e.g., bash, zsh) or an absolute path (e.g., /bin/bash)
 
 #Datasize for Wordcount
 export WORDCOUNT_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
@@ -66,7 +67,7 @@ export SCAN_PAGES=100		# Number of pages in the data set (nodes of the graph)
 export SCAN_USERVISITS=1000	# Number of user visits in the data set (edges of the graph)
 
 #Command
-#export COMMAND=		# Command or executable script to run in batch mode. It can also be a directory containing only executable scripts
+#export COMMAND=		# Command or executable script to run in batch command mode. It can be a directory containing executable scripts
 #export PREPARE_COMMAND=	# Command or executable script to run before COMMAND
 
 #TIMEOUT

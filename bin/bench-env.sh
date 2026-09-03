@@ -81,6 +81,6 @@ if [[ -z $TIMEOUT ]]; then
 	export TIMEOUT=$DEFAULT_TIMEOUT
 fi
 
-if [[ -n "$TIMEOUT" && "$TIMEOUT" != "0" && "$EXPECT" != null ]]; then
+if [[ -n "$TIMEOUT" && "$TIMEOUT" -gt 0 ]]; then
 	m_echo "Timeout set to $TIMEOUT seconds"
 fi

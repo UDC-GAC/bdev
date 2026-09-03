@@ -214,8 +214,6 @@ fi
 require_binary IP_COMMAND ip
 # Check getent command
 require_binary RESOLVEIP_COMMAND getent
-# Check expect command
-require_binary --warn EXPECT expect
 # Check Python
 require_binary PYTHON_BIN python3 python
 
