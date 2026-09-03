@@ -22,6 +22,7 @@ do
 		export FORCE_DELETE_HDFS=${FORCE_DELETE_HDFS};\
 		export DISK_SPACE_CHECK=${DISK_SPACE_CHECK};\
 		export BDEV_BIN_DIR=${BDEV_BIN_DIR};\
+		export REPORT_LOG=${REPORT_LOG};\
 		$BDEV_CLEANUP_DIR/data.sh"
 done
 
