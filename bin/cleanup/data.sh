@@ -49,5 +49,5 @@ fi
 if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
 	# Load BDEv functions
 	. $BDEV_BIN_DIR/functions.sh
-	check_directory_space "$TMP_DIR" "$LOCAL_DIRS"
+	check_disk_space "$TMP_DIR" "$LOCAL_DIRS"
 fi
