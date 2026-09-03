@@ -1128,6 +1128,7 @@ export -f require_binary
 
 check_disk_space() {
     local DISK_MIN_FREE_PERCENT="${DISK_SPACE_THRESHOLD:-5}"
+    m_echo "Disk space checking (threshold: ${DISK_MIN_FREE_PERCENT}%"
     # Take all arguments passed to the function and replace commas with spaces
     local RAW_DIRS="${*//,/ }"
     local CHECKED_MOUNTS=()
@@ -1166,7 +1167,7 @@ check_disk_space() {
         local avail_gb=$(( avail_kb / 1024 / 1024 ))
 
         if (( avail_pct < DISK_MIN_FREE_PERCENT )); then
-            m_warn "Low disk space on $HOSTNAME: $mount_point ($target) | ${avail_pct}% free | ${avail_gb}GB available (threshold: ${DISK_MIN_FREE_PERCENT}%)"
+            m_warn "Low disk space on $HOSTNAME: $mount_point ($target) | ${avail_pct}% free (${avail_gb}GB available)"
         fi
     done
 }
