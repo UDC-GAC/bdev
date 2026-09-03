@@ -1,6 +1,6 @@
 #!/bin/bash
 
-local execution_number=1
+execution_number=1
 
 if [[ -n "$1" ]]; then
 	execution_number="$1"
