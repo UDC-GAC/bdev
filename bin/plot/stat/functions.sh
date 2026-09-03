@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function get_index(){
+function get_index() {
 	# echo "$1"
 	# echo "${2}"
 	SEARCH_WORD=$1
@@ -29,7 +29,7 @@ function get_index(){
 
 export -f get_index
 
-function get_value(){
+function get_value() {
 	NUM=$1
 	STRING=$2
 	echo "$STRING" \
@@ -40,7 +40,7 @@ function get_value(){
 export -f get_value
 
 
-function ini_dat_file(){
+function ini_dat_file() {
 	DAT_FILE=${FILE_PREFIX}.dat
 	TMP_DAT_FILE=${FILE_PREFIX}.tmp
 	SUM_FILE=${FILE_PREFIX}_sum.dat
@@ -51,7 +51,7 @@ function ini_dat_file(){
 
 export -f ini_dat_file
 
-function gen_dat_file(){
+function gen_dat_file() {
 	TAG_INDEXES=`get_index "$TAG" "$HEADER"`
 	for FIRST_INDEX in "$TAG_INDEXES"
 	do
@@ -237,7 +237,7 @@ function avg_dat_file() {
 
 export -f avg_dat_file
 
-function plot_dat_file_lines(){
+function plot_dat_file_lines() {
 	PLOT_FILE=${FILE_PREFIX}.eps
 	DAT_HEAD=`head -n 1 $DAT_FILE`
 	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
@@ -257,7 +257,7 @@ function plot_dat_file_lines(){
 
 export -f plot_dat_file_lines
 
-function plot_dat_file_boxes(){
+function plot_dat_file_boxes() {
 	PLOT_FILE=${FILE_PREFIX}.eps
 	DAT_HEAD=`head -n 1 $DAT_FILE`
 	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
@@ -277,7 +277,7 @@ function plot_dat_file_boxes(){
 
 export -f plot_dat_file_boxes
 
-function plot_dat_file_stacked(){
+function plot_dat_file_stacked() {
 	STOCKED_PLOT_FILE=${FILE_PREFIX}_stacked.eps
 	# if [[ -z $STATIC_COLS ]]
 	# then

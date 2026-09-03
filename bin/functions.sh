@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function get_date {
+function get_date() {
 	DATE=$(date '+%d/%m/%Y %H:%M:%S')
 }
 
@@ -89,6 +89,68 @@ function timestamp() {
 }
 
 export -f timestamp
+
+function sum() {
+	SUM=0
+	for VALUE in $*
+	do
+		SUM=$(op "$SUM + $VALUE")
+	done
+	echo $SUM
+}
+
+export -f sum
+
+function median() {
+	if [[ ! -n "$*" ]]; then
+		COUNT=0
+		unset MIDDLE
+	else
+		COUNT=$(echo $* | wc -w)
+		MIDDLE=$((1+$COUNT/2))
+		MEDIAN=$(echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1)
+	fi
+}
+
+export -f median
+
+function avg() {
+	SUM=0
+	COUNT=0
+	for VALUE in $*
+	do
+		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]; then		
+			SUM=$(echo "scale=4; $SUM + $VALUE " | bc)
+			COUNT=$(( $COUNT + 1 ))
+		fi
+	done
+	if [[ $(echo "$SUM == 0" | bc) -eq 1 ]]; then
+		unset AVG
+	else
+		AVG=$(echo "scale=2; $SUM / $COUNT " | bc)
+	fi
+}
+
+export -f avg
+
+function maxmin() {
+	unset MAX
+	unset MIN
+	for VALUE in $*
+	do
+		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]
+		then	
+			if [[ -z $MAX || `echo $VALUE'>'$MAX | bc -l` == 1 ]]; then
+				MAX=$VALUE
+			fi
+			if [[ -z $MIN || `echo $VALUE'<'$MIN | bc -l` == 1 ]]; then
+				MIN=$VALUE
+			fi
+		fi
+	done
+}
+
+export -f maxmin
 
 function read_list() {
 	local file="$1"
@@ -976,68 +1038,6 @@ function save_elapsed_time() {
 }
 
 export -f save_elapsed_time
-
-function sum () {
-	SUM=0
-	for VALUE in $*
-	do
-		SUM=$(op "$SUM + $VALUE")
-	done
-	echo $SUM
-}
-
-export -f sum
-
-function median () {
-	if [[ ! -n "$*" ]]; then
-		COUNT=0
-		unset MIDDLE
-	else
-		COUNT=$(echo $* | wc -w)
-		MIDDLE=$((1+$COUNT/2))
-		MEDIAN=$(echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1)
-	fi
-}
-
-export -f median
-
-function avg () {
-	SUM=0
-	COUNT=0
-	for VALUE in $*
-	do
-		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]; then		
-			SUM=$(echo "scale=4; $SUM + $VALUE " | bc)
-			COUNT=$(( $COUNT + 1 ))
-		fi
-	done
-	if [[ $(echo "$SUM == 0" | bc) -eq 1 ]]; then
-		unset AVG
-	else
-		AVG=$(echo "scale=2; $SUM / $COUNT " | bc)
-	fi
-}
-
-export -f avg
-
-function maxmin () {
-	unset MAX
-	unset MIN
-	for VALUE in $*
-	do
-		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]
-		then	
-			if [[ -z $MAX || `echo $VALUE'>'$MAX | bc -l` == 1 ]]; then
-				MAX=$VALUE
-			fi
-			if [[ -z $MIN || `echo $VALUE'<'$MIN | bc -l` == 1 ]]; then
-				MIN=$VALUE
-			fi
-		fi
-	done
-}
-
-export -f maxmin
 
 function is_nfs() {
     local target_path="$1"

@@ -1,13 +1,13 @@
 #!/bin/bash
 
 
-function get_row(){
+function get_row() {
 	cat "$2" | head -n $1 | tail -n 1
 }
 
 export -f get_row
 
-function op_dat_file(){
+function op_dat_file() {
 	AWK_COMMAND=$1
 	
 	TARGET_DAT_FILES=""
@@ -49,14 +49,14 @@ function op_dat_file(){
 
 export -f op_dat_file
 
-function sum_dat_file(){
+function sum_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
 }
 
 export -f sum_dat_file
 
 
-function avg_dat_file(){
+function avg_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x/NF}'
 }
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function plot_dat_file_lines(){
+function plot_dat_file_lines() {
 	DAT_FILES=`ls ${FILE_PREFIX}*.csv`
 	PLOT_FILE=${FILE_PREFIX}.eps
 	unset COLS
@@ -26,7 +26,7 @@ function plot_dat_file_lines(){
 
 export -f plot_dat_file_lines
 
-function get_min_rows(){
+function get_min_rows() {
 	unset MIN_ROWS
 	for f in $TARGET_DAT_FILES
 	do
@@ -40,13 +40,13 @@ function get_min_rows(){
 
 export -f get_min_rows
 
-function get_row(){
+function get_row() {
 	cut -f $1 -d "," $2 | head -$MIN_ROWS | tail -n +2 
 }
 
 export -f get_row
 
-function op_dat_file(){
+function op_dat_file() {
 	AWK_COMMAND=$1
 	
 	TARGET_DAT_FILES=""
@@ -89,7 +89,7 @@ function op_dat_file(){
 
 export -f op_dat_file
 
-function sum_dat_file(){
+function sum_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
 
 	awk -F ',' "\$1 <= $ELAPSED_TIME {for(i=2;i<=NF;i++)sum+=\$i; next} END {print sum}" <(echo "$OUTPUT_FILE_CONTENT") > $OUTPUT_TOT_SUM_FILE
@@ -99,7 +99,7 @@ function sum_dat_file(){
 export -f sum_dat_file
 
 
-function avg_dat_file(){
+function avg_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x/NF}'
 }
 
