@@ -93,7 +93,7 @@ function read_list() {
 	while read -r line || [[ -n "$line" ]]; do
 		# Remove comments and spaces at the beginning/end
 		local val="${line%%#*}"
-		val=$(echo$val)
+		val=$(echo $val)
 		if [[ -n "$val" ]]; then
             		values="${values:+$values }$val"
         	fi
