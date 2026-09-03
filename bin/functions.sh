@@ -813,6 +813,7 @@ export -f start_benchmark
 
 function end_benchmark() {
 	CURRENT_TIME=$(timestamp)
+	local code="${1:-${exit_code:-0}}"
 	END_TIME=$(($END_TIME+$CURRENT_TIME))
 
 	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
@@ -866,8 +867,15 @@ function end_benchmark() {
 	CURRENT_TIME=$(timestamp)
 	END_TOTAL_TIME=$(($END_TOTAL_TIME+$CURRENT_TIME))
 
-	if [[ $ELAPSED_TIME == "TIMEOUT" ]]; then
-		m_err "TIMEOUT"
+	#124 is the standard POSIX code for GNU timeout
+	if [[ ${TIMEOUT:-0} -gt 0 && $code -eq 124 ]]; then
+		export ELAPSED_TIME="TIMEOUT"
+		export ELAPSED_TOTAL_TIME="TIMEOUT"
+		m_err "${BENCHMARK} timeout exceeded (${TIMEOUT} seconds)"
+	elif [[ $code -ne 0 ]]; then
+		export ELAPSED_TIME="FAILED"
+		export ELAPSED_TOTAL_TIME="FAILED"
+		m_err "${BENCHMARK} execution failed (exit code: $code)"
 	else
 		export ELAPSED_TIME=$(op "($END_TIME - $START_TIME) / 1000")
 		export ELAPSED_TOTAL_TIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
@@ -893,18 +901,9 @@ function end_benchmark() {
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 	
-	#124 is the standard POSIX code for GNU timeout
-	if [[ ${TIMEOUT:-0} -gt 0 && $exit_code -eq 124 ]]; then
-		ELAPSED_TIME="TIMEOUT"
-		m_warn "Timeout exceeded (${TIMEOUT} seconds)"
-		return 124
-	fi
-    
-    	if [[ $exit_code -ne 0 ]]; then
-    		ELAPSED_TIME="FAILED"
-        	m_warn "${BENCHMARK} execution failed (exit code: $exit_code)"
-        	return $exit_code
-    	fi
+	save_elapsed_time
+	
+	return $code
 }
 
 export -f end_benchmark
@@ -914,8 +913,6 @@ function run_benchmark() {
 	local exit_code=0
 	    
 	start_benchmark
-
-	local exit_code=0
 	
 	if [[ ${TIMEOUT:-0} -gt 0 ]]; then
 		m_echo "Running ${BENCHMARK^} (timeout ${TIMEOUT} seconds): $CMD"
@@ -927,19 +924,17 @@ function run_benchmark() {
 		exit_code=$?
 	fi
 
-	end_benchmark
+	end_benchmark "$exit_code"
 
-    	return 0
+    	return $?
 }
 
 export -f run_benchmark
 
 function save_elapsed_time() {
 	if [[ "$ELAPSED_TIME" == "FAILED" ]]; then
-		m_err "${BENCHMARK} failed"
 		FINISH="true"
 	elif [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-		m_err "${BENCHMARK} timed out"
 		FINISH="true"
 	else
 		m_echo "Workload runtime: $ELAPSED_TIME seconds"
