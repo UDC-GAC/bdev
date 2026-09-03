@@ -17,7 +17,7 @@ do
 
 	if [[ "$NUM_SOLUTIONS" -eq 0 ]]; then
 		set_no_framework
-		bash $BDEV_BIN_DIR/run_command.sh
+		bash $BDEV_BIN_DIR/run-command.sh
 	else
 		SOLUTION_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
@@ -57,7 +57,7 @@ do
 			fi
 
 			# Run framework
-			bash $BDEV_BIN_DIR/run_framework.sh
+			bash $BDEV_BIN_DIR/run-framework.sh
 		done
 	fi
 done
