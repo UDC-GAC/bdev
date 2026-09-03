@@ -236,5 +236,6 @@ fi
 echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> ${REPORT_GEN_GRAPHS_FILE}
 
 if [[ $STAT_GEN_PLOTS == "true" ]]; then
+	m_echo "Generating dool plots for all nodes"
 	${GRAPHS_SCRIPT}
 fi

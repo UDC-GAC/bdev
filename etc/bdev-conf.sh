@@ -23,8 +23,16 @@ export ENABLE_BDWATCHDOG=false	# Enable resource monitoring through BDWatchdog
 export MONITOR_DELAY_SECONDS=10	# Delay time (seconds) after/before starting/stopping all monitors
 
 # Resource stats
-export STAT_GEN_PLOTS=false	# Generate plots during execution
+export STAT_GEN_PLOTS=false	# Generate plots for all nodes during execution
 export STAT_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
+
+# RAPL
+export RAPL_GEN_PLOTS=false	# Generate plots for all nodes during execution
+export RAPL_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
+
+# OPROFILE
+export OPROFILE_BIN="ocount"	# OProfile command
+export OPROFILE_EVENTS="INST_RETIRED,LLC_MISSES,LLC_REFS"	# Events to record during OProfile analysis (can be consulted by using the ophelp command)
 
 # HPE iLO
 export ILO_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
@@ -32,14 +40,6 @@ export ILO_USERNAME="ilo_user"		# User name for ILO interface
 export ILO_PASSWD="..ilo_user.."	# Password for ILO user
 export ILO_BASE_IP=192.168.255		# Base IP for ILO interfaces
 export ILO_MASTER=localhost		# Node which can connect to the ILO interface for all the workers (localhost means to use the master node)
-
-# RAPL
-export RAPL_GEN_PLOTS=false	# Generate plots during execution
-export RAPL_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
-
-# OPROFILE
-export OPROFILE_BIN="ocount"	# OProfile command
-export OPROFILE_EVENTS="INST_RETIRED,LLC_MISSES,LLC_REFS"	# Events to record during OProfile analysis (can be consulted by using the ophelp command)
 
 # BDWATCHDOG
 export BDWATCHDOG_ATOP=true		# Enable resource monitoring with atop

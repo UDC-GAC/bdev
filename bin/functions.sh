@@ -586,7 +586,7 @@ function write_report() {
 	fi
 
 	if [[ $ENABLE_RAPL == "true" ]]; then
-		m_echo "Generating rapl plots"
+		m_echo "Generating RAPL plots"
 		if [[ ! -f "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p $RAPL_PLOT_DIR
 		fi
@@ -594,7 +594,7 @@ function write_report() {
 	fi
 
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
-		m_echo "Generating oprofile plots"
+		m_echo "Generating Oprofile plots"
 		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
@@ -917,17 +917,17 @@ function end_benchmark() {
 	fi
 
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
-		m_echo "Generating Oprofile data"
+		m_echo "Generating data for Oprofile"
 		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
 	fi
 	
 	if [[ $ENABLE_RAPL == "true" ]]; then
-		m_echo "Generating RAPL data"
+		m_echo "Generating data for RAPL"
 		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
 	fi
 	
 	if [[ $ENABLE_STAT == "true" ]]; then
-		m_echo "Generating dool data"
+		m_echo "Generating data for dool"
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 	
