@@ -245,6 +245,16 @@ else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
+if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
+	export HOSTNAME_SCRIPT=get_hostname.sh
+else
+	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
+fi
+
+if [[ $ENABLE_OPROFILE == "true" ]]; then
+	require_binary OPROFILE_BIN $OPROFILE_BIN
+fi
+
 # Define variables for BDWatchdog binary daemons
 if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         if [[ $BDWATCHDOG_ATOP == "true" ]]; then
@@ -254,10 +264,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
             fi
         fi
         if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
-	    export TURBOSTAT_BIN=$TURBOSTAT_BIN_DIR/turbostat
-            if [[ ! -f "$TURBOSTAT_BIN" || ! -x "$TURBOSTAT_BIN" ]]; then
-                 m_exit "turbostat is enabled but the binary $TURBOSTAT_BIN is not found or is not executable"
-            fi
+	    require_binary TURBOSTAT_BIN $TURBOSTAT_BIN
         fi
         if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
             export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
@@ -265,12 +272,6 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
                 m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
             fi
         fi
-fi
-
-if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-	export HOSTNAME_SCRIPT=get_hostname.sh
-else
-	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
 if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then

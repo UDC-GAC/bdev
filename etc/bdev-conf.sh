@@ -38,14 +38,14 @@ export RAPL_GEN_PLOTS=false	# Generate plots during execution
 export RAPL_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
 
 # OPROFILE
-export OPROFILE_BIN_DIR=$(dirname "$(which ocount 2> /dev/null)")	# Directory containing OProfile binaries
+export OPROFILE_BIN="ocount"	# OProfile command
 export OPROFILE_EVENTS="INST_RETIRED,LLC_MISSES,LLC_REFS"	# Events to record during OProfile analysis (can be consulted by using the ophelp command)
 
 # BDWATCHDOG
 export BDWATCHDOG_ATOP=true		# Enable resource monitoring with atop
 export BDWATCHDOG_TURBOSTAT=true	# Enable energy monitoring with turbostat
 export BDWATCHDOG_NETHOGS=true		# Enable network monitoring with nethogs
-export TURBOSTAT_BIN_DIR=$(dirname "$(which turbostat 2> /dev/null)")	# Directory containing turbostat binaries
+export TURBOSTAT_BIN="turbostat"	# Turbostat command
 export BDWATCHDOG_USERNAME="$USER"	# User name that runs the experiments (useful for the BDWatchdog web interface)
 export BDWATCHDOG_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
 export BDWATCHDOG_POST_ENDPOINT="http://hostname:8080/tsdb/api/put"	# OpenTSDB post endpoint

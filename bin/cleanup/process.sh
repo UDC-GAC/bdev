@@ -19,5 +19,10 @@ if [[ -n "$DOOL_PID" ]]; then
     kill -9 $DOOL_PID 2>/dev/null
 fi
 
-killall -u $USER -q -9 ocount
-killall -u $USER -q -9 rapl_plot
+if [[ $ENABLE_OPROFILE == "true" ]]; then
+	killall -u $USER -q -9 $OPROFILE_BIN
+fi
+
+if [[ $ENABLE_RAPL == "true" ]]; then
+	killall -u $USER -q -9 rapl_plot
+fi

@@ -10,7 +10,7 @@ do
 	mkdir -p ${OPROFILENODEDIR}
 	echo "Starting oprofile monitor in ${NODE}, storing data on ${OPROFILENODEDIR}" >> ${OPROFILELOGDIR}/log 2>&1
 	nohup $SSH_CMD $NODE "export OPROFILELOGFILE=${OPROFILENODEDIR}/oprofile; \
-		export OPROFILE_BIN_DIR=${OPROFILE_BIN_DIR}; \
+		export OPROFILE_BIN=${OPROFILE_BIN}; \
 		export OPROFILE_EVENTS=${OPROFILE_EVENTS}; \
 		bash $OPROFILE_HOME/oprofile_monitor.sh" > ${OPROFILENODEDIR}/oprofile.out 2>&1 &
 	
