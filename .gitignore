@@ -1,4 +1,4 @@
-BDEv_OUT
+BDEv_OUTPUT
 frameworks/dist
 benchmarks/Hadoop/bin/*.jar
 benchmarks/Spark/bin/*.jar
