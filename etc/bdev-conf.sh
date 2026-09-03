@@ -32,7 +32,7 @@ export RAPL_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
 
 # OPROFILE
 export OPROFILE_BIN="ocount"	# OProfile command
-export OPROFILE_EVENTS="INST_RETIRED,LLC_MISSES,LLC_REFS"	# Events to record during OProfile analysis (can be consulted by using the ophelp command)
+export OPROFILE_EVENTS="inst_retired"	# Comma-separared list of events that will be logged. Supported events scan be queried using the ophelp command
 
 # HPE iLO
 export ILO_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
