@@ -78,8 +78,8 @@ fi
 export REPORT_DIR=${OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
-export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_graphs.sh
-export PLOT_DIR=$REPORT_DIR/graphs
+export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
+export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo

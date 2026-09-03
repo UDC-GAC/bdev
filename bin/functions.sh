@@ -577,8 +577,8 @@ function write_report() {
 	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
 	printf "\n" >> $REPORT_FILE
 
-	if [[ $ENABLE_PLOT == "true" ]]; then
-		m_echo "Generating performance graphs"
+	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
+		m_echo "Generating performance plots"
 		if [[ ! -f "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
@@ -586,7 +586,7 @@ function write_report() {
 	fi
 
 	if [[ $ENABLE_RAPL == "true" ]]; then
-		m_echo "Generating rapl graphs"
+		m_echo "Generating rapl plots"
 		if [[ ! -f "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p $RAPL_PLOT_DIR
 		fi
@@ -594,7 +594,7 @@ function write_report() {
 	fi
 
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
-		m_echo "Generating oprofile graphs"
+		m_echo "Generating oprofile plots"
 		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
@@ -745,7 +745,7 @@ function begin_report() {
 	echo -e "$REPORT" > $REPORT_FILE
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
-	if [[ $ENABLE_PLOT == "true" ]]; then
+	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
 		if [[ ! -f "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi

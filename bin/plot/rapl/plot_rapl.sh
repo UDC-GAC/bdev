@@ -5,7 +5,7 @@
 
 cd ${RAPLLOGDIR}
 
-GRAPHS_SCRIPT=${RAPLLOGDIR}/gen_graphs.sh
+GRAPHS_SCRIPT=${RAPLLOGDIR}/gen_plots.sh
 echo "$SCRIPT_HEADER" > ${GRAPHS_SCRIPT}
 
 RAPLNODEDIRS=`find -name "node-*"`
@@ -152,7 +152,6 @@ fi
 
 echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> ${REPORT_GEN_GRAPHS_FILE}
 
-if [[ $RAPL_GEN_GRAPHS == "true" ]]
-then
+if [[ $RAPL_GEN_PLOTS == "true" ]]; then
 	${GRAPHS_SCRIPT}
 fi
