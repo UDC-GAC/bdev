@@ -170,9 +170,13 @@ case "$SPARK_API" in
         ;;
 esac
 
+if ! [[ "$NUM_EXECUTIONS" =~ ^[0-9]+$ ]] || [[ "$NUM_EXECUTIONS" -lt 1 ]]; then
+	m_exit "The number of workload executions (NUM_EXECUTIONS) must be an integer greater than 0: '${NUM_EXECUTIONS:-<not set>}'"
+fi
+
 export CLUSTER_SIZES=$(read_list "$BDEV_EXPERIMENT_DIR/cluster_sizes.lst")
 export BENCHMARKS=$(read_list "$BDEV_EXPERIMENT_DIR/benchmarks.lst")
-export SOLUTIONS=$(read_solutions "$BDEV_EXPERIMENT_DIR/frameworks.lst")
+export SOLUTIONS=$(read_frameworks "$BDEV_EXPERIMENT_DIR/frameworks.lst")
 export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
 export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
 export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")
