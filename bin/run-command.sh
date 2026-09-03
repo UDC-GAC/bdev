@@ -3,14 +3,17 @@
 #Set network configuration
 configure_network
 
-# Init and load configuration parameters
+#Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh
 
-setup_phase
+#Generate input datasets
+. ${COMMON_BENCH_DIR}/bin/prepare.sh
 
 export BENCHMARK=command
 unset ELAPSED_TIMES
 unset COMMAND
+
+setup_phase
 
 . $BDEV_BIN_DIR/bench-env.sh
 

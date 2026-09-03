@@ -498,6 +498,7 @@ function set_no_framework() {
 	export SOLUTIONS=""
 	export SOLUTION=NONE
 	export BENCHMARKS=command
+	export GEN_COMMAND="true"
 	export NUM_BENCHMARKS=1
 	export NUM_EXECUTIONS=1
 	export SOLUTION_HOME=""

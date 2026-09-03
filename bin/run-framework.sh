@@ -3,7 +3,7 @@
 #Set network configuration
 configure_network
 
-# Init and load configuration parameters
+#Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh
 
 #Read solution environment
