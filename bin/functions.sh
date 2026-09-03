@@ -622,6 +622,7 @@ function begin_report() {
 	REPORT="$REPORT \t Mahout heapsize (MB)   \t\t $MAHOUT_HEAPSIZE \n"
 	REPORT="$REPORT \t TMP dir  \t\t\t\t $TMP_DIR \n"
 	REPORT="$REPORT \t Local dirs  \t\t\t\t $LOCAL_DIRS \n"
+	REPORT="$REPORT \t Disk low-space threshold (%) \t\t $DISK_SPACE_THRESHOLD \n"
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
 	REPORT="$REPORT \t Python \t\t\t\t $PYTHON_BIN \n"
