@@ -68,7 +68,12 @@ function m_stop_message() {
 export -f m_stop_message
 
 function op() {
-	printf '%s\n' "scale=4; ($*)/1" | bc
+	local res
+	res=$(printf '%s\n' "scale=4; ($*)/1" | bc)
+	# Add the initial 0 if the result is less than 1 (positive or negative)
+	[[ $res == .* ]] && res="0$res"
+	[[ $res == -.* ]] && res="-0${res#-}"
+	printf '%s\n' "$res"
 }
 
 export -f op
