@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Configuration parameters for BDEv
+## Global configuration parameters
 
 export STORAGE_BACKEND=hdfs  # Supported backends: hdfs, nfs
 export NFS_MOUNT_POINT=${NFS_MOUNT_POINT:-""}  #Only required if STORAGE_BACKEND=nfs
@@ -9,11 +9,12 @@ export DEFAULT_TIMEOUT=86400	# Default workload timeout (in seconds)
 export OUTPUT_DIR=$PWD/${APP_NAME}_OUTPUT	# Default report output directory
 export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 export ENABLE_PLOT=false	# Enable plot generation
-export ENABLE_MODULES=false     # Enable use of modules environment
-export MODULES_JAVA="java"      # Modules to load Java
-export MODULES_PYTHON="python"  # Modules to load Python
+export ENABLE_MODULES=false     # Enable use of environment modules & Lmod
+export MODULES_JAVA="java"      # Modules to load for enabling Java
+export MODULES_PYTHON="python"  # Modules to load for enabling Python
+export DISK_SPACE_THRESHOLD=10	# Free disk space percentage required before triggering a low-space warning
 
-# Monitors
+# Monitoring
 export ENABLE_STAT=false	# Enable built-in resource monitoring using dool
 export ENABLE_ILO=false		# Enable HPE iLO power monitoring
 export ENABLE_RAPL=false	# Enable RAPL power monitoring
