@@ -176,7 +176,7 @@ fi
 
 export CLUSTER_SIZES=$(read_list "$BDEV_EXPERIMENT_DIR/cluster_sizes.lst")
 export BENCHMARKS=$(read_list "$BDEV_EXPERIMENT_DIR/benchmarks.lst")
-export SOLUTIONS=$(read_frameworks "$BDEV_EXPERIMENT_DIR/frameworks.lst")
+export SOLUTIONS=$(read_frameworks_list "$BDEV_EXPERIMENT_DIR/frameworks.lst")
 export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
 export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
 export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")

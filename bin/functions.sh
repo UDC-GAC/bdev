@@ -90,13 +90,15 @@ function read_list() {
 	[[ ! -f "$file" ]] && return 0
 	
 	local values=""
+	local line
 	while read -r line || [[ -n "$line" ]]; do
 		# Remove comments and spaces at the beginning/end
 		local val="${line%%#*}"
-		val=$(echo $val)
+		# Native array: trims spaces/tabs and separates tokens if there are several
+		local fields=($val)
 		
-		if [[ -n "$val" ]]; then
-            		values="${values:+$values }$val"
+		if [[ ${#fields[@]} -gt 0 ]]; then
+            		values="${values:+$values }${fields[*]}"
         	fi
 	done < "$file"
 
@@ -105,15 +107,17 @@ function read_list() {
 
 export -f read_list
 
-function read_frameworks() {
+function read_frameworks_list() {
 	local file="$1"
 	[[ ! -f "$file" ]] && return 0
 	
 	local values=""
+	local line
 	while read -r line || [[ -n "$line" ]]; do
 		# Remove comments and spaces at the beginning/end
 		local val="${line%%#*}"
-		local fields=($line)
+		# Native array: trims spaces/tabs and separates tokens if there are several
+		local fields=($val)
 		
 		if [[ ${#fields[@]} -gt 0 ]]; then
 			local framework="${fields[0]}"
@@ -126,7 +130,7 @@ function read_frameworks() {
 	echo "$values"
 }
 
-export -f read_frameworks
+export -f read_frameworks_list
 
 function get_num_conf_params() {
     echo "${#CONFIG_KEYS[@]}"
