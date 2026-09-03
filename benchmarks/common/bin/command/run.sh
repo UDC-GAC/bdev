@@ -7,7 +7,7 @@ if [[ -z $COMMAND ]]; then
 
 	if [[ ${TIMEOUT:-0} -gt 0 ]]; then
           	m_echo "Interactive session timeout: ${TIMEOUT} seconds"
-            	timeout --foreground "${TIMEOUT}s" "$ACTIVE_SHELL" -i 2>&1 | tee -a "$TMPLOGFILE"
+            	timeout --foreground -s HUP -k 3s "${TIMEOUT}s" "$ACTIVE_SHELL" -i 2>&1 | tee -a "$TMPLOGFILE"
     	else
         	"$ACTIVE_SHELL" -i 2>&1 | tee -a "$TMPLOGFILE"
     	fi
