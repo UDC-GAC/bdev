@@ -92,7 +92,7 @@ elif [[ "x$EXAMPLES_DATA_FORMAT" == "xText" ]]; then
 	export EXAMPLES_INPUT_FORMAT=$TEXT_INPUT_FORMAT
 	export EXAMPLES_OUTPUT_FORMAT=$TEXT_OUTPUT_FORMAT
 else 
-	m_err "Unknown examples format $EXAMPLES_DATA_FORMAT"
+	m_exit "Unknown examples format $EXAMPLES_DATA_FORMAT"
 fi
 
 export RGEN_BASE_PATH="${STORAGE_BACKEND_URI}/RGen"

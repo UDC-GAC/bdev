@@ -2,10 +2,10 @@
 
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	SLAVES=`cat $SLAVESFILE`
-	for slave in $SLAVES
+	for NODE in $SLAVES
 	do
-		m_echo "Finishing NodeManager:" $slave
-		$SSH_CMD $slave "${BDEV_BIN_DIR}/kill.sh $JPS NodeManager"
+		m_echo "Finishing NodeManager:" $NODE
+		$SSH_CMD $NODE "${BDEV_BIN_DIR}/kill.sh $JPS NodeManager"
 	done
 
   	m_echo "Finishing ResourceManager:" $MASTERNODE

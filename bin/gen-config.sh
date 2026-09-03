@@ -42,12 +42,11 @@ m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
 m_echo "Workers:"
 i=1
-for SLAVE in $SLAVENODES
+for NODE in $SLAVENODES
 do
-	if [[ $i -lt $CLUSTER_SIZE ]]
-	then
-		m_echo "$SLAVE"
-		echo $SLAVE >> $SLAVESFILE
+	if [[ $i -lt $CLUSTER_SIZE ]]; then
+		m_echo "$NODE"
+		echo $NODE >> $SLAVESFILE
 	fi
 	i=$(( $i + 1 ))
 done

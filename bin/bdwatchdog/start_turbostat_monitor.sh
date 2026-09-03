@@ -9,10 +9,10 @@ if [[ ! -d "${BDW_LOG_DIR}" ]]; then
 	fi
 fi
 
-for SLAVE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $SLAVENODES
 do
-	echo "Starting turbostat daemon in ${SLAVE}" >> ${BDW_LOG_DIR}/turbostat_log 2>&1
-	$SSH_CMD $SLAVE ". ${BDW_LOG_DIR}/config.sh; \
+	echo "Starting turbostat daemon in ${NODE}" >> ${BDW_LOG_DIR}/turbostat_log 2>&1
+	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \
 		${BDWATCHDOG_HOME}/turbostat-config.sh; \
    		${PYTHON_BIN} ${BDWATCHDOG_DAEMONS_DIR}/turbostat.py start" >> ${BDW_LOG_DIR}/turbostat_log 2>&1
 done

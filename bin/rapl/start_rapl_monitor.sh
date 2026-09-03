@@ -13,13 +13,13 @@ fi
 cd $OLD_PWD
 
 export NODE_NUMBER=0
-for SLAVE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $SLAVENODES
 do
 	RAPLNODEDIR=${RAPLLOGDIR}/node-${NODE_NUMBER}
 	RAPLTMPDIR=${TMP_DIR}/rapl/node-${NODE_NUMBER}
 	mkdir -p ${RAPLNODEDIR}
-	echo "Starting RAPL monitor in ${SLAVE}, storing data on ${RAPLNODEDIR}" >> ${RAPLLOGDIR}/log 2>&1
-	nohup $SSH_CMD $SLAVE "export RAPLLOGFILE=${RAPLNODEDIR}/rapl; \
+	echo "Starting RAPL monitor in ${NODE}, storing data on ${RAPLNODEDIR}" >> ${RAPLLOGDIR}/log 2>&1
+	nohup $SSH_CMD $NODE "export RAPLLOGFILE=${RAPLNODEDIR}/rapl; \
 		export RAPLTMPDIR=${RAPLTMPDIR}; \
 		export RAPL_HOME=${RAPL_HOME}; \
 		export RAPL_SECONDS_INTERVAL=${RAPL_SECONDS_INTERVAL}; \

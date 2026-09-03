@@ -6,12 +6,12 @@ m_echo "Flink configuration"
 if [ $FLINK_TASKMANAGERS_PER_NODE -gt 1 ]; then
 	SLAVELIST=`cat $SLAVESFILE`
 	rm $SLAVESFILE
-	for slave in $SLAVELIST
+	for NODE in $SLAVELIST
 	do
 		i=1
-		while [ "$i" -le "$FLINK_TASKMANAGERS_PER_NODE" ]
+		while [[ "$i" -le "$FLINK_TASKMANAGERS_PER_NODE" ]]
 		do
-			echo $slave >> $SLAVESFILE
+			echo $NODE >> $SLAVESFILE
 			i=$((i + 1))
 		done
 	done

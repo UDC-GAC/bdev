@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for SLAVE in $SLAVENODES $MASTERNODE
+for NODE in $SLAVENODES $MASTERNODE
 do
-	$SSH_CMD $SLAVE "killall -u $USER -q -SIGINT ocount"
+	$SSH_CMD $NODE "killall -u $USER -q -SIGINT ocount"
 done
