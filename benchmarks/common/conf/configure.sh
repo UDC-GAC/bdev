@@ -196,7 +196,7 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 fi
 
 # Hive SQL queries adapted from HiBench
-function prepare_sql () {
+function prepare_sql() {
     unset HIVE_OPTS
     unset HADOOP_CLIENT_OPTS
 	
@@ -221,7 +221,7 @@ function prepare_sql () {
 
 export -f prepare_sql
 
-function init_hive_metastore () {
+function init_hive_metastore() {
 	mkdir -p ${BENCHMARK_OUTPUT_DIR}
 
 	${HIVE_HOME}/bin/schematool \
@@ -234,7 +234,7 @@ function init_hive_metastore () {
 
 export -f init_hive_metastore
 
-function prepare_sql_aggregation () {
+function prepare_sql_aggregation() {
 	prepare_sql
 	HIVE_SQL_FILE=$1
 
@@ -249,7 +249,7 @@ EOF
 
 export -f prepare_sql_aggregation
 
-function prepare_sql_join () {
+function prepare_sql_join() {
 	prepare_sql
 	HIVE_SQL_FILE=$1
 
@@ -266,7 +266,7 @@ EOF
 
 export -f prepare_sql_join
 
-function prepare_sql_scan () {
+function prepare_sql_scan() {
 	prepare_sql
 	HIVE_SQL_FILE=$1
 
