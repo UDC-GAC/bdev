@@ -1,39 +1,39 @@
 #!/bin/bash
 
 function get_date() {
-	DATE=$(date '+%d/%m/%Y %H:%M:%S')
+	printf -v DATE '%(%d/%m/%Y %H:%M:%S)T' -1
 }
 
 export -f get_date
 
 function m_echo() {
 	get_date
-	echo -e "\e[48;5;2m[$DATE INFO]\e[0m $@" 
-	echo "$DATE > $@" >> $REPORT_LOG
+	printf '\e[48;5;2m[%s INFO]\e[0m %s\n' "$DATE" "$*"
+	[[ -n "$REPORT_LOG" ]] && printf '%s > %s\n' "$DATE" "$*" >> "$REPORT_LOG"
 }
 
 export -f m_echo
 
 function m_err() {
 	get_date
-	echo -e "\e[48;5;1m[$DATE ERR ]\e[0m $@" >&2
-	echo "$DATE ! $@" >> $REPORT_LOG
+	printf '\e[48;5;1m[%s ERR ]\e[0m %s\n' "$DATE" "$*" >&2
+	[[ -n "$REPORT_LOG" ]] && printf '%s ! %s\n' "$DATE" "$*" >> "$REPORT_LOG"
 }
 
 export -f m_err
 
 function m_warn() {
 	get_date
-	echo -e "\e[48;5;208m[$DATE WARN]\e[0m $@"
-	echo "$DATE ! $@" >> $REPORT_LOG
+	printf '\e[48;5;208m[%s WARN]\e[0m %s\n' "$DATE" "$*"
+	[[ -n "$REPORT_LOG" ]] && printf '%s ! %s\n' "$DATE" "$*" >> "$REPORT_LOG"
 }
 
 export -f m_warn
 
 function m_exit() {
-	m_err $@
-	bash $CLEANUP_YARN_SCRIPT
-	bash $CLEANUP_PROCESS_SCRIPT
+	m_err "$@"
+	[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
+	[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
 	m_echo "Exiting $APP_NAME v$APP_VERSION"
 	exit 1
 }
