@@ -10,7 +10,7 @@ export BENCHMARK_SETUP="" # Command to run before each execution of each workloa
 export BENCHMARK_CLEANUP="" # Command to run after each execution of each workload
 export FRAMEWORK_SETUP="" # Command to run before each execution of each framework
 export FRAMEWORK_CLEANUP="" # Command to run after each execution of each framework
-export INTERACTIVE_SHELL="/bin/bash"	# Shell to use in interactive command mode. It can be a binary name (e.g., bash, zsh) or an absolute path (e.g., /bin/bash)
+export INTERACTIVE_SHELL="bash"	# Shell to use in interactive command mode. It can be a binary name (e.g., bash, zsh) or an absolute path (e.g., /bin/bash)
 
 #Datasize for Wordcount
 export WORDCOUNT_DATASIZE=$((1 * 1024 * 1024))	# Size of the input data set (Bytes)
