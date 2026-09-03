@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export APP_NAME=BDEv
-export APP_VERSION=4.0
+export APP_VERSION=4.0.0
 
 if [[ -z $BDEV_HOME ]]; then
         echo "Error: BDEV_HOME must be set"
