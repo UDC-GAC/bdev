@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 4.0 - 2026-09-02
+BDEv 4.0 - 2026-09-03
 ---------------------
 	This is a major release that modernizes the orchestration stack, introducing support for Spark 4.x, Hadoop 3.5, and Flink 1.20 LTS, adding new benhmarks for Spark and Flink, while removing support for legacy framework versions.
 	A key highlight of this release is the refactoring of the storage layer. BDEv v4.0 allows users to configure NFS as a lightweight storage backend alternative to HDFS for workloads that do not require distributed storage.
@@ -68,7 +68,9 @@ BDEv 4.0 - 2026-09-02
 
 		- Allow to set the number of cores per mapper/reducer (mapreduce.sh)
 		
-		- Add cleanup phase for YARN applications
+		- Add cleanup phase for YARN applications and improve data cleanup
+		
+		- Add disk space sanity checks with configurable warning threshold (bdev-conf.sh)
 
 		- HDFS and YARN services are now stopped using the Hadoop scripts
 
