@@ -86,6 +86,10 @@ BDEv 4.0 - 2026-09-03
 
 		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
 
+		- Replace legacy expect with native GNU timeout in benchmark runner
+
+		- Improve command mode with configurable interactive shell (benchmarks-conf.sh)
+
 		- Fix failure detection when running benchmarks
 
 		- Simplified tool configuration and removed experiment directory
