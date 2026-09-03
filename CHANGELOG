@@ -3,6 +3,102 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
+BDEv 4.0 - 2026-09-03
+---------------------
+	This is a major release that modernizes the orchestration stack, introducing support for Spark 4.x, Hadoop 3.5, and Flink 1.20 LTS, adding new benhmarks for Spark and Flink, while removing support for legacy framework versions.
+	A key highlight of this release is the refactoring of the storage layer. BDEv v4.0 allows users to configure NFS as a lightweight storage backend alternative to HDFS for workloads that do not require distributed storage.
+	Future minor releases will build upon this foundation to introduce support for additional distributed storage backends, such as Apache Ozone.
+
+	NEW FEATURES
+		- Updated versions of the following frameworks
+			- Hadoop 3.4.3
+			- Spark 3.4.4
+			- Spark 3.5.9
+			- Flink 1.19.3
+
+		- Remove support of the following frameworks
+			- Hadoop 1.x
+			- Hadoop-UDA 1.x
+			- Hadoop-UDA YARN
+			- Spark 1.x
+			- Flink < 1.15
+			- RDMA-Hadoop 1.x
+			- RDMA-Hadoop 2.x
+			- RDMA-Spark
+			- DataMPI
+			- FlameMR
+
+		- Support for the Spark 4.x line
+
+		- Support for the Hadoop 3.5.x line
+
+		- Support for the Flink 1.20.x line (LTS)
+
+		- Support for NFS a as a storage backend alternative to HDFS, which can be configured in bdev-conf.sh
+
+		- Flink on YARN relies on the Session Mode instead of the deprecated Per-job Mode
+
+		- Add Flink SQL benchmarks implementations (scan, join and aggregation) using the Table API
+
+		- Update Flink implementations for PageRank and ConnectedComponents to avoid using the deprecated Graph API (Gelly)
+
+		- Max value for Flink network memory size now also supports an auto-calculated value
+
+		- Add Flink parameter to set the size of memory buffers used by the network stack and the memory manager (frameworks-conf.sh)
+
+		- Add Spark benchmarks implementations using the Dataset API
+
+		- Add Spark parameter to configure the number of shuffle partitions based on Executor cores (frameworks-conf.sh)
+
+		- Add Spark parameter to configure Kryo registration behavior (frameworks-conf.sh)
+
+		- Add Spark parameter to configure compression codec for Parquet files (frameworks-conf.sh)
+
+		- Spark AQE is now enabled by default
+
+		- Fix Spark memory configuration for Driver and AppMaster on YARN
+
+		- Improve and simplify configuration for RDMA-Hadoop-3
+
+		- RDMA interface for RDMA-Hadoop-3 can now be configured for IB and RoCE networks (system-conf.sh)
+
+		- Add RDMA-Hadoop-3 parameter to configure the packet size for RDMA write (frameworks-conf.sh)
+
+		- Support for starting the Secondary NameNode for HDFS
+
+		- Allow to set the number of cores per mapper/reducer (mapreduce.sh)
+		
+		- Add cleanup phase for YARN applications and improve data cleanup
+		
+		- Add disk space sanity checks with configurable warning threshold (bdev-conf.sh)
+
+		- HDFS and YARN services are now stopped using the Hadoop scripts
+
+		- Improve Hadoop deployment by waiting for HDFS safe mode readiness
+
+		- Update RGen data generator to support local file system URI (file://) and to include bug fixes
+
+		- Update resource monitoring tool to dool v1.3.8
+
+		- Update iLO scripts to version 6.00
+
+		- Update RAPL-based power monitoring tool to PAPI v7.2.0
+
+		- BDEv now runs by default in command mode when no benchmark is selected in benchmarks.lst
+
+		- Replace legacy expect with native GNU timeout in benchmark runner
+
+		- Improve command mode with configurable interactive shell (benchmarks-conf.sh)
+
+		- Fix failure detection when running benchmarks
+
+		- Simplified tool configuration and removed experiment directory
+
+		- Fix Java detection and improve JAVA_HOME configuration
+
+		- Multiple refactorings and code modernizations, minor changes and bug fixes
+
+
 BDEv 3.9 - 2024-04-11
 ---------------------
 	A point release for the BDEv 3.x line
@@ -39,7 +135,7 @@ BDEv 3.9 - 2024-04-11
 
 		- Update RAPL-based power monitoring tool to PAPI v7.1.0
 
-		- Upate RGen data generator to include minor improvements and bug fixes
+		- Update RGen data generator to include minor improvements and bug fixes
 
 		- Update resource monitoring tool to dool v1.3.1
 		

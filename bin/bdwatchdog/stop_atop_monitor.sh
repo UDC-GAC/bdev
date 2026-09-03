@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
-for SLAVE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $SLAVENODES
 do
-	echo "Stopping atop daemon in ${SLAVE}" >> ${BDW_LOG_DIR}/atop_log 2>&1
-	$SSH_CMD $SLAVE "source ${BDW_LOG_DIR}/config.sh; \
-	${PYTHON3_BIN} ${BDWATCHDOG_DAEMONS_DIR}/atop.py stop" >> ${BDW_LOG_DIR}/atop_log 2>&1
+	echo "Stopping atop daemon in ${NODE}" >> ${BDW_LOG_DIR}/atop_log 2>&1
+	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \
+		${PYTHON_BIN} ${BDWATCHDOG_DAEMONS_DIR}/atop.py stop" >> ${BDW_LOG_DIR}/atop_log 2>&1
 done

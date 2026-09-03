@@ -1,0 +1,33 @@
+<!--         RIBCL Sample Script for HPE Lights-Out Products         -->
+<!--  Copyright 2003,2021 Hewlett Packard Enterprise Development LP  -->
+
+<!-- Description:  This is a sample XML script to set the Power      -->
+<!--               Cap feature on the host server.                   -->
+
+<!--        The power cap values are returned and received in Watts. -->
+
+<!-- NOTE:  You will need to replace the USER_LOGIN and PASSWORD     -->
+<!--        and other values inside the quotation marks with values  -->
+<!--        that are appropriate for your environment.               -->
+
+<!--        Modification of power cap setting requires               -->
+<!--        Configure iLO privilege.                                 -->
+
+<!--        Use HPQLOCFG.EXE v1.00 or greater with this script.      -->
+
+<!--        See "iLO Scripting and Command Line Guide" for more      -->
+<!--        information on scripting and the syntax of the RIBCL     -->
+<!--        XML.                                                     -->
+
+<!--        Firmware support information for this script:            -->
+<!--            iLO 6 - All versions.                                -->
+<!--            iLO 5 - All versions                                 -->
+<!--            iLO 4 - All versions.                                -->
+
+<RIBCL VERSION="2.0">
+   <LOGIN USER_LOGIN="adminname" PASSWORD="password">
+      <SERVER_INFO MODE="write">
+         <SET_POWER_CAP POWER_CAP="300"/>
+      </SERVER_INFO>
+   </LOGIN>
+</RIBCL>

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 PROCESSES=`$SSH_CMD $ILO_MASTER 'ps -elf' | grep "ilo_monitor" | grep -v "stop_ilo_monitor" | tr -s " "`
 echo "$PROCESSES" >> ${POWERLOGDIR}/log

@@ -1,7 +1,0 @@
-# flinkbench
-
-Benchmarking suite for Apache Flink
-
-# Compile and build assembled jar
-
-sbt +assembly

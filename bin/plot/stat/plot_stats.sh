@@ -5,9 +5,8 @@
 
 cd ${STATLOGDIR}
 
-GRAPHS_SCRIPT=${STATLOGDIR}/gen_graphs.sh
+GRAPHS_SCRIPT=${STATLOGDIR}/gen_plots.sh
 echo "$SCRIPT_HEADER" > ${GRAPHS_SCRIPT}
-
 
 CPU_DAT_FILES=""
 LOAD_DAT_FILES=""
@@ -236,7 +235,7 @@ fi
 
 echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> ${REPORT_GEN_GRAPHS_FILE}
 
-if [[ $STAT_GEN_GRAPHS == "true" ]]
-then
+if [[ $STAT_GEN_PLOTS == "true" ]]; then
+	m_echo "Generating dool plots for all nodes"
 	${GRAPHS_SCRIPT}
 fi

@@ -1,28 +1,24 @@
 #!/bin/bash
 
-if [ $# -lt 1 ]; then
+if [[ $# -lt 1 ]]; then
        echo "$0 hostfile"
-       exit -1
+       exit 1
 fi
 
-FILE=$1
+INPUT_FILE="$1"
+CURRENT_NODE="${HOSTNAME%%.*}"
 
-NAME=`echo $HOSTNAME | cut -d "." -f 1`
-
-while read i
-do
-	NODE=`echo $i | awk '{print $1}' | cut -d "." -f 1`
-        if [[ $NODE == "localhost" ]]
-        then
-          echo "localhost"
-          break
+while read -r NODE_NAME _; do
+	NODE="${NODE_NAME%%.*}"
+	
+        if [[ "$NODE" == "localhost" ]]; then
+        	echo "localhost"
+        	break
         fi
         
-        if [[ $NODE == $NAME ]]
-        then
-        	NODE_NAME=`echo $i | awk '{print $1}'`
-        	echo $NODE_NAME
-                break
+	if [[ "$NODE" == "$CURRENT_NODE" ]]; then
+		echo "$NODE_NAME"
+		break
         fi
-done < $FILE
+done < "$INPUT_FILE"
 

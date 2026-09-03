@@ -1,0 +1,82 @@
+name := "sparkbench"
+val sparkVersion = sys.props.getOrElse("spark.version", "4.0.0")
+
+def scalaVersionsForSpark(sv: String): Seq[String] = {
+  if (sv.startsWith("2.")) {
+    Seq("2.11.12", "2.12.21")
+  } else if (sv.startsWith("3.0") || sv.startsWith("3.1")) {
+    Seq("2.12.21")
+  } else if (sv.startsWith("4.")) {
+    Seq("2.13.18")
+  } else {
+    Seq("2.12.21", "2.13.18")
+  }
+}
+
+scalaVersion := scalaVersionsForSpark(sparkVersion).head
+crossScalaVersions := scalaVersionsForSpark(sparkVersion)
+
+javacOptions ++= {
+  if (sparkVersion.startsWith("4.")) {
+    Seq("-source", "17", "-target", "17", "-encoding", "UTF-8")
+  } else {
+    Seq("--release", "8", "-encoding", "UTF-8")
+  }
+}
+
+scalacOptions ++= {
+  val targetJvm = if (sparkVersion.startsWith("4.")) "17" else "8"
+  val encoding = Seq("-encoding", "UTF-8")
+
+  if (scalaBinaryVersion.value == "2.11") {
+    Seq("-target:jvm-1.8") ++ encoding
+  } else {
+    Seq("-release", targetJvm) ++ encoding
+  }
+}
+
+libraryDependencies ++= Seq(
+"org.apache.spark" %% "spark-core" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-graphx" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-mllib" % sparkVersion % "provided",
+"org.apache.spark" %% "spark-hive" % sparkVersion % "provided",
+"org.apache.mahout" % "mahout-mr" % "0.12.2" excludeAll (
+  ExclusionRule("org.apache.hadoop")
+),
+"org.codehaus.jackson" % "jackson-core-asl"   % "1.9.13",
+"org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.13",
+"com.github.scopt" %% "scopt" % "4.1.0"
+)
+
+assembly / assemblyShadeRules := Seq(
+  ShadeRule.rename("com.github.scopt.**" -> "shadeSCOPT.@1").inAll
+)
+
+assembly / assemblyJarName := s"${name.value}-${sparkVersion}_${scalaBinaryVersion.value}.jar"
+
+assembly / assemblyOption := (assemblyOption in assembly).value.withIncludeScala(false)
+
+assemblyMergeStrategy in assembly := {
+  case PathList("org","aopalliance", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "inject", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "servlet", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "activation", xs @ _*) => MergeStrategy.last
+  case PathList("javax", "xml", xs @ _*) => MergeStrategy.last
+  case PathList("org", "apache", xs @ _*) => MergeStrategy.last
+  case PathList("com", "google", xs @ _*) => MergeStrategy.last
+  case PathList("com", "esotericsoftware", xs @ _*) => MergeStrategy.last
+  case PathList("com", "codahale", xs @ _*) => MergeStrategy.last
+  case PathList("com", "yammer", xs @ _*) => MergeStrategy.last
+  case PathList("org", "xmlpull", xs @ _*) => MergeStrategy.last
+  case PathList("org", "xpp3", xs @ _*) => MergeStrategy.last  
+  case "about.html" => MergeStrategy.rename
+  case "META-INF/ECLIPSEF.RSA" => MergeStrategy.last
+  case "META-INF/mailcap" => MergeStrategy.last
+  case "META-INF/mimetypes.default" => MergeStrategy.last
+  case "plugin.properties" => MergeStrategy.last
+  case "log4j.properties" => MergeStrategy.last
+  case x if x.endsWith("module-info.class") => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assembly / assemblyMergeStrategy).value
+    oldStrategy(x)
+}

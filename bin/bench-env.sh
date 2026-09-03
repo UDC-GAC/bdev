@@ -1,6 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${i}
+execution_number=1
+
+if [[ -n "$1" ]]; then
+	execution_number="$1"
+fi
+
+export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${execution_number}
 mkdir -p $BENCHMARK_OUTPUT_DIR
 export TMPLOGFILE=$BENCHMARK_OUTPUT_DIR/output
 export POWERLOGDIR=$BENCHMARK_OUTPUT_DIR/pow_records
@@ -13,7 +19,6 @@ unset ELAPSED_TIME
 unset READ_SIZE
 
 case "$BENCHMARK" in 
-
 	'testdfsio')
 		export TIMEOUT=$TESTDFSIO_TIMEOUT
 	;;
@@ -72,12 +77,10 @@ case "$BENCHMARK" in
 
 esac
 
-if [[ -z $TIMEOUT ]]
-then
-	TIMEOUT=$DEFAULT_TIMEOUT
+if [[ -z $TIMEOUT ]]; then
+	export TIMEOUT=$DEFAULT_TIMEOUT
 fi
 
-if [[ -n "$TIMEOUT" && "$TIMEOUT" != "0" ]]
-then
+if [[ -n "$TIMEOUT" && "$TIMEOUT" -gt 0 ]]; then
 	m_echo "Timeout set to $TIMEOUT seconds"
 fi

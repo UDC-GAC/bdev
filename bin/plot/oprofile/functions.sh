@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 
-function get_row(){
+function get_row() {
 	cat "$2" | head -n $1 | tail -n 1
 }
 
 export -f get_row
 
-function op_dat_file(){
+function op_dat_file() {
 	AWK_COMMAND=$1
 	
 	TARGET_DAT_FILES=""
@@ -28,8 +28,9 @@ function op_dat_file(){
 
 	HEADER=`cat $FIRST_DAT_FILE | head -1`
 	OUTPUT_FILE_CONTENT=`get_row 1 $FIRST_DAT_FILE`
-
-	for COL in `seq 2 $NCOLS`
+	
+	COL=2
+	while [ "$COL" -le "$NCOLS" ]
 	do
 		unset ALL_COLUMNS
 		for f in $TARGET_DAT_FILES
@@ -38,9 +39,8 @@ function op_dat_file(){
 		done
 
 		NEW_COLUMN=`awk "$AWK_COMMAND" <(echo "$ALL_COLUMNS")`
-
 		OUTPUT_FILE_CONTENT=`paste -d "," <(echo "$OUTPUT_FILE_CONTENT") <(echo "$NEW_COLUMN")`
-
+		COL=$((COL + 1))
 	done
 
 	echo "$HEADER" > $OUTPUT_SUM_FILE
@@ -49,14 +49,14 @@ function op_dat_file(){
 
 export -f op_dat_file
 
-function sum_dat_file(){
+function sum_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
 }
 
 export -f sum_dat_file
 
 
-function avg_dat_file(){
+function avg_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x/NF}'
 }
 

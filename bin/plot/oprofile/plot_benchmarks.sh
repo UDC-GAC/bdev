@@ -51,7 +51,7 @@ do
 
 		for SOLUTION in $SOLUTIONS
 		do
-			LINE=`echo "$EVENT_SUMMARY" | egrep "^${CLUSTER_SIZE},${SOLUTION},"`
+			LINE=`echo "$EVENT_SUMMARY" | grep -E "^${CLUSTER_SIZE},${SOLUTION},"`
 			EVENT_COUNTERS=`echo "$LINE" | cut -f 5 -d ","`
 
 			median $EVENT_COUNTERS

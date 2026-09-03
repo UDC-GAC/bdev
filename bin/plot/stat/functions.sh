@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-function get_index(){
+function get_index() {
 	# echo "$1"
 	# echo "${2}"
 	SEARCH_WORD=$1
@@ -29,7 +29,7 @@ function get_index(){
 
 export -f get_index
 
-function get_value(){
+function get_value() {
 	NUM=$1
 	STRING=$2
 	echo "$STRING" \
@@ -40,7 +40,7 @@ function get_value(){
 export -f get_value
 
 
-function ini_dat_file(){
+function ini_dat_file() {
 	DAT_FILE=${FILE_PREFIX}.dat
 	TMP_DAT_FILE=${FILE_PREFIX}.tmp
 	SUM_FILE=${FILE_PREFIX}_sum.dat
@@ -51,7 +51,7 @@ function ini_dat_file(){
 
 export -f ini_dat_file
 
-function gen_dat_file(){
+function gen_dat_file() {
 	TAG_INDEXES=`get_index "$TAG" "$HEADER"`
 	for FIRST_INDEX in "$TAG_INDEXES"
 	do
@@ -166,7 +166,8 @@ function avg_dat_file() {
 	NFILES=$(( `echo $TARGET_DAT_FILES | wc -w` ))
 	NCOLS=$(( `echo $FIRST_HEAD | grep -o "," | wc -l` + 1 ))
 
-	for COL in `seq 1 $NCOLS`
+	COL=1
+	while [ "$COL" -le "$NCOLS" ]
 	do
 		TMP_FILE=${FILE_PREFIX}_${COL}.tmp
 		JOIN_FILE=${FILE_PREFIX}_${COL}_join.tmp
@@ -187,6 +188,7 @@ function avg_dat_file() {
 
 		avg_file_rows $JOIN_FILE $TMP_AVG_FILE
 
+		COL=$((COL + 1))
 		echo "$COL_TAG" > $AVG_FILE
 		cat $TMP_AVG_FILE >> $AVG_FILE
 
@@ -235,7 +237,7 @@ function avg_dat_file() {
 
 export -f avg_dat_file
 
-function plot_dat_file_lines(){
+function plot_dat_file_lines() {
 	PLOT_FILE=${FILE_PREFIX}.eps
 	DAT_HEAD=`head -n 1 $DAT_FILE`
 	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
@@ -249,13 +251,13 @@ function plot_dat_file_lines(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/lines_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_lines
 
-function plot_dat_file_boxes(){
+function plot_dat_file_boxes() {
 	PLOT_FILE=${FILE_PREFIX}.eps
 	DAT_HEAD=`head -n 1 $DAT_FILE`
 	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
@@ -269,13 +271,13 @@ function plot_dat_file_boxes(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/boxes_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'\"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/boxes_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_boxes
 
-function plot_dat_file_stacked(){
+function plot_dat_file_stacked() {
 	STOCKED_PLOT_FILE=${FILE_PREFIX}_stacked.eps
 	# if [[ -z $STATIC_COLS ]]
 	# then
@@ -294,8 +296,8 @@ function plot_dat_file_stacked(){
 	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$STOCKED_PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
-		palette_file='\${BDEV_HOME}${PALETTE_FILE#$METHOD_HOME}'; \
-		cols='$COLS'; \"" '${BDEV_HOME}'${STAT_PLOT_HOME#$METHOD_HOME}/stacked_graph.gplot >> $GRAPHS_SCRIPT
+		palette_file='\${BDEV_HOME}${PALETTE_FILE#$BDEV_HOME}'; \
+		cols='$COLS'; \"" '${BDEV_HOME}'${STAT_PLOT_HOME#$BDEV_HOME}/stacked_graph.gplot >> $GRAPHS_SCRIPT
 }
 
 export -f plot_dat_file_stacked

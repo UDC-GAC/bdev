@@ -1,0 +1,41 @@
+jobmanager.rpc.address: $master
+rest.address: $master
+rest.client.max-content-length: $flink_rest_client_max_content_length
+jobmanager.memory.process.size: $flink_jobmanager_memory mb
+jobmanager.rpc.port: 6123
+jobmanager.execution.failover-strategy: region
+jobmanager.archive.fs.dir: $storage_backend_uri/$flink_history_server_dir
+historyserver.archive.fs.dir: $storage_backend_uri/$flink_history_server_dir
+taskmanager.memory.process.size: $flink_taskmanager_memory mb
+taskmanager.numberOfTaskSlots: $flink_taskmanager_slots
+taskmanager.network.netty.client.connectTimeoutSec: $flink_taskmanager_network_netty_timeout
+taskmanager.network.bind-policy: ip
+taskmanager.memory.network.fraction: $flink_taskmanager_memory_network_fraction
+taskmanager.memory.network.max: $flink_taskmanager_memory_network_max
+taskmanager.memory.network.min: $flink_taskmanager_memory_network_min
+taskmanager.memory.segment-size: $flink_taskmanager_memory_segment_size
+taskmanager.memory.framework.off-heap.batch-shuffle.size: $flink_taskmanager_memory_off_heap_shuffle_size
+taskmanager.memory.framework.off-heap.size: $flink_taskmanager_memory_off_heap_size
+taskmanager.network.sort-shuffle.min-buffers: $flink_taskmanager_network_sort_shuffle_buffers
+taskmanager.network.sort-shuffle.min-parallelism: $flink_taskmanager_network_sort_shuffle_parallelism
+taskmanager.network.blocking-shuffle.compression.enabled: $flink_taskmanager_network_shuffle_compress
+parallelism.default: $flink_default_parallelism
+io.tmp.dirs: $flink_local_dirs
+heartbeat.timeout: $flink_heartbeat_timeout
+akka.ask.timeout: $flink_akka_ask_timeout s
+akka.lookup.timeout: $flink_akka_ask_timeout s
+akka.tcp.timeout: $flink_akka_tcp_timeout s
+akka.framesize: $flink_akka_framesize
+fs.hdfs.hadoopconf: $hadoop_conf_dir
+fs.output.always-create-directory: true
+env.hadoop.conf.dir: $hadoop_conf_dir
+env.yarn.conf.dir: $hadoop_conf_dir
+env.java.home: $java_home
+env.java.opts: -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native $java_jpms_opts
+env.java.opts.all: -Djava.io.tmpdir=$tmp_dir -Djava.library.path=$hadoop_home/lib/native $java_jpms_opts
+env.log.dir: $flink_log_dir
+env.pid.dir: $tmp_dir/flink/pid
+env.ssh.opts: $ssh_opts
+classloader.check-leaked-classloader: false
+containerized.master.env.LD_LIBRARY_PATH: $hadoop_home/lib/native
+containerized.taskmanager.env.LD_LIBRARY_PATH: $hadoop_home/lib/native

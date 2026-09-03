@@ -1,11 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
-m_echo "Finishing"
+m_echo "Finishing..."
 
 export FORCE_DELETE_HDFS=$DELETE_HDFS
 
-if [[ $NUM_CLUSTERS -gt 1 ]]; then
+if [[ "$NUM_CLUSTERS" -gt 1 ]]; then
 	export FORCE_DELETE_HDFS=true
 fi
 
-. $CLEAN_DATA_SCRIPT
+. $CLEANUP_DATA_SCRIPT
+
+m_stop_message

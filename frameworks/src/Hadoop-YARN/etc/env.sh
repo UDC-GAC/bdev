@@ -1,0 +1,29 @@
+#!/bin/bash
+export SOL_BENCH_DIR=$BENCHMARKS_DIR/Hadoop
+export SOL_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
+export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
+export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs
+export MASTERFILE=$SOL_CONF_DIR/masters
+
+#HADOOP environment variables
+export HADOOP_HOME=$SOLUTION_HOME
+export HADOOP_CONF_DIR=$SOL_CONF_DIR
+export YARN_CONF_DIR=$HADOOP_CONF_DIR
+export PATH=$HADOOP_HOME/bin:$PATH
+export HADOOP_VERSION=${HADOOP_HOME##*/}
+export HADOOP_MAJOR_VERSION=${HADOOP_VERSION%.*}
+export HADOOP_SERIES=${HADOOP_VERSION%%.*}
+
+if [[ $HADOOP_SERIES == "3" ]]; then
+	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN-3
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
+	export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
+	export SLAVESFILE=$SOL_CONF_DIR/workers
+elif [[ $HADOOP_SERIES == "2" ]]; then
+	export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Hadoop-YARN
+	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
+	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
+	export SLAVESFILE=$SOL_CONF_DIR/slaves
+else
+	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
+fi

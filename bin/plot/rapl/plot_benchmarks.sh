@@ -46,7 +46,7 @@ do
 
 	for SOLUTION in $SOLUTIONS
 	do
-		LINE=`echo "$ENERGY_SUMMARY" | egrep "^${CLUSTER_SIZE},${SOLUTION},"`
+		LINE=`echo "$ENERGY_SUMMARY" | grep -E "^${CLUSTER_SIZE},${SOLUTION},"`
 		ENERGIES=`echo "$LINE" | cut -f 4 -d ","`
 
 		median $ENERGIES
@@ -88,7 +88,7 @@ do
 
 	for SOLUTION in $SOLUTIONS
 	do
-		LINE=`echo "$ED2P_SUMMARY" | egrep "^${CLUSTER_SIZE},${SOLUTION},"`
+		LINE=`echo "$ED2P_SUMMARY" | grep -E "^${CLUSTER_SIZE},${SOLUTION},"`
 		ENERGIES=`echo "$LINE" | cut -f 4 -d ","`
 
 		median $ENERGIES

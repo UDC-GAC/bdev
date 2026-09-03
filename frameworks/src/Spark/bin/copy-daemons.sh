@@ -1,0 +1,9 @@
+#!/bin/bash
+m_echo "Spark daemons"
+. $OLD_COPY_DAEMONS_SCRIPT
+
+SOL_DAEMONS_DIR=$HADOOP_DAEMONS_DIR
+SOL_SBIN_DIR=$HADOOP_SBIN_DIR
+
+m_echo "Hadoop daemons"
+. $OLD_COPY_DAEMONS_SCRIPT
