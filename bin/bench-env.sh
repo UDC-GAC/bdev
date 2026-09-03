@@ -1,6 +1,12 @@
 #!/bin/bash
 
-export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${i}
+local execution_number=1
+
+if [[ -n "$1" ]]; then
+	execution_number="$1"
+fi
+
+export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${execution_number}
 mkdir -p $BENCHMARK_OUTPUT_DIR
 export TMPLOGFILE=$BENCHMARK_OUTPUT_DIR/output
 export POWERLOGDIR=$BENCHMARK_OUTPUT_DIR/pow_records

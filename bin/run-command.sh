@@ -16,6 +16,7 @@ setup_phase
 
 export BENCHMARK=command
 unset ELAPSED_TIMES
+unset COMMAND
 
 . $BDEV_BIN_DIR/bench-env.sh
 

@@ -40,7 +40,7 @@ do
 
 	while [[ "$i" -le "$NUM_EXECUTIONS" ]]
 	do
-		. $BDEV_BIN_DIR/bench-env.sh
+		. $BDEV_BIN_DIR/bench-env.sh $i
 		# Starting workload
 		m_echo "Running ${BENCHMARK^}, logging to ${BENCHMARK_OUTPUT_DIR}"
 

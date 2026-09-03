@@ -23,17 +23,21 @@ add_conf_param "ip_master" $MASTERIP
 add_conf_param "net_interface" $NETWORK_INTERFACE
 add_conf_param "hostfile" $HOSTFILE
 
+# Storage backend
 export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
-m_echo "Storage backend URI: $STORAGE_BACKEND_URI"
+if [[ "$SOLUTION" != "NONE" ]]; then
+	m_echo "Storage backend URI: $STORAGE_BACKEND_URI"
+fi
 
-# Storage backend
 if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	export HADOOP_DEFAULT_FS="$STORAGE_BACKEND_URI"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 
 	if [[ $HDFS_REPLICATION_FACTOR -gt $SLAVES_NUMBER ]]; then
-		m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+		if [[ "$SOLUTION" != "NONE" ]]; then
+			m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+		fi
 		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
 	fi
 else
