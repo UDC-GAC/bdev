@@ -6,12 +6,6 @@ configure_network
 # Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh
 
-#Configure benchmarks
-. ${COMMON_BENCH_DIR}/conf/configure.sh
-
-#Generate input datasets
-. ${COMMON_BENCH_DIR}/bin/prepare.sh
-
 setup_phase
 
 export BENCHMARK=command
