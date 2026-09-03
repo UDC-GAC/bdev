@@ -11,7 +11,6 @@ configure_network
 
 export BENCHMARK=command
 unset ELAPSED_TIMES
-unset COMMAND
 
 setup_phase
 
