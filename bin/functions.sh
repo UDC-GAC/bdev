@@ -35,7 +35,7 @@ function m_exit() {
 	bash $CLEANUP_YARN_SCRIPT
 	bash $CLEANUP_PROCESS_SCRIPT
 	m_echo "Exiting $APP_NAME v$APP_VERSION"
-	exit -1
+	exit 1
 }
 
 export -f m_exit
@@ -434,7 +434,7 @@ function set_cluster_size() {
 
 export -f set_cluster_size
 
-function set_solution() {
+function set_framework() {
 	export SOLUTION
 	export SOLUTION_NAME=`echo $SOLUTION | cut -d '_' -f 1`
 	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
@@ -491,34 +491,60 @@ function set_solution() {
 	unset FINISH
 }
 
-export -f set_solution
+export -f set_framework
 
-function set_nosolution() {
+function set_no_framework() {
+	m_warn "No framework was configured. Running in command mode"
+	export SOLUTIONS=""
+	export SOLUTION=NONE
+	export BENCHMARKS=command
+	export NUM_BENCHMARKS=1
+	export NUM_EXECUTIONS=1
 	export SOLUTION_HOME=""
         export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
 	mkdir -p $SOLUTION_REPORT_DIR
 	unset FINISH
 }
 
-export -f set_nosolution
+export -f set_no_framework
 
-function start_solution() {
+function setup_phase() {
 	if [[ -n "$FRAMEWORK_SETUP" ]]; then
 		m_echo "Setting up $SOLUTION: $FRAMEWORK_SETUP"
 		bash -c "$FRAMEWORK_SETUP"
 	fi
+	
+	if [[ $ENABLE_BDWATCHDOG == "true" && $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
+		export MONGODB_IP=$BDWATCHDOG_MONGODB_IP
+		export MONGODB_PORT=$BDWATCHDOG_MONGODB_PORT
+		export TESTS_POST_ENDPOINT=$BDWATCHDOG_TESTS_POST_ENDPOINT
+		export EXPERIMENTS_POST_ENDPOINT=$BDWATCHDOG_EXPERIMENTS_POST_ENDPOINT
+
+		### MARK start of experiments
+		MY_DATE=$(date '+%d-%m-%Y-%H:%M')
+		MY_SOLUTION=$(echo $SOLUTION | cut -d"-" -f1)
+		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+	fi	
 }
 
-export -f start_solution
+export -f setup_phase
 
-function end_solution() {
+function cleanup_phase() {
+	if [[ $ENABLE_BDWATCHDOG == "true" && $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
+		### MARK end of experiments
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py end "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
+		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
+	fi
+
 	if [[ -n "$FRAMEWORK_CLEANUP" ]]; then
 		m_echo "Cleaning up $SOLUTION: $FRAMEWORK_CLEANUP"
 		bash -c "$FRAMEWORK_CLEANUP"
 	fi
 }
 
-export -f end_solution
+export -f cleanup_phase
 
 function write_report() {
 	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
@@ -946,16 +972,15 @@ export -f run_benchmark
 function save_elapsed_time() {
 	if [[ "$ELAPSED_TIME" == "FAILED" ]]; then
 		m_err "${BENCHMARK} failed"
+		FINISH="true"
+	elif [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
+		m_err "${BENCHMARK} timed out"
+		FINISH="true"
 	else
-		if [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-			m_err "${BENCHMARK} timed out"
-			FINISH="true"
-		else
-			m_echo "Workload runtime: $ELAPSED_TIME seconds"
-			m_echo "Total runtime: $ELAPSED_TOTAL_TIME seconds"
-		fi
-
+		m_echo "Workload runtime: $ELAPSED_TIME seconds"
+		m_echo "Total runtime: $ELAPSED_TOTAL_TIME seconds"
 	fi
+
 	echo "$ELAPSED_TIME" > $ELAPSED_TIME_FILE
 	ELAPSED_TIMES="$ELAPSED_TIMES $ELAPSED_TIME"
 }
@@ -1099,3 +1124,49 @@ function require_binary() {
 }
 
 export -f require_binary
+
+check_disk_space() {
+    # Take all arguments passed to the function and replace commas with spaces
+    local RAW_DIRS="${*//,/ }"
+    local CHECKED_MOUNTS=()
+
+    for dir in $RAW_DIRS; do
+        [[ -z "$dir" ]] && continue
+
+        # Si la ruta no existe aún, resolver el ancestro más cercano que sí exista
+        local target="$dir"
+        while [[ ! -d "$target" && "$target" != "/" && "$target" != "." ]]; do
+            target=$(dirname "$target")
+        done
+
+        [[ ! -d "$target" ]] && continue
+
+        # Obtener bloques totales ($2), libres ($4) y punto de montaje ($6) en formato POSIX
+        local df_info
+        df_info=$(df -Pk "$target" 2>/dev/null | awk 'NR==2 {print $2, $4, $6}')
+        [[ -z "$df_info" ]] && continue
+
+        local total_kb=$(echo "$df_info" | awk '{print $1}')
+        local avail_kb=$(echo "$df_info" | awk '{print $2}')
+        local mount_point=$(echo "$df_info" | awk '{print $3}')
+
+        # Deduplicar: omitir si ya se evaluó este mismo punto de montaje
+        if [[ " ${CHECKED_MOUNTS[*]} " =~ " ${mount_point} " ]]; then
+            continue
+        fi
+        CHECKED_MOUNTS+=("$mount_point")
+
+        # Evitar división por cero en sistemas virtuales o pseudofs
+        (( total_kb == 0 )) && continue
+
+        # Cálculo aritmético nativo de enteros en Bash
+        local avail_pct=$(( (avail_kb * 100) / total_kb ))
+        local avail_gb=$(( avail_kb / 1024 / 1024 ))
+
+        if (( avail_pct < MIN_FREE_PERCENT )); then
+            m_warn "Low disk space on $mount_point ($target): ${avail_pct}% free (${avail_gb}GB available, threshold: ${MIN_FREE_PERCENT}%)"
+        fi
+    done
+}
+
+export -f check_disk_space

@@ -10,12 +10,12 @@ configure_network
 m_echo "Reading environment: ${SOLUTION_DIR}/etc/env.sh"
 . ${SOLUTION_DIR}/etc/env.sh
 
-#Initiliaze solution
+#Init framework
 m_echo "Initiliazing $SOLUTION"
 . ${INIT_SOL_SCRIPT}
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 
-#Start solution
+#Start framework
 m_echo "Starting $SOLUTION"
 . ${SOLUTION_DIR}/bin/start.sh
 
@@ -29,23 +29,7 @@ if [[ -f ${SOL_BENCH_DIR}/bin/prepare.sh ]]; then
 	. ${SOL_BENCH_DIR}/bin/prepare.sh
 fi
 
-start_solution
-
-if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
-	if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-		export MONGODB_IP=$BDWATCHDOG_MONGODB_IP
-		export MONGODB_PORT=$BDWATCHDOG_MONGODB_PORT
-		export TESTS_POST_ENDPOINT=$BDWATCHDOG_TESTS_POST_ENDPOINT
-		export EXPERIMENTS_POST_ENDPOINT=$BDWATCHDOG_EXPERIMENTS_POST_ENDPOINT
-
-	### MARK start of experiments
-		MY_DATE=`date '+%d-%m-%Y-%H:%M'`
-		MY_SOLUTION=`echo $SOLUTION | cut -d"-" -f1`
-		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
-	fi
-fi
+setup_phase
 
 #For each benchmark
 for BENCHMARK in $BENCHMARKS
@@ -54,7 +38,7 @@ do
 	unset ELAPSED_TIMES
 	i=1
 
-	while [ "$i" -le "$NUM_EXECUTIONS" ]
+	while [[ "$i" -le "$NUM_EXECUTIONS" ]]
 	do
 		. $BDEV_BIN_DIR/bench-env.sh
 		# Starting workload
@@ -88,21 +72,14 @@ do
 	done
 
 	write_report
+	
 	if [[ $FINISH == "true" ]]; then
 		break
 	fi
 done
 
-if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
-	if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-	### MARK end of experiments
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py end "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
-		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
-	fi
-fi
+cleanup_phase
 
-end_solution
-
-#Clean up
+#Finish framework
 m_echo "Finishing $SOLUTION"
 . $SOLUTION_DIR/bin/finish.sh

@@ -16,14 +16,8 @@ do
 	set_cluster_size
 
 	if [[ "$NUM_SOLUTIONS" -eq 0 ]]; then
-		m_warn "No framework was configured. Running in command mode"
-		export SOLUTIONS=""
-		export SOLUTION=NONE
-		export BENCHMARKS=command
-		export NUM_BENCHMARKS=1
-		set_nosolution
-
-		bash $BDEV_BIN_DIR/run-nosol.sh
+		set_no_framework
+		bash $BDEV_BIN_DIR/run_command.sh
 	else
 		SOLUTION_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
@@ -32,13 +26,13 @@ do
 			export FORCE_DELETE_HDFS=true
 		fi
 
-		. $CLEANUP_DATA_SCRIPT
+		. $CLEANUP_DATA_SCRIPT --check-disk
 
-		# For each solution
+		# For each framework
 		for SOLUTION in $SOLUTIONS
 		do
 			SOLUTION_NUMBER=$((SOLUTION_NUMBER+1))
-			set_solution $SOLUTION_NUMBER
+			set_framework $SOLUTION_NUMBER
 			export FORCE_FORMAT_HDFS=false
 
 			if [[ $SOLUTION_NUMBER -eq 1 ]]; then
@@ -62,7 +56,8 @@ do
 				export NUM_BENCHMARKS=1
 			fi
 
-			bash $BDEV_BIN_DIR/run-sol.sh
+			# Run framework
+			bash $BDEV_BIN_DIR/run_framework.sh
 		done
 	fi
 done

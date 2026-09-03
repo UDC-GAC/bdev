@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# # Cleaning of temporary files
+# Cleaning of temporary files
 if [[ -n "$USER" ]]; then
 	rm -rf /tmp/hadoop-"$USER" /tmp/spark-"$USER" /tmp/flink-"$USER" /tmp/jna-"$USER" 2>/dev/null
 
@@ -43,4 +43,11 @@ MKDIR_TARGETS="${TMP_DIR} ${LOCAL_DIRS//,/ } ${SPARK_LOCAL_DIRS//,/ } ${FLINK_LO
 
 if [[ -n "${MKDIR_TARGETS// /}" ]]; then
 	mkdir -p $MKDIR_TARGETS 2>/dev/null
+fi
+
+# Disk space check
+if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
+	# Load BDEv functions
+	. $BDEV_BIN_DIR/functions.sh
+	check_directory_space "$TMP_DIR" "$LOCAL_DIRS"
 fi
