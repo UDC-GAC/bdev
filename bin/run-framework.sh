@@ -12,7 +12,7 @@ m_echo "Reading environment: ${SOLUTION_DIR}/etc/env.sh"
 
 #Init framework
 m_echo "Initiliazing $SOLUTION"
-. ${INIT_SOL_SCRIPT}
+. ${INIT_SCRIPT}
 . ${COMMON_BENCH_DIR}/conf/configure.sh
 
 #Start framework
