@@ -170,14 +170,18 @@ case "$SPARK_API" in
         ;;
 esac
 
-export CLUSTER_SIZES=$(read_list $BDEV_EXPERIMENT_DIR/cluster_sizes.lst)
-export BENCHMARKS=$(read_list $BDEV_EXPERIMENT_DIR/benchmarks.lst)
-export SOLUTIONS=$(read_solutions $BDEV_EXPERIMENT_DIR/frameworks.lst)
+export CLUSTER_SIZES=$(read_list "$BDEV_EXPERIMENT_DIR/cluster_sizes.lst")
+export BENCHMARKS=$(read_list "$BDEV_EXPERIMENT_DIR/benchmarks.lst")
+export SOLUTIONS=$(read_solutions "$BDEV_EXPERIMENT_DIR/frameworks.lst")
 export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
 export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
 export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")
-export SLURM_ENV="false"
 
+if [[ "$NUM_CLUSTERS" -lt 1 ]]; then
+	m_exit "No cluster sizes specified. Revise cluster_sizes.lst"
+fi
+
+export SLURM_ENV="false"
 # Check if we are under a SLURM environment
 if [[ -n "$SLURM_JOB_ID" ]]; then
 	SLURM_ENV="true"

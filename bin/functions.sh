@@ -86,14 +86,20 @@ function timestamp() {
 export -f timestamp
 
 function read_list() {
-	values=""
-	while read line || [[ -n "$line" ]]
-	do
-		val=$(echo "$line" | sed -r -e 's/#.*$//g')
-		values="$values $val"
-	done < $1 
+	local file="$1"
+	[[ ! -f "$file" ]] && return 0
+	
+	local values=""
+	while read -r line || [[ -n "$line" ]]; do
+		# Remove comments and spaces at the beginning/end
+		local val="${line%%#*}"
+		val=$(echo$val)
+		if [[ -n "$val" ]]; then
+            		values="${values:+$values }$val"
+        	fi
+	done < "$file"
 
-	echo $values
+	echo "$values"
 }
 
 export -f read_list
