@@ -94,6 +94,7 @@ function read_list() {
 		# Remove comments and spaces at the beginning/end
 		local val="${line%%#*}"
 		val=$(echo $val)
+		
 		if [[ -n "$val" ]]; then
             		values="${values:+$values }$val"
         	fi
@@ -104,22 +105,28 @@ function read_list() {
 
 export -f read_list
 
-function read_solutions() {
-	values=""
-	while read line || [[ -n "$line" ]]
-	do
-		sol=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $1}')
-		if [[ -n "$sol" ]]; then
-			version=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $2}')
-			net_if=$(echo "$line" | sed -r -e 's/#.*$//g' | awk '{print $3}')
-			values="$values ${sol}_${version}_${net_if}"
+function read_frameworks() {
+	local file="$1"
+	[[ ! -f "$file" ]] && return 0
+	
+	local values=""
+	while read -r line || [[ -n "$line" ]]; do
+		# Remove comments and spaces at the beginning/end
+		local val="${line%%#*}"
+		local fields=($line)
+		
+		if [[ ${#fields[@]} -gt 0 ]]; then
+			local framework="${fields[0]}"
+            		local version="${fields[1]}"
+            		local network="${fields[2]}"
+            		values="${values:+$values }${framework}_${version}_${network}"
 		fi
-	done < $1 
+	done < "$file" 
 
-	echo $values
+	echo "$values"
 }
 
-export -f read_solutions
+export -f read_frameworks
 
 function get_num_conf_params() {
     echo "${#CONFIG_KEYS[@]}"
