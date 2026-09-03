@@ -90,68 +90,6 @@ function timestamp() {
 
 export -f timestamp
 
-function sum() {
-	SUM=0
-	for VALUE in $*
-	do
-		SUM=$(op "$SUM + $VALUE")
-	done
-	echo $SUM
-}
-
-export -f sum
-
-function median() {
-	if [[ ! -n "$*" ]]; then
-		COUNT=0
-		unset MIDDLE
-	else
-		COUNT=$(echo $* | wc -w)
-		MIDDLE=$((1+$COUNT/2))
-		MEDIAN=$(echo "$*" | xargs -n1 | sort -n | head -n "$MIDDLE" | tail -n 1)
-	fi
-}
-
-export -f median
-
-function avg() {
-	SUM=0
-	COUNT=0
-	for VALUE in $*
-	do
-		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]; then		
-			SUM=$(echo "scale=4; $SUM + $VALUE " | bc)
-			COUNT=$(( $COUNT + 1 ))
-		fi
-	done
-	if [[ $(echo "$SUM == 0" | bc) -eq 1 ]]; then
-		unset AVG
-	else
-		AVG=$(echo "scale=2; $SUM / $COUNT " | bc)
-	fi
-}
-
-export -f avg
-
-function maxmin() {
-	unset MAX
-	unset MIN
-	for VALUE in $*
-	do
-		if [[ "x$VALUE" != "xFAILED" && "x$VALUE" != "xTIMEOUT" ]]
-		then	
-			if [[ -z $MAX || `echo $VALUE'>'$MAX | bc -l` == 1 ]]; then
-				MAX=$VALUE
-			fi
-			if [[ -z $MIN || `echo $VALUE'<'$MIN | bc -l` == 1 ]]; then
-				MIN=$VALUE
-			fi
-		fi
-	done
-}
-
-export -f maxmin
-
 function read_list() {
 	local file="$1"
 	[[ ! -f "$file" ]] && return 0
@@ -1176,3 +1114,108 @@ get_interactive_shell() {
 }
 
 export -f get_interactive_shell
+
+function sum() {
+    SUM=0
+    local -a values=($*)
+    if [[ ${#values[@]} -gt 0 ]]; then
+        local old_ifs="$IFS"
+        IFS='+'
+        local expr="${values[*]}"
+        IFS="$old_ifs"
+        SUM=$(op "0 + $expr")
+    fi
+    echo "$SUM"
+}
+
+export -f sum
+
+function median() {
+    local -a values=($*)
+    COUNT=${#values[@]}
+    if [[ $COUNT -eq 0 ]]; then
+        unset MIDDLE
+    else
+        MIDDLE=$((1 + COUNT / 2))
+        if [[ $COUNT -eq 1 ]]; then
+            MEDIAN="${values[0]}"
+        else
+            local -a sorted
+            mapfile -t sorted < <(printf '%s\n' "${values[@]}" | LC_ALL=C sort -n)
+            MEDIAN="${sorted[MIDDLE-1]}"
+        fi
+    fi
+}
+
+export -f median
+
+function avg() {
+    SUM=0
+    COUNT=0
+    local -a valid=()
+    local val
+    for val in $*; do
+        if [[ "$val" != "FAILED" && "$val" != "TIMEOUT" ]]; then
+            valid+=("$val")
+        fi
+    done
+
+    COUNT=${#valid[@]}
+    if [[ $COUNT -eq 0 ]]; then
+        unset AVG
+        return 0
+    fi
+
+    local old_ifs="$IFS"
+    IFS='+'
+    local expr="${valid[*]}"
+    IFS="$old_ifs"
+
+    local is_zero
+    read -r SUM is_zero AVG < <(bc <<EOF
+scale=4
+s = 0 + $expr
+print s, " ", (s == 0), " "
+if (s != 0) {
+    scale=2
+    print s / $COUNT
+}
+EOF
+    )
+
+    if [[ "$is_zero" -eq 1 ]]; then
+        unset AVG
+    fi
+}
+
+export -f avg
+
+function maxmin() {
+    unset MAX
+    unset MIN
+    local -a valid=()
+    local val
+    for val in $*; do
+        if [[ "$val" != "FAILED" && "$val" != "TIMEOUT" ]]; then
+            valid+=("$val")
+        fi
+    done
+
+    local count=${#valid[@]}
+    if [[ $count -eq 0 ]]; then
+        return 0
+    fi
+
+    if [[ $count -eq 1 ]]; then
+        MAX="${valid[0]}"
+        MIN="${valid[0]}"
+        return 0
+    fi
+
+    local -a sorted
+    mapfile -t sorted < <(printf '%s\n' "${valid[@]}" | LC_ALL=C sort -n)
+    MIN="${sorted[0]}"
+    MAX="${sorted[count-1]}"
+}
+
+export -f maxmin
