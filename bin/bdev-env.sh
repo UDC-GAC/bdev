@@ -75,7 +75,7 @@ fi
 
 if [[ -z "$BDEV_OUTPUT_DIR" ]]; then
 	PRINT_OUTPUT_DIR_WARNING=true
-	export BDEV_OUTPUT_DIR=$PWD/${APP_NAME}_${APP_VERSION}_OUTPUT
+	export BDEV_OUTPUT_DIR=$PWD/${APP_NAME}_${APP_VERSION}_OUT
 fi
 
 # Load BDEv and system configuration files
@@ -101,7 +101,7 @@ fi
 m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
-if [[ "$PRINT_OUTOUT_DIR_WARNING" == "true" ]]; then
+if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"
 fi
 
