@@ -12,7 +12,7 @@ for arg in "$@"; do
 done
 
 if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
-	m_echo "Performing data cleanup and disk space checks (threshold: ${DISK_MIN_FREE_PERCENT}%)"
+	m_echo "Performing data cleanup and disk space checks (threshold: ${DISK_SPACE_THRESHOLD}%)"
 else
 	m_echo "Performing data cleanup"
 fi
