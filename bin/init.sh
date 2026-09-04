@@ -5,7 +5,7 @@ m_start_message
 m_echo "Initializing"
 
 # Load hostfile
-. $BDEV_BIN_DIR/load-hostfile.sh
+load_hostfile
 
 . $CLEANUP_PROCESS_SCRIPT
 
