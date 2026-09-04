@@ -3,6 +3,14 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
+BDEv 4.X.X - 2026-XX-XX
+-----------------------
+	NEW FEATURES
+		- Move SSH options to system-conf.sh with improved defaults, propagating them to frameworks for robust, unattended cluster execution
+
+		- Minor changes and bug fixes
+ 
+ 
 BDEv 4.0.0 - 2026-09-03
 -----------------------
 	This is a major release that modernizes the orchestration stack, introducing support for Spark 4.x, Hadoop 3.5, and Flink 1.20 LTS, adding new benhmarks for Spark and Flink, while removing support for legacy framework versions.
