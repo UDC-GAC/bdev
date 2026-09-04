@@ -5,19 +5,23 @@ kill_java_process() {
     local process="$2"
 
     m_echo "Finishing $process:" "$node"
-    $SSH_CMD "$node" "${BDEV_BIN_DIR}/kill.sh $JPS $process"
+    $SSH_CMD "$node" \
+        "DAEMON_PIDS=\$(\"$JPS\" | awk -v process=\"$process\" '\$2 ~ process {print \$1}'); \
+         if [[ -n \"\$DAEMON_PIDS\" ]]; then
+             kill -9 \$DAEMON_PIDS 2>/dev/null
+         fi"		 
 }
 
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	SLAVES=$(cat "$SLAVESFILE")
 	for NODE in $SLAVES; do
-		kill_process "$NODE" "NodeManager"
+		kill_java_process "$NODE" "NodeManager"
 	done
 
-  	kill_process "$MASTERNODE" "ResourceManager"
+  	kill_java_process "$MASTERNODE" "ResourceManager"
 
   	if [[ $TIMELINE_SERVER == "true" ]]; then
-		kill_process "$MASTERNODE" "ApplicationHistoryServer"
+		kill_java_process "$MASTERNODE" "ApplicationHistoryServer"
 	fi
 else
 	m_echo "Stopping YARN services"
@@ -25,5 +29,5 @@ else
 fi
 
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
-	kill_process "$MASTERNODE" "JobHistoryServer"
+	kill_java_process "$MASTERNODE" "JobHistoryServer"
 fi
