@@ -9,7 +9,7 @@ if [[ -z $BDEV_HOME ]]; then
 fi
 
 export BDEV_START_DATE=$(date +"%d_%m_%Y_%H-%M-%S-%N")
-export BDEV_CONF_DIR=$BDEV_HOME/etc
+export BDEV_DEFAULT_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
 export BDEV_CLEANUP_DIR=$BDEV_HOME/bin/cleanup
 export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
@@ -65,8 +65,8 @@ export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 . $BDEV_BIN_DIR/functions.sh
 
 if [[ -z $BDEV_CONF_DIR ]]; then
-	PRINT_EXP_DIR_WARNING=true
-	export BDEV_CONF_DIR=$BDEV_CONF_DIR
+	PRINT_CONF_DIR_WARNING=true
+	export BDEV_CONF_DIR=$BDEV_DEFAULT_CONF_DIR
 fi
 
 if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
@@ -94,8 +94,8 @@ fi
 m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
-if [[ "$PRINT_EXP_DIR_WARNING" == "true" ]]; then
-	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_CONF_DIR"
+if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
+	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_DEFAULT_CONF_DIR"
 fi
 
 if [[ ! -d "$BDEV_CONF_DIR" ]]; then
