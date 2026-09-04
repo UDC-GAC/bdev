@@ -99,11 +99,12 @@ if [[ ! -d "$REPORT_DIR" ]]; then
 fi
 
 m_echo "$APP_NAME v$APP_VERSION"
-m_echo "Reporting to $REPORT_DIR"
 
 if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"
 fi
+
+m_echo "Reporting to $REPORT_DIR"
 
 if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_DEFAULT_CONF_DIR"
