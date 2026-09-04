@@ -47,7 +47,10 @@ else
 fi
 
 # Hadoop
+NAMENODE_RPC_ADDRESS="${HADOOP_DEFAULT_FS#*://}"
+NAMENODE_RPC_ADDRESS="${RPC_ADDRESS%%/*}"
 add_conf_param "hadoop_default_fs" $HADOOP_DEFAULT_FS
+add_conf_param "namenode_rpc_address" $NAMENODE_RPC_ADDRESS
 add_conf_param "hdfs_port" $HDFS_PORT
 add_conf_param "yarn_app_staging_dir" $YARN_APP_STAGING_DIR
 add_conf_param "mappers_per_node" $MAPPERS_PER_NODE
