@@ -69,7 +69,7 @@ done
 # Extra Java runtime options.  Empty by default.
 # For Kerberos debugging, an extended option set logs more invormation
 # export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Dsun.security.krb5.debug=true -Dsun.security.spnego.debug"
-RESOLVER_SCRIPT="$hostname_script"
+RESOLVER_SCRIPT="$get_hostname_script"
 HOSTFILE="$hostfile"
 HADOOPHOSTNAME=""
 
