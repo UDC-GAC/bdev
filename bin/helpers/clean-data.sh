@@ -48,6 +48,6 @@ fi
 # Disk space check
 if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
 	# Load BDEv functions
-	. $BDEV_BIN_DIR/functions.sh
+	. $HELPER_SCRIPTS_DIR/functions.sh
 	check_disk_space "$TMP_DIR" "$LOCAL_DIRS"
 fi
