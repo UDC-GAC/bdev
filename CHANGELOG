@@ -10,11 +10,13 @@ BDEv 4.X.X - 2026-XX-XX
 
 		- Add pre-flight SSH check to validate connection options and ensure passwordless access
 		
-		- Improve parsing of hostfile, validation of network interfaces and related helper scripts
+		- Improve parsing of hostfile, validation of network interfaces and related helper network scripts
 		
 		- Fix network configuration issues
 
-		- Rename BDEV_EXPERIMENT_DIR to BDEV_CONF_DIR for the configuration directoy
+		- Remove OUTPUT_DIR from bdev-conf file and replace it with BDEV_OUTPUT_DIR environment variable and default fallaback
+
+		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
 		
 		- Minor changes and bug fixes
  
