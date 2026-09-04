@@ -216,6 +216,17 @@ if [[ "$BDEV_SSH_OPTS" != *"BatchMode=yes"* ]]; then
     BDEV_SSH_OPTS="-o BatchMode=yes $BDEV_SSH_OPTS"
 fi
 
+# Basic syntax check
+if echo " $BDEV_SSH_OPTS" | grep -qE " [a-zA-Z]+="; then
+    for token in $BDEV_SSH_OPTS; do
+        if [[ "$token" == *"="* ]] && [ "$prev_token" != "-o" ]; then
+            m_error "Malformed BDEV_SSH_OPTS: $BDEV_SSH_OPTS"
+            m_exit "BDEV_SSH_OPTS: '$token' is missing the '-o' prefix"
+        fi
+        prev_token="$token"
+    done
+fi
+
 export SSH_CMD="$SSH_CMD $BDEV_SSH_OPTS"
 
 # Check java command and version

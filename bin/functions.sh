@@ -1115,6 +1115,26 @@ get_interactive_shell() {
 
 export -f get_interactive_shell
 
+check_ssh_connectivity() {
+    local test_node="$1"
+    local ssh_output
+    local exit_code
+
+    # Execute the null command ':' or 'true' by capturing the error output
+    ssh_output=$($SSH_CMD "$test_node" ":" 2>&1)
+    exit_code=$?
+
+    if [ $exit_code -ne 0 ]; then
+    	m_err "SSH pre-flight check failed on target: $test_node"
+        m_err "Command executed: $SSH_CMD $test_node \":\""
+        m_err "Exit code: $exit_code" >&2
+        m_err "Details: $ssh_output" >&2
+        m_exit "Please check your BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
+    fi
+}
+
+export -f check_ssh_connectivity
+
 function sum() {
     SUM=0
     local -a values=($*)
