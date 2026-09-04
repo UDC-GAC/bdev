@@ -64,9 +64,9 @@ export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 # Load BDEv functions
 . $BDEV_BIN_DIR/functions.sh
 
-if [[ -z $BDEV_EXPERIMENT_DIR ]]; then
+if [[ -z $BDEV_CONF_DIR ]]; then
 	PRINT_EXP_DIR_WARNING=true
-	export BDEV_EXPERIMENT_DIR=$BDEV_CONF_DIR
+	export BDEV_CONF_DIR=$BDEV_CONF_DIR
 fi
 
 if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
@@ -74,14 +74,14 @@ if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
 fi
 
 # Load BDEv and system configuration files
-. $BDEV_EXPERIMENT_DIR/bdev-conf.sh
-. $BDEV_EXPERIMENT_DIR/system-conf.sh
+. $BDEV_CONF_DIR/bdev-conf.sh
+. $BDEV_CONF_DIR/system-conf.sh
 
 export REPORT_DIR=${OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
-export HELPER_SCRIPTS_DIR=${REPORT_DIR}/scripts
+export HELPER_SCRIPTS_DIR=${REPORT_DIR}/helper_scripts
 export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
@@ -95,19 +95,19 @@ m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
 
 if [[ "$PRINT_EXP_DIR_WARNING" == "true" ]]; then
-	m_warn "BDEV_EXPERIMENT_DIR not defined, using default directory: $BDEV_CONF_DIR"
+	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_CONF_DIR"
 fi
 
-if [[ ! -d "$BDEV_EXPERIMENT_DIR" ]]; then
-	m_exit "BDEV_EXPERIMENT_DIR does not exist or is not a directory: $BDEV_EXPERIMENT_DIR"
+if [[ ! -d "$BDEV_CONF_DIR" ]]; then
+	m_exit "BDEV_CONF_DIR does not exist or is not a directory: $BDEV_CONF_DIR"
 fi
 
 if [[ ! -d "$BDEV_FRAMEWORKS_DIR" ]]; then
 	m_exit "BDEV_FRAMEWORKS_DIR does not exist or is not a directory: $BDEV_FRAMEWORKS_DIR"
 fi
 
-export BDEV_EXPERIMENT_DIR=$(cd "$BDEV_EXPERIMENT_DIR" && pwd)
-m_echo "Configuration directory: $BDEV_EXPERIMENT_DIR"
+export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
+m_echo "Configuration directory: $BDEV_CONF_DIR"
 
 # Storage backend
 if [[ -z "$STORAGE_BACKEND" ]]; then
@@ -157,19 +157,19 @@ if ! mkdir -p "$REPORT_DIR/etc" "$HELPER_SCRIPTS_DIR"; then
 	m_exit "Could not create the required report subdirectories"
 fi
 
-if ! cp -r "$BDEV_EXPERIMENT_DIR"/* "$REPORT_DIR/etc/"; then
+if ! cp -r "$BDEV_CONF_DIR"/* "$REPORT_DIR/etc/"; then
     m_exit "Could not copy configuration files to $REPORT_DIR/etc"
 fi
 
-export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
-m_echo "Configuration copied to: $BDEV_EXPERIMENT_DIR"
+export BDEV_CONF_DIR=$REPORT_DIR/etc
+m_echo "Configuration copied to: $BDEV_CONF_DIR"
 
 # Load remaining configuration files
-. $BDEV_EXPERIMENT_DIR/hdfs.sh
-. $BDEV_EXPERIMENT_DIR/yarn.sh
-. $BDEV_EXPERIMENT_DIR/mapreduce.sh
-. $BDEV_EXPERIMENT_DIR/benchmarks-conf.sh
-. $BDEV_EXPERIMENT_DIR/frameworks-conf.sh
+. $BDEV_CONF_DIR/hdfs.sh
+. $BDEV_CONF_DIR/yarn.sh
+. $BDEV_CONF_DIR/mapreduce.sh
+. $BDEV_CONF_DIR/benchmarks-conf.sh
+. $BDEV_CONF_DIR/frameworks-conf.sh
 
 case "$SPARK_API" in
     rdd|dataset)
@@ -183,9 +183,9 @@ if ! [[ "$NUM_EXECUTIONS" =~ ^[0-9]+$ ]] || [[ "$NUM_EXECUTIONS" -lt 1 ]]; then
 	m_exit "The number of workload executions must be an integer greater than 0: NUM_EXECUTIONS=${NUM_EXECUTIONS:-<not set>}"
 fi
 
-export CLUSTER_SIZES=$(read_list "$BDEV_EXPERIMENT_DIR/cluster_sizes.lst")
-export BENCHMARKS=$(read_list "$BDEV_EXPERIMENT_DIR/benchmarks.lst")
-export SOLUTIONS=$(read_frameworks_list "$BDEV_EXPERIMENT_DIR/frameworks.lst")
+export CLUSTER_SIZES=$(read_list "$BDEV_CONF_DIR/cluster_sizes.lst")
+export BENCHMARKS=$(read_list "$BDEV_CONF_DIR/benchmarks.lst")
+export SOLUTIONS=$(read_frameworks_list "$BDEV_CONF_DIR/frameworks.lst")
 export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
 export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
 export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")
@@ -203,7 +203,7 @@ fi
 # Setup default hostfile
 if [[ -z $BDEV_HOSTFILE ]]; then
 	if [[ "$SLURM_ENV" == "false" ]]; then
-		export BDEV_HOSTFILE=$BDEV_EXPERIMENT_DIR/hostfile
+		export BDEV_HOSTFILE=$BDEV_CONF_DIR/hostfile
 	fi
 fi
 		

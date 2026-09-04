@@ -1,19 +1,27 @@
 #!/bin/bash
 
+kill_java_process() {
+    local node="$1"
+    local process="$2"
+
+    m_echo "Finishing $process:" "$node"
+    $SSH_CMD "$node" \
+        "DAEMON_PIDS=\$(\"$JPS\" | awk -v process=\"$process\" '\$2 ~ process {print \$1}'); \
+         if [[ -n \"\$DAEMON_PIDS\" ]]; then
+             kill -9 \$DAEMON_PIDS 2>/dev/null
+         fi"		 
+}
+
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
-	SLAVES=`cat $SLAVESFILE`
-	for NODE in $SLAVES
-	do
-		m_echo "Finishing NodeManager:" $NODE
-		$SSH_CMD $NODE "${BDEV_BIN_DIR}/kill.sh $JPS NodeManager"
+	SLAVES=$(cat "$SLAVESFILE")
+	for NODE in $SLAVES; do
+		kill_java_process "$NODE" "NodeManager"
 	done
 
-  	m_echo "Finishing ResourceManager:" $MASTERNODE
-	$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS ResourceManager"
+  	kill_java_process "$MASTERNODE" "ResourceManager"
 
   	if [[ $TIMELINE_SERVER == "true" ]]; then
-		m_echo "Finishing ApplicationHistoryServer:" $MASTERNODE
-		$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS ApplicationHistoryServer"
+		kill_java_process "$MASTERNODE" "ApplicationHistoryServer"
 	fi
 else
 	m_echo "Stopping YARN services"
@@ -21,6 +29,5 @@ else
 fi
 
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
-	m_echo "Finishing JobHistoryServer:" $MASTERNODE
-	$SSH_CMD $MASTERNODE "${BDEV_BIN_DIR}/kill.sh $JPS JobHistoryServer"
+	kill_java_process "$MASTERNODE" "JobHistoryServer"
 fi
