@@ -1,24 +1,36 @@
 #!/bin/bash
+set -euo pipefail
 
 if [[ $# -lt 1 ]]; then
-       echo "$0 hostfile"
+       echo "Usage: $0 <hostfile>" >&2
        exit 1
 fi
 
 INPUT_FILE="$1"
-CURRENT_NODE="${HOSTNAME%%.*}"
 
-while read -r NODE_NAME _; do
+if [[ ! -r "$INPUT_FILE" ]]; then
+    echo "Hostfile not found or not readable: $INPUT_FILE" >&2
+	exit 1
+fi
+
+CURRENT_NODE="${HOSTNAME:-$(hostname -s)}"
+CURRENT_NODE="${CURRENT_NODE%%.*}"
+
+while read -r NODE_NAME _ || [[ -n "$NODE_NAME" ]]; do
+	[[ -z "$NODE_NAME" || "$NODE_NAME" =~ ^# ]] && continue
+	
 	NODE="${NODE_NAME%%.*}"
 	
-        if [[ "$NODE" == "localhost" ]]; then
-        	echo "localhost"
-        	break
-        fi
+	if [[ "$NODE" == "localhost" ]]; then
+		echo "localhost"
+		exit 0
+	fi
         
 	if [[ "$NODE" == "$CURRENT_NODE" ]]; then
 		echo "$NODE_NAME"
-		break
-        fi
+		exit 0
+	fi
 done < "$INPUT_FILE"
 
+echo "Node '$CURRENT_NODE' not found in $INPUT_FILE" >&2
+exit 1

@@ -17,6 +17,20 @@
 # limitations under the License.
 #
 
+RESOLVER_SCRIPT="$get_hostname_script"
+IP_RESOLVER_SCRIPT="$get_ip_from_hostname_script"
+HOSTFILE="$hostfile"
+SPARKHOSTNAME=""
+SPARKIP=""
+
+if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
+    SPARKHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
+fi
+
+if [[ -x "$IP_RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
+    SPARKIP=$("$IP_RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
+fi
+
 # This file is sourced when running various Spark programs.
 # Copy it as spark-env.sh and edit that to configure Spark for your site.
 
@@ -28,8 +42,8 @@
 
 # Options read by executors and drivers running inside the cluster
 # - SPARK_LOCAL_IP, to set the IP address Spark binds to on this node
-SPARK_LOCAL_IP=`$bdev_bin_dir/get_ip_from_hostname.sh $hostfile`
-SPARK_LOCAL_HOSTNAME=`$bdev_bin_dir/$hostname_script $hostfile`
+SPARK_LOCAL_IP="${SPARKIP:-$loopback_ip}"
+SPARK_LOCAL_HOSTNAME="${SPARKHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
 # - SPARK_PUBLIC_DNS, to set the public DNS name of the driver program
 # - SPARK_LOCAL_DIRS, storage directories to use on this node for shuffle and RDD data
 SPARK_LOCAL_DIRS=$spark_local_dirs
