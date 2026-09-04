@@ -221,7 +221,7 @@ fi
 if echo " $BDEV_SSH_OPTS" | grep -qE " [a-zA-Z]+="; then
     for token in $BDEV_SSH_OPTS; do
         if [[ "$token" == *"="* ]] && [ "$prev_token" != "-o" ]; then
-            m_error "Malformed BDEV_SSH_OPTS: $BDEV_SSH_OPTS"
+            m_err "Malformed BDEV_SSH_OPTS: $BDEV_SSH_OPTS"
             m_exit "BDEV_SSH_OPTS: '$token' is missing the '-o' prefix"
         fi
         prev_token="$token"
