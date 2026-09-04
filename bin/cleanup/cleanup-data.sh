@@ -19,7 +19,8 @@ fi
 
 for NODE in $MASTERNODE $SLAVENODES
 do
-	$SSH_CMD $NODE "export TMP_DIR=${TMP_DIR};\
+	$SSH_CMD $NODE "export USER='${USER}';\
+		export TMP_DIR=${TMP_DIR};\
 		export LOCAL_DIRS='${LOCAL_DIRS}';\
 		export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS}';\
 		export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS}';\

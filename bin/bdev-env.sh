@@ -26,6 +26,7 @@ export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
 export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
 export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
+export USER=${USER:-$(id -nu)}
 
 #ILO
 export ILO_HOME=$BDEV_BIN_DIR/ilo
