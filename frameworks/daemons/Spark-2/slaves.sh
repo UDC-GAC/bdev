@@ -88,7 +88,7 @@ if [ "$SPARK_SSH_OPTS" = "" ]; then
 fi
 
 #BDEv
-export SPARK_SSH_OPTS=$SSH_OPTS
+export SPARK_SSH_OPTS=$BDEV_SSH_OPTS
 #BDEv
 set -- "export" "SPARK_CONF_DIR=${SPARK_CONF_DIR}" ";" "${@}"
 

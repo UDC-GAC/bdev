@@ -198,30 +198,49 @@ if [[ -z $BDEV_HOSTFILE ]]; then
 	fi
 fi
 		
-# Setup modules
+# Setup environment modules
 if [[ "$ENABLE_MODULES" == "true" ]]; then
-	m_echo "Loading modules: ${MODULES_JAVA}"
+	m_echo "Loading environment modules: ${MODULES_JAVA}"
 	module load ${MODULES_JAVA}
-	m_echo "Loading modules: ${MODULES_PYTHON}"
+	m_echo "Loading environment modules: ${MODULES_PYTHON}"
 	module load ${MODULES_PYTHON}
 fi
 
-# Check ssh command
+# Check ssh command and options
 require_binary SSH_CMD ssh
-export SSH_CMD="$SSH_CMD $SSH_OPTS"
-# Check java command
+
+# Ensure safe defaults for SSH
+export BDEV_SSH_OPTS="${BDEV_SSH_OPTS:-"-o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10s -o LogLevel=ERROR"}"
+
+if [[ "$BDEV_SSH_OPTS" != *"BatchMode=yes"* ]]; then
+    BDEV_SSH_OPTS="-o BatchMode=yes $BDEV_SSH_OPTS"
+fi
+
+export SSH_CMD="$SSH_CMD $BDEV_SSH_OPTS"
+
+# Check java command and version
 require_binary JAVA java
 export BDEV_JAVA_HOME=$(dirname $(dirname "${JAVA}"))
+
+# Check java version
+# Java 8 spits out: version "1.8.0_412" -> We keep "8"
+# Java 11 spits out: version "11.0.22" -> We'll stick with "11"
+JAVA_VER_STRING=$("$JAVA" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+JAVA_MAJOR_VER=$(echo "$JAVA_VER_STRING" | awk -F '.' '{if ($1 == 1) print $2; else print $1}')
+
 # Check jps command
 if [[ -x "${BDEV_JAVA_HOME}/bin/jps" ]]; then
 	export JPS="${BDEV_JAVA_HOME}/bin/jps"
 else
 	m_exit "Missing jps command (not found in ${BDEV_JAVA_HOME}/bin)"
 fi
+
 # Check ip command
 require_binary IP_COMMAND ip
+
 # Check getent command
 require_binary RESOLVEIP_COMMAND getent
+
 # Check Python
 require_binary PYTHON_BIN python3 python
 
@@ -232,12 +251,6 @@ if [[ "$PYTHON_MAJOR_VERSION" != "3" ]]; then
 	m_exit "$APP_NAME v$APP_VERSION requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
 fi
 
-# Check java version
-# Java 8 spits out: version "1.8.0_412" -> We keep "8"
-# Java 11 spits out: version "11.0.22" -> We'll stick with "11"
-JAVA_VER_STRING=$("$JAVA" -version 2>&1 | awk -F '"' '/version/ {print $2}')
-JAVA_MAJOR_VER=$(echo "$JAVA_VER_STRING" | awk -F '.' '{if ($1 == 1) print $2; else print $1}')
-
 #Define the JPMS options exclusive to Java 9+
 if [[ "$JAVA_MAJOR_VER" -le 8 ]]; then
 	export JAVA_JPMS_OPTS=""
@@ -245,12 +258,14 @@ else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
+# Define hostname script depending on the configured mode
 if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
 	export HOSTNAME_SCRIPT=get_hostname.sh
 else
 	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
 fi
 
+# Check ocount command for Oprofile
 if [[ $ENABLE_OPROFILE == "true" ]]; then
 	require_binary OPROFILE_BIN $OPROFILE_BIN
 fi
@@ -274,6 +289,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         fi
 fi
 
+# YARN scheduler class
 if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
 	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
 else

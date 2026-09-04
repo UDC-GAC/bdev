@@ -14,3 +14,4 @@ export CORES_PER_CPU=$(grep "^core id" /proc/cpuinfo | sort -u | wc -l)		# Cores
 export CORES_PER_NODE=$(( $CPUS_PER_NODE * $CORES_PER_CPU ))			# Cores per node
 export MEMORY_PER_NODE=$(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo)	# Total memory per node
 export MEMORY_ALLOC_PER_NODE=$(op_int "$MEMORY_PER_NODE * $MEMORY_PER_NODE_FACTOR")	# Available memory per node
+export BDEV_SSH_OPTS="-o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10s -o LogLevel=ERROR"	# SSH options

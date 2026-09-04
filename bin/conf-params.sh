@@ -11,7 +11,7 @@ add_conf_param "bdev_home" $BDEV_HOME
 add_conf_param "bdev_bin_dir" $BDEV_BIN_DIR
 add_conf_param "enable_hostnames" $ENABLE_HOSTNAMES
 add_conf_param "hostname_script" $HOSTNAME_SCRIPT
-add_conf_param "ssh_opts" "$SSH_OPTS"
+add_conf_param "ssh_opts" "$BDEV_SSH_OPTS"
 add_conf_param "loopback_ip" $LOOPBACK_IP
 add_conf_param "tmp_dir" $TMP_DIR
 add_conf_param "local_dirs" $LOCAL_DIRS

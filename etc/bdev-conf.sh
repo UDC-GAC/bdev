@@ -7,7 +7,6 @@ export NFS_MOUNT_POINT=${NFS_MOUNT_POINT:-""}	# Only required if STORAGE_BACKEND
 export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostnames for cluster nodes
 export DEFAULT_TIMEOUT=3600	# Default workload timeout (in seconds)
 export OUTPUT_DIR=$PWD/${APP_NAME}_OUTPUT	# Default report output directory
-export SSH_OPTS="-o StrictHostKeyChecking=no"	# Optional SSH parameters
 export ENABLE_RUNTIME_PLOTS=false	# Generates performance plots with the execution time of workloads
 export ENABLE_MODULES=false	# Enable use of environment modules & Lmod
 export MODULES_JAVA="java"	# Modules to load for enabling Java
