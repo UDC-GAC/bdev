@@ -70,10 +70,11 @@ done
 # For Kerberos debugging, an extended option set logs more invormation
 # export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Dsun.security.krb5.debug=true -Dsun.security.spnego.debug"
 RESOLVER_SCRIPT="$hostname_script"
+HOSTFILE="$hostfile"
 HADOOPHOSTNAME=""
 
 if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
-    HADOOPHOSTNAME=$("$RESOLVER_SCRIPT" "$hostfile" "$loopback_ip" 2>/dev/null)
+    HADOOPHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
 fi
 
 export HADOOPHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
