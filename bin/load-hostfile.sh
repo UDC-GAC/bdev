@@ -22,6 +22,10 @@ fi
 export NUM_NODES=$(echo "$COMPUTE_NODES" | wc -w)
 m_echo "Nodes ($NUM_NODES): $COMPUTE_NODES"
 
+# Check SSH connectivity (fail fast)
+FIRST_NODE="${COMPUTE_NODES%% *}"
+check_ssh_connectivity "$FIRST_NODE"
+
 if [[ ! -z "${ETHERNET_INTERFACE}" ]]; then
 	export HOSFTILE_ETHERNET=$REPORT_DIR/hostfile.ethernet
 	export ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface $HOSFTILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES)
