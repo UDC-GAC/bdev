@@ -81,14 +81,14 @@ export REPORT_DIR=${OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
+export HELPER_SCRIPTS_DIR=${REPORT_DIR}/scripts
 export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo
 
-if [[ ! -d $REPORT_DIR ]]; then
-	mkdir -p $REPORT_DIR
-	mkdir -p $REPORT_DIR/etc
+if ! mkdir -p "$REPORT_DIR" ; then
+	m_exit "Could not create report directory at $REPORT_DIR"
 fi
 
 m_echo "$APP_NAME v$APP_VERSION"
@@ -153,7 +153,18 @@ export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/spark/local")
 export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
 
 # Copy configuration to REPORT_DIR
-cp -r $BDEV_EXPERIMENT_DIR/* $REPORT_DIR/etc
+if ! mkdir -p "$REPORT_DIR/etc" "$HELPER_SCRIPTS_DIR"; then
+	m_exit "Could not create report subdirectories"
+fi
+
+if ! cp -r "$BDEV_EXPERIMENT_DIR"/* "$REPORT_DIR/etc/"; then
+    m_exit "Could not copy configuration files to $REPORT_DIR/etc"
+fi
+
+if ! cp "$BDEV_BIN_DIR/helpers"/* "$HELPER_SCRIPTS_DIR/"; then
+    m_exit "Could not copy helper scripts to $HELPER_SCRIPTS_DIR"
+fi
+
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
 m_echo "Configuration copied to: $BDEV_EXPERIMENT_DIR"
 
