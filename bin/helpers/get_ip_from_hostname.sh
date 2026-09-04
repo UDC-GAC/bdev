@@ -19,6 +19,7 @@ CURRENT_NODE="${CURRENT_NODE%%.*}"
 
 while read -r NODE_NAME NODE_IP || [[ -n "$NODE_NAME" ]]; do
 	[[ -z "$NODE_NAME" || "$NODE_NAME" =~ ^# ]] && continue
+	[[ -z "$NODE_IP" ]] && continue
 	
 	NODE="${NODE_NAME%%.*}"
 
