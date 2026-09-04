@@ -282,7 +282,7 @@ function load_hostfile() {
 	fi
 
 	if [[ -z "${raw_nodes}" ]]; then
-	    m_exit "Nodes extracted from $nodes_source is empty. Please verify your configuration."
+	    m_exit "Nodes extracted from $nodes_source is empty. Please verify your configuration"
 	fi
 
 	export HOSTFILE_REPORT="$REPORT_DIR/hostfile"
@@ -338,10 +338,10 @@ function load_hostfile() {
 	fi
 
 	if [[ -z "${ETHERNET_COMPUTE_NODES:-}" && -z "${IPOIB_COMPUTE_NODES:-}" ]]; then
-		m_warn "No valid network interface hconfigured. Using default configuration"
+		m_warn "No valid network interface configured. Using default network configuration"
 	fi
 
-	# Load initial nodes
+	# Load nodes from default hostfile
 	configure_nodes $COMPUTE_NODES
 
 	# Replace MAX in CLUSTER_SIZES (if needed)
@@ -549,7 +549,7 @@ function configure_network() {
 		export RDMA_HADOOP_ROCE_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
 		m_echo "Using network interface $NETWORK_INTERFACE for TCP/IP over Ethernet and hostfile: $HOSTFILE"
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 		m_echo "Using network interface $NETWORK_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
 	fi
 	
