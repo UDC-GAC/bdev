@@ -13,6 +13,8 @@ BDEv 4.X.X - 2026-XX-XX
 		- Improve parsing of hostfile, validation of network interfaces and related helper scripts
 		
 		- Fix network configuration issues
+
+		- Rename BDEV_EXPERIMENT_DIR to BDEV_CONF_DIR for the configuration directoy
 		
 		- Minor changes and bug fixes
  
