@@ -551,6 +551,8 @@ function configure_network() {
 		m_echo "Using network interface $NETWORK_INTERFACE for TCP/IP over Ethernet and hostfile: $HOSTFILE"
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 		m_echo "Using network interface $NETWORK_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
+	else
+		m_exit "Unkown network interface for $SOLUTION. Revise network settings"
 	fi
 	
 	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $HOSTFILE)
