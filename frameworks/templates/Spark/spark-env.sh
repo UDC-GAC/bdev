@@ -28,7 +28,7 @@ if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
 fi
 
 if [[ -x "$IP_RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
-    SPARKIP=$("$IP_RESOLVER_SCRIPT" "$HOSTFILE" 2>/dev/null)
+    SPARKIP=$("$IP_RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
 fi
 
 # This file is sourced when running various Spark programs.
