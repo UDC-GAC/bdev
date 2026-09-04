@@ -106,6 +106,10 @@ if [[ ! -d "$BDEV_FRAMEWORKS_DIR" ]]; then
 	m_exit "BDEV_FRAMEWORKS_DIR does not exist or is not a directory: $BDEV_FRAMEWORKS_DIR"
 fi
 
+if ! is_nfs "$BDEV_FRAMEWORKS_DIR"; then
+	m_warn "BDEV_FRAMEWORKS_DIR is not a shared directory mounted using NFS, which will likely cause issues for multi-node executions: $BDEV_FRAMEWORKS_DIR"
+fi
+
 export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
 export BDEV_CONF_DIR_ORIG="$BDEV_CONF_DIR"
 m_echo "Configuration directory: $BDEV_CONF_DIR"
@@ -122,7 +126,7 @@ if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 	fi
     
 	if ! is_nfs "$NFS_MOUNT_POINT"; then
-	        m_exit "NFS_MOUNT_POINT is not a directory mounted using NFS: $NFS_MOUNT_POINT"
+	        m_exit "NFS_MOUNT_POINT is not a shared directory mounted using NFS: $NFS_MOUNT_POINT"
 	fi
 
 	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
