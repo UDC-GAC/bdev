@@ -26,6 +26,7 @@ export COPY_DAEMONS_SCRIPT=$BDEV_BIN_DIR/copy-daemons.sh
 export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
 export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
+export CLEANUP_ON_EXIT="false"
 export USER=${USER:-$(id -nu)}
 
 #ILO
@@ -221,8 +222,8 @@ fi
 if echo " $BDEV_SSH_OPTS" | grep -qE " [a-zA-Z]+="; then
     for token in $BDEV_SSH_OPTS; do
         if [[ "$token" == *"="* ]] && [ "$prev_token" != "-o" ]; then
-            m_err "Malformed BDEV_SSH_OPTS: $BDEV_SSH_OPTS"
-            m_exit "BDEV_SSH_OPTS: '$token' is missing the '-o' prefix"
+            m_error "Malformed BDEV_SSH_OPTS: $BDEV_SSH_OPTS"
+            m_exit "'$token' is missing the '-o' prefix"
         fi
         prev_token="$token"
     done

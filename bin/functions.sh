@@ -14,13 +14,13 @@ function m_echo() {
 
 export -f m_echo
 
-function m_err() {
+function m_error() {
 	get_date
 	printf '\e[48;5;1m[%s ERR ]\e[0m %s\n' "$DATE" "$*" >&2
 	[[ -n "$REPORT_LOG" ]] && printf '%s ! %s\n' "$DATE" "$*" >> "$REPORT_LOG"
 }
 
-export -f m_err
+export -f m_error
 
 function m_warn() {
 	get_date
@@ -31,9 +31,13 @@ function m_warn() {
 export -f m_warn
 
 function m_exit() {
-	m_err "$@"
-	[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
-	[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
+	m_error "$@"
+	
+	if [[ "$CLEANUP_ON_EXIT" == "true" ]]; then
+		[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
+		[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
+	fi
+	
 	m_echo "Exiting $APP_NAME v$APP_VERSION"
 	exit 1
 }
@@ -270,10 +274,11 @@ function get_nodes_by_hostname() {
 		fi
 		
 		if [[ -z "${OUT}" ]]; then
-			m_err "Hostname for node $NODE could not be revolved"
+			m_error "Hostname for node $NODE could not be revolved"
 			OUT_NODES=""
 			return 1
 		fi
+		
 		local NODE_IP=$(echo "$OUT" | awk '{print $1}')
 		local NODE_NAME=$(echo "$OUT" | awk '{print $2}')
 
@@ -303,14 +308,14 @@ function get_nodes_by_interface() {
         do
         	local INTERFACE_DATA
         	if ! INTERFACE_DATA=$($SSH_CMD "$NODE" "$IP_COMMAND a s $INTERFACE" 2>/dev/null | grep 'inet '); then
-                        m_err "$INTERFACE interface not found or not configured for $NODE"
+                        m_error "$INTERFACE interface not found or not configured for $NODE"
 			OUT_NODES=""
 			return 1
                 fi
                 
                 local INTERFACE_IP=$(echo "$INTERFACE_DATA" | awk '{print $2}' | cut -d '/' -f 1 | head -n 1)
                 if [[ -z "${INTERFACE_IP}" ]]; then
-                        m_err "IP not found for $NODE using $INTERFACE interface"
+                        m_error "IP not found for $NODE using $INTERFACE interface"
 			OUT_NODES=""
 			return 1
                 fi
@@ -901,11 +906,11 @@ function end_benchmark() {
 	if [[ ${TIMEOUT:-0} -gt 0 && $code -eq 124 ]]; then
 		export ELAPSED_TIME="TIMEOUT"
 		export ELAPSED_TOTAL_TIME="TIMEOUT"
-		m_err "${BENCHMARK^} timeout exceeded (${TIMEOUT} seconds)"
+		m_error "${BENCHMARK^} timeout exceeded (${TIMEOUT} seconds)"
 	elif [[ $code -ne 0 ]]; then
 		export ELAPSED_TIME="FAILED"
 		export ELAPSED_TOTAL_TIME="FAILED"
-		m_err "${BENCHMARK^} execution failed (exit code: $code)"
+		m_error "${BENCHMARK^} execution failed (exit code: $code)"
 	else
 		export ELAPSED_TIME=$(op "($END_TIME - $START_TIME) / 1000")
 		export ELAPSED_TOTAL_TIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
@@ -1126,11 +1131,11 @@ check_ssh_connectivity() {
     exit_code=$?
 
     if [ $exit_code -ne 0 ]; then
-    	m_err "SSH pre-flight check failed on target: $test_node"
-        m_err "Command executed: $SSH_CMD $test_node \":\""
-        m_err "Exit code: $exit_code" >&2
-        m_err "Details: $ssh_output" >&2
-        m_exit "Please check your BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
+    	m_error "SSH pre-flight check failed on node: $test_node"
+        m_error "Command executed: $SSH_CMD $test_node \":\""
+        m_error "Exit code: $exit_code" >&2
+        m_error "Details: $ssh_output" >&2
+        m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
     fi
 }
 
