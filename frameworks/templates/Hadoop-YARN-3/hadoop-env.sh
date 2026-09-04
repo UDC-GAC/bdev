@@ -64,7 +64,14 @@ export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 export HADOOP_SECONDARYNAMENODE_OPTS="-Xmx""${HADOOP_SECONDARYNAMENODE_HEAPSIZE}""m"
 
-export HADOOPHOSTNAME=`$bdev_bin_dir/$hostname_script $hostfile $loopback_ip`
+RESOLVER_SCRIPT="$hostname_script"
+HADOOPHOSTNAME=""
+
+if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
+    HADOOPHOSTNAME=$("$RESOLVER_SCRIPT" "$hostfile" "$loopback_ip" 2>/dev/null)
+fi
+
+export HADOOPHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
 export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME} $java_jpms_opts"
 
 # Technically, the only required environment variable is JAVA_HOME.
