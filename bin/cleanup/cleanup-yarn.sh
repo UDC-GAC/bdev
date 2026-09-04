@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -z "$YARN_EXECUTABLE" ]] || ! command -v "$YARN_EXECUTABLE" &> /dev/null; then
-	return
+	exit 0
 else
     m_echo "Performing YARN cleanup"
     sleep 1
