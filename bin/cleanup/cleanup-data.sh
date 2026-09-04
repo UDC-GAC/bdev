@@ -29,7 +29,7 @@ do
 		export DISK_SPACE_THRESHOLD=${DISK_SPACE_THRESHOLD};\
 		export BDEV_BIN_DIR=${BDEV_BIN_DIR};\
 		export REPORT_LOG=${REPORT_LOG};\
-		$BDEV_CLEANUP_DIR/clean-data.sh"
+		$HELPER_SCRIPTS_DIR/clean-data.sh"
 done
 
 m_echo "Cleanup done"
