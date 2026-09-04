@@ -1191,7 +1191,7 @@ check_disk_space() {
     for dir in $RAW_DIRS; do
         [[ -z "$dir" ]] && continue
 
-        # Si la ruta no existe aún, resolver el ancestro más cercano que sí exista
+        # If the route does not yet exist, resolve the nearest ancestor that does exist.
         local target="$dir"
         while [[ ! -d "$target" && "$target" != "/" && "$target" != "." ]]; do
             target=$(dirname "$target")
@@ -1199,7 +1199,7 @@ check_disk_space() {
 
         [[ ! -d "$target" ]] && continue
 
-        # Obtener bloques totales ($2), libres ($4) y punto de montaje ($6) en formato POSIX
+        # Obtain total blocks ($2), free blocks ($4) and mount point ($6) in POSIX format
         local df_info
         df_info=$(df -Pk "$target" 2>/dev/null | awk 'NR==2 {print $2, $4, $6}')
         [[ -z "$df_info" ]] && continue
@@ -1208,21 +1208,21 @@ check_disk_space() {
         local avail_kb=$(echo "$df_info" | awk '{print $2}')
         local mount_point=$(echo "$df_info" | awk '{print $3}')
 
-        # Deduplicar: omitir si ya se evaluó este mismo punto de montaje
+        # Deduplicate: skip if this same assembly point has already been evaluated
         if [[ " ${CHECKED_MOUNTS[*]} " =~ " ${mount_point} " ]]; then
             continue
         fi
         CHECKED_MOUNTS+=("$mount_point")
 
-        # Evitar división por cero en sistemas virtuales o pseudofs
+        # Avoid division by zero in virtual systems or pseudofs
         (( total_kb == 0 )) && continue
 
-        # Cálculo aritmético nativo de enteros en Bash
+        # Native integer arithmetic calculation in Bash
         local avail_pct=$(( (avail_kb * 100) / total_kb ))
         local avail_gb=$(( avail_kb / 1024 / 1024 ))
 
         if (( avail_pct < DISK_MIN_FREE_PERCENT )); then
-            m_warn "Low disk space on $HOSTNAME: $mount_point ($target) | ${avail_pct}% free (${avail_gb}GB available)"
+            echo "Low disk space on $HOSTNAME: $mount_point ($target) | ${avail_pct}% free (${avail_gb}GB available)"
         fi
     done
 }
