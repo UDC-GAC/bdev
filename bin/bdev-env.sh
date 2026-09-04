@@ -75,14 +75,16 @@ fi
 
 if [[ -z "$BDEV_OUTPUT_DIR" ]]; then
 	PRINT_OUTPUT_DIR_WARNING=true
-	export BDEV_OUTPUT_DIR=$PWD/${APP_NAME}_${APP_VERSION}_OUTPUT
+	export BDEV_OUTPUT_DIR=$PWD
+else
+	export BDEV_OUTPUT_DIR="$BDEV_OUTPUT_DIR/${APP_NAME}_${APP_VERSION}_OUTPUT"
 fi
 
 # Load BDEv and system configuration files
 . $BDEV_CONF_DIR/bdev-conf.sh
 . $BDEV_CONF_DIR/system-conf.sh
 
-export REPORT_DIR=${BDEV_OUTPUT_DIR}/${APP_NAME}_report_${BDEV_START_DATE}
+export REPORT_DIR="${BDEV_OUTPUT_DIR}/${APP_NAME}_report_${BDEV_START_DATE}"
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
