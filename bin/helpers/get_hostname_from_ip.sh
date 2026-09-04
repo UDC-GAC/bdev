@@ -20,7 +20,7 @@ if [[ "$LOOPBACK_IP" == "$IP" ]]; then
     exit 0
 fi
 
-while read -r NODE_NAME NODE_IP || [[ -n "$NODE_NAME" ]]; do
+while read -r NODE_NAME NODE_IP _ || [[ -n "$NODE_NAME" ]]; do
        [[ -z "$NODE_NAME" || "$NODE_NAME" =~ ^# ]] && continue
        [[ -z "$NODE_IP" ]] && continue
        
