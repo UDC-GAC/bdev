@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [[ $# -lt 2 ]]; then
-       echo "usage: $0 <hostfile> <ip> [loopback]"
+       echo "usage: $0 <hostfile> <ip> [loopback]" >&2
        exit 1
 fi
 
