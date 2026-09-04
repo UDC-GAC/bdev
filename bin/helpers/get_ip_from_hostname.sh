@@ -49,5 +49,5 @@ while read -r NODE_NAME NODE_IP _ || [[ -n "$NODE_NAME" ]]; do
 	fi
 done < "$INPUT_FILE"
 
-echo "Node '$CURRENT_NODE' not found in $INPUT_FILE" >&2
+echo "Node '$TARGET_NODE' not found in $INPUT_FILE" >&2
 exit 1
