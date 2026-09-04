@@ -17,7 +17,7 @@ fi
 CURRENT_NODE=$(hostname -s 2>/dev/null || hostname)
 CURRENT_NODE="${CURRENT_NODE%%.*}"
 
-while read -r NODE_NAME NODE_IP || [[ -n "$NODE_NAME" ]]; do
+while read -r NODE_NAME NODE_IP _ || [[ -n "$NODE_NAME" ]]; do
 	[[ -z "$NODE_NAME" || "$NODE_NAME" =~ ^# ]] && continue
 	[[ -z "$NODE_IP" ]] && continue
 	
