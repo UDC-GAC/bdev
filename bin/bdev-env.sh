@@ -154,15 +154,11 @@ export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
 
 # Copy configuration to REPORT_DIR
 if ! mkdir -p "$REPORT_DIR/etc" "$HELPER_SCRIPTS_DIR"; then
-	m_exit "Could not create report subdirectories"
+	m_exit "Could not create the required report subdirectories"
 fi
 
 if ! cp -r "$BDEV_EXPERIMENT_DIR"/* "$REPORT_DIR/etc/"; then
     m_exit "Could not copy configuration files to $REPORT_DIR/etc"
-fi
-
-if ! cp "$BDEV_BIN_DIR/helpers"/* "$HELPER_SCRIPTS_DIR/"; then
-    m_exit "Could not copy helper scripts to $HELPER_SCRIPTS_DIR"
 fi
 
 export BDEV_EXPERIMENT_DIR=$REPORT_DIR/etc
@@ -282,11 +278,19 @@ else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
+# Copy helper scripts
+if ! cp "$BDEV_BIN_DIR/helpers"/* "$HELPER_SCRIPTS_DIR/"; then
+    m_exit "Could not copy helper scripts to $HELPER_SCRIPTS_DIR"
+fi
+
+# Define ip script
+export GET_IP_FROM_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh"
+
 # Define hostname script depending on the configured mode
 if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-	export HOSTNAME_SCRIPT=get_hostname.sh
+	export GET_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_hostname.sh"
 else
-	export HOSTNAME_SCRIPT=get_ip_from_hostname.sh
+	export GET_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh"
 fi
 
 # Check ocount command for Oprofile
