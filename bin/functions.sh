@@ -735,6 +735,8 @@ function begin_report() {
 	REPORT="$APP_NAME v$APP_VERSION report \n"
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
+	REPORT="$REPORT \n Configuration directory: \n"
+	REPORT="$REPORT \t $BDEV_CONF_DIR \n"
 	REPORT="$REPORT \n Frameworks directory: \n"
 	REPORT="$REPORT \t $BDEV_FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
