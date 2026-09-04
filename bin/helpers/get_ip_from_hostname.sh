@@ -14,7 +14,7 @@ if [[ ! -r "$INPUT_FILE" ]]; then
 	exit 1
 fi
 
-CURRENT_NODE="${HOSTNAME:-$(hostname -s)}"
+CURRENT_NODE=$(hostname -s 2>/dev/null || hostname)
 CURRENT_NODE="${CURRENT_NODE%%.*}"
 
 while read -r NODE_NAME NODE_IP || [[ -n "$NODE_NAME" ]]; do
