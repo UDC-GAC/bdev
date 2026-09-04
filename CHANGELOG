@@ -10,6 +10,10 @@ BDEv 4.X.X - 2026-XX-XX
 
 		- Add pre-flight SSH check to validate connection options and ensure passwordless access
 		
+		- Improve parsing of hostfile and validation of network interfaces
+		
+		- Fix network configuration issues
+		
 		- Minor changes and bug fixes
  
  
