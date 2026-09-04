@@ -306,7 +306,7 @@ function load_hostfile() {
 	export CLEANUP_ON_EXIT="true"
 
 	if [[ -n "${ETHERNET_INTERFACE:-}" ]]; then
-		export HOSFTILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
+		export HOSTFILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
 	
 		ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_ETHERNET" "$ETHERNET_INTERFACE" $COMPUTE_NODES)
 		ETH_STATUS=$?
@@ -322,7 +322,7 @@ function load_hostfile() {
 	fi
 
 	if [[ -n "${IPOIB_INTERFACE:-}" ]]; then
-		export HOSFTILE_IPOIB="$REPORT_DIR/hostfile.ipoib"
+		export HOSTFILE_IPOIB="$REPORT_DIR/hostfile.ipoib"
 		
 		IPOIB_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_IPOIB" "$IPOIB_INTERFACE" $COMPUTE_NODES)
 		IB_STATUS=$?
@@ -501,7 +501,7 @@ function configure_network() {
                 	if [[ -n "${ETHERNET_COMPUTE_NODES:-}" ]]; then
                     		nodes="$ETHERNET_COMPUTE_NODES"
                     		net_interface="$ETHERNET_INTERFACE"
-                    		file="$HOSFTILE_ETHERNET"
+                    		file="$HOSTFILE_ETHERNET"
                 	else
                     		nodes="$COMPUTE_NODES"
                     		net_interface=default
@@ -512,7 +512,7 @@ function configure_network() {
                 	if [[ -n "${IPOIB_COMPUTE_NODES:-}" ]]; then
                     		nodes="$IPOIB_COMPUTE_NODES"
                     		net_interface="$IPOIB_INTERFACE"
-                    		file="$HOSFTILE_IPOIB"
+                    		file="$HOSTFILE_IPOIB"
                 	else
                     		nodes="$COMPUTE_NODES"
                     		net_interface=default
