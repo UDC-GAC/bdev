@@ -64,11 +64,12 @@ export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 export HADOOP_SECONDARYNAMENODE_OPTS="-Xmx""${HADOOP_SECONDARYNAMENODE_HEAPSIZE}""m"
 
-RESOLVER_SCRIPT="$hostname_script"
+RESOLVER_SCRIPT="$get_hostname_script"
+HOSTFILE="$hostfile"
 HADOOPHOSTNAME=""
 
 if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
-    HADOOPHOSTNAME=$("$RESOLVER_SCRIPT" "$hostfile" "$loopback_ip" 2>/dev/null)
+    HADOOPHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
 fi
 
 export HADOOPHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
