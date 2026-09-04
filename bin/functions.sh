@@ -1121,6 +1121,7 @@ check_ssh_connectivity() {
     local exit_code
 
     # Execute the null command ':' or 'true' by capturing the error output
+    m_info "Checking SSH connectivity to $test_node"
     ssh_output=$($SSH_CMD "$test_node" ":" 2>&1)
     exit_code=$?
 
