@@ -520,7 +520,7 @@ function configure_network() {
                 	;;
 
             	    *)
-                	m_exit "Invalid network interface $SOLUTION_NET_INTERFACE for $SOLUTION. Revise network settings"
+                	m_exit "Invalid network interface '$SOLUTION_NET_INTERFACE' for $SOLUTION. Revise the configured frameworks (framework.lst)"
                 	;;
         	esac
         fi
@@ -541,17 +541,17 @@ function configure_network() {
 	export RDMA_HADOOP_ROCE_ENABLED=false
 		
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-		m_echo "Using RDMA interface $RDMA_INTERFACE for InfiniBand and hostfile: $HOSTFILE"
+		m_echo "Using RDMA interface '$RDMA_INTERFACE' for InfiniBand and hostfile: $HOSTFILE"
 		export RDMA_HADOOP_IB_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		m_echo "Using RDMA interface $RDMA_INTERFACE for RoCE and hostfile: $HOSTFILE"
+		m_echo "Using RDMA interface '$RDMA_INTERFACE' for RoCE and hostfile: $HOSTFILE"
 		export RDMA_HADOOP_ROCE_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
-		m_echo "Using network interface $NETWORK_INTERFACE for TCP/IP over Ethernet and hostfile: $HOSTFILE"
+		m_echo "Using network interface '$NETWORK_INTERFACE' for TCP/IP over Ethernet and hostfile: $HOSTFILE"
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
-		m_echo "Using network interface $NETWORK_INTERFACE for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
+		m_echo "Using network interface '$NETWORK_INTERFACE' for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
 	else
-		m_exit "Unkown network interface for $SOLUTION. Revise network settings"
+		m_exit "Invalid network interface '${SOLUTION_NET_INTERFACE}' for $SOLUTION. Revise the configured frameworks (framework.lst)"
 	fi
 	
 	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $HOSTFILE)
@@ -589,10 +589,10 @@ export -f set_cluster_size
 
 function set_framework() {
 	export SOLUTION
-	export SOLUTION_NAME=`echo $SOLUTION | cut -d '_' -f 1`
-	export SOLUTION_VERSION=`echo $SOLUTION | cut -d '_' -f 2`
-	export SOLUTION_NET_INTERFACE=`echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}'`
-	export SOLUTION_DIR=${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}
+	export SOLUTION_NAME=$(echo $SOLUTION | cut -d '_' -f 1)
+	export SOLUTION_VERSION=$(echo $SOLUTION | cut -d '_' -f 2)
+	export SOLUTION_NET_INTERFACE=$(echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}')
+	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
 	SOLUTION_NUM=$1
 
 	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
