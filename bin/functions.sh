@@ -37,8 +37,7 @@ function m_exit() {
 		[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
 		[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
 	fi
-	
-	m_echo "Exiting $APP_NAME v$APP_VERSION"
+
 	exit 1
 }
 
@@ -526,12 +525,12 @@ function configure_network() {
         	esac
         fi
     
-	configure_nodes ${COMPUTE_NODES}
+	configure_nodes "$nodes"
 	export NETWORK_INTERFACE="$net_interface"
 	export HOSTFILE="$file"
 		
-	if [[ -z ${HOSTFILE} ]]; then
-		m_exit "Invalid hostfile for $SOLUTION. Revise network settings"
+	if [[ ! -f ${HOSTFILE} ]]; then
+		m_exit "Hostfile for $SOLUTION does not exist: $HOSTFILE"
 	fi
 
 	if [[ -z ${NETWORK_INTERFACE} ]]; then
