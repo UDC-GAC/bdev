@@ -260,92 +260,122 @@ function get_conf_value() {
 export -f get_conf_value
 
 function get_nodes_by_hostname() {
-	local NODE_FILE="$1"
-	local NODES="${*:2}"
-	local OUT_NODES=""
-	touch $NODE_FILE
+	local node_file="$1"
+	shift
+	local nodes="$*"
+	local tmp_file="${node_file}.tmp"
+	local out_nodes=()
 	
-        for NODE in $NODES
-        do
-        	if [[ "$NODE" == "localhost" || "$NODE" == "$LOOPBACK_IP" ]]; then
-        		OUT="$LOOPBACK_IP $NODE"
+	> "$tmp_file"
+	
+        for node in $nodes; do
+        	local node_ip=""
+        	local node_name=""
+        	
+        	if [[ "$node" == "localhost" || "$node" == "$LOOPBACK_IP" ]]; then
+        		node_ip="$LOOPBACK_IP"
+        		node_name="$node"
         	else
-			OUT=$($RESOLVEIP_COMMAND hosts "$NODE")
+        		local out
+        		local resolve_status
+        		out=$($RESOLVEIP_COMMAND hosts "$node" 2>&1)
+			resolve_status=$?
+			
+			if [[ $resolve_status -ne 0 || -z "$out" ]]; then
+				m_error "Could not resolve hostname for node: '$node'"
+				m_error "Command failed: $RESOLVEIP_COMMAND hosts \"$node\" (exit code: $resolve_status)"
+				[[ -n "$out" ]] && m_error "Details: $out"
+				rm -f "$tmp_file"
+				return 1
+			fi
+            
+			node_ip=$(awk '{print $1}' <<< "$out")
+			node_name=$(awk '{print $2}' <<< "$out")
 		fi
 		
-		if [[ -z "${OUT}" ]]; then
-			m_error "Hostname for node $NODE could not be revolved"
-			OUT_NODES=""
-			return 1
-		fi
-		
-		local NODE_IP=$(echo "$OUT" | awk '{print $1}')
-		local NODE_NAME=$(echo "$OUT" | awk '{print $2}')
-
 		if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
-			OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+			out_nodes+=("$node_name")
 		else
-			OUT_NODES="${OUT_NODES} ${NODE_IP}"
+			out_nodes+=("$node_ip")
 		fi
 
-                echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
+                echo "$node_name $node_ip" >> "$tmp_file"
         done
 
-        echo "${OUT_NODES# }"
+	# Consolidate the file
+	mv "$tmp_file" "$node_file"
+        echo "${out_nodes[*]}"
+        return 0
 }
 
 export -f get_nodes_by_hostname
 
 function get_nodes_by_interface() {
-	local NODE_FILE="$1"
-	local INTERFACE="$2"
-	local NODES="${*:3}"
-	local OUT_NODES=""
-	local SUCCESS=1
-	touch $NODE_FILE
-
-        for NODE in $NODES
-        do
-        	local INTERFACE_DATA
-        	if ! INTERFACE_DATA=$($SSH_CMD "$NODE" "$IP_COMMAND a s $INTERFACE" 2>/dev/null | grep 'inet '); then
-                        m_error "$INTERFACE interface not found or not configured for $NODE"
-			OUT_NODES=""
+	local node_file="$1"
+	local interface="$2"
+	shift 2
+	local nodes="$*"
+	local tmp_file="${node_file}.tmp"
+	local out_nodes=()
+	local resolution_warning=0
+	
+	> "$tmp_file"
+	
+        for node in $nodes; do
+        	# Obtain data from the remote interface via SSH
+        	local interface_data
+        	interface_data=$($SSH_CMD "$node" "$IP_COMMAND a s $interface" 2>/dev/null | grep 'inet ')
+        	
+        	if [[ -z "$interface_data" ]]; then
+        		m_error "Interface '$interface' not found or inactive on node '$node'"
+			rm -f "$tmp_file"
 			return 1
                 fi
                 
-                local INTERFACE_IP=$(echo "$INTERFACE_DATA" | awk '{print $2}' | cut -d '/' -f 1 | head -n 1)
-                if [[ -z "${INTERFACE_IP}" ]]; then
-                        m_error "IP not found for $NODE using $INTERFACE interface"
-			OUT_NODES=""
-			return 1
+                # Extract the clean IP address (without CIDR mask)
+                local interface_ip
+                interface_ip=$(echo "$interface_data" | awk '{print $2}' | cut -d '/' -f 1 | head -n 1)
+                
+                if [[ -z "$interface_ip" ]]; then
+                	m_error "Could not parse IPv4 address for interface '$interface' on node '$node'"
+                	rm -f "$tmp_file"
+                	return 1
                 fi
                 
-                local OUT
-                OUT=$($RESOLVEIP_COMMAND hosts "$INTERFACE_IP")
+                # Reverse resolution (IP -> Hostname)
+                local out
+                local node_ip
+                local node_name
+                out=$($RESOLVEIP_COMMAND hosts "$interface_ip" 2>/dev/null)
                 
-                if [[ -z "${OUT}" ]]; then
-                        SUCCESS=0
-                        NODE_IP="$INTERFACE_IP"
-                        NODE_NAME="$NODE"
+                if [[ -z "$out" ]]; then
+                	# In clusters it is common for interfaces like ib0 not to have reverse PTR registration; we degrade with warning without aborting execution
+                        resolution_warning=1
+                        node_ip="$interface_ip"
+                        node_name="$node"
                 else
-                        NODE_IP=$(echo "$OUT" | awk '{print $1}')
-                        NODE_NAME=$(echo "$OUT" | awk '{print $2}')
+                        node_ip=$(awk '{print $1}' <<< "$out")
+                        node_name=$(awk '{print $2}' <<< "$out")
                 fi
 
                 if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
-                        OUT_NODES="${OUT_NODES} ${NODE_NAME}"
+                        out_nodes+=("$node_name")
                 else
-                        OUT_NODES="${OUT_NODES} ${NODE_IP}"
+                        out_nodes+=("$node_ip")
                 fi
 
-                echo "$NODE_NAME $NODE_IP" >> "$NODE_FILE"
+                echo "$node_name $node_ip" >> "$tmp_file"
         done
 
-        echo "${OUT_NODES# }"
-
-        if [[ $SUCCESS -ne 1 ]]; then
-                m_warn "IP to hostname resolution failed for $INTERFACE"
-        fi
+	# If all nodes responded, we consolidate the file
+	mv "$tmp_file" "$node_file"
+	
+	if [[ $resolution_warning -eq 1 ]]; then
+		m_warn "Reverse resolution failed for some nodes on interface '$interface'. Using base hostnames as fallback"
+    	fi
+    
+	echo "${out_nodes[*]}"
+	return 0
 }
 
 export -f get_nodes_by_interface
@@ -373,7 +403,7 @@ function configure_network() {
 	if [[ "${SOLUTION}" == "NONE" ]]; then
 		nodes="$COMPUTE_NODES"
 		net_interface=default
-		file="$HOSFTILE_DEFAULT"
+		file="$HOSTFILE_REPORT"
 	else
 		case "$SOLUTION_NET_INTERFACE" in
 		    ethernet)
@@ -384,7 +414,7 @@ function configure_network() {
                 	else
                     		nodes="$COMPUTE_NODES"
                     		net_interface=default
-                    		file="$HOSFTILE_DEFAULT"
+                    		file="$HOSTFILE_REPORT"
                 	fi
                 	;;
             	    ipoib|ib|roce)
@@ -395,7 +425,7 @@ function configure_network() {
                 	else
                     		nodes="$COMPUTE_NODES"
                     		net_interface=default
-                    		file="$HOSFTILE_DEFAULT"
+                    		file="$HOSTFILE_REPORT"
                 	fi
                 	;;
 

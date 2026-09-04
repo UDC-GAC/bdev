@@ -1,26 +1,42 @@
 #!/bin/bash
 
+local nodes_source=""
+local raw_nodes=""
+
 if [[ -n "${BDEV_HOSTFILE:-}" ]]; then
 	if [[ ! -f "$BDEV_HOSTFILE" ]]; then
-		m_exit "Missing BDEV_HOSTFILE: $BDEV_HOSTFILE"
+		m_exit "BDEV_HOSTFILE is defined but does not exist: $BDEV_HOSTFILE"
 	fi
 	
-	export COMPUTE_NODES=$(awk '{print $1}' "$BDEV_HOSTFILE")
+	nodes_source="hostfile '$BDEV_HOSTFILE'"
+	raw_nodes=$(awk '{print $1}' "$BDEV_HOSTFILE")
 elif [[ "$SLURM_ENV" == "true" ]]; then
-	export COMPUTE_NODES=$(scontrol show hostname $SLURM_JOB_NODELIST)
+	if [[ -z "${SLURM_JOB_NODELIST:-}" ]]; then
+		m_exit "Running under Slurm, but SLURM_JOB_NODELIST is empty"
+        fi
+        
+        nodes_source="Slurm allocation (\$SLURM_JOB_NODELIST='$SLURM_JOB_NODELIST')"
+	raw_nodes=$(scontrol show hostname "$SLURM_JOB_NODELIST")
 else
-	m_exit "BDEV_HOSTFILE is not defined or is empty"
+	m_exit "No hostfile available: BDEV_HOSTFILE is not defined and Slurm allocation was not detected"
 fi
 
-export HOSFTILE_DEFAULT=$REPORT_DIR/hostfile
-export COMPUTE_NODES=$(get_nodes_by_hostname $HOSFTILE_DEFAULT $COMPUTE_NODES)
-
-if [[ -z "${COMPUTE_NODES}" ]]; then
-	m_exit "There were errors processing the hostfile: $BDEV_HOSTFILE. Revise network settings"
+if [[ -z "${raw_nodes}" ]]; then
+    m_exit "Nodes extracted from $nodes_source is empty. Please verify your configuration."
 fi
 
+export HOSTFILE_REPORT="$REPORT_DIR/hostfile"
+# Run without 'export' on the same line so as not to mask the exit status
+COMPUTE_NODES=$(get_nodes_by_hostname "$HOSTFILE_REPORT" "$raw_nodes")
+PARSE_STATUS=$?
+
+if [[ $PARSE_STATUS -ne 0 || -z "${COMPUTE_NODES}" ]]; then
+	m_exit "Network resolution failed while processing nodes from $nodes_source"
+fi
+
+export COMPUTE_NODES
 export NUM_NODES=$(echo "$COMPUTE_NODES" | wc -w)
-m_echo "Nodes ($NUM_NODES): $COMPUTE_NODES"
+m_echo "Nodes from hostfile ($NUM_NODES): $COMPUTE_NODES"
 
 # Check connectivity to validate SSH and the network (fail fast)
 FIRST_NODE="${COMPUTE_NODES%% *}"
@@ -29,34 +45,40 @@ check_ssh_connectivity "$FIRST_NODE"
 # Enable cleanup on exit
 export CLEANUP_ON_EXIT="true"
 
-if [[ ! -z "${ETHERNET_INTERFACE}" ]]; then
-	export HOSFTILE_ETHERNET=$REPORT_DIR/hostfile.ethernet
-	export ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface $HOSFTILE_ETHERNET $ETHERNET_INTERFACE $COMPUTE_NODES)
+if [[ -n "${ETHERNET_INTERFACE:-}" ]]; then
+	export HOSFTILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
 	
-	if [[ -z "${ETHERNET_COMPUTE_NODES}" ]]; then
+	ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_ETHERNET" "$ETHERNET_INTERFACE" $COMPUTE_NODES)
+	ETH_STATUS=$?
+	
+	if [[ $ETH_STATUS -ne 0 || -z "${ETHERNET_COMPUTE_NODES}" ]]; then
 		export ETHERNET_COMPUTE_NODES=""
-		rm $HOSFTILE_ETHERNET >& /dev/null
-		m_warn "Ethernet ($ETHERNET_INTERFACE): interface will be ignored"
+		rm -f "$HOSTFILE_ETHERNET"
+		m_warn "Ethernet ($ETHERNET_INTERFACE): interface validation failed across nodes; interface will be ignored"
 	else
+		export ETHERNET_COMPUTE_NODES
 		m_echo "Ethernet ($ETHERNET_INTERFACE): $ETHERNET_COMPUTE_NODES"
 	fi
 fi
 
-if [[ ! -z "${IPOIB_INTERFACE}" ]]; then
-	export HOSFTILE_IPOIB=$REPORT_DIR/hostfile.ipoib
-       	export IPOIB_COMPUTE_NODES=$(get_nodes_by_interface $HOSFTILE_IPOIB $IPOIB_INTERFACE $COMPUTE_NODES)
+if [[ -n "${IPOIB_INTERFACE:-}" ]]; then
+	export HOSFTILE_IPOIB="$REPORT_DIR/hostfile.ipoib"
 	
-	if [[ -z "${IPOIB_COMPUTE_NODES}" ]]; then
+	IPOIB_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_IPOIB" "$IPOIB_INTERFACE" $COMPUTE_NODES)
+	IB_STATUS=$?
+       	
+	if [[ $IB_STATUS -ne 0 || -z "${IPOIB_COMPUTE_NODES}" ]]; then
 		export IPOIB_COMPUTE_NODES=""
-		rm $HOSFTILE_IPOIB >& /dev/null
-		m_warn "IPoIB ($IPOIB_INTERFACE): interface will be ignored"
+		rm -f "$HOSTFILE_IPOIB"
+		m_warn "IPoIB ($IPOIB_INTERFACE): interface validation failed across nodes; interface will be ignored"
 	else
+		export IPOIB_COMPUTE_NODES
 		m_echo "IPoIB ($IPOIB_INTERFACE): $IPOIB_COMPUTE_NODES"
 	fi
 fi
 
-if [[ ! -n "${ETHERNET_COMPUTE_NODES}" && ! -n "${IPOIB_COMPUTE_NODES}" ]]; then
-	m_warn "No valid interface has been configured. Using default configuration"
+if [[ -z "${ETHERNET_COMPUTE_NODES:-}" && -z "${IPOIB_COMPUTE_NODES:-}" ]]; then
+	m_warn "No valid network interface hconfigured. Using default configuration"
 fi
 
 # Load initial nodes
