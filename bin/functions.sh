@@ -554,7 +554,7 @@ function configure_network() {
 		m_exit "Invalid network interface '${SOLUTION_NET_INTERFACE}' for $SOLUTION. Revise the configured frameworks (framework.lst)"
 	fi
 	
-	export MASTERIP=$($BDEV_BIN_DIR/get_ip_from_hostname.sh $HOSTFILE)
+	export MASTERIP=$($HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh $HOSTFILE)
 }
 
 export -f configure_network
