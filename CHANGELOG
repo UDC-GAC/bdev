@@ -8,6 +8,8 @@ BDEv 4.X.X - 2026-XX-XX
 	NEW FEATURES
 		- Move SSH options to system-conf.sh with improved defaults, propagating them to frameworks for robust, unattended cluster execution
 
+		- Add pre-flight SSH check to validate connection options and ensure passwordless access
+		
 		- Minor changes and bug fixes
  
  
