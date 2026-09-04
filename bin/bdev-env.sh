@@ -108,6 +108,10 @@ fi
 
 m_echo "Reporting to $REPORT_DIR"
 
+if ! is_nfs "$BDEV_OUTPUT_DIR"; then
+	m_warn "BDEV_OUTPUT_DIR is not a shared directory mounted using NFS, which will likely cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
+fi
+
 if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_DEFAULT_CONF_DIR"
 fi
