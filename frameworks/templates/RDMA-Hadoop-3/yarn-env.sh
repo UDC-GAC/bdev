@@ -39,7 +39,16 @@ fi
 export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 export YARN_NODEMANAGER_HEAPSIZE=$nodemanager_d_heapsize
 export YARN_TIMELINE_HEAPSIZE=$yarn_timeline_d_heapsize
-export YARNHOSTNAME=`$bdev_bin_dir/$hostname_script $hostfile $loopback_ip`
+
+RESOLVER_SCRIPT="$get_hostname_script"
+HOSTFILE="$hostfile"
+YARNHOSTNAME=""
+
+if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
+    YARNHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
+fi
+
+export YARNHOSTNAME="${YARNHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
 export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME} $java_jpms_opts"
 
 ###
