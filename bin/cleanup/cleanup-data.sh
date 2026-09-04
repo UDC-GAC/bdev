@@ -19,17 +19,27 @@ fi
 
 for NODE in $MASTERNODE $SLAVENODES
 do
-	$SSH_CMD $NODE "export USER='${USER}';\
-		export TMP_DIR=${TMP_DIR};\
-		export LOCAL_DIRS='${LOCAL_DIRS}';\
-		export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS}';\
-		export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS}';\
-		export FORCE_DELETE_HDFS=${FORCE_DELETE_HDFS};\
-		export DISK_SPACE_CHECK=${DISK_SPACE_CHECK};\
-		export DISK_SPACE_THRESHOLD=${DISK_SPACE_THRESHOLD};\
-		export BDEV_BIN_DIR=${BDEV_BIN_DIR};\
-		export REPORT_LOG=${REPORT_LOG};\
-		$HELPER_SCRIPTS_DIR/clean-data.sh"
+	RESULT=$(
+		$SSH_CMD $NODE "export USER='${USER}';\
+			export TMP_DIR=${TMP_DIR};\
+			export LOCAL_DIRS='${LOCAL_DIRS}';\
+			export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS}';\
+			export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS}';\
+			export FORCE_DELETE_HDFS=${FORCE_DELETE_HDFS};\
+			export DISK_SPACE_CHECK=${DISK_SPACE_CHECK};\
+			export DISK_SPACE_THRESHOLD=${DISK_SPACE_THRESHOLD};\
+			export BDEV_BIN_DIR=${BDEV_BIN_DIR};\
+			export REPORT_LOG=${REPORT_LOG};\
+			$HELPER_SCRIPTS_DIR/clean-data.sh"
+	)
 done
 
-m_echo "Cleanup done"
+STATUS=$?
+
+if [[ $STATUS -ne 0 ]]; then
+    m_err "Failed cleanup data on $NODE"
+elif [[ -n "$RESULT" ]]; then
+        echo "$RESULT"
+else
+	m_echo "Cleanup done"
+fi
