@@ -73,11 +73,16 @@ if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
 	export BDEV_FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
 fi
 
+if [[ -z "$BDEV_OUTPUT_DIR" ]]; then
+	PRINT_OUTPUT_DIR_WARNING=true
+	export BDEV_OUTPUT_DIR=$PWD/${APP_NAME}_${APP_VERSION}_OUTPUT
+fi
+
 # Load BDEv and system configuration files
 . $BDEV_CONF_DIR/bdev-conf.sh
 . $BDEV_CONF_DIR/system-conf.sh
 
-export REPORT_DIR=${OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
+export REPORT_DIR=${BDEV_OUTPUT_DIR}/report_${APP_NAME}_${BDEV_START_DATE}
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
@@ -87,12 +92,18 @@ export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
 export ILO_DIR=$PLOT_DIR/ilo
 
-if ! mkdir -p "$REPORT_DIR" ; then
-	m_exit "Could not create report directory at $REPORT_DIR"
+if [[ ! -d "$REPORT_DIR" ]]; then
+	if ! mkdir -p "$REPORT_DIR" ; then
+		m_exit "Could not create report directory at $REPORT_DIR"
+	fi
 fi
 
 m_echo "$APP_NAME v$APP_VERSION"
 m_echo "Reporting to $REPORT_DIR"
+
+if [[ "$PRINT_OUTOUT_DIR_WARNING" == "true" ]]; then
+	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"
+fi
 
 if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_CONF_DIR not defined, using default directory: $BDEV_DEFAULT_CONF_DIR"
