@@ -525,7 +525,7 @@ function configure_network() {
         	esac
         fi
     
-	configure_nodes "$nodes"
+	configure_nodes $nodes
 	export NETWORK_INTERFACE="$net_interface"
 	export HOSTFILE="$file"
 		
