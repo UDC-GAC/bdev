@@ -736,7 +736,7 @@ function begin_report() {
 	REPORT="$REPORT \n Report directory: \n"
 	REPORT="$REPORT \t $REPORT_DIR \n"
 	REPORT="$REPORT \n Configuration directory: \n"
-	REPORT="$REPORT \t $BDEV_CONF_DIR \n"
+	REPORT="$REPORT \t $BDEV_CONF_DIR_ORIG \n"
 	REPORT="$REPORT \n Frameworks directory: \n"
 	REPORT="$REPORT \t $BDEV_FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
