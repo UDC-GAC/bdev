@@ -1,5 +1,9 @@
 <configuration>
   <property>
+    <name>dfs.namenode.rpc-address</name>
+    <value>>$hadoop_default_fs</value>
+  </property>
+  <property>
     <name>dfs.datanode.hostname</name>
     <value>${HADOOPHOSTNAME}</value>
   </property>
