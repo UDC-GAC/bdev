@@ -107,6 +107,7 @@ if [[ ! -d "$BDEV_FRAMEWORKS_DIR" ]]; then
 fi
 
 export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
+export BDEV_CONF_DIR_ORIG="$BDEV_CONF_DIR"
 m_echo "Configuration directory: $BDEV_CONF_DIR"
 
 # Storage backend
