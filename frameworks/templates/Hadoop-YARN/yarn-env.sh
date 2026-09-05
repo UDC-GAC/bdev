@@ -109,16 +109,8 @@ fi
 # restore ordinary behaviour
 unset IFS
 
-RESOLVER_SCRIPT="$get_hostname_script"
-HOSTFILE="$hostfile"
-YARNHOSTNAME=""
-
-if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
-    YARNHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
-fi
-
-export YARNHOSTNAME="${YARNHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
-export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME} $java_jpms_opts"
+YARNHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
+export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${YARNHOSTNAME} $java_jpms_opts"
 
 YARN_OPTS="$YARN_OPTS -Dhadoop.log.dir=$YARN_LOG_DIR"
 YARN_OPTS="$YARN_OPTS -Dyarn.log.dir=$YARN_LOG_DIR"
