@@ -19,9 +19,9 @@ SPARK_MASTER_PORT="${SPARK_MASTER_PORT:-7077}"
 SPARK_MASTER_HOST="${MASTERNODE:-$(hostname -f)}"
 MASTER_URL="spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}"
 
-WORKERS_FILE="${SPARK_CONF_DIR}/workers"
-if [[ ! -f "$WORKERS_FILE" ]]; then
-    echo "ERROR: Workers file not found in ${WORKERS_FILE}" >&2
+WORKERSFILE="${SPARK_CONF_DIR}/workers"
+if [[ ! -f "$WORKERSFILE" ]]; then
+    echo "ERROR: Workers file not found in ${WORKERSFILE}" >&2
     exit 1
 fi
 
@@ -39,7 +39,7 @@ while IFS= read -r host || [[ -n "$host" ]]; do
          export SPARK_LOG_DIR=\"${SPARK_LOG_DIR:-}\"; \
          export SPARK_PID_DIR=\"${SPARK_PID_DIR:-}\"; \
          \"${SPARK_HOME}/sbin/start-worker.sh\" \"$MASTER_URL\"" 2>&1 | sed "s/^/$host: /" &
-done < "$WORKERS_FILE"
+done < "$WORKERSFILE"
 
 wait
 echo "All Spark workers started"
