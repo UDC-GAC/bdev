@@ -23,6 +23,10 @@ export SPARK_MAJOR_VERSION=${SPARK_VERSION%.*}
 export SPARK_SERIES=${SPARK_VERSION%%.*}
 export SPARK_SSH_OPTS="${BDEV_SSH_OPTS}"
 
+if [ $SPARK_SERIES == "0" ] || [ $SPARK_SERIES == "1" ]; then
+	m_exit "Spark version is not supported: $SPARK_VERSION"
+fi
+
 # Hadoop
 export HADOOP_HOME=$SPARK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
