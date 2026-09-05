@@ -34,11 +34,11 @@ if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	export HADOOP_DEFAULT_FS="$STORAGE_BACKEND_URI"
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 
-	if [[ $HDFS_REPLICATION_FACTOR -gt $SLAVES_NUMBER ]]; then
+	if [[ $HDFS_REPLICATION_FACTOR -gt $WORKES_NUMBER ]]; then
 		if [[ "$SOLUTION" != "NONE" ]]; then
-			m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $SLAVES_NUMBER due to insufficient DataNodes"
+			m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $WORKES_NUMBER due to insufficient DataNodes"
 		fi
-		export HDFS_REPLICATION_FACTOR=$SLAVES_NUMBER
+		export HDFS_REPLICATION_FACTOR=$WORKES_NUMBER
 	fi
 else
 	export HADOOP_DEFAULT_FS="file:///"
