@@ -21,6 +21,7 @@ export PATH=$SPARK_HOME/bin:$PATH
 export SPARK_VERSION=${SOLUTION_HOME##*/}
 export SPARK_MAJOR_VERSION=${SPARK_VERSION%.*}
 export SPARK_SERIES=${SPARK_VERSION%%.*}
+export SPARK_SSH_OPTS="${BDEV_SSH_OPTS}"
 
 if [ $SPARK_SERIES == "0" ] || [ $SPARK_SERIES == "1" ]; then
 	m_exit "Spark version is not supported: $SPARK_VERSION"
