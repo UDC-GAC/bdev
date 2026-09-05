@@ -2,7 +2,7 @@
 
 # Avoid cleanup if framework does not exist
 SCRIPT_MASTER="$SPARK_HOME/sbin/stop-master.sh"
-SCRIPT_WORKERS="$$SOLUTION_DIR/bin/stop-workers.sh"
+SCRIPT_WORKERS="$SOLUTION_DIR/bin/stop-workers.sh"
 
 if [ -f "$SCRIPT_MASTER" ]; then
 	bash $SCRIPT_MASTER
