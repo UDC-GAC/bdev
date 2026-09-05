@@ -3,6 +3,7 @@ export SOL_BENCH_DIR=$BENCHMARKS_DIR/Hadoop
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs
+export SOL_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
 export MASTERFILE=$SOL_CONF_DIR/masters
 
 #HADOOP environment variables
