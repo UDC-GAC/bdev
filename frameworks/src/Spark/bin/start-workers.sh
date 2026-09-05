@@ -16,7 +16,7 @@ fi
 . "${SPARK_HOME}/bin/load-spark-env.sh"
 
 SPARK_MASTER_PORT="${SPARK_MASTER_PORT:-7077}"
-SPARK_MASTER_HOST="${$MASTERNODE:-$(hostname -f)}"
+SPARK_MASTER_HOST="${MASTERNODE:-$(hostname -f)}"
 MASTER_URL="spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}"
 
 WORKERS_FILE="${SPARK_CONF_DIR}/workers"
@@ -26,6 +26,7 @@ if [[ ! -f "$WORKERS_FILE" ]]; then
 fi
 
 SPARK_SSH_OPTS="${SPARK_SSH_OPTS:--o StrictHostKeyChecking=no}"
+echo "Starting Spark workers pointing to ${MASTER_URL}..."
 
 while IFS= read -r host || [[ -n "$host" ]]; do
     # Skip comments and empty lines
