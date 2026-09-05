@@ -35,10 +35,6 @@ export HADOOP_HOME=$SPARK_HADOOP_HOME
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
 export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 
-#Daemons
-export OLD_COPY_DAEMONS_SCRIPT=$COPY_DAEMONS_SCRIPT
-export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
-
 #Deploy mode
 export FINISH_YARN="true"
 export DEPLOY_ARGS="--master spark://${MASTERNODE}:7077 --deploy-mode client"
