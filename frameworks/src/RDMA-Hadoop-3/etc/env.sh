@@ -7,7 +7,7 @@ export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/RDMA-Hadoop-3
 export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN-3
 export SOL_SBIN_DIR=$SOLUTION_HOME/libexec
 export MASTERFILE=$SOL_CONF_DIR/masters
-export SLAVESFILE=$SOL_CONF_DIR/workers
+export WORKERSFILE=$SOL_CONF_DIR/workers
 
 #HADOOP environment variables
 export HADOOP_HOME=$SOLUTION_HOME
