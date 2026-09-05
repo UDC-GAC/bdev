@@ -1,7 +1,7 @@
 #!/bin/bash
 
 m_echo "Flink configuration"
-. $OLD_GEN_CONFIG_SCRIPT
+. $SOL_GEN_CONFIG_SCRIPT
 
 if [[ "$FLINK_TASKMANAGERS_PER_NODE" -gt 1 ]]; then
 	NODES=$(cat $WORKERSFILE)
@@ -21,4 +21,4 @@ export MASTERFILE=$HADOOP_CONF_DIR/masters
 export WORKERSFILE=$HADOOP_WORKERSFILE
 
 m_echo "Hadoop configuration: $FLINK_HADOOP_HOME"
-. $OLD_GEN_CONFIG_SCRIPT
+. $GEN_CONFIG_SCRIPT
