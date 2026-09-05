@@ -40,10 +40,6 @@ fi
 export HADOOP_HOME=$FLINK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
 
-#Configuration
-export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
-export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
-
 #Deploy mode
 export FINISH_YARN="false"
 # Session Mode
