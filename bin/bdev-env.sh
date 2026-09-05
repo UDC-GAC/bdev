@@ -302,9 +302,7 @@ else
 fi
 
 # Copy helper scripts
-if ! cp "$BDEV_BIN_DIR/helpers"/* \
-        "$BDEV_BIN_DIR/functions.sh" \
-        "$HELPER_SCRIPTS_DIR/"; then
+if ! cp "$BDEV_BIN_DIR/helpers"/* "$HELPER_SCRIPTS_DIR/"; then
     m_exit "Could not copy helper scripts to $HELPER_SCRIPTS_DIR"
 fi
 
