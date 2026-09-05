@@ -1,7 +1,7 @@
 #!/bin/bash
 
 m_echo "Flink configuration"
-. $OLD_GEN_CONFIG_SCRIPT
+. $SOL_GEN_CONFIG_SCRIPT
 
 export SOL_TEMPLATE_DIR=$HADOOP_TEMPLATE_DIR
 export SOL_CONF_DIR=$HADOOP_CONF_DIR
@@ -9,4 +9,4 @@ export MASTERFILE=$HADOOP_CONF_DIR/masters
 export WORKERSFILE=$HADOOP_WORKERSFILE
 
 m_echo "Hadoop configuration: $FLINK_HADOOP_HOME"
-. $OLD_GEN_CONFIG_SCRIPT
+. $GEN_CONFIG_SCRIPT
