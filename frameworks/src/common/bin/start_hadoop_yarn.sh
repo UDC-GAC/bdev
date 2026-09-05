@@ -6,6 +6,9 @@ for F in "$BDEV_CONF_DIR"/yarn/*.xml; do
     cp "$F" "$HADOOP_CONF_DIR" || exit 1
 done
 
+# Avoid warnings
+mkdir -p "$HADOOP_LOG_DIR" 2>/dev/null || true
+
 if [[ $HADOOP_SERIES == "3" ]]; then
 	$COMMON_SRC_DIR/bin/start_hadoop_yarn_3.sh
 else
