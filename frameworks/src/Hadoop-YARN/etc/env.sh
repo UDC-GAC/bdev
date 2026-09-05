@@ -8,7 +8,6 @@ export MASTERFILE=$SOL_CONF_DIR/masters
 #HADOOP environment variables
 export HADOOP_HOME=$SOLUTION_HOME
 export HADOOP_CONF_DIR=$SOL_CONF_DIR
-export YARN_CONF_DIR=$HADOOP_CONF_DIR
 export PATH=$HADOOP_HOME/bin:$PATH
 export HADOOP_VERSION=${HADOOP_HOME##*/}
 export HADOOP_MAJOR_VERSION=${HADOOP_VERSION%.*}
@@ -25,6 +24,7 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Hadoop-YARN
 	export SOL_SBIN_DIR=$SOLUTION_HOME/sbin
 	export SLAVESFILE=$SOL_CONF_DIR/slaves
+	export YARN_CONF_DIR=$HADOOP_CONF_DIR
 else
 	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
