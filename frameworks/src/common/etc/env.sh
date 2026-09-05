@@ -28,7 +28,7 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 	export HADOOP_SBIN_DIR=$HADOOP_HOME/sbin
 	export HADOOP_SLAVESFILE=$HADOOP_CONF_DIR/slaves
 	export YARN_CONF_DIR=$HADOOP_CONF_DIR
-	export YARN_LOG_DIR=$SOLUTION_REPORT_DIR/logs/hadoop
+	export YARN_LOG_DIR=$HADOOP_LOG_DIR
 else
 	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
