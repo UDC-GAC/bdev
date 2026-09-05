@@ -20,7 +20,6 @@ add_conf_param "java_home" $BDEV_JAVA_HOME
 add_conf_param "java_jpms_opts" "$JAVA_JPMS_OPTS"
 add_conf_param "python_bin_path" $PYTHON_BIN
 add_conf_param "master" $MASTERNODE
-add_conf_param "ip_master" $MASTERIP
 add_conf_param "net_interface" $NETWORK_INTERFACE
 add_conf_param "hostfile" $HOSTFILE
 
