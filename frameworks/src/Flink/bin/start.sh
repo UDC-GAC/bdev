@@ -8,6 +8,9 @@ $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 #Save Hadoop classpath to a file
 echo $HADOOP_CLASSPATH > $FLINK_HADOOP_CLASSPATH
 
+# Create LOG dir
+mkdir -p "$FLINK_LOG_DIR" 2>/dev/null || true
+
 m_echo "Starting the standalone Flink cluster (Session Mode)"
 $FLINK_HOME/bin/start-cluster.sh
 
