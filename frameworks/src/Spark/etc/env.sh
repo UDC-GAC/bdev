@@ -23,16 +23,6 @@ export SPARK_MAJOR_VERSION=${SPARK_VERSION%.*}
 export SPARK_SERIES=${SPARK_VERSION%%.*}
 export SPARK_SSH_OPTS="${BDEV_SSH_OPTS}"
 
-if [ $SPARK_SERIES == "0" ] || [ $SPARK_SERIES == "1" ]; then
-	m_exit "Spark version is not supported: $SPARK_VERSION"
-elif [ $SPARK_SERIES == "2" ]; then
-	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-slaves.sh
-	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Spark-2
-else
-	export SPARK_WORKERS_START_SCRIPT=$SPARK_HOME/sbin/start-workers.sh
-	export SOL_DAEMONS_DIR=$DAEMONS_DIR/Spark
-fi
-
 # Hadoop
 export HADOOP_HOME=$SPARK_HADOOP_HOME
 . $COMMON_SRC_DIR/etc/env.sh
