@@ -25,10 +25,6 @@
 ## YARN_xyz > HADOOP_xyz > hard-coded defaults
 ##
 
-export YARN_CONF_DIR=$sol_conf_dir
-export YARN_LOG_DIR=$sol_log_dir
-export YARN_PID_DIR=$tmp_dir/yarn/pid
-
 export JAVA_HOME=$java_home
 
 if [ "$JAVA_HOME" = "" ]; then
@@ -39,17 +35,6 @@ fi
 export YARN_RESOURCEMANAGER_HEAPSIZE=$resourcemanager_d_heapsize
 export YARN_NODEMANAGER_HEAPSIZE=$nodemanager_d_heapsize
 export YARN_TIMELINE_HEAPSIZE=$yarn_timeline_d_heapsize
-
-RESOLVER_SCRIPT="$get_hostname_script"
-HOSTFILE="$hostfile"
-YARNHOSTNAME=""
-
-if [[ -x "$RESOLVER_SCRIPT" && -f "$HOSTFILE" ]]; then
-    YARNHOSTNAME=$("$RESOLVER_SCRIPT" "$HOSTFILE" "$loopback_ip" 2>/dev/null)
-fi
-
-export YARNHOSTNAME="${YARNHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
-export YARN_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DYARNHOSTNAME=${YARNHOSTNAME} $java_jpms_opts"
 
 ###
 # Resource Manager specific parameters
