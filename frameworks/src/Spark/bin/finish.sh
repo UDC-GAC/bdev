@@ -1,10 +1,15 @@
 #!/bin/bash
 
-# Avoid cleanup if solution does not exist
-SCRIPT=$SPARK_HOME/sbin/stop-all.sh
+# Avoid cleanup if framework does not exist
+SCRIPT_MASTER="$SPARK_HOME/sbin/stop-master.sh"
+SCRIPT_WORKERS="$$SOLUTION_DIR/bin/stop-workers.sh"
 
-if [ -f "$SCRIPT" ]; then
-	bash $SCRIPT
+if [ -f "$SCRIPT_MASTER" ]; then
+	bash $SCRIPT_MASTER
+fi
+
+if [ -f "$SCRIPT_WORKERS" ]; then
+	bash $SCRIPT_WORKERS
 fi
 
 $COMMON_SRC_DIR/bin/finish_hdfs.sh
