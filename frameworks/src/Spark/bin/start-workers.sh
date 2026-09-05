@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eo pipefail
 
 if [[ -z "${SPARK_HOME:-}" ]]; then
     echo "ERROR: SPARK_HOME is not set." >&2
