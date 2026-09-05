@@ -1,8 +1,6 @@
 #!/bin/bash
 export SOL_BENCH_DIR=$BENCHMARKS_DIR/Flink
 export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Flink
-export SOL_DAEMONS_DIR=$DAEMONS_DIR/Flink
-export SOL_SBIN_DIR=$SOLUTION_HOME/bin
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/flink
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs/flink
@@ -15,7 +13,6 @@ export FLINK_VERSION=${SOLUTION_HOME##*/}
 export FLINK_MAJOR_VERSION=${FLINK_VERSION%.*}
 export FLINK_SERIES=${FLINK_VERSION%%.*}
 export FLINK_CONF_DIR=$SOL_CONF_DIR
-export FLINK_SBIN_DIR=$SOL_SBIN_DIR
 export FLINK_LOG_DIR=$SOL_LOG_DIR
 export PATH=$FLINK_HOME/bin:$PATH
 export FLINK_TASKMANAGERS=$(($FLINK_TASKMANAGERS_PER_NODE * $WORKERS_NUMBER))
@@ -45,24 +42,10 @@ export HADOOP_HOME=$FLINK_HADOOP_HOME
 export OLD_GEN_CONFIG_SCRIPT=$GEN_CONFIG_SCRIPT
 export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 
-#Daemons
-export OLD_COPY_DAEMONS_SCRIPT=$COPY_DAEMONS_SCRIPT
-export COPY_DAEMONS_SCRIPT=$SOLUTION_DIR/bin/copy-daemons.sh
-
 #Deploy mode
 export FINISH_YARN="true"
 # Session Mode
 export DEPLOY_ARGS="run -p ${FLINK_PARALLELISM}"
-
-# Set and copy config.sh file according to Flink version
-FLINK_CONFIG_SH_FILE=$SOL_DAEMONS_DIR/config/config-${FLINK_MAJOR_VERSION}.sh
-
-if [ ! -f $FLINK_CONFIG_SH_FILE ]; then
-        m_exit "Flink config.sh file not found: $FLINK_CONFIG_SH_FILE"
-else
-	m_echo "Copying Flink config.sh file: $FLINK_CONFIG_SH_FILE"
-	cp -f $FLINK_CONFIG_SH_FILE $SOL_SBIN_DIR/config.sh
-fi
 
 add_conf_param "flink_conf_dir" $FLINK_CONF_DIR
 add_conf_param "flink_log_dir" $FLINK_LOG_DIR
