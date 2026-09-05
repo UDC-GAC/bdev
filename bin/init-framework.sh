@@ -12,4 +12,3 @@ fi
 m_echo "Generating configuration: $SOL_TEMPLATE_DIR"
 . $GEN_CONFIG_SCRIPT
 
-. $COPY_DAEMONS_SCRIPT
