@@ -4,7 +4,7 @@ $COMMON_SRC_DIR/bin/start_hadoop_yarn.sh
 
 m_echo "Starting the standalone Spark cluster"
 $SPARK_HOME/sbin/start-master.sh
-$SOLUTION_DIR/bin/start-workers.sh
+bash "$SOLUTION_DIR/bin/start-workers.sh"
 
 if [ $SPARK_HISTORY_SERVER == "true" ]; then
 	storage_mkdir ${SPARK_HISTORY_SERVER_DIR}
