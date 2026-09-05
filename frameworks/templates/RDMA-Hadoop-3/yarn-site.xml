@@ -12,7 +12,7 @@
 
   <property>
     <name>yarn.nodemanager.hostname</name>
-    <value>${YARNHOSTNAME}</value>
+    <value>${HADOOPHOSTNAME}</value>
   </property>
 
   <property>
