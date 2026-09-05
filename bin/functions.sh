@@ -552,9 +552,7 @@ function configure_network() {
 		m_echo "Using network interface '$NETWORK_INTERFACE' for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
 	else
 		m_exit "Invalid network interface '${SOLUTION_NET_INTERFACE}' for $SOLUTION. Revise the configured frameworks (framework.lst)"
-	fi
-	
-	export MASTERIP=$($HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh $HOSTFILE)
+	fi	
 }
 
 export -f configure_network
