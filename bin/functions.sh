@@ -578,7 +578,7 @@ export -f set_directory_configuration
 
 function set_cluster_size() {
 	export CLUSTER_SIZE
-	export SLAVES_NUMBER=$((CLUSTER_SIZE - 1))
+	export WORKERS_NUMBER=$((CLUSTER_SIZE - 1))
 	export CLUSTER_SIZE_REPORT_DIR=$REPORT_DIR/${CLUSTER_SIZE}
 	m_echo "Cluster size set to $CLUSTER_SIZE"
 }
