@@ -1,7 +1,7 @@
 #!/bin/bash
 
 m_echo "Flink configuration"
-. $SOL_GEN_CONFIG_SCRIPT
+. $GEN_CONFIG_SCRIPT
 
 if [[ "$FLINK_TASKMANAGERS_PER_NODE" -gt 1 ]]; then
 	NODES=$(cat $WORKERSFILE)
