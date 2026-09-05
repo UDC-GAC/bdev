@@ -64,6 +64,9 @@ export HDFS_NAMENODE_OPTS="-Xmx""${HADOOP_NAMENODE_HEAPSIZE}""m"
 export HDFS_DATANODE_OPTS="-Xmx""${HADOOP_DATANODE_HEAPSIZE}""m"
 export HDFS_SECONDARYNAMENODE_OPTS="-Xmx""${HDFS_SECONDARYNAMENODE_HEAPSIZE}""m"
 
+# Avoid warning
+mkdir -p "$HADOOP_PID_DIR" 2>/dev/null || true
+
 RESOLVER_SCRIPT="$get_hostname_script"
 HOSTFILE="$hostfile"
 HADOOPHOSTNAME=""
