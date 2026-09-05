@@ -44,8 +44,8 @@ function resolve_hive_issues() {
 export JAVA_HOME=${BDEV_JAVA_HOME}
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
 export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
-export REDUCERS_NUMBER=$(( ${SLAVES_NUMBER} * ${REDUCERS_PER_NODE} ))
-export MAPPERS_NUMBER=$(( ${SLAVES_NUMBER} * ${MAPPERS_PER_NODE} ))
+export REDUCERS_NUMBER=$(( ${WORKERS_NUMBER} * ${REDUCERS_PER_NODE} ))
+export MAPPERS_NUMBER=$(( ${WORKERS_NUMBER} * ${MAPPERS_PER_NODE} ))
 export TPCX_HS_ROWS_NUMBER=$(( $TPCX_HS_DATASIZE / 100 ))
 export TERASORT_ROWS_NUMBER=$(( $TERASORT_DATASIZE / 100 ))
 
