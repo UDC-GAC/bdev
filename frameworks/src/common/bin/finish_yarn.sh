@@ -13,8 +13,8 @@ kill_java_process() {
 }
 
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
-	SLAVES=$(cat "$SLAVESFILE")
-	for NODE in $SLAVES; do
+	WORKERS=$(cat "$WORKERSFILE")
+	for NODE in $WORKERS; do
 		kill_java_process "$NODE" "NodeManager"
 	done
 
