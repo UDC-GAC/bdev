@@ -17,7 +17,7 @@ else
 	m_echo "Performing data cleanup"
 fi
 
-for NODE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $WORKERNODES
 do
 	RESULT=$(
 		$SSH_CMD $NODE "export USER='${USER}';\

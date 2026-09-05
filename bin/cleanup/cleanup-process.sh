@@ -2,7 +2,7 @@
 
 m_echo "Performing process cleanup"
 
-for NODE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $WORKERNODES
 do
 	$SSH_CMD $NODE "export USER='${USER}';\
 		export JPS=${JPS};\

@@ -37,17 +37,17 @@ do
 	sed "$sed_script" "$F" > "$SOL_CONF_DIR/${file}"
 done
 
-rm -f $MASTERFILE $SLAVESFILE
+rm -f $MASTERFILE $WORKERSFILE
 m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
-touch $SLAVESFILE
+touch $WORKERSFILE
 m_echo "Workers:"
 
 i=1
-for NODE in $SLAVENODES; do
+for NODE in $WORKERNODES; do
 	if [[ $i -lt $CLUSTER_SIZE ]]; then
 		m_echo "$NODE"
-		echo $NODE >> $SLAVESFILE
+		echo $NODE >> $WORKERSFILE
 	fi
 	i=$(( $i + 1 ))
 done

@@ -9,7 +9,7 @@ if [[ ! -d "${BDW_LOG_DIR}" ]]; then
 	fi
 fi
 
-for NODE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $WORKERNODES
 do
 	echo "Starting atop daemon in ${NODE}" >> ${BDW_LOG_DIR}/atop_log 2>&1
 	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \

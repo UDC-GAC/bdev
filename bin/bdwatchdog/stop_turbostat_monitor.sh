@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for NODE in $MASTERNODE $SLAVENODES
+for NODE in $MASTERNODE $WORKERNODES
 do
 	echo "Stopping turbostat daemon in ${NODE}" >> ${BDW_LOG_DIR}/turbostat_log 2>&1
 	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \

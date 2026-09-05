@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export NODE_NUMBER=1
-for NODE in $SLAVES
+for NODE in $WORKERNODES
 do
 	echo "Creating ilo_monitor to ${NODE}, storing data on ${POWERLOGDIR}/node-${NODE_NUMBER}.pow" \
 		>> ${POWERLOGDIR}/log 2>&1

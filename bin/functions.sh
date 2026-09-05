@@ -475,10 +475,10 @@ function configure_nodes()  {
     	shift
     	
     	if [[ $# -eq 0 ]]; then
-        	export SLAVENODES="$MASTERNODE"
+        	export WORKERNODES="$MASTERNODE"
         	export MAX_NODES=2
     	else
-        	export SLAVENODES="$*"
+        	export WORKERNODES="$*"
         	export MAX_NODES=$(( $# + 1 ))
     	fi
 }
@@ -745,7 +745,7 @@ function begin_report() {
 	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
 		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
 	fi
-	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $SLAVENODES \n"
+	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $WORKERNODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
 	if [[ "$NUM_BENCHMARKS" -gt 0 ]]; then
 		REPORT="$REPORT \t Benchmarks  \t\t\t\t $BENCHMARKS \n"
