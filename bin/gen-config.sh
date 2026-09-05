@@ -40,10 +40,11 @@ done
 rm -f $MASTERFILE $SLAVESFILE
 m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
+touch $SLAVESFILE
 m_echo "Workers:"
+
 i=1
-for NODE in $SLAVENODES
-do
+for NODE in $SLAVENODES; do
 	if [[ $i -lt $CLUSTER_SIZE ]]; then
 		m_echo "$NODE"
 		echo $NODE >> $SLAVESFILE
