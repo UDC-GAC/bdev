@@ -33,7 +33,6 @@ while IFS= read -r host || [[ -n "$host" ]]; do
     [[ "$host" =~ ^[[:space:]]*# ]] && continue
     [[ -z "${host// }" ]] && continue
     
-    echo "Starting Spark worker on ${host}..."
     $SSH_CMD -n $SPARK_SSH_OPTS "$host" \
         "export SPARK_CONF_DIR=\"$SPARK_CONF_DIR\"; \
          export SPARK_LOG_DIR=\"${SPARK_LOG_DIR:-}\"; \
