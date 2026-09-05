@@ -2,12 +2,12 @@
 set -eo pipefail
 
 if [[ -z "${SPARK_HOME:-}" ]]; then
-    echo "ERROR: SPARK_HOME is not set." >&2
+    echo "ERROR: SPARK_HOME is not set" >&2
     exit 1
 fi
 
 if [[ -z "${SPARK_CONF_DIR:-}" ]]; then
-    echo "ERROR: SPARK_CONF_DIR must be exported before launching workers." >&2
+    echo "ERROR: SPARK_CONF_DIR must be exported before launching workers" >&2
     exit 1
 fi
 
