@@ -39,7 +39,7 @@ generate_framework_config() {
 
     # Copy base configuration from tarball
 		if ! mkdir -p "$target_dir"; then
-        m_exit "Could not create SOL_CONF_DIR: $target_dir"
+        m_exit "Could not create configuration folder: $target_dir"
     fi
 
     if ! cp -r "$src_dir"/* "$target_dir"/; then
