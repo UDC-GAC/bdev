@@ -4,10 +4,10 @@
 
 # Spark
 generate_framework_config \
-    "$SPARK_CONF_DIR_SRC" \
-    "$SPARK_TEMPLATE_DIR" \
-    "$SPARK_CONF_DIR" \
-    "$SPARK_LOG_DIR" \
+    "$SOLUTION_CONF_DIR_SRC" \
+    "$SOLUTION_TEMPLATE_DIR" \
+    "$SOLUTION_CONF_DIR" \
+    "$SOLUTION_LOG_DIR" \
     "$MASTERFILE" \
     "$WORKERSFILE"
 
