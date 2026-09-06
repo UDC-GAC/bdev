@@ -13,7 +13,6 @@ if [[ ! -f "$WORKERSFILE" ]]; then
 fi
 
 WORKER_SCRIPT="stop-worker.sh"
-
 if [[ $SPARK_SERIES == "2" ]]
     WORKER_SCRIPT="stop-slave.sh"
 fi
