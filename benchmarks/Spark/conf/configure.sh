@@ -25,7 +25,7 @@ else
 	esac
 fi
 
-export SPARK_BENCH_DIR=$SOL_BENCH_DIR/bin
+export SPARK_BENCH_DIR=$SOLUTION_BENCH_DIR/bin
 export SPARK_BENCH_JAR=$SPARK_BENCH_DIR/$SPARK_BENCH_JAR_NAME
 
 if [[ ! -f "$SPARK_BENCH_JAR" ]]; then
