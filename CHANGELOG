@@ -10,8 +10,6 @@ BDEv 4.X.X - 2026-XX-XX
 
 		- Add ad-hoc launcher scripts for Spark and Flink to explicitly inject configuration paths into remote workers
 
-		- Spark and Flink now use ad-hoc launcher scripts to correctly propagate environment variables, keeping framework tarballs untouched
-
 		- Move SSH options to system-conf.sh with improved defaults, propagating them to frameworks for robust, unattended cluster execution
 
 		- Add pre-flight SSH check to validate connection options and ensure passwordless access
