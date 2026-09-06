@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#Set directories
-set_directory_configuration
-
 if [[ -z "${SOL_TEMPLATE_DIR:-}" ]]; then
 	m_exit "SOL_TEMPLATE_DIR is not defined or is empty"
 fi
@@ -10,6 +7,9 @@ fi
 if [[ ! -d "$SOL_TEMPLATE_DIR" ]]; then
 	m_exit "SOL_TEMPLATE_DIR does not exist or is not a directory: $SOL_TEMPLATE_DIR"
 fi
+
+#Copy configuration files from tarball
+copy_configuration_files_to_report_dir
 
 sed_script=""
 k=1
@@ -29,6 +29,7 @@ done
 #declare -p CONFIG_VALUES
 #echo $sed_script
 
+# Render the templates for the configuration files
 for F in "$SOL_TEMPLATE_DIR"/*
 do
 	[[ -f "$F" ]] || continue
@@ -37,6 +38,7 @@ do
 	sed "$sed_script" "$F" > "$SOL_CONF_DIR/${file}"
 done
 
+# Generate master and worker files
 rm -f $MASTERFILE $WORKERSFILE
 m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
