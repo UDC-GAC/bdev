@@ -4,16 +4,16 @@
 SCRIPT_MASTER="$SPARK_HOME/sbin/stop-master.sh"
 SCRIPT_WORKERS="$SOLUTION_DIR/bin/stop-workers.sh"
 
-if [ -f "$SCRIPT_MASTER" ]; then
-	bash $SCRIPT_MASTER
+if [[ -f "$SCRIPT_MASTER" ]]; then
+	bash "$SCRIPT_MASTER"
 fi
 
-if [ -f "$SCRIPT_WORKERS" ]; then
-	bash $SCRIPT_WORKERS
+if [[ -f "$SCRIPT_WORKERS" ]]; then
+	bash "$SCRIPT_WORKERS"
 fi
 
-$COMMON_SRC_DIR/bin/finish_hdfs.sh
-bash $CLEANUP_PROCESS_SCRIPT
+"$COMMON_SRC_DIR/bin/finish_hdfs.sh"
+bash "$CLEANUP_PROCESS_SCRIPT"
 
 # Get rid of jar files in user logs
 find "$SOLUTION_REPORT_DIR" \
