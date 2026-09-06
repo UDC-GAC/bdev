@@ -2,7 +2,7 @@
 
 . "$BDEV_BIN_DIR/gen-config.sh"
 
-# FLINK
+# Flink
 generate_framework_config \
     "$SOLUTION_CONF_DIR_SRC" \
     "$SOLUTION_TEMPLATE_DIR" \
