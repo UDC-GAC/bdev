@@ -1,8 +1,8 @@
 #!/bin/bash
-export SOL_BENCH_DIR=$BENCHMARKS_DIR/Hadoop
-export SOL_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
-export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
-export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs
+export SOLUTION_CONF_DIR_SRC=$SOLUTION_HOME/etc/hadoop
+export SOLUTION_CONF_DIR=$SOLUTION_REPORT_DIR/etc/hadoop
+export SOLUTION_LOG_DIR=$SOLUTION_REPORT_DIR/logs
+export SOLUTION_BENCH_DIR=$BENCHMARKS_DIR/Hadoop
 export MASTERFILE=$SOL_CONF_DIR/masters
 
 #HADOOP environment variables
