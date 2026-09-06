@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 . "$BDEV_BIN_DIR/gen-config.sh"
 
 # Spark
