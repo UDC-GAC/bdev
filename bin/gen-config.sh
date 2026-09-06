@@ -35,6 +35,8 @@ generate_framework_config() {
     [[ ! -d "$src_dir" ]] && m_exit "Source conf dir does not exist: $src_dir"
     [[ ! -d "$template_dir" ]] && m_exit "Template dir does not exist: $template_dir"
 
+	m_echo "Generating configuration for $src_dir using templates from $template_dir"
+
     # Copy base configuration from tarball
 		if ! mkdir -p "$target_dir"; then
         m_exit "Could not create SOL_CONF_DIR: $target_dir"
@@ -47,7 +49,7 @@ generate_framework_config() {
     if ! chmod -R +w "$target_dir"; then
         m_exit "Could not make configuration folder writable: $target_dir"
     fi
-		
+	
 	# Render templates using a temporary sed file
 	local sed_rules
     sed_rules=$(mktemp)
