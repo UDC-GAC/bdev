@@ -9,7 +9,7 @@ if [[ -z "$WORKERNODES" ]]; then
 fi
 
 #Generate configuration
-. "$GEN_CONFIG_SCRIPT"
+. "${SOLUTION_DIR}/bin/gen-config.sh"
 
 m_echo "Master: $MASTERNODE"
 m_echo "Workers:"
