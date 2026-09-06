@@ -16,4 +16,7 @@ $COMMON_SRC_DIR/bin/finish_hdfs.sh
 bash $CLEANUP_PROCESS_SCRIPT
 
 # Get rid of jar files in user logs
-eval $SPARK_BENCH_JAR_DELETE
+find "$SOLUTION_REPORT_DIR" \
+    -name "*${SPARK_SCALA_VERSION}.jar" \
+    -type f \
+    -delete
