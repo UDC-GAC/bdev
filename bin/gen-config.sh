@@ -39,14 +39,6 @@ do
 done
 
 # Generate master and worker files
-rm -f $MASTERFILE $WORKERSFILE
-echo $MASTERNODE > $MASTERFILE
-touch $WORKERSFILE
-
-i=1
-for NODE in $WORKERNODES; do
-	if [[ $i -lt $CLUSTER_SIZE ]]; then
-		echo $NODE >> $WORKERSFILE
-	fi
-	i=$(( $i + 1 ))
-done
+rm -f "$MASTERFILE" "$WORKERSFILE"
+echo "$MASTERNODE" > "$MASTERFILE"
+printf '%s\n' $WORKERNODES | head -n $((CLUSTER_SIZE - 1)) > "$WORKERSFILE"
