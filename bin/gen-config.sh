@@ -48,7 +48,7 @@ m_echo "Workers:"
 i=1
 for NODE in $WORKERNODES; do
 	if [[ $i -lt $CLUSTER_SIZE ]]; then
-		m_echo "$NODE"
+		m_echo $'\t'"$NODE"
 		echo $NODE >> $WORKERSFILE
 	fi
 	i=$(( $i + 1 ))
