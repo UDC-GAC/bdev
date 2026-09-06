@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eo pipefail
 
 if [[ $# -lt 1 ]]; then
        echo "Usage: $0 <hostfile> [target_node] [loopback_ip]" >&2
