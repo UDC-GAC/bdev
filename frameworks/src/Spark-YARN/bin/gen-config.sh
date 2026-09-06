@@ -1,14 +1,17 @@
 #!/bin/bash
 
-m_echo "Spark configuration"
-. $GEN_CONFIG_SCRIPT
+#!/bin/bash
 
-export SOL_TEMPLATE_DIR=$HADOOP_TEMPLATE_DIR
-export SOL_CONF_DIR=$HADOOP_CONF_DIR
-export SOL_CONF_DIR_SRC=$HADOOP_CONF_DIR_SRC
-export SOL_LOG_DIR=$HADOOP_LOG_DIR
-export MASTERFILE=$HADOOP_CONF_DIR/masters
-export WORKERSFILE=$HADOOP_WORKERSFILE
+. "$BDEV_BIN_DIR/gen-config.sh"
 
-m_echo "Hadoop configuration: $SPARK_HADOOP_HOME"
-. $GEN_CONFIG_SCRIPT
+# Spark
+generate_framework_config \
+    "$SOLUTION_CONF_DIR_SRC" \
+    "$SOLUTION_TEMPLATE_DIR" \
+    "$SOLUTION_CONF_DIR" \
+    "$SOLUTION_LOG_DIR" \
+    "$MASTERFILE" \
+    "$WORKERSFILE"
+
+# Hadoop
+. "$COMMON_SRC_DIR/bin/gen-config.sh"
