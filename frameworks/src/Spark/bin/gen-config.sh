@@ -1,14 +1,21 @@
 #!/bin/bash
 
-m_echo "Spark configuration"
-. $GEN_CONFIG_SCRIPT
+. "$GEN_CONFIG_SCRIPT"
 
-export SOL_TEMPLATE_DIR=$HADOOP_TEMPLATE_DIR
-export SOL_CONF_DIR=$HADOOP_CONF_DIR
-export SOL_CONF_DIR_SRC=$HADOOP_CONF_DIR_SRC
-export SOL_LOG_DIR=$HADOOP_LOG_DIR
-export MASTERFILE=$HADOOP_CONF_DIR/masters
-export WORKERSFILE=$HADOOP_WORKERSFILE
+generate_framework_config \
+    "$SPARK_CONF_DIR_SRC" \
+    "$SPARK_TEMPLATE_DIR" \
+    "$SPARK_CONF_DIR" \
+    "$SPARK_LOG_DIR" \
+    "$MASTERFILE" \
+    "$WORKERSFILE"
 
-m_echo "Hadoop configuration: $SPARK_HADOOP_HOME"
-. $GEN_CONFIG_SCRIPT
+if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
+  generate_framework_config \
+    "$HADOOP_CONF_DIR_SRC" \
+    "$HADOOP_TEMPLATE_DIR" \
+    "$HADOOP_CONF_DIR" \
+    "$HADOOP_LOG_DIR" \
+    "$MASTERFILE" \
+    "$WORKERSFILE"
+fi
