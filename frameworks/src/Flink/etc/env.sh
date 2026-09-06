@@ -4,7 +4,6 @@ export SOL_TEMPLATE_DIR=$TEMPLATES_DIR/Flink
 export SOL_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOL_CONF_DIR=$SOLUTION_REPORT_DIR/conf/flink
 export SOL_LOG_DIR=$SOLUTION_REPORT_DIR/logs/flink
-export GEN_CONFIG_SCRIPT=$SOLUTION_DIR/bin/gen-config.sh
 export MASTERFILE=$SOL_CONF_DIR/masters
 export WORKERSFILE=$SOL_CONF_DIR/workers
 
