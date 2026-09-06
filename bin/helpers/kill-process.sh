@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eo pipefail
 
 PROCESS="NameNode|SecondaryNameNode|DataNode|ResourceManager|NodeManager|JobHistoryServer|ApplicationHistoryServer|RunJar|Child|MRAppMaster|YarnChild|SparkSubmit|CoarseGrainedExecutorBackend|ApplicationMaster|Master|HistoryServer|Worker|ExecutorLauncher|JobManager|TaskManager|StandaloneSessionClusterEntrypoint|TaskManagerRunner|CliFrontend"
 
