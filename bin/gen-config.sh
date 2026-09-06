@@ -81,15 +81,3 @@ generate_framework_config() {
 	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
 	add_conf_param "hadoop_home" $HADOOP_HOME
 }
-
-# Default execution if the script is run directly
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    # It was invoked directly as a command
-    generate_framework_config \
-        "${SOL_CONF_DIR_SRC}" \
-        "${SOL_TEMPLATE_DIR}" \
-        "${SOL_CONF_DIR}" \
-		"${SOL_LOG_DIR}" \
-        "${MASTERFILE:-}" \
-        "${WORKERSFILE:-}"
-fi
