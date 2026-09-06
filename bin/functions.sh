@@ -557,43 +557,6 @@ function configure_network() {
 
 export -f configure_network
 
-function copy_configuration_files_to_report_dir() {
-	if [[ -z "${SOL_CONF_DIR:-}" ]]; then
-		m_exit "SOL_CONF_DIR is not defined or is empty"
-	fi
-
-	if [[ -z "${SOL_CONF_DIR_SRC:-}" ]]; then
-		m_exit "SOL_CONF_DIR_SRC is not defined or is empty"
-	fi
-
-	if [[ -z "${SOL_LOG_DIR:-}" ]]; then
-		m_exit "SOL_LOG_DIR is not defined or is empty"
-	fi
-	
-	if [[ ! -d "$SOL_CONF_DIR_SRC" ]]; then
-		m_exit "SOL_CONF_DIR_SRC does not exist or is not a directory: $SOL_CONF_DIR_SRC"
-    fi
-	
-	if ! mkdir -p "$SOL_CONF_DIR"; then
-        m_exit "Could not create SOL_CONF_DIR: $SOL_CONF_DIR"
-    fi
-
-    if ! cp -r "$SOL_CONF_DIR_SRC"/* "$SOL_CONF_DIR"/; then
-        m_exit "Could not copy configuration from $SOL_CONF_DIR_SRC to $SOL_CONF_DIR"
-    fi
-
-    if ! chmod -R +w "$SOL_CONF_DIR"; then
-        m_exit "Could not make configuration writable: $SOL_CONF_DIR"
-    fi
-	
-	add_conf_param "sol_conf_dir" $SOL_CONF_DIR
-	add_conf_param "sol_log_dir" $SOL_LOG_DIR
-	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
-	add_conf_param "hadoop_home" $HADOOP_HOME
-}
-
-export -f copy_configuration_files_to_report_dir
-
 function set_cluster_size() {
 	export CLUSTER_SIZE
 	export WORKERS_NUMBER=$((CLUSTER_SIZE - 1))
