@@ -21,12 +21,12 @@ m_echo "Starting $SOLUTION"
 
 #Configure benchmarks
 m_echo "Configuring benchmarks"
-. ${SOL_BENCH_DIR}/conf/configure.sh
+. ${SOLUTION_BENCH_DIR}/conf/configure.sh
 
 #Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
-if [[ -f ${SOL_BENCH_DIR}/bin/prepare.sh ]]; then
-	. ${SOL_BENCH_DIR}/bin/prepare.sh
+if [[ -f ${SOLUTION_BENCH_DIR}/bin/prepare.sh ]]; then
+	. ${SOLUTION_BENCH_DIR}/bin/prepare.sh
 fi
 
 setup_phase
