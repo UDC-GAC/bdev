@@ -20,6 +20,11 @@ if [[ ! -f "$WORKERSFILE" ]]; then
     exit 1
 fi
 
+WORKER_SCRIPT="start-worker.sh"
+if [[ $SPARK_SERIES == "2" ]]
+    WORKER_SCRIPT="start-slave.sh"
+fi
+
 SPARK_SSH_OPTS="${SPARK_SSH_OPTS:--o StrictHostKeyChecking=no}"
 echo "Starting Spark workers pointing to ${MASTER_URL}..."
 
@@ -32,7 +37,7 @@ while IFS= read -r host || [[ -n "$host" ]]; do
         "export SPARK_CONF_DIR=\"$SPARK_CONF_DIR\"; \
          export SPARK_LOG_DIR=\"${SPARK_LOG_DIR:-}\"; \
          export SPARK_PID_DIR=\"${SPARK_PID_DIR:-}\"; \
-         \"${SPARK_HOME}/sbin/start-worker.sh\" \"$MASTER_URL\"" 2>&1 | sed "s/^/$host: /" &
+         \"${SPARK_HOME}/sbin/${WORKER_SCRIPT}\" \"$MASTER_URL\"" 2>&1 | sed "s/^/$host: /" &
 done < "$WORKERSFILE"
 
 wait
