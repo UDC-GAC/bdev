@@ -24,4 +24,6 @@ generate_framework_config \
     "$WORKERSFILE"
 
 # Hadoop
-. "$COMMON_SRC_DIR/bin/gen-config.sh"
+if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
+	. "$COMMON_SRC_DIR/bin/gen-config.sh"
+fi
