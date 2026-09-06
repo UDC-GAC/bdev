@@ -5,5 +5,4 @@ generate_framework_config \
   "$HADOOP_TEMPLATE_DIR" \
   "$HADOOP_CONF_DIR" \
   "$HADOOP_LOG_DIR" \
-  "$HADOOP_MASTERFILE" \
   "$HADOOP_WORKERSFILE"
