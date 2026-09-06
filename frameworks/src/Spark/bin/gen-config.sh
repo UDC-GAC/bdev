@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. "$GEN_CONFIG_SCRIPT"
+. "$BDEV_BIN_DIR/gen-config.sh"
 
 # Spark
 generate_framework_config \
