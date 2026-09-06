@@ -49,6 +49,11 @@ generate_framework_config() {
     if ! chmod -R +w "$target_dir"; then
         m_exit "Could not make configuration folder writable: $target_dir"
     fi
+
+	add_conf_param "sol_conf_dir" $target_dir
+	add_conf_param "sol_log_dir" $target_log_dir
+	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
+	add_conf_param "hadoop_home" $HADOOP_HOME
 	
 	# Render templates using a temporary sed file
 	local sed_rules
@@ -75,9 +80,4 @@ generate_framework_config() {
         rm -f "$workers_file"
         printf '%s\n' $WORKERNODES | head -n $((CLUSTER_SIZE - 1)) > "$workers_file"
     fi
-
-	add_conf_param "sol_conf_dir" $target_dir
-	add_conf_param "sol_log_dir" $target_log_dir
-	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
-	add_conf_param "hadoop_home" $HADOOP_HOME
 }
