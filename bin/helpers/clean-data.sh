@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eo pipefail
 
 check_disk_space() {
     local DISK_MIN_FREE_PERCENT="${DISK_SPACE_THRESHOLD:-5}"
