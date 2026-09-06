@@ -1,5 +1,4 @@
 #!/bin/bash
-set -eo pipefail
 
 # Generates a temporary sed script with all BDEv parameters
 build_sed_rules_file() {
