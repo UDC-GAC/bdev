@@ -25,3 +25,5 @@ elif [[ $HADOOP_SERIES == "2" ]]; then
 else
 	m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
+
+export HADOOP_TEMPLATE_DIR=$SOLUTION_TEMPLATE_DIR
