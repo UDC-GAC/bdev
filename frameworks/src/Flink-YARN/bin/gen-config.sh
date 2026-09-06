@@ -1,14 +1,15 @@
 #!/bin/bash
 
-m_echo "Flink configuration"
-. $GEN_CONFIG_SCRIPT
+. "$BDEV_BIN_DIR/gen-config.sh"
 
-export SOL_TEMPLATE_DIR=$HADOOP_TEMPLATE_DIR
-export SOL_CONF_DIR=$HADOOP_CONF_DIR
-export SOL_CONF_DIR_SRC=$HADOOP_CONF_DIR_SRC
-export SOL_LOG_DIR=$HADOOP_LOG_DIR
-export MASTERFILE=$HADOOP_CONF_DIR/masters
-export WORKERSFILE=$HADOOP_WORKERSFILE
+# FLINK
+generate_framework_config \
+    "$SOLUTION_CONF_DIR_SRC" \
+    "$SOLUTION_TEMPLATE_DIR" \
+    "$SOLUTION_CONF_DIR" \
+    "$SOLUTION_LOG_DIR" \
+    "$MASTERFILE" \
+    "$WORKERSFILE"
 
-m_echo "Hadoop configuration: $FLINK_HADOOP_HOME"
-. $GEN_CONFIG_SCRIPT
+# Hadoop
+. "$COMMON_SRC_DIR/bin/gen-config.sh"
