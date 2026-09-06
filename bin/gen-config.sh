@@ -25,7 +25,7 @@ generate_framework_config() {
     local src_dir="$1"			# Original folder in the tarball
     local template_dir="$2"		# Template folder
     local target_dir="$3"		# Final destination in $REPORT_DIR
-	local target_log_dir="$3"	# Log folder in destination
+	local target_log_dir="$4"	# Log folder in destination
     local master_file="${5:-}" # Masters file path (optional)
     local workers_file="${6:-}"# Workers file path (optional)
 
