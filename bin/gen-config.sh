@@ -38,7 +38,7 @@ generate_framework_config() {
 	m_echo "Generating configuration for $src_dir using templates from $template_dir"
 
     # Copy base configuration from tarball
-		if ! mkdir -p "$target_dir"; then
+	if ! mkdir -p "$target_dir"; then
         m_exit "Could not create configuration folder: $target_dir"
     fi
 
