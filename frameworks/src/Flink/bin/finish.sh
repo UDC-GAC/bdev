@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Avoid cleanup if framework does not exist
-SCRIPT_MASTER="$FLINK_BIN_DIR/jobmanager.sh"
+SCRIPT_MASTER="$FLINK_HOME/bin/jobmanager.sh"
 
 if [[ -f "$SCRIPT_MASTER" ]]; then
 	bash "$SCRIPT_MASTER" stop
