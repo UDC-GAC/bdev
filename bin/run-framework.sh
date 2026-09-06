@@ -55,8 +55,8 @@ do
 			sleep $BENCHMARK_WAIT_SECONDS
 		fi
 
-		if [[ -f ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
-			. ${SOL_BENCH_DIR}/bin/${BENCHMARK}/run.sh
+		if [[ -f ${SOLUTION_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
+			. ${SOLUTION_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
