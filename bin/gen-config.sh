@@ -26,8 +26,8 @@ generate_framework_config() {
     local template_dir="$2"		# Template folder
     local target_dir="$3"		# Final destination in $REPORT_DIR
 	local target_log_dir="$4"	# Log folder in destination
-    local master_file="${5:-}" # Masters file path (optional)
-    local workers_file="${6:-}"# Workers file path (optional)
+    local master_file="${5:-}"	# Masters file path (optional)
+    local workers_file="${6:-}"	# Workers file path (optional)
 
     [[ -z "$src_dir" || -z "$template_dir" || -z "$target_dir" ]] && \
         m_exit "generate_framework_config: src_dir, template_dir and target_dir are required"
