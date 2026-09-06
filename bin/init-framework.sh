@@ -9,8 +9,7 @@ if [[ -z "$WORKERNODES" ]]; then
 fi
 
 #Generate configuration
-m_echo "Generating configuration: $SOL_TEMPLATE_DIR"
-. $GEN_CONFIG_SCRIPT
+$GEN_CONFIG_SCRIPT
 
 m_echo "Master: $MASTERNODE"
 m_echo "Workers:"
