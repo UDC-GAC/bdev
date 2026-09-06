@@ -14,10 +14,6 @@ m_echo "Generating configuration: $SOL_TEMPLATE_DIR"
 
 m_echo "Master: $MASTERNODE"
 m_echo "Workers:"
-i=1
-for NODE in $WORKERNODES; do
-	if [[ $i -lt $CLUSTER_SIZE ]]; then
-		m_echo $'\t'"$NODE"
-	fi
-	i=$(( $i + 1 ))
-done
+while read -r NODE; do
+    m_echo $'\t'"$NODE"
+done < "$WORKERSFILE"
