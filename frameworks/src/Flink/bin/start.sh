@@ -3,7 +3,7 @@
 "$COMMON_SRC_DIR/bin/start_hadoop_yarn.sh"
 
 # Setup required jars
-. "$SOL_BENCH_DIR/conf/setup_jars.sh"
+. "$SOLUTION_BENCH_DIR/conf/setup_jars.sh"
 
 # Create LOG dir
 mkdir -p "$FLINK_LOG_DIR" 2>/dev/null || true
