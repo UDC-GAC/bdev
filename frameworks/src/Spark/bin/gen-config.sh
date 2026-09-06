@@ -2,6 +2,7 @@
 
 . "$GEN_CONFIG_SCRIPT"
 
+# Spark
 generate_framework_config \
     "$SPARK_CONF_DIR_SRC" \
     "$SPARK_TEMPLATE_DIR" \
@@ -10,12 +11,5 @@ generate_framework_config \
     "$MASTERFILE" \
     "$WORKERSFILE"
 
-if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-  generate_framework_config \
-    "$HADOOP_CONF_DIR_SRC" \
-    "$HADOOP_TEMPLATE_DIR" \
-    "$HADOOP_CONF_DIR" \
-    "$HADOOP_LOG_DIR" \
-    "$MASTERFILE" \
-    "$WORKERSFILE"
-fi
+# Hadoop
+. "$COMMON_SRC_DIR/bin/gen-config.sh"
