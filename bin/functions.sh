@@ -592,7 +592,7 @@ function copy_configuration_files_to_report_dir() {
 	add_conf_param "hadoop_home" $HADOOP_HOME
 }
 
-export -f set_directory_configuration
+export -f copy_configuration_files_to_report_dir
 
 function set_cluster_size() {
 	export CLUSTER_SIZE
