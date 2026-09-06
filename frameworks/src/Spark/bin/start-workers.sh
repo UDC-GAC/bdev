@@ -21,7 +21,7 @@ if [[ ! -f "$WORKERSFILE" ]]; then
 fi
 
 WORKER_SCRIPT="start-worker.sh"
-if [[ $SPARK_SERIES == "2" ]]
+if [[ $SPARK_SERIES == "2" ]]; then
     WORKER_SCRIPT="start-slave.sh"
 fi
 
