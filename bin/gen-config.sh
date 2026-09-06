@@ -40,15 +40,12 @@ done
 
 # Generate master and worker files
 rm -f $MASTERFILE $WORKERSFILE
-m_echo "Master: $MASTERNODE"
 echo $MASTERNODE > $MASTERFILE
 touch $WORKERSFILE
-m_echo "Workers:"
 
 i=1
 for NODE in $WORKERNODES; do
 	if [[ $i -lt $CLUSTER_SIZE ]]; then
-		m_echo $'\t'"$NODE"
 		echo $NODE >> $WORKERSFILE
 	fi
 	i=$(( $i + 1 ))
