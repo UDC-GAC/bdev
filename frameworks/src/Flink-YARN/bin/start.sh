@@ -3,7 +3,7 @@
 "$COMMON_SRC_DIR/bin/start_hadoop_yarn.sh"
 
 # Setup required jars
-. "$SOL_BENCH_DIR/conf/setup_jars.sh"
+. "$SOLUTION_BENCH_DIR/conf/setup_jars.sh"
 
 # Set classpath in the config file
 echo "containerized.master.env.CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
