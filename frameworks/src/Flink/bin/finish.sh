@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Avoid cleanup if solution does not exist
-SCRIPT="$FLINK_HOME/bin/stop-cluster.sh"
+# Avoid cleanup if framework does not exist
+SCRIPT_MASTER="$FLINK_BIN_DIR/jobmanager.sh"
 
-if [[ -f "$SCRIPT" ]]; then
-	bash $SCRIPT
+if [[ -f "$SCRIPT_MASTER" ]]; then
+	bash "$SCRIPT_MASTER" stop
+	bash "$SOLUTION_DIR/bin/stop-workers.sh"
 fi
 
 "$COMMON_SRC_DIR/bin/finish_hdfs.sh"
