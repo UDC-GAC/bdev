@@ -78,6 +78,6 @@ done
 
 cleanup_phase
 
-#Finish framework
-m_echo "Finishing $SOLUTION"
-. $SOLUTION_DIR/bin/finish.sh
+#Stop framework
+m_echo "Stopping $SOLUTION"
+. $SOLUTION_DIR/bin/stop.sh

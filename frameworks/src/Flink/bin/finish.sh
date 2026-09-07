@@ -8,5 +8,5 @@ if [[ -f "$SCRIPT_MASTER" ]]; then
 	bash "$SOLUTION_DIR/bin/stop-workers.sh"
 fi
 
-"$COMMON_SRC_DIR/bin/finish_hdfs.sh"
+"$COMMON_SRC_DIR/bin/stop_hdfs.sh"
 bash "$CLEANUP_PROCESS_SCRIPT"

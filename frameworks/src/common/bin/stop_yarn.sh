@@ -4,7 +4,7 @@ kill_java_process() {
     local node="$1"
     local process="$2"
 
-    m_echo "Finishing $process:" "$node"
+    m_echo "Stopping $process:" "$node"
     $SSH_CMD "$node" \
         "DAEMON_PIDS=\$(\"$JPS\" | awk -v process=\"$process\" '\$2 ~ process {print \$1}'); \
          if [[ -n \"\$DAEMON_PIDS\" ]]; then
