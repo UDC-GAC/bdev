@@ -660,12 +660,18 @@ function set_framework() {
 	export RESOURCE_MANAGER="yarn"
 	SOLUTION_NUM=$1
 
-	if [[ "$SOLUTION_NAME" != "Spark-YARN" ]]; then
+	if [[ "$SOLUTION_NAME" == "Spark*" ]]; then
 		SOLUTION_NAME="Spark"
-		RESOURCE_MANAGER="standalone"
-	elif [[ "$SOLUTION_NAME" != "Flink-YARN" ]]; then
+		
+		if [[ "$SOLUTION_NAME" != "Spark-YARN_*" ]]; then
+			RESOURCE_MANAGER="standalone"
+		fi
+	elif [[ "$SOLUTION_NAME" == "Flink*" ]]; then
 		SOLUTION_NAME="Flink"
-		RESOURCE_MANAGER="standalone"
+		
+		if [[ "$SOLUTION_NAME" != "Flink-YARN_*" ]]; then
+			RESOURCE_MANAGER="standalone"
+		fi
 	fi
 
 	export SOLUTION_HOME=${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
