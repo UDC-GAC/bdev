@@ -657,21 +657,15 @@ function set_framework() {
 	export SOLUTION_VERSION=$(echo $SOLUTION | cut -d '_' -f 2)
 	export SOLUTION_NET_INTERFACE=$(echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}')
 	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
-	export RESOURCE_MANAGER="yarn"
+	export RESOURCE_MANAGER="standalone"
 	SOLUTION_NUM=$1
 
-	if [[ "$SOLUTION_NAME" == "Spark*" ]]; then
-		SOLUTION_NAME="Spark"
-		
-		if [[ "$SOLUTION_NAME" != "Spark-YARN_*" ]]; then
-			RESOURCE_MANAGER="standalone"
-		fi
-	elif [[ "$SOLUTION_NAME" == "Flink*" ]]; then
-		SOLUTION_NAME="Flink"
-		
-		if [[ "$SOLUTION_NAME" != "Flink-YARN_*" ]]; then
-			RESOURCE_MANAGER="standalone"
-		fi
+	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
+	    SOLUTION_NAME="Spark"
+	    RESOURCE_MANAGER="yarn"
+	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]; then
+	    SOLUTION_NAME="Flink"
+	    RESOURCE_MANAGER="yarn"
 	fi
 
 	export SOLUTION_HOME=${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
@@ -681,7 +675,6 @@ function set_framework() {
 		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
 	else
 		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
-		m_echo "Resource manager: $RESOURCE_MANAGER"
 	fi
 
 	if [[ "$SOLUTION_NAME" == "Spark" ]]; then
@@ -695,6 +688,8 @@ function set_framework() {
         	fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
+		RESOURCE_MANAGER="yarn"
+		
 		if [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
@@ -702,6 +697,7 @@ function set_framework() {
 		fi
 		HADOOP_VERSION=$SOLUTION_VERSION
 	else
+		RESOURCE_MANAGER="yarn"
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
 
@@ -717,6 +713,7 @@ function set_framework() {
 		fi
 	fi
 	
+	m_echo "Resource manager: $RESOURCE_MANAGER"
 	export CURRENT_HADOOP_VERSION=`echo ${HADOOP_VERSION##*/}`
 	unset FINISH
 }
