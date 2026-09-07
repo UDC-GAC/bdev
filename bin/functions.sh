@@ -656,9 +656,8 @@ function set_framework() {
 	export SOLUTION_NAME=$(echo $SOLUTION | cut -d '_' -f 1)
 	export SOLUTION_VERSION=$(echo $SOLUTION | cut -d '_' -f 2)
 	export SOLUTION_NET_INTERFACE=$(echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}')
-	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
 	export RESOURCE_MANAGER="standalone"
-	SOLUTION_NUM=$1
+	SOLUTION_NUM="$1"
 
 	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
 	    SOLUTION_NAME="Spark"
@@ -668,25 +667,26 @@ function set_framework() {
 	    RESOURCE_MANAGER="yarn"
 	fi
 
-	export SOLUTION_HOME=${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
-	export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
+	export SOLUTION_HOME="${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}"
+	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
+	export SOLUTION_REPORT_DIR="${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}"
 
-	if [[ ! -d $SOLUTION_HOME ]]; then
+	if [[ ! -d "$SOLUTION_HOME" ]]; then
 		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
 	else
 		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
 	fi
 
 	if [[ "$SOLUTION_NAME" == "Spark" ]]; then
-        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $SPARK_HADOOP_HOME ]]; then
+        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d "$SPARK_HADOOP_HOME" ]]; then
             		m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
         	fi
-		HADOOP_VERSION=`echo ${SPARK_HADOOP_HOME##*/}`
+		HADOOP_VERSION=$(echo ${SPARK_HADOOP_HOME##*/})
 	elif [[ "$SOLUTION_NAME" == "Flink" ]]; then
-        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $FLINK_HADOOP_HOME ]]; then
+        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d "$FLINK_HADOOP_HOME" ]]; then
             		m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
         	fi
-		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
+		HADOOP_VERSION=$(echo ${FLINK_HADOOP_HOME##*/})
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
 		RESOURCE_MANAGER="yarn"
 		
@@ -695,26 +695,26 @@ function set_framework() {
 		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
 		fi
-		HADOOP_VERSION=$SOLUTION_VERSION
+		HADOOP_VERSION="$SOLUTION_VERSION"
 	else
 		RESOURCE_MANAGER="yarn"
-		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
+		HADOOP_VERSION=$(echo ${SOLUTION_HOME##*/})
 	fi
 
 	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
 		m_exit "Could not create framework output directory at $SOLUTION_REPORT_DIR"
 	fi
 	
-	if [[ $NUM_SOLUTIONS -gt 1 ]]; then
+	if [[ "$NUM_SOLUTIONS" -gt 1 ]]; then
 		if [[ $SOLUTION_NUM -gt 1 ]]; then
-			export LAST_HADOOP_VERSION=$CURRENT_HADOOP_VERSION
+			export LAST_HADOOP_VERSION="$CURRENT_HADOOP_VERSION"
 		else
 			export LAST_HADOOP_VERSION="null"
 		fi
 	fi
 	
 	m_echo "Resource manager: $RESOURCE_MANAGER"
-	export CURRENT_HADOOP_VERSION=`echo ${HADOOP_VERSION##*/}`
+	export CURRENT_HADOOP_VERSION=$(echo ${HADOOP_VERSION##*/})
 	unset FINISH
 }
 
