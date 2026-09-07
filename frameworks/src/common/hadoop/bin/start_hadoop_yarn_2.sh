@@ -23,7 +23,7 @@ fi
 
 #Resourcemanager & Nodemanagers
 m_echo "Starting Resourcemanager and Nodemanagers"
-"$HADOOP_HOME/sbin/yarn-daemon.sh" --config "$HADOOP_CONF_DIR" start resourcemanager"
+"$HADOOP_HOME/sbin/yarn-daemon.sh" --config "$HADOOP_CONF_DIR" start resourcemanager
 "$HADOOP_HOME/sbin/yarn-daemons.sh" --config "$HADOOP_CONF_DIR" start nodemanager
 
 if [[ $TIMELINE_SERVER == "true" ]]; then
