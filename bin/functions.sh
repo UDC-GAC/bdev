@@ -696,9 +696,12 @@ function set_framework() {
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
 		fi
 		HADOOP_VERSION="$SOLUTION_VERSION"
-	else
+	elif [[ "$SOLUTION_NAME" == "Hadoop-YARN" ]]; then
 		RESOURCE_MANAGER="yarn"
+		SOLUTION_DIR="$COMMON_HADOOP_DIR"
 		HADOOP_VERSION=$(echo ${SOLUTION_HOME##*/})
+	else
+		m_exit "Unknown framework: $SOLUTION"
 	fi
 
 	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
