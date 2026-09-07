@@ -8,7 +8,7 @@ if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 		$HDFS_CONFIG "$HADOOP_CONF_DIR" namenode -format -force -clusterID CID-bdev > "$HDFS_FORMAT_LOG" 2>&1
 	fi
 
-	#Namenode and Secondary NameNode (optionaal)
+	#Namenode and Secondary NameNode (optional)
 	m_echo "Starting NameNode and DataNodes"
 	$HDFS_CONFIG "$HADOOP_CONF_DIR" --daemon start namenode
 

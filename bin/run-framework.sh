@@ -14,13 +14,6 @@ m_echo "Initiliazing $SOLUTION"
 m_echo "Starting $SOLUTION"
 . ${SOLUTION_DIR}/bin/start.sh
 
-#Configure benchmarks
-m_echo "Configuring benchmarks"
-. ${COMMON_BENCH_DIR}/conf/configure.sh
-if [[ -f ${SOLUTION_BENCH_DIR}/conf/configure.sh ]]; then
-	. ${SOLUTION_BENCH_DIR}/conf/configure.sh
-fi
-
 #Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
 if [[ -f ${SOLUTION_BENCH_DIR}/bin/prepare.sh ]]; then
