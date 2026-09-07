@@ -7,7 +7,6 @@ if [[ -n "$1" ]]; then
 fi
 
 export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${execution_number}
-mkdir -p $BENCHMARK_OUTPUT_DIR
 export TMPLOGFILE=$BENCHMARK_OUTPUT_DIR/output
 export POWERLOGDIR=$BENCHMARK_OUTPUT_DIR/pow_records
 export STATLOGDIR=$BENCHMARK_OUTPUT_DIR/stat_records
@@ -17,6 +16,10 @@ export BDW_LOG_DIR=$BENCHMARK_OUTPUT_DIR/bdwatchdog
 export ELAPSED_TIME_FILE=$BENCHMARK_OUTPUT_DIR/runtime
 unset ELAPSED_TIME
 unset READ_SIZE
+
+if ! mkdir -p "$BENCHMARK_OUTPUT_DIR" ; then
+	m_exit "Could not create benchmark output directory at $BENCHMARK_OUTPUT_DIR"
+fi
 
 case "$BENCHMARK" in 
 	'testdfsio')

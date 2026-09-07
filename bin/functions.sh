@@ -657,12 +657,15 @@ function set_framework() {
 	export SOLUTION_VERSION=$(echo $SOLUTION | cut -d '_' -f 2)
 	export SOLUTION_NET_INTERFACE=$(echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}')
 	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
+	export RESOURCE_MANAGER="yarn"
 	SOLUTION_NUM=$1
 
-	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
+	if [[ "$SOLUTION_NAME" != "Spark-YARN" ]]; then
 		SOLUTION_NAME="Spark"
-	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]; then
+		RESOURCE_MANAGER="standalone"
+	elif [[ "$SOLUTION_NAME" != "Flink-YARN" ]]; then
 		SOLUTION_NAME="Flink"
+		RESOURCE_MANAGER="standalone"
 	fi
 
 	export SOLUTION_HOME=${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}
@@ -672,17 +675,18 @@ function set_framework() {
 		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
 	else
 		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
+		m_echo "Resource manager: $RESOURCE_MANAGER"
 	fi
 
 	if [[ "$SOLUTION_NAME" == "Spark" ]]; then
-        if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $SPARK_HADOOP_HOME ]]; then
-            m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
-        fi
+        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $SPARK_HADOOP_HOME ]]; then
+            		m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
+        	fi
 		HADOOP_VERSION=`echo ${SPARK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "Flink" ]]; then
-        if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $FLINK_HADOOP_HOME ]]; then
-            m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
-        fi
+        	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d $FLINK_HADOOP_HOME ]]; then
+            		m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
+        	fi
 		HADOOP_VERSION=`echo ${FLINK_HADOOP_HOME##*/}`
 	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
 		if [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
@@ -695,6 +699,10 @@ function set_framework() {
 		HADOOP_VERSION=`echo ${SOLUTION_HOME##*/}`
 	fi
 
+	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
+		m_exit "Could not create framework output directory at $SOLUTION_REPORT_DIR"
+	fi
+	
 	if [[ $NUM_SOLUTIONS -gt 1 ]]; then
 		if [[ $SOLUTION_NUM -gt 1 ]]; then
 			export LAST_HADOOP_VERSION=$CURRENT_HADOOP_VERSION
@@ -702,9 +710,8 @@ function set_framework() {
 			export LAST_HADOOP_VERSION="null"
 		fi
 	fi
-
+	
 	export CURRENT_HADOOP_VERSION=`echo ${HADOOP_VERSION##*/}`
-	mkdir -p $SOLUTION_REPORT_DIR
 	unset FINISH
 }
 

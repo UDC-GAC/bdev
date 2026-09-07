@@ -5,11 +5,14 @@ kill_java_process() {
     local process="$2"
 
     m_echo "Stopping $process:" "$node"
-    $SSH_CMD "$node" \
-        "DAEMON_PIDS=\$(\"$JPS\" | awk -v process=\"$process\" '\$2 ~ process {print \$1}'); \
-         if [[ -n \"\$DAEMON_PIDS\" ]]; then
-             kill -9 \$DAEMON_PIDS 2>/dev/null
-         fi"		 
+    $SSH_CMD "$node" "
+        JPS_MATCHES=\$(\"$JPS\" 2>/dev/null | awk -v p=\"$process\" '\$2 ~ p')
+        if [[ -n \"\$JPS_MATCHES\" ]]; then
+            PROCESS_PIDS=\$(echo \"\$JPS_MATCHES\" | awk '{print \$1}')
+            echo \"\$HOSTNAME: cleaning up $process:\"
+            echo \"\$JPS_MATCHES\" | awk '{printf \"  %s with PID %s\\n\", \$2, \$1}'
+            kill -9 \$PROCESS_PIDS 2>/dev/null || true
+        fi"	 
 }
 
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then

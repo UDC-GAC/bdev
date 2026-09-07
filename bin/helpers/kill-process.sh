@@ -8,14 +8,14 @@ if [[ -n "$JPS_MATCHES" ]]; then
     PROCESS_PIDS=$(awk '{print $1}' <<< "$JPS_MATCHES")
     echo "$HOSTNAME: cleaning up:"
     awk '{printf "  %s with PID %s\n", $2, $1}' <<< "$JPS_MATCHES"
-    kill -9 $PROCESS_PIDS 2>/dev/null
+    kill -9 $PROCESS_PIDS 2>/dev/null || true
 fi
 
 DOOL_PID=$(ps -elf | grep "$PYTHON_BIN" | grep "$DOOL_COMMAND_NAME" | grep -v "export" | grep -v "grep" | awk '{print $4}')
 
 if [[ -n "$DOOL_PID" ]]; then
     echo "$HOSTNAME: cleaning up ${DOOL_COMMAND_NAME} with PID $DOOL_PID"
-    kill -9 $DOOL_PID 2>/dev/null
+    kill -9 $DOOL_PID 2>/dev/null || true
 fi
 
 if [[ "$ENABLE_OPROFILE" == "true" ]]; then

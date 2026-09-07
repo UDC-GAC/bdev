@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
+	"$COMMON_SRC_DIR/bin/stop_hadoop_yarn.sh"
+	return 0
+fi
+
 # Avoid cleanup if framework does not exist
 SCRIPT_MASTER="$SPARK_HOME/sbin/stop-master.sh"
 
