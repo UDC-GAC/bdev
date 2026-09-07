@@ -9,7 +9,7 @@
 mkdir -p "$FLINK_LOG_DIR" 2>/dev/null || true
 
 m_echo "Starting the standalone Flink cluster (Session Mode)"
-"$FLINK_BIN_DIR/jobmanager.sh" start
+"$FLINK_HOME/bin/jobmanager.sh" start
 bash "$SOLUTION_DIR/bin/start-workers.sh"
 
 if [[ "$FLINK_HISTORY_SERVER" == "true" ]]; then
