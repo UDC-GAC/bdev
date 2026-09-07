@@ -14,7 +14,7 @@ unset ELAPSED_TIMES
 
 setup_phase
 
-. $BDEV_BIN_DIR/bench-env.sh
+. ${BDEV_BIN_DIR}/bench-env.sh
 
 # Starting workload
 m_echo "Running ${BENCHMARK^}, logging to ${BENCHMARK_OUTPUT_DIR}"

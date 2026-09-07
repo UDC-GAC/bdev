@@ -255,7 +255,7 @@ function get_conf_value() {
 
 export -f get_conf_value
 
-build_sed_rules_file() {
+function build_sed_rules_file() {
     # Generates a temporary sed script with all BDEv parameters
     local rules_file="$1"
     local num
@@ -275,7 +275,9 @@ build_sed_rules_file() {
     done
 }
 
-generate_framework_config() {
+export -f build_sed_rules_file
+
+function generate_framework_config() {
     local src_dir="$1"		# Original folder in the tarball
     local template_dir="$2"	# Template folder
     local target_dir="$3"	# Final destination in $REPORT_DIR
@@ -311,8 +313,8 @@ generate_framework_config() {
     add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
     add_conf_param "hadoop_home" $HADOOP_HOME
 	
-	# Render templates using a temporary sed file
-	local sed_rules
+    # Render templates using a temporary sed file
+    local sed_rules
     sed_rules=$(mktemp)
     build_sed_rules_file "$sed_rules"
     #declare -p CONFIG_KEYS
@@ -337,6 +339,8 @@ generate_framework_config() {
         printf '%s\n' $WORKERNODES | head -n $((CLUSTER_SIZE - 1)) > "$workers_file"
     fi
 }
+
+export -f generate_framework_config
 
 function load_hostfile() {
 	local nodes_source=""

@@ -5,10 +5,10 @@ bin=`cd "$bin"; pwd`
 export BDEV_HOME=`cd "$bin"/..; pwd`
 
 # Load BDEv configuration
-. $BDEV_HOME/bin/bdev-env.sh
+. ${BDEV_HOME}/bin/bdev-env.sh
 
 # Init BDEv
-. $BDEV_BIN_DIR/init.sh
+. ${BDEV_BIN_DIR}/init.sh
 
 # For each cluster size
 for CLUSTER_SIZE in $CLUSTER_SIZES
@@ -17,7 +17,7 @@ do
 
 	if [[ "$NUM_SOLUTIONS" -eq 0 ]]; then
 		set_no_framework
-		bash $BDEV_BIN_DIR/run-command.sh
+		bash ${BDEV_BIN_DIR}/run-command.sh
 	else
 		SOLUTION_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
@@ -57,10 +57,10 @@ do
 			fi
 
 			# Run framework
-			bash $BDEV_BIN_DIR/run-framework.sh
+			bash ${BDEV_BIN_DIR}/run-framework.sh
 		done
 	fi
 done
 
 # Finish BDEv
-. $BDEV_BIN_DIR/finish.sh
+. ${BDEV_BIN_DIR}/finish.sh

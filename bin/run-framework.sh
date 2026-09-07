@@ -8,7 +8,7 @@ configure_network
 
 #Init framework
 m_echo "Initiliazing $SOLUTION"
-. $BDEV_BIN_DIR/init-framework.sh
+. ${BDEV_BIN_DIR}/init-framework.sh
 
 #Start framework
 m_echo "Starting $SOLUTION"
@@ -38,7 +38,7 @@ do
 
 	while [[ "$i" -le "$NUM_EXECUTIONS" ]]
 	do
-		. $BDEV_BIN_DIR/bench-env.sh $i
+		. ${BDEV_BIN_DIR}/bench-env.sh $i
 		# Starting workload
 		m_echo "Running ${BENCHMARK^}, logging to ${BENCHMARK_OUTPUT_DIR}"
 
@@ -78,4 +78,4 @@ cleanup_phase
 
 #Stop framework
 m_echo "Stopping $SOLUTION"
-. $SOLUTION_DIR/bin/stop.sh
+. ${SOLUTION_DIR}/bin/stop.sh
