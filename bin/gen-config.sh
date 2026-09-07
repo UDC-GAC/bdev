@@ -21,10 +21,10 @@ build_sed_rules_file() {
 }
 
 generate_framework_config() {
-    local src_dir="$1"			# Original folder in the tarball
-    local template_dir="$2"		# Template folder
-    local target_dir="$3"		# Final destination in $REPORT_DIR
-	local target_log_dir="$4"	# Log folder in destination
+    local src_dir="$1"		# Original folder in the tarball
+    local template_dir="$2"	# Template folder
+    local target_dir="$3"	# Final destination in $REPORT_DIR
+    local target_log_dir="$4"	# Log folder in destination
     local master_file="${5:-}"	# Masters file path (optional)
     local workers_file="${6:-}"	# Workers file path (optional)
 
@@ -33,36 +33,38 @@ generate_framework_config() {
 
     [[ ! -d "$src_dir" ]] && m_exit "Source conf dir does not exist: $src_dir"
     [[ ! -d "$template_dir" ]] && m_exit "Template dir does not exist: $template_dir"
-
-	m_echo "Generating configuration files in: $target_dir"
+    
+    
+    local target_dir_short_path="$(basename "$(dirname "$target_dir")")/$(basename "$target_dir")"
+    m_echo "Generating configuration files in: $target_dir_short_path"
 
     # Copy base configuration from tarball
-	if ! mkdir -p "$target_dir"; then
+    if ! mkdir -p "$target_dir"; then
         m_exit "Could not create configuration folder: $target_dir"
     fi
 
     if ! cp -r "$src_dir"/* "$target_dir"/; then
-        m_exit "Could not copy configuration from $src_dir to $target_dir"
+        m_exit "Could not copy configuration files from $src_dir to $target_dir"
     fi
 
     if ! chmod -R +w "$target_dir"; then
         m_exit "Could not make configuration folder writable: $target_dir"
     fi
+    
+    m_echo "Rendering template files from: $template_dir"
 
-	m_echo "Rendering template files from: $template_dir"
-
-	add_conf_param "sol_conf_dir" $target_dir
-	add_conf_param "sol_log_dir" $target_log_dir
-	add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
-	add_conf_param "hadoop_home" $HADOOP_HOME
+    add_conf_param "sol_conf_dir" $target_dir
+    add_conf_param "sol_log_dir" $target_log_dir
+    add_conf_param "hadoop_conf_dir" $HADOOP_CONF_DIR
+    add_conf_param "hadoop_home" $HADOOP_HOME
 	
 	# Render templates using a temporary sed file
 	local sed_rules
     sed_rules=$(mktemp)
     build_sed_rules_file "$sed_rules"
-	#declare -p CONFIG_KEYS
-	#declare -p CONFIG_VALUES
-	#echo $sed_rules
+    #declare -p CONFIG_KEYS
+    #declare -p CONFIG_VALUES
+    #echo $sed_rules
 
     for tmpl in "$template_dir"/*; do
         [[ -f "$tmpl" ]] || continue

@@ -539,17 +539,18 @@ function configure_network() {
 
 	export RDMA_HADOOP_IB_ENABLED=false
 	export RDMA_HADOOP_ROCE_ENABLED=false
-		
+	HOSTFILE_SHORT_PATH="$(basename "$(dirname "$HOSTFILE")")/$(basename "$HOSTFILE")"
+
 	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
-		m_echo "Using RDMA interface '$RDMA_INTERFACE' for InfiniBand and hostfile: $HOSTFILE"
+		m_echo "Using RDMA interface '$RDMA_INTERFACE' for InfiniBand and hostfile: $HOSTFILE_SHORT_PATH"
 		export RDMA_HADOOP_IB_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
-		m_echo "Using RDMA interface '$RDMA_INTERFACE' for RoCE and hostfile: $HOSTFILE"
+		m_echo "Using RDMA interface '$RDMA_INTERFACE' for RoCE and hostfile: $HOSTFILE_SHORT_PATH"
 		export RDMA_HADOOP_ROCE_ENABLED=true
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
-		m_echo "Using network interface '$NETWORK_INTERFACE' for TCP/IP over Ethernet and hostfile: $HOSTFILE"
+		m_echo "Using network interface '$NETWORK_INTERFACE' for TCP/IP over Ethernet and hostfile: $HOSTFILE_SHORT_PATH"
 	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
-		m_echo "Using network interface '$NETWORK_INTERFACE' for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE"
+		m_echo "Using network interface '$NETWORK_INTERFACE' for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE_SHORT_PATH"
 	else
 		m_exit "Invalid network interface '${SOLUTION_NET_INTERFACE}' for $SOLUTION. Revise the configured frameworks (framework.lst)"
 	fi	

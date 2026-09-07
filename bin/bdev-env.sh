@@ -182,7 +182,7 @@ if ! cp -r "$BDEV_CONF_DIR"/* "$REPORT_DIR/etc/"; then
 fi
 
 export BDEV_CONF_DIR=$REPORT_DIR/etc
-m_echo "Configuration copied to: $BDEV_CONF_DIR"
+m_echo "Configuration files copied to: $BDEV_CONF_DIR"
 
 # Load remaining configuration files
 . $BDEV_CONF_DIR/hdfs.sh
