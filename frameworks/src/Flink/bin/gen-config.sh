@@ -1,15 +1,10 @@
 #!/bin/bash
 
-if [[ "$FLINK_TASKMANAGERS_PER_NODE" -gt 1 ]]; then
-	NODES=$(cat $WORKERSFILE)
-	rm -f "$WORKERSFILE"
-	for NODE in $NODES; do
-		i=1
-		while [[ "$i" -le "$FLINK_TASKMANAGERS_PER_NODE" ]]; do
-			echo $NODE >> $WORKERSFILE
-			i=$((i + 1))
-		done
-	done
+if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
+	if [[ "$FLINK_TASKMANAGERS_PER_NODE" -gt 1 ]]; then
+		awk -v n="$FLINK_TASKMANAGERS_PER_NODE" '{ for (i = 0; i < n; i++) print }' "$WORKERSFILE" > "${WORKERSFILE}.tmp"
+		mv "${WORKERSFILE}.tmp" "$WORKERSFILE"
+	fi
 fi
 
 # Flink
@@ -22,6 +17,6 @@ generate_framework_config \
     "$WORKERSFILE"
 
 # Hadoop
-if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
+if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" || "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	. "$COMMON_SRC_DIR/bin/gen-config.sh"
 fi

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
+	echo "stop" | "$FLINK_HOME/bin/yarn-session.sh" -id $YARN_APP_ID
+	"$COMMON_SRC_DIR/bin/stop_hadoop_yarn.sh"
+	return 0
+fi
+
 # Avoid cleanup if framework does not exist
 SCRIPT_MASTER="$FLINK_HOME/bin/jobmanager.sh"
 
