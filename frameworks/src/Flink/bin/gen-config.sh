@@ -23,5 +23,5 @@ generate_framework_config \
 
 # Hadoop
 if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-	"$COMMON_SRC_DIR/bin/gen-config.sh"
+	. "$COMMON_SRC_DIR/bin/gen-config.sh"
 fi
