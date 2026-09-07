@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Load BDEv functions
+. $BDEV_BIN_DIR/functions.sh
+
 # Load storage backend functions
 . $COMMON_SRC_DIR/lib/storage_backend.sh
 
