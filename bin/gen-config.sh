@@ -34,9 +34,7 @@ generate_framework_config() {
     [[ ! -d "$src_dir" ]] && m_exit "Source conf dir does not exist: $src_dir"
     [[ ! -d "$template_dir" ]] && m_exit "Template dir does not exist: $template_dir"
     
-    
-    local target_dir_short_path="$(basename "$(dirname "$target_dir")")/$(basename "$target_dir")"
-    m_echo "Generating configuration files in: $target_dir_short_path"
+    m_echo "Generating configuration files in: $target_dir"
 
     # Copy base configuration from tarball
     if ! mkdir -p "$target_dir"; then
