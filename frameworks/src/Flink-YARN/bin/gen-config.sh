@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. "$BDEV_BIN_DIR/gen-config.sh"
-
 # Flink
 generate_framework_config \
     "$SOLUTION_CONF_DIR_SRC" \
@@ -12,4 +10,4 @@ generate_framework_config \
     "$WORKERSFILE"
 
 # Hadoop
-. "$COMMON_SRC_DIR/bin/gen-config.sh"
+"$COMMON_SRC_DIR/bin/gen-config.sh"

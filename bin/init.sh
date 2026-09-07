@@ -7,6 +7,14 @@ m_echo "Initializing"
 # Load hostfile
 load_hostfile
 
+if [[ -z "$MASTERNODE" ]]; then
+	m_exit "Master node is null. Revise network settings"
+fi
+
+if [[ -z "$WORKERNODES" ]]; then
+	m_exit "Worker nodes are null. Revise network settings"
+fi
+
 . $CLEANUP_PROCESS_SCRIPT
 
 begin_report

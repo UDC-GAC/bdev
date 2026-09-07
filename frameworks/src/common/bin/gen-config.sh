@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. "$BDEV_BIN_DIR/gen-config.sh"
-
 export WORKERSFILE=$HADOOP_WORKERSFILE
 
 generate_framework_config \

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. "$BDEV_BIN_DIR/gen-config.sh"
-
 if [[ "$FLINK_TASKMANAGERS_PER_NODE" -gt 1 ]]; then
 	NODES=$(cat $WORKERSFILE)
 	rm -f "$WORKERSFILE"
@@ -25,5 +23,5 @@ generate_framework_config \
 
 # Hadoop
 if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-	. "$COMMON_SRC_DIR/bin/gen-config.sh"
+	"$COMMON_SRC_DIR/bin/gen-config.sh"
 fi

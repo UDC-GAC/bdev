@@ -6,7 +6,7 @@ if [[ $GEN_WORDCOUNT == "true" ]]; then
 
 		OPTIONS=(
     		-t randomtext
-			-b "${RGEN_BASE_PATH}"
+		-b "${RGEN_BASE_PATH}"
     		-n "${INPUT_WORDCOUNT}"
     		-m "${MAPPERS_NUMBER}"
     		-p "${WORDCOUNT_DATASIZE}"

@@ -1,14 +1,10 @@
 #!/bin/bash
 
-if [[ -z "$MASTERNODE" ]]; then
-	m_exit "Master node is null. Revise network settings"
-fi
+#Loading framework environment
+m_echo "Loading environment: ${SOLUTION_DIR}/etc/env.sh"
+. ${SOLUTION_DIR}/etc/env.sh
 
-if [[ -z "$WORKERNODES" ]]; then
-	m_exit "Worker nodes are null. Revise network settings"
-fi
-
-#Generate configuration
+#Generate framework configuration
 . "${SOLUTION_DIR}/bin/gen-config.sh"
 
 m_echo "Master: $MASTERNODE"

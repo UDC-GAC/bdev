@@ -6,14 +6,9 @@ configure_network
 #Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh
 
-#Read solution environment
-m_echo "Reading environment: ${SOLUTION_DIR}/etc/env.sh"
-. ${SOLUTION_DIR}/etc/env.sh
-
 #Init framework
 m_echo "Initiliazing $SOLUTION"
-. ${INIT_SCRIPT}
-. ${COMMON_BENCH_DIR}/conf/configure.sh
+. $BDEV_BIN_DIR/init-framework.sh
 
 #Start framework
 m_echo "Starting $SOLUTION"
@@ -21,7 +16,10 @@ m_echo "Starting $SOLUTION"
 
 #Configure benchmarks
 m_echo "Configuring benchmarks"
-. ${SOLUTION_BENCH_DIR}/conf/configure.sh
+. ${COMMON_BENCH_DIR}/conf/configure.sh
+if [[ -f ${SOLUTION_BENCH_DIR}/conf/configure.sh ]]; then
+	. ${SOLUTION_BENCH_DIR}/conf/configure.sh
+fi
 
 #Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh

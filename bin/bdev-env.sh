@@ -19,7 +19,6 @@ export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
 export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
 export TEMPLATES_DIR=$BDEV_HOME/frameworks/templates
 export THIRD_PARTY_DIR=$BDEV_HOME/third-party
-export INIT_SCRIPT=$BDEV_BIN_DIR/init-framework.sh
 export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
 export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
