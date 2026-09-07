@@ -2,7 +2,7 @@
 
 if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
 	echo "stop" | "$FLINK_HOME/bin/yarn-session.sh" -id $YARN_APP_ID
-	"$COMMON_SRC_DIR/bin/stop_hadoop_yarn.sh"
+	"$COMMON_HADOOP_DIR/bin/stop_hadoop_yarn.sh"
 	return 0
 fi
 
@@ -14,5 +14,5 @@ if [[ -f "$SCRIPT_MASTER" ]]; then
 	bash "$SOLUTION_DIR/bin/stop-workers.sh"
 fi
 
-"$COMMON_SRC_DIR/bin/stop_hdfs.sh"
+"$COMMON_HADOOP_DIR/bin/stop_hdfs.sh"
 bash "$CLEANUP_PROCESS_SCRIPT"

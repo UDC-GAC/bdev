@@ -1,4 +1,5 @@
 #!/bin/bash
+
 export SOLUTION_TEMPLATE_DIR=$TEMPLATES_DIR/Flink
 export SOLUTION_CONF_DIR_SRC=$SOLUTION_HOME/conf
 export SOLUTION_CONF_DIR=$SOLUTION_REPORT_DIR/conf/flink
@@ -58,7 +59,7 @@ fi
 
 # Hadoop integration
 export HADOOP_HOME="$FLINK_HADOOP_HOME"
-. "$COMMON_SRC_DIR/etc/env.sh"
+. "$COMMON_HADOOP_DIR/etc/env.sh"
 
 add_conf_param "flink_conf_dir"			"$FLINK_CONF_DIR"
 add_conf_param "flink_log_dir"			"$FLINK_LOG_DIR"

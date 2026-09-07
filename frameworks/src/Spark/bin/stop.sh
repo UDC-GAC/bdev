@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
-	"$COMMON_SRC_DIR/bin/stop_hadoop_yarn.sh"
+	"$COMMON_HADOOP_DIR/bin/stop_hadoop_yarn.sh"
 	return 0
 fi
 
@@ -13,7 +13,7 @@ if [[ -f "$SCRIPT_MASTER" ]]; then
 	bash "$SOLUTION_DIR/bin/stop-workers.sh"
 fi
 
-"$COMMON_SRC_DIR/bin/stop_hdfs.sh"
+"$COMMON_HADOOP_DIR/bin/stop_hdfs.sh"
 bash "$CLEANUP_PROCESS_SCRIPT"
 
 # Get rid of jar files in user logs

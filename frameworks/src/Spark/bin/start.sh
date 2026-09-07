@@ -1,6 +1,6 @@
 #!/bin/bash
 
-"$COMMON_SRC_DIR/bin/start_hadoop_yarn.sh"
+"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn.sh"
 
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Spark cluster"

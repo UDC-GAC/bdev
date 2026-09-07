@@ -1,4 +1,5 @@
 #!/bin/bash
+
 export SOLUTION_TEMPLATE_DIR="$TEMPLATES_DIR/Spark"
 export SOLUTION_CONF_DIR_SRC="$SOLUTION_HOME/conf"
 export SOLUTION_CONF_DIR="$SOLUTION_REPORT_DIR/conf/spark"
@@ -53,7 +54,7 @@ export SPARK_SQL_SHUFFLE_PARTITIONS=$(($SPARK_DEFAULT_PARALLELISM * $SPARK_SQL_S
 
 # Hadoop integration
 export HADOOP_HOME="$SPARK_HADOOP_HOME"
-. "$COMMON_SRC_DIR/etc/env.sh"
+. "$COMMON_HADOOP_DIR/etc/env.sh"
 
 add_conf_param "spark_conf_dir"			"$SPARK_CONF_DIR"
 add_conf_param "spark_log_dir"			"$SPARK_LOG_DIR"

@@ -11,5 +11,5 @@ generate_framework_config \
 
 # Hadoop
 if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" || "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-    . "$COMMON_SRC_DIR/bin/gen-config.sh"
+    . "$COMMON_HADOOP_DIR/bin/gen-config.sh"
 fi

@@ -9,10 +9,10 @@ done
 # Avoid warnings
 mkdir -p "$HADOOP_LOG_DIR" 2>/dev/null || true
 
-if [[ $HADOOP_SERIES == "3" ]]; then
-	$COMMON_SRC_DIR/bin/start_hadoop_yarn_3.sh
+if [[ "$HADOOP_SERIES" == "3" ]]; then
+	"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn_3.sh"
 else
-	$COMMON_SRC_DIR/bin/start_hadoop_yarn_2.sh
+	"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn_2.sh"
 fi
 
 sleep 2
@@ -21,6 +21,6 @@ SAFEMODE_STATUS=$($HADOOP_HOME/bin/hdfs dfsadmin -safemode get 2>/dev/null)
 
 if [[ "$SAFEMODE_STATUS" == *"ON"* ]]; then
 	m_echo "HDFS is in Safe Mode. Waiting for DataNodes..."
-	$HADOOP_HOME/bin/hdfs dfsadmin -safemode wait >/dev/null 2>&1
+	"$HADOOP_HOME/bin/hdfs" dfsadmin -safemode wait >/dev/null 2>&1
 	m_echo "HDFS has exited the Safe Mode and is ready for writing"
 fi

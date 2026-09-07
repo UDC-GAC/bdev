@@ -4,7 +4,7 @@
 . $BDEV_BIN_DIR/functions.sh
 
 # Load storage backend functions
-. $COMMON_SRC_DIR/lib/storage_backend.sh
+. $STORAGE_BACKEND_LIB
 
 # Initialize arrays for configuration parameters
 ini_conf_params

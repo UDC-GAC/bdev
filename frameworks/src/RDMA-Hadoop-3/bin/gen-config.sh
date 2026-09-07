@@ -1,3 +1,3 @@
 #!/bin/bash
 
-. "$COMMON_SRC_DIR/bin/gen-config.sh"
+. "$COMMON_HADOOP_DIR/bin/gen-config.sh"

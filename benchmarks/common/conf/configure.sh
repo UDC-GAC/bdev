@@ -39,7 +39,7 @@ function resolve_hive_issues() {
 }
 
 # Load storage backend functions
-. ${COMMON_SRC_DIR}/lib/storage_backend.sh
+. $STORAGE_BACKEND_LIB
 
 export JAVA_HOME=${BDEV_JAVA_HOME}
 export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
