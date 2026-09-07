@@ -713,7 +713,12 @@ function set_framework() {
 		fi
 	fi
 	
-	m_echo "Resource manager: $RESOURCE_MANAGER"
+	if [[ "$RESOURCE_MANAGER" == "yarn" ]]; then
+		m_echo "Resource manager: YARN"
+	else
+		m_echo "Resource manager: ${RESOURCE_MANAGER^}"
+	fi
+
 	export CURRENT_HADOOP_VERSION=$(echo ${HADOOP_VERSION##*/})
 	unset FINISH
 }
