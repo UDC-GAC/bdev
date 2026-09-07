@@ -141,7 +141,7 @@ function read_frameworks_list() {
 export -f read_frameworks_list
 
 function get_num_conf_params() {
-    echo "${#CONFIG_KEYS[@]}"
+    printf '%s\n' "${#CONFIG_KEYS[@]}"
 }
 
 export -f get_num_conf_params
@@ -154,13 +154,13 @@ function ini_conf_params() {
 export -f ini_conf_params
 
 function add_conf_param() {
-    local key=$1
-    local value=$2
+    local key="$1"
+    local value="$2"
 
     local i
     for i in "${!CONFIG_KEYS[@]}"; do
-        if [[ ${CONFIG_KEYS[i]} == "$key" ]]; then
-            CONFIG_VALUES[i]=$value
+        if [[ "${CONFIG_KEYS[i]}" == "$key" ]]; then
+            CONFIG_VALUES[i]="$value"
             return
         fi
     done
@@ -207,15 +207,12 @@ function add_conf_param_list() {
     local key="$1"
     local param_list="$2"
     local value=""
-    local first=true
 
     for param in $param_list; do
-        if $first; then
-            value="$param"
-            first=false
-        else
-            value+=",${param}"
+        if [[ -n "$value" ]]; then
+            value+=","
         fi
+	value+="$param"
     done
 
     add_conf_param "$key" "$value"
@@ -223,7 +220,7 @@ function add_conf_param_list() {
 
 export -f add_conf_param_list
 
-function add_prefix_sufix() {
+function add_prefix_suffix() {
     local param_list="$1"
     local prefix="$2"
     local sufix="$3"
@@ -236,7 +233,7 @@ function add_prefix_sufix() {
     echo "${result# }"
 }
 
-export -f add_prefix_sufix
+export -f add_prefix_suffix
 
 function get_conf_key() {
     local index=$(( $1 - 1 ))

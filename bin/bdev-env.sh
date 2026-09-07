@@ -168,8 +168,8 @@ else
 	export LOCAL_DIRS="${LOCAL_DIRS_NEW% }"
 fi
 
-export SPARK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/spark/local")
-export FLINK_LOCAL_DIRS=$(add_prefix_sufix "$LOCAL_DIRS" "" "/flink/local")
+export SPARK_LOCAL_DIRS=$(add_prefix_suffix "$LOCAL_DIRS" "" "/spark/local")
+export FLINK_LOCAL_DIRS=$(add_prefix_suffix "$LOCAL_DIRS" "" "/flink/local")
 
 # Copy configuration to REPORT_DIR
 if ! mkdir -p "$REPORT_DIR/etc" "$HELPER_SCRIPTS_DIR"; then

@@ -92,11 +92,11 @@ add_conf_param "shuffle_parallelcopies" $SHUFFLE_PARALLELCOPIES
 add_conf_param "io_sort_record_percent" $IO_SORT_RECORD_PERCENT
 add_conf_param "io_sort_spill_percent" $IO_SORT_SPILL_PERCENT
 add_conf_param "reduce_slow_start_completed_maps" $REDUCE_SLOW_START_COMPLETED_MAPS
-add_conf_param_list "dfs_name_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/name"`"
-add_conf_param_list "dfs_data_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/data"`"
-add_conf_param_list "dfs_checkpoint_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/dfs/namesecondary"`"
-add_conf_param_list "mapreduce_local_dir" "`add_prefix_sufix "$LOCAL_DIRS" "" "/mapred/local"`"
-add_conf_param_list "yarn_local_dirs" "`add_prefix_sufix "$LOCAL_DIRS" "" "/yarn/local"`"
+add_conf_param_list "dfs_name_dir" "`add_prefix_suffix "$LOCAL_DIRS" "" "/dfs/name"`"
+add_conf_param_list "dfs_data_dir" "`add_prefix_suffix "$LOCAL_DIRS" "" "/dfs/data"`"
+add_conf_param_list "dfs_checkpoint_dir" "`add_prefix_suffix "$LOCAL_DIRS" "" "/dfs/namesecondary"`"
+add_conf_param_list "mapreduce_local_dir" "`add_prefix_suffix "$LOCAL_DIRS" "" "/mapred/local"`"
+add_conf_param_list "yarn_local_dirs" "`add_prefix_suffix "$LOCAL_DIRS" "" "/yarn/local"`"
 add_conf_param "yarn_timeline_server"	$TIMELINE_SERVER
 add_conf_param "yarn_timeline_d_heapsize" $TIMELINE_SERVER_D_HEAPSIZE
 add_conf_param "resourcemanager_d_heapsize" $RESOURCEMANAGER_D_HEAPSIZE
