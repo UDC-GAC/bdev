@@ -6,7 +6,7 @@ JPS_MATCHES=$("$JPS" 2>/dev/null | grep -E "$PROCESS")
 
 if [[ -n "$JPS_MATCHES" ]]; then
     PROCESS_PIDS=$(awk '{print $1}' <<< "$JPS_MATCHES")
-    echo "$HOSTNAME: cleaning up:"
+    echo "$HOSTNAME: cleaning up"
     awk '{printf "  %s with PID %s\n", $2, $1}' <<< "$JPS_MATCHES"
     kill -9 $PROCESS_PIDS 2>/dev/null || true
 fi

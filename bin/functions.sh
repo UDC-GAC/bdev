@@ -298,6 +298,10 @@ function generate_framework_config() {
         m_exit "Could not create configuration folder: $target_dir"
     fi
 
+    if ! mkdir -p "$target_log_dir"; then
+        m_exit "Could not create log folder: $target_log_dir"
+    fi
+    
     if ! cp -r "$src_dir"/* "$target_dir"/; then
         m_exit "Could not copy configuration files from $src_dir to $target_dir"
     fi
@@ -738,7 +742,11 @@ function set_no_framework() {
 	export NUM_EXECUTIONS=1
 	export SOLUTION_HOME=""
         export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
-	mkdir -p $SOLUTION_REPORT_DIR
+
+	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
+		m_exit "Could not create framework output directory at $SOLUTION_REPORT_DIR"
+	fi
+
 	unset FINISH
 }
 
@@ -788,7 +796,7 @@ function write_report() {
 
 	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
 		m_echo "Generating performance plots"
-		if [[ ! -f "$PLOT_DIR" ]]; then
+		if [[ ! -d "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_benchmarks.sh >> $PLOT_DIR/log 2>&1
@@ -796,7 +804,7 @@ function write_report() {
 
 	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Generating RAPL plots"
-		if [[ ! -f "$RAPL_PLOT_DIR" ]]; then
+		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p $RAPL_PLOT_DIR
 		fi
 		bash $RAPL_PLOT_HOME/plot_benchmarks.sh >> $RAPL_PLOT_DIR/log 2>&1
@@ -804,7 +812,7 @@ function write_report() {
 
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		m_echo "Generating Oprofile plots"
-		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
+		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
 		bash $OPROFILE_PLOT_HOME/plot_benchmarks.sh >> $OPROFILE_PLOT_DIR/log 2>&1
@@ -957,21 +965,21 @@ function begin_report() {
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
 
 	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
-		if [[ ! -f "$PLOT_DIR" ]]; then
+		if [[ ! -d "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_legend.sh $PLOT_DIR >> $PLOT_DIR/log 2>&1
 	fi
 
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
-		if [[ ! -f "$OPROFILE_PLOT_DIR" ]]; then
+		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR
 		fi
 		bash $PLOT_HOME/plot_legend.sh $OPROFILE_PLOT_DIR >> $OPROFILE_PLOT_DIR/log 2>&1
 	fi
 
 	if [[ $ENABLE_ILO == "true" ]]; then
-        	if [[ ! -f "$ILO_DIR" ]]; then
+        	if [[ ! -d "$ILO_DIR" ]]; then
         	        mkdir -p $ILO_DIR
 	        fi
 

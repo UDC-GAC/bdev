@@ -5,9 +5,6 @@
 # Setup required jars
 . "$SOLUTION_BENCH_DIR/conf/setup_jars.sh"
 
-# Create LOG dir
-mkdir -p "$FLINK_LOG_DIR" 2>/dev/null || true
-
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Flink cluster (Session Mode)"
 	"$FLINK_HOME/bin/jobmanager.sh" start
