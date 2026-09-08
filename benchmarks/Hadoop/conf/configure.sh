@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PEGASUS_JAR=$THIRD_PARTY_DIR/pegasus-2.0/pegasus-2.0.jar
+export PEGASUS_JAR="$BDEV_LIB_DIR/pegasus-2.0.jar"
 
 if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]]; then
 	URL="https://archive.apache.org/dist/mahout"
