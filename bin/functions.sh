@@ -1314,6 +1314,24 @@ check_ssh_connectivity() {
 
 export -f check_ssh_connectivity
 
+function download_jar_if_missing() {
+    local target_jar="$1"
+    local url="$2"
+    local desc="$3"
+
+    if [[ ! -f "$target_jar" ]]; then
+        m_echo "$desc not found. Downloading from $url..."
+        local tmp_jar="${target_jar}.tmp"
+        if ! wget -q -O "$tmp_jar" "$url" || [[ ! -s "$tmp_jar" ]]; then
+            rm -f "$tmp_jar" 2>/dev/null
+            m_exit "Could not download $desc from $url"
+        fi
+        mv "$tmp_jar" "$target_jar"
+    fi
+}
+
+export -f download_jar_if_missing
+
 function sum() {
     SUM=0
     local -a values=($*)
