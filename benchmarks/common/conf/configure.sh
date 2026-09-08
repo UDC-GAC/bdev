@@ -26,23 +26,22 @@ function resolve_hive_issues() {
         cp "${BACKUP_FILE}" "${RESTORED_JAR}"
     fi
 
-	if [[ ! -f ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR ]]; then
-		URL=https://bdev.des.udc.es/dist
-		m_echo "Downloading $COMMONS_COLLECTIONS_JAR from $URL"
-		wget -q -O ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR $URL/$COMMONS_COLLECTIONS_JAR
-
-		if [[ $? != 0 ]]; then
-			rm ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR >& /dev/null
-			m_exit "Error when downloading $COMMONS_COLLECTIONS_JAR"
-    		fi
+    if [[ ! -f ${HIVE_LIB}/$COMMONS_COLLECTIONS_JAR ]]; then
+        if [[ ! -f "$BDEV_LIB_DIR/$COMMONS_COLLECTIONS_JAR" ]]; then
+        	m_exit "Required jar file does not exist: $BDEV_LIB_DIR/$COMMONS_COLLECTIONS_JAR"
+        fi
+        
+        if ! cp -f "$BDEV_LIB_DIR/$COMMONS_COLLECTIONS_JAR" "$HIVE_LIB"; then
+		m_exit "Could not copy $BDEV_LIB_DIR/$COMMONS_COLLECTIONS_JAR to $HIVE_LIB"
 	fi
+    fi
 }
 
 # Load storage backend functions
 . $STORAGE_BACKEND_LIB
 
 export JAVA_HOME=${BDEV_JAVA_HOME}
-export DATAGEN_JAR=${COMMON_BENCH_DIR}/bin/rgen.jar
+export DATAGEN_JAR=${BDEV_LIB_DIR}/rgen.jar
 export HADOOP_EXAMPLES_JAR=$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples*.jar
 export REDUCERS_NUMBER=$(( ${WORKERS_NUMBER} * ${REDUCERS_PER_NODE} ))
 export MAPPERS_NUMBER=$(( ${WORKERS_NUMBER} * ${MAPPERS_PER_NODE} ))

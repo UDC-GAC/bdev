@@ -25,8 +25,7 @@ else
 	esac
 fi
 
-SPARK_BENCH_DIR=$SOLUTION_BENCH_DIR/bin
-export SPARK_BENCH_JAR=$SPARK_BENCH_DIR/$SPARK_BENCH_JAR_NAME
+export SPARK_BENCH_JAR=$BDEV_LIB_DIR/$SPARK_BENCH_JAR_NAME
 
 if [[ ! -f "$SPARK_BENCH_JAR" ]]; then
 	# Download sparkbench jar file
@@ -42,7 +41,7 @@ else
 fi
 
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
-	export TPCX_HS_JAR=$SPARK_BENCH_DIR/$SPARK_TPCX_HS_JAR_NAME
+	export TPCX_HS_JAR=$BDEV_LIB_DIR/$SPARK_TPCX_HS_JAR_NAME
 
 	if [[ ! -f "$TPCX_HS_JAR" ]]; then
 		# Download TPCx-HS jar file

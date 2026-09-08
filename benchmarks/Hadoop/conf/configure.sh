@@ -34,9 +34,8 @@ if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]];
 fi
 
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
-	HADOOP_BENCH_DIR=$SOLUTION_BENCH_DIR/bin
 	HADOOP_TPCX_HS_JAR_NAME=tpcx-hs-hadoop.jar
-	export TPCX_HS_JAR=$HADOOP_BENCH_DIR/${HADOOP_TPCX_HS_JAR_NAME}
+	export TPCX_HS_JAR=$BDEV_LIB_DIR/$HADOOP_TPCX_HS_JAR_NAME
 
 	if [[ ! -f $TPCX_HS_JAR ]]; then
 		# Download TPCx-HS jar file
