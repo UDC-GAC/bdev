@@ -2,7 +2,7 @@
 
 if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
 	echo "stop" | "$FLINK_HOME/bin/yarn-session.sh" -id $YARN_APP_ID
-	"$COMMON_HADOOP_DIR/bin/stop_hadoop_yarn.sh"
+	"$COMMON_HADOOP_DIR/bin/stop.sh"
 	return 0
 fi
 

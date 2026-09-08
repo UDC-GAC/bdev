@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" ]]; then
-	"$COMMON_HADOOP_DIR/bin/stop_hadoop_yarn.sh"
+	"$COMMON_HADOOP_DIR/bin/stop.sh"
 	return 0
 fi
 

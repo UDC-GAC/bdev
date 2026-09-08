@@ -1,6 +1,6 @@
 #!/bin/bash
 
-"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn.sh"
+"$COMMON_HADOOP_DIR/bin/start.sh"
 
 # Setup required jars
 . "$SOLUTION_BENCH_DIR/conf/setup_jars.sh"
