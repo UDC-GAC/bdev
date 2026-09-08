@@ -282,11 +282,12 @@ function generate_framework_config() {
     local template_dir="$2"	# Template folder
     local target_dir="$3"	# Final destination in $REPORT_DIR
     local target_log_dir="$4"	# Log folder in destination
-    local master_file="${5:-}"	# Masters file path (optional)
-    local workers_file="${6:-}"	# Workers file path (optional)
-
-    [[ -z "$src_dir" || -z "$template_dir" || -z "$target_dir" || -z "$target_log_dir" ]] && \
-        m_exit "generate_framework_config: src_dir, template_dir, target_dir and target_log_dir are required"
+    local target_lib_dir="$5"	# Lib folder in destination
+    local master_file="${6:-}"	# Masters file path (optional)
+    local workers_file="${7:-}"	# Workers file path (optional)
+    
+    [[ -z "$src_dir" || -z "$template_dir" || -z "$target_dir" || -z "$target_log_dir" || -z "$target_lib_dir" ]] && \
+        m_exit "generate_framework_config: src_dir, template_dir, target_dir, target_log_dir and target_lib_dir are required"
 
     [[ ! -d "$src_dir" ]] && m_exit "Source conf dir does not exist: $src_dir"
     [[ ! -d "$template_dir" ]] && m_exit "Template dir does not exist: $template_dir"
@@ -301,7 +302,11 @@ function generate_framework_config() {
     if ! mkdir -p "$target_log_dir"; then
         m_exit "Could not create log folder: $target_log_dir"
     fi
-    
+
+    if ! mkdir -p "$target_lib_dir"; then
+        m_exit "Could not create lib folder: $target_lib_dir"
+    fi
+
     if ! cp -r "$src_dir"/* "$target_dir"/; then
         m_exit "Could not copy configuration files from $src_dir to $target_dir"
     fi
@@ -314,6 +319,7 @@ function generate_framework_config() {
 
     add_conf_param "sol_conf_dir" "$target_dir"
     add_conf_param "sol_log_dir" "$target_log_dir"
+    add_conf_param "sol_lib_dir" "$target_lib_dir"
     add_conf_param "hadoop_conf_dir" "${HADOOP_CONF_DIR:-}"
     add_conf_param "hadoop_home" "${HADOOP_HOME:-}"
 	

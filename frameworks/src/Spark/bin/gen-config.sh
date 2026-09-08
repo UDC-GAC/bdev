@@ -6,6 +6,7 @@ generate_framework_config \
     "$SOLUTION_TEMPLATE_DIR" \
     "$SOLUTION_CONF_DIR" \
     "$SOLUTION_LOG_DIR" \
+    "$SOLUTION_LIB_DIR" \
     "$MASTERFILE" \
     "$WORKERSFILE"
 

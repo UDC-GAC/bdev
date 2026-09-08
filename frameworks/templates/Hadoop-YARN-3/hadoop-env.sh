@@ -78,6 +78,10 @@ fi
 export HADOOPHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
 export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME} $java_jpms_opts"
 
+if [[ -d "$sol_lib_dir" ]]; then
+    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$sol_lib_dir/*"
+fi
+
 # Technically, the only required environment variable is JAVA_HOME.
 # All others are optional.  However, the defaults are probably not
 # preferred.  Many sites configure these options outside of Hadoop,

@@ -2,9 +2,6 @@
 
 "$COMMON_HADOOP_DIR/bin/start.sh"
 
-# Setup required jars
-. "$SOLUTION_BENCH_DIR/conf/setup_jars.sh"
-
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Flink cluster (Session Mode)"
 	"$FLINK_HOME/bin/jobmanager.sh" start

@@ -125,6 +125,10 @@ if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
 fi  
 YARN_OPTS="$YARN_OPTS -Dyarn.policy.file=$YARN_POLICYFILE"
 
+if [[ -d "$sol_lib_dir" ]]; then
+    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$sol_lib_dir/*"
+fi
+
 ###
 # Router specific parameters
 ###
