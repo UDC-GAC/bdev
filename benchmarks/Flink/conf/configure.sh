@@ -1,176 +1,138 @@
 #!/bin/bash
 
-export SORT_PARTITIONS=$FLINK_PARALLELISM
+install_dependency_jar() {
+    local jar_name="$1"
+    local url="$2"
+    local desc="$3"
+
+    # If it exists in the tarball's opt/ directory, we link from there
+    if [[ -f "$FLINK_OPT_ORIGINAL/$jar_name" ]]; then
+        ln -sf "$FLINK_OPT_ORIGINAL/$jar_name" "$FLINK_LIB_DIR/"
+    else
+        # Otherwise, we cache it in BDEV_LIB_DIR and create the symlink
+        local cached_jar="$BDEV_LIB_DIR/$jar_name"
+        download_jar_if_missing "$cached_jar" "$url" "$desc"
+        ln -sf "$cached_jar" "$FLINK_LIB_DIR/"
+    fi
+}
+
+# Variables
 # Hardcode last scala version supported by Flink 1.x
 # From Flink 2.x onwards, Flink is scala-free
 FLINK_SCALA_VERSION=2.12
 FLINK_LIB="$FLINK_HOME/lib"
 FLINK_OPT="$FLINK_HOME/opt"
-FLINK_BENCH_JAR_NAME=flinkbench-1.0_${FLINK_SCALA_VERSION}.jar
-export FLINK_BENCH_JAR=$BDEV_LIB_DIR/$FLINK_BENCH_JAR_NAME
-FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
-FLINK_HADOOP_COMPATIBILITY_PATH="${FLINK_LIB}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
-MAPREDUCE_JAR_FILE=("$HADOOP_HOME"/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar)
+export SORT_PARTITIONS=$FLINK_PARALLELISM
 export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:$HADOOP_CLASSPATH"
-
+export FLINK_HIVE_VERSION=3.1.3
+	
 if [[ "$FLINK_MAJOR_VERSION" == "1.15" || "$FLINK_MAJOR_VERSION" == "1.16" ]]; then
-	FLINK_HIVE_VERSION=3.1.2
-else
-	FLINK_HIVE_VERSION=3.1.3
+	export FLINK_HIVE_VERSION=3.1.2
 fi
 
-FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
-FLINK_SQL_CONNECTOR_HIVE_PATH="${FLINK_LIB}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
-HIVE_EXEC_CORE_JAR="hive-exec-${FLINK_HIVE_VERSION}-core.jar"
-HIVE_EXEC_CORE_PATH="${FLINK_LIB}/${HIVE_EXEC_CORE_JAR}"
-HIVE_EXEC_CORE_URL="https://repo1.maven.org/maven2/org/apache/hive/hive-exec/${FLINK_HIVE_VERSION}/${HIVE_EXEC_CORE_JAR}"
-HIVE_FILTERED_CLASSPATH="$HADOOP_CLASSPATH"
+# Determine whether integration with Hive is required
+is_hive="false"
+if [[ "$GEN_AGGREGATION" == "true" || "$GEN_JOIN" == "true" || "$GEN_SCAN" == "true" ]]; then
+    is_hive="true"
+fi
+
+# Project Flink base libraries while respecting the Table Planner
+for jar in "$FLINK_LIB_ORIGINAL"/*.jar; do
+    [[ -f "$jar" ]] || continue
+    jar_name="${jar##*/}"
+
+    # If we use Hive, we skip the isolated loader to avoid conflicts.
+    if [[ "$is_hive" == "true" && "$jar_name" == flink-table-planner-loader-* ]]; then
+        continue
+    fi
+    ln -sf "$jar" "$FLINK_LIB_DIR/"
+done
+
+# Hadoop MapReduce dependencies
+MAPREDUCE_JAR_FILE=("$HADOOP_HOME"/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar)
 
 if [[ ! -f "${MAPREDUCE_JAR_FILE[0]}" ]]; then
     m_exit "MapReduce jar not found: $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-core-*.jar"
 fi
 
-if ! cp -f "$MAPREDUCE_JAR_FILE" "$FLINK_LIB"; then
-    m_exit "Could not copy $MAPREDUCE_JAR_FILE to $FLINK_LIB"
-fi
+ln -sf "${MAPREDUCE_JAR_FILE[0]}" "$FLINK_LIB_DIR/"
 
-if [[ ! -f "$FLINK_BENCH_JAR" ]]; then
-    # Download flinkbench jar file
-    URL=https://bdev.des.udc.es/dist/flinkbench
-    m_echo "Downloading $FLINK_BENCH_JAR_NAME"
+# Flink Hadoop compatibility
+FLINK_HADOOP_COMPATIBILITY_JAR="flink-hadoop-compatibility_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+FLINK_HADOOP_COMPATIBILITY_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-hadoop-compatibility_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_HADOOP_COMPATIBILITY_JAR}"
+install_dependency_jar "$FLINK_HADOOP_COMPATIBILITY_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" "Flink Hadoop compatibility JAR"
 
-    if ! wget -q -O "$FLINK_BENCH_JAR" "$URL/$FLINK_BENCH_JAR_NAME"; then
-	rm -f "$FLINK_BENCH_JAR" 2>/dev/null
-        m_exit "Error when downloading $FLINK_BENCH_JAR_NAME"
-    fi
-else
-	m_echo "Using $FLINK_BENCH_JAR"
-fi
-
-if [[ ! -f "$FLINK_HADOOP_COMPATIBILITY_PATH" ]]; then
-    m_echo "Flink Hadoop compatibility JAR not found: $FLINK_HADOOP_COMPATIBILITY_PATH"
-    m_echo "Downloading $FLINK_HADOOP_COMPATIBILITY_URL..."
-
-    TMP_JAR="${FLINK_HADOOP_COMPATIBILITY_PATH}.tmp"
-
-    if ! wget -q -O "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_URL" || [[ ! -s "$TMP_JAR" ]]; then
-        rm -f "$TMP_JAR" 2>/dev/null
-        m_exit "Could not download $FLINK_HADOOP_COMPATIBILITY_JAR. Please download it manually and copy it to ${FLINK_LIB}"
-    fi
-
-    if ! mv "$TMP_JAR" "$FLINK_HADOOP_COMPATIBILITY_PATH"; then
-    	rm -f "$TMP_JAR" 2>/dev/null
-        m_exit "Could not install $FLINK_HADOOP_COMPATIBILITY_JAR into $FLINK_LIB"
-    fi
-fi
-
+# FlinkBench JAR
+FLINK_BENCH_JAR_NAME=flinkbench-1.0_${FLINK_SCALA_VERSION}.jar
+export FLINK_BENCH_JAR=$BDEV_LIB_DIR/$FLINK_BENCH_JAR_NAME
+download_jar_if_missing "$FLINK_BENCH_JAR" "$BDEV_WEBPAGE/dist/flinkbench/$FLINK_BENCH_JAR_NAME" "$FLINK_BENCH_JAR_NAME"
+m_echo "Using $FLINK_BENCH_JAR"
+    
+# TPCx-HS Benchmark JAR
 if [[ "$GEN_TPCX_HS" == "true" ]]; then
-    if [[ "$FLINK_SERIES" == "1" ]]; then
-        FLINK_TPCX_HS_JAR_NAME=tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar
-        export TPCX_HS_JAR=$BDEV_LIB_DIR/$FLINK_TPCX_HS_JAR_NAME
-    else
-        m_exit "Flink version is not supported: $FLINK_VERSION"
+    if [[ "$FLINK_SERIES" != "1" ]]; then
+        m_exit "Flink version is not supported for TPCx-HS: $FLINK_VERSION"
     fi
 
-    if [[ ! -f "$TPCX_HS_JAR" ]]; then
-        # Download TPCx-HS jar file
-        URL=https://bdev.des.udc.es/dist/tpcx-hs
-        m_echo "Downloading $FLINK_TPCX_HS_JAR_NAME from $URL"
-
-        if ! wget -q -O "$TPCX_HS_JAR" "$URL/$FLINK_TPCX_HS_JAR_NAME"; then
-            rm -f "$TPCX_HS_JAR" 2>/dev/null
-            m_exit "Error when downloading $FLINK_TPCX_HS_JAR_NAME"
-    	fi
-    else
-        m_echo "Using $TPCX_HS_JAR"
-    fi
+    FLINK_TPCX_HS_JAR_NAME="tpcx-hs-flink-1.0_${FLINK_SCALA_VERSION}.jar"
+    export TPCX_HS_JAR="$BDEV_LIB_DIR/$FLINK_TPCX_HS_JAR_NAME"
+    download_jar_if_missing "$TPCX_HS_JAR" \
+        "$BDEV_WEBPAGE/dist/tpcx-hs/$FLINK_TPCX_HS_JAR_NAME" \
+        "$FLINK_TPCX_HS_JAR_NAME"
+    m_echo "Using $TPCX_HS_JAR"
 fi
 
-if [[ "$GEN_AGGREGATION" == "true" || "$GEN_JOIN" == "true" || "$GEN_SCAN" == "true" ]]; then
+# Hive-specific configuration
+if [[ "$is_hive" == "true" ]]; then
 	if [[ -z "$HIVE_HOME" ]]; then
 		m_exit "HIVE_HOME is not defined or is empty"
 	fi
 
-	if [[ -d "$HIVE_HOME" ]]; then
-		HIVE_LIB="${HIVE_HOME}/lib"
-	else
+	if [[ ! -d "$HIVE_HOME" ]]; then
 		m_exit "HIVE_HOME does not exist or is not a directory: $HIVE_HOME"
 	fi
+	
+	# Install Hive Exec Core
+	HIVE_LIB="${HIVE_HOME}/lib"
+	HIVE_EXEC_CORE_JAR="hive-exec-${FLINK_HIVE_VERSION}-core.jar"
+	HIVE_EXEC_CORE_URL="https://repo1.maven.org/maven2/org/apache/hive/hive-exec/${FLINK_HIVE_VERSION}/${HIVE_EXEC_CORE_JAR}"
+	install_dependency_jar "$HIVE_EXEC_CORE_JAR" "$HIVE_EXEC_CORE_URL" "Hive exec core jar"
 
-	if [[ -f "${FLINK_OPT}/${HIVE_EXEC_CORE_JAR}" ]]; then
-		if ! mv "${FLINK_OPT}/${HIVE_EXEC_CORE_JAR}" "$FLINK_LIB/"; then
-			m_exit "Could not move $HIVE_EXEC_CORE_JAR from $FLINK_OPT to $FLINK_LIB"
-    		fi
-	elif [[ ! -f "$HIVE_EXEC_CORE_PATH" ]]; then
-		m_echo "Hive exec core jar not found: $HIVE_EXEC_CORE_PATH"
-    		m_echo "Downloading $HIVE_EXEC_CORE_URL..."
+	# Install SQL Connector
+	FLINK_SQL_CONNECTOR_HIVE_JAR="flink-connector-hive_${FLINK_SCALA_VERSION}-${FLINK_VERSION}.jar"
+	FLINK_SQL_CONNECTOR_HIVE_URL="https://repo1.maven.org/maven2/org/apache/flink/flink-connector-hive_${FLINK_SCALA_VERSION}/${FLINK_VERSION}/${FLINK_SQL_CONNECTOR_HIVE_JAR}"
+	install_dependency_jar "$FLINK_SQL_CONNECTOR_HIVE_JAR" "$FLINK_SQL_CONNECTOR_HIVE_URL" "Flink SQL connector for Hive"
 
-		TMP_JAR="${HIVE_EXEC_CORE_PATH}.tmp"
+	# Link the actual Table Planner from opt/
+	planner_found="false"
+	for planner in "$FLINK_OPT_ORIGINAL"/flink-table-planner*.jar; do
+		[[ -f "$planner" ]] || continue
+		[[ "$planner" == *loader* ]] && continue
+		ln -sf "$planner" "$FLINK_LIB_DIR/"
+		planner_found="true"
+	done
 
-    		if ! wget -q -O "$TMP_JAR" "$HIVE_EXEC_CORE_URL" || [[ ! -s "$TMP_JAR" ]]; then
-        		rm -f "$TMP_JAR" 2>/dev/null
-        		m_exit "Could not download $HIVE_EXEC_CORE_JAR. Please download it manually and copy it to ${FLINK_LIB}"
-    		fi
-
-    		if ! mv "$TMP_JAR" "$HIVE_EXEC_CORE_PATH"; then
-    			rm -f "$TMP_JAR" 2>/dev/null
-        		m_exit "Could not install $HIVE_EXEC_CORE_JAR into $FLINK_LIB"
-    		fi
-	fi
-
-	if [[ -f "${FLINK_OPT}/${FLINK_SQL_CONNECTOR_HIVE_JAR}" ]]; then
-		if ! mv "${FLINK_OPT}/${FLINK_SQL_CONNECTOR_HIVE_JAR}" "$FLINK_LIB/"; then
-			m_exit "Could not move $FLINK_SQL_CONNECTOR_HIVE_JAR from $FLINK_OPT to $FLINK_LIB"
-    		fi	
-	elif [[ ! -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]]; then
-    		m_echo "Flink SQL connector for Hive not found: $FLINK_SQL_CONNECTOR_HIVE_PATH"
-    		m_echo "Downloading $FLINK_SQL_CONNECTOR_HIVE_URL..."
-
-    		TMP_JAR="${FLINK_SQL_CONNECTOR_HIVE_PATH}.tmp"
-
-   		if ! wget -q -O "$TMP_JAR" "$FLINK_SQL_CONNECTOR_HIVE_URL" || [[ ! -s "$TMP_JAR" ]]; then
-        		rm -f "$TMP_JAR" 2>/dev/null
-        		m_exit "Could not download $FLINK_SQL_CONNECTOR_HIVE_JAR. Please download it manually and copy it to ${FLINK_LIB}"
-    		fi
-
-    		if ! mv "$TMP_JAR" "$FLINK_SQL_CONNECTOR_HIVE_PATH"; then
-        		rm -f "$TMP_JAR" 2>/dev/null
-        		m_exit "Could not install $FLINK_SQL_CONNECTOR_HIVE_JAR into $FLINK_LIB"
-    		fi
-	fi
-
-	# Remove the isolated loader from lib/ so it stops interfering
-	mv "$FLINK_LIB"/flink-table-planner-loader-*.jar "$FLINK_OPT"/ 2>/dev/null || true	
-
-	# Copy the real planner
-	if ! find "$FLINK_OPT" -maxdepth 1 -name "flink-table-planner*.jar" ! -name "*loader*" -exec cp {} "$FLINK_LIB/" \;; then
-		m_exit "Could not copy Flink table planner JAR to $FLINK_LIB"
+	if [[ "$planner_found" == "false" ]]; then
+		m_exit "Could not find Flink table planner JAR in $FLINK_OPT_ORIGINAL"
 	fi
 
 	# Set classpath excluding problematic jars
+	HIVE_FILTERED_CLASSPATH=""
 	for f in "$HIVE_LIB"/*.jar; do
 	    [[ -f "$f" ]] || continue
 	    
-            filename=$(basename "$f")
+            filename="${f##*/}"
             
             case "$filename" in
                 hive-exec-*.jar|calcite-*|scala-*.jar|spark-*.jar)
-                    ;;
+			;;
                 *)
-                    HIVE_FILTERED_CLASSPATH="$HIVE_FILTERED_CLASSPATH:$f"
-                    ;;
+			HIVE_FILTERED_CLASSPATH="${HIVE_FILTERED_CLASSPATH:+${HIVE_FILTERED_CLASSPATH}:}$f"
+			;;
             esac
         done
 
-	export HADOOP_CLASSPATH="$HIVE_FILTERED_CLASSPATH"
+	export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:$HIVE_FILTERED_CLASSPATH:${HADOOP_CLASSPATH:-}"
 else
-	if [[ -f "$FLINK_SQL_CONNECTOR_HIVE_PATH" ]]; then
-		mv "$FLINK_SQL_CONNECTOR_HIVE_PATH" "$FLINK_OPT/"
-	fi
-	
-	if [[ -f "$HIVE_EXEC_CORE_PATH" ]]; then
-		mv "$HIVE_EXEC_CORE_PATH" "$FLINK_OPT/"
-	fi
+	export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:${HADOOP_CLASSPATH:-}"
 fi

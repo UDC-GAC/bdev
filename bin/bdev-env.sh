@@ -9,6 +9,7 @@ if [[ -z $BDEV_HOME ]]; then
 fi
 
 export BDEV_START_DATE=$(date +"%d_%m_%Y_%H-%M-%S-%5N")
+export BDEV_WEBPAGE="https://bdev.des.udc.es"
 export BDEV_DEFAULT_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
 export BDEV_LIB_DIR=$BDEV_HOME/lib
