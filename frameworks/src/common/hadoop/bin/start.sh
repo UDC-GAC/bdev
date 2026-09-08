@@ -10,9 +10,9 @@ done
 mkdir -p "$HADOOP_LOG_DIR" 2>/dev/null || true
 
 if [[ "$HADOOP_SERIES" == "3" ]]; then
-	"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn_3.sh"
+	"$COMMON_HADOOP_DIR/bin/start_yarn_3.sh"
 else
-	"$COMMON_HADOOP_DIR/bin/start_hadoop_yarn_2.sh"
+	"$COMMON_HADOOP_DIR/bin/start_yarn_2.sh"
 fi
 
 sleep 2
