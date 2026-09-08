@@ -7,6 +7,10 @@ m_echo "Loading environment: ${SOLUTION_DIR}/etc/env.sh"
 #Generate framework configuration
 . "${SOLUTION_DIR}/bin/gen-config.sh"
 
+if [[ ! -f "${WORKERSFILE:-}" ]]; then
+	m_exit "Workers file does not exist: $WORKERSFILE"
+fi
+
 m_echo "Master: $MASTERNODE"
 m_echo "Workers:"
 while read -r NODE; do

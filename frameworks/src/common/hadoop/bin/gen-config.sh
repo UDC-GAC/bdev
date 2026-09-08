@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export WORKERSFILE=$HADOOP_WORKERSFILE
+export WORKERSFILE="$HADOOP_WORKERSFILE"
 
 generate_framework_config \
   "$HADOOP_CONF_DIR_SRC" \
