@@ -1,7 +1,9 @@
 #!/bin/bash
 
-for NODE in $MASTERNODE $WORKERNODES
-do
+# Deduplicate nodes in case the master is also a worker
+UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
+
+for NODE in $UNIQUE_NODES; do
 	echo "Stopping nethogs daemon in ${NODE}" >> ${BDW_LOG_DIR}/nethogs_log 2>&1
 	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \
 		${PYTHON_BIN} ${BDWATCHDOG_DAEMONS_DIR}/nethogs.py stop" >> ${BDW_LOG_DIR}/nethogs_log 2>&1

@@ -495,18 +495,18 @@ function probe_and_network_discovery() {
 
 	# Execute the remote script via SSH
 	ssh_output=$($SSH_CMD "$node" \
-            "USER='${USER}' \
-             JPS='${JPS}' \
-             DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}' \
-             PYTHON_BIN='${PYTHON_BIN}' \
-             IP_COMMAND='${IP_COMMAND}' \
-             ENABLE_OPROFILE='${ENABLE_OPROFILE:-}' \
-             ENABLE_RAPL='${ENABLE_RAPL:-}' \
-             OPROFILE_BIN='${OPROFILE_BIN:-}' \
+            "export USER='${USER}'; \
+             export JPS='${JPS}'; \
+             export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}'; \
+             export PYTHON_BIN='${PYTHON_BIN}'; \
+             export IP_COMMAND='${IP_COMMAND}'; \
+             export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
+             export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
+             export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
              '$HELPER_SCRIPTS_DIR/probe_node.sh' '$eth_iface' '$ib_iface'" 2>&1)
+
+        # Abort on critical failure when SSH fails        
         exit_code=$?
-        
-        # Abort on critical failure when SSH fails
         if [[ $exit_code -ne 0 ]]; then
             m_error "SSH pre-flight check failed on node: $node"
             m_error "Command executed: $SSH_CMD $node"

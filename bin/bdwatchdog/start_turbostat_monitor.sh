@@ -9,8 +9,10 @@ if [[ ! -d "${BDW_LOG_DIR}" ]]; then
 	fi
 fi
 
-for NODE in $MASTERNODE $WORKERNODES
-do
+# Deduplicate nodes in case the master is also a worker
+UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
+
+for NODE in $UNIQUE_NODES; do
 	echo "Starting turbostat daemon in ${NODE}" >> ${BDW_LOG_DIR}/turbostat_log 2>&1
 	$SSH_CMD $NODE ". ${BDW_LOG_DIR}/config.sh; \
 		${BDWATCHDOG_HOME}/turbostat-config.sh; \

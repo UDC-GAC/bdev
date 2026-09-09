@@ -11,11 +11,18 @@ if [[ -n "$JPS_MATCHES" ]]; then
     kill -9 $PROCESS_PIDS 2>/dev/null || true
 fi
 
-DOOL_PID=$(ps -elf | grep "$PYTHON_BIN" | grep "$DOOL_COMMAND_NAME" | grep -v "export" | grep -v "grep" | awk '{print $4}')
+if [[ -n "${DOOL_COMMAND_NAME:-}" ]]; then
+    DOOL_PID=$(ps -elf \
+        | grep "${PYTHON_BIN:-python}" \
+        | grep "$DOOL_COMMAND_NAME" \
+        | grep -v -E "grep|probe_node|kill-process|export" \
+        | awk '{print $4}' \
+        | grep -v -E "^($$|$PPID)$" || true)
 
-if [[ -n "$DOOL_PID" ]]; then
-    echo "$HOSTNAME: cleaning up ${DOOL_COMMAND_NAME} with PID $DOOL_PID"
-    kill -9 $DOOL_PID 2>/dev/null || true
+    if [[ -n "$DOOL_PID" ]]; then
+        echo "$HOSTNAME: cleaning up ${DOOL_COMMAND_NAME} with PID(s): $DOOL_PID"
+        kill -9 $DOOL_PID 2>/dev/null || true
+    fi
 fi
 
 if [[ "$ENABLE_OPROFILE" == "true" ]]; then

@@ -1,11 +1,12 @@
 #!/bin/bash
 
-
 mkdir -p $OPROFILELOGDIR
+NODE_NUMBER=0
 
-export NODE_NUMBER=0
-for NODE in $MASTERNODE $WORKERNODES
-do
+# Deduplicate nodes in case the master is also a worker
+UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
+
+for NODE in $UNIQUE_NODES; do
 	OPROFILENODEDIR=${OPROFILELOGDIR}/node-${NODE_NUMBER}
 	mkdir -p ${OPROFILENODEDIR}
 	echo "Starting oprofile monitor in ${NODE}, storing data on ${OPROFILENODEDIR}" >> ${OPROFILELOGDIR}/log 2>&1
@@ -14,7 +15,7 @@ do
 		export OPROFILE_EVENTS=${OPROFILE_EVENTS}; \
 		bash $OPROFILE_HOME/oprofile_monitor.sh" > ${OPROFILENODEDIR}/oprofile.out 2>&1 &
 	
-	export NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
+	NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
 done
 
 

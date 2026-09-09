@@ -12,9 +12,12 @@ fi
 
 cd $OLD_PWD
 
-export NODE_NUMBER=0
-for NODE in $MASTERNODE $WORKERNODES
-do
+NODE_NUMBER=0
+
+# Deduplicate nodes in case the master is also a worker
+UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
+
+for NODE in $UNIQUE_NODES; do
 	RAPLNODEDIR=${RAPLLOGDIR}/node-${NODE_NUMBER}
 	RAPLTMPDIR=${TMP_DIR}/rapl/node-${NODE_NUMBER}
 	mkdir -p ${RAPLNODEDIR}
@@ -25,7 +28,7 @@ do
 		export RAPL_SECONDS_INTERVAL=${RAPL_SECONDS_INTERVAL}; \
 		bash $RAPL_HOME/rapl_monitor.sh" > ${RAPLNODEDIR}/rapl.out 2>&1 &
 	
-	export NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
+	NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
 done
 
 
