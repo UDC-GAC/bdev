@@ -1,5 +1,6 @@
 BDEv_*_OUTPUT
-frameworks/dist
+frameworks/*
+!frameworks/README
 lib/*bench-*.jar
 lib/flink-*.jar
 lib/tpcx-hs-*.jar
