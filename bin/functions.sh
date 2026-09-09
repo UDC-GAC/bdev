@@ -320,8 +320,10 @@ function generate_framework_config() {
     add_conf_param "framework_conf_dir" "$target_dir"
     add_conf_param "framework_log_dir" "$target_log_dir"
     add_conf_param "framework_lib_dir" "$target_lib_dir"
-    add_conf_param "hadoop_conf_dir" "${HADOOP_CONF_DIR:-}"
     add_conf_param "hadoop_home" "${HADOOP_HOME:-}"
+    add_conf_param "hadoop_conf_dir" "${HADOOP_CONF_DIR:-}"
+    add_conf_param "hadoop_log_dir" "${HADOOP_LOG_DIR:-}"
+    add_conf_param "hadoop_lib_dir" "${HADOOP_LIB_DIR:-}"
 	
     # Render templates using a temporary sed file
     local sed_rules
