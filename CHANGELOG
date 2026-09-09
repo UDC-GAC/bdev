@@ -6,7 +6,7 @@ the Big Data Evaluator (BDEv) software package.
 BDEv 4.X.X - 2026-XX-XX
 -----------------------
 	NEW FEATURES
-		- Remove all custom framework scripts and the `daemons` directory, keeping original tarballs untouched
+		- Remove all custom scripts and the `daemons` directory, keeping the original scripts bundled with the frameworks untouched
 
 		- Add ad-hoc launcher scripts for Spark and Flink to explicitly inject configuration paths into remote workers
 
@@ -23,6 +23,8 @@ BDEv 4.X.X - 2026-XX-XX
 		- Remove OUTPUT_DIR from bdev-conf file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
 
 		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
+		
+		- Rename third-party directory for more intuitive name ('tools') to store the auxiliary tools integrated into the BDEv distribution
 		
 		- Minor changes and bug fixes
  
