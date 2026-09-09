@@ -1,8 +1,7 @@
 BDEv_OUTPUT
 frameworks/dist
-benchmarks/Hadoop/bin/*.jar
-benchmarks/Spark/bin/*.jar
-benchmarks/Flink/bin/*.jar
+lib/*bench-*.jar
+lib/tpcx-hs-*.jar
 benchmarks/Spark/src/sparkbench/*.jar
 benchmarks/Spark/src/sparkbench/project/target
 benchmarks/Spark/src/sparkbench/project/project/target
