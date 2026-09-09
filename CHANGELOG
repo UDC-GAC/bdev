@@ -25,7 +25,9 @@ BDEv 4.X.X - 2026-XX-XX
 		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
 		
 		- Rename third-party directory for more intuitive name ('tools') to store the auxiliary tools integrated into the BDEv distribution
-		
+
+		- Refactor base directories for better organization
+
 		- Minor changes and bug fixes
  
  
