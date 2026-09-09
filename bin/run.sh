@@ -31,11 +31,11 @@ do
 		# For each framework
 		for FRAMEWORK in $FRAMEWORKS
 		do
-			FRAMEWORK=$((FRAMEWORK+1))
-			set_framework $FRAMEWORK
+			FRAMEWORK_NUMBER=$((FRAMEWORK_NUMBER+1))
+			set_framework $FRAMEWORK_NUMBER
 			export FORCE_FORMAT_HDFS=false
 
-			if [[ $FRAMEWORK -eq 1 ]]; then
+			if [[ $FRAMEWORK_NUMBER -eq 1 ]]; then
 			    if [[ $FORMAT_HDFS == "true" || $FORCE_DELETE_HDFS == "true" ]]; then
 					export FORCE_FORMAT_HDFS=true
 			    fi
