@@ -6,8 +6,8 @@ install_dependency_jar() {
     local desc="$3"
 
     # If it exists in the tarball's opt/ directory, we link from there
-    if [[ -f "$FLINK_OPT_ORIGINAL/$jar_name" ]]; then
-        ln -sf "$FLINK_OPT_ORIGINAL/$jar_name" "$FLINK_LIB_DIR/"
+    if [[ -f "$FLINK_TARBALL_OPT/$jar_name" ]]; then
+        ln -sf "$FLINK_TARBALL_OPT/$jar_name" "$FLINK_LIB_DIR/"
     else
         # Otherwise, we cache it in BDEV_LIB_DIR and create the symlink
         local cached_jar="$BDEV_LIB_DIR/$jar_name"
@@ -20,10 +20,9 @@ install_dependency_jar() {
 # Hardcode last scala version supported by Flink 1.x
 # From Flink 2.x onwards, Flink is scala-free
 FLINK_SCALA_VERSION=2.12
-FLINK_LIB="$FLINK_HOME/lib"
-FLINK_OPT="$FLINK_HOME/opt"
+FLINK_TARBALL_LIB="$FLINK_HOME/lib"
+FLINK_TARBALL_OPT="$FLINK_HOME/opt"
 export SORT_PARTITIONS="$FLINK_PARALLELISM"
-export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:$HADOOP_CLASSPATH"
 export FLINK_HIVE_VERSION=3.1.3
 	
 if [[ "$FLINK_MAJOR_VERSION" == "1.15" || "$FLINK_MAJOR_VERSION" == "1.16" ]]; then
@@ -37,7 +36,7 @@ if [[ "$GEN_AGGREGATION" == "true" || "$GEN_JOIN" == "true" || "$GEN_SCAN" == "t
 fi
 
 # Project Flink base libraries while respecting the Table Planner
-for jar in "$FLINK_LIB"/*.jar; do
+for jar in "$FLINK_TARBALL_LIB"/*.jar; do
     [[ -f "$jar" ]] || continue
     jar_name="${jar##*/}"
 
@@ -105,7 +104,7 @@ if [[ "$is_hive" == "true" ]]; then
 
 	# Link the actual Table Planner from opt/
 	planner_found="false"
-	for planner in "$FLINK_OPT"/flink-table-planner*.jar; do
+	for planner in "$FLINK_TARBALL_OPT"/flink-table-planner*.jar; do
 		[[ -f "$planner" ]] || continue
 		[[ "$planner" == *loader* ]] && continue
 		ln -sf "$planner" "$FLINK_LIB_DIR/"
@@ -132,7 +131,5 @@ if [[ "$is_hive" == "true" ]]; then
             esac
         done
 
-	export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:$HIVE_FILTERED_CLASSPATH:${HADOOP_CLASSPATH:-}"
-else
-	export HADOOP_CLASSPATH="$FLINK_LIB_DIR/*:${HADOOP_CLASSPATH:-}"
+	export HADOOP_CLASSPATH="$HIVE_FILTERED_CLASSPATH:${HADOOP_CLASSPATH:-}"
 fi
