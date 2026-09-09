@@ -2,7 +2,7 @@
 
 m_start_message
 
-m_echo "Initializing"
+m_echo "Loading hostfile..."
 
 # Load hostfile
 load_hostfile

@@ -100,7 +100,7 @@ if [[ ! -d "$REPORT_DIR" ]]; then
 	fi
 fi
 
-m_echo "$APP_NAME v$APP_VERSION"
+m_echo "Running $APP_NAME v$APP_VERSION from BDEV_HOME=$BDEV_HOME"
 
 if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"

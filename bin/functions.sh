@@ -375,7 +375,7 @@ function load_hostfile() {
 	fi
 
 	if [[ -z "${raw_nodes}" ]]; then
-	    m_exit "Nodes extracted from $nodes_source is empty. Please verify your configuration"
+	    m_exit "Cluster nodes extracted from $nodes_source is empty. Please verify your configuration"
 	fi
 
 	export HOSTFILE_REPORT="$REPORT_DIR/hostfile"
@@ -389,7 +389,7 @@ function load_hostfile() {
 
 	export COMPUTE_NODES
 	export NUM_NODES=$(echo "$COMPUTE_NODES" | wc -w)
-	m_echo "Nodes from hostfile ($NUM_NODES): $COMPUTE_NODES"
+	m_echo "Cluster nodes from hostfile ($NUM_NODES): $COMPUTE_NODES"
 
 	# Check connectivity to validate SSH and the network (fail fast)
 	FIRST_NODE="${COMPUTE_NODES%% *}"
