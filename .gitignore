@@ -1,4 +1,4 @@
-BDEv_OUTPUT
+BDEv_*_OUTPUT
 frameworks/dist
 lib/*bench-*.jar
 lib/flink-*.jar
@@ -12,5 +12,5 @@ benchmarks/Flink/src/flinkbench/*.jar
 benchmarks/Flink/src/flinkbench/project/target
 benchmarks/Flink/src/flinkbench/project/project/target
 benchmarks/Flink/src/flinkbench/target
-third-party/mahout*
-third-party/hive*
+tools/mahout*
+tools/hive*
