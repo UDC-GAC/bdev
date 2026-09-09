@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #Loading framework environment
-m_echo "Loading environment: ${SOLUTION_DIR}/etc/env.sh"
-. ${SOLUTION_DIR}/etc/env.sh
+m_echo "Loading environment: ${FRAMEWORK_DIR}/etc/env.sh"
+. ${FRAMEWORK_DIR}/etc/env.sh
 
 #Generate framework configuration
-. "${SOLUTION_DIR}/bin/gen-config.sh"
+. "${FRAMEWORK_DIR}/bin/gen-config.sh"
 
 if [[ ! -f "${WORKERSFILE:-}" ]]; then
 	m_exit "Workers file does not exist: $WORKERSFILE"
@@ -22,6 +22,6 @@ done < "$WORKERSFILE"
 
 #Configure benchmarks for this framework
 m_echo "Configuring benchmarks"
-if [[ -f ${SOLUTION_BENCH_DIR}/conf/configure.sh ]]; then
-	. ${SOLUTION_BENCH_DIR}/conf/configure.sh
+if [[ -f ${FRAMEWORK_BENCH_DIR}/conf/configure.sh ]]; then
+	. ${FRAMEWORK_BENCH_DIR}/conf/configure.sh
 fi

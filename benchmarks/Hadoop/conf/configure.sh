@@ -10,16 +10,16 @@ if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]];
 		URL="$BDEV_WEBPAGE/dist/mahout"
 	fi
 
-	TMP_MAHOUT_FILE=$THIRD_PARTY_DIR/apache-mahout-distribution-${MAHOUT_VERSION}.tar.gz
-	TMP_MAHOUT_DIR=$THIRD_PARTY_DIR/apache-mahout-distribution-${MAHOUT_VERSION}
+	TMP_MAHOUT_FILE=$BDEV_TOOLS_DIR/apache-mahout-distribution-${MAHOUT_VERSION}.tar.gz
+	TMP_MAHOUT_DIR=$BDEV_TOOLS_DIR/apache-mahout-distribution-${MAHOUT_VERSION}
 
 	m_echo "Downloading mahout-$MAHOUT_VERSION"
 	wget -q -O $TMP_MAHOUT_FILE $URL/$MAHOUT_VERSION/apache-mahout-distribution-${MAHOUT_VERSION}.tar.gz
 
 	if [[ $? != 0 ]]; then
 		rm -f $TMP_MAHOUT_FILE >& /dev/null
-		TMP_MAHOUT_FILE=$THIRD_PARTY_DIR/mahout-distribution-${MAHOUT_VERSION}.tar.gz
-		TMP_MAHOUT_DIR=$THIRD_PARTY_DIR/mahout-distribution-${MAHOUT_VERSION}
+		TMP_MAHOUT_FILE=$BDEV_TOOLS_DIR/mahout-distribution-${MAHOUT_VERSION}.tar.gz
+		TMP_MAHOUT_DIR=$BDEV_TOOLS_DIR/mahout-distribution-${MAHOUT_VERSION}
 		wget -q -O $TMP_MAHOUT_FILE $URL/$MAHOUT_VERSION/mahout-distribution-${MAHOUT_VERSION}.tar.gz
 		
 		if [[ $? != 0 ]]; then
@@ -29,7 +29,7 @@ if [[ ( $GEN_KMEANS == "true" || $GEN_BAYES == "true" ) && ! -d $MAHOUT_HOME ]];
 	fi
 
 	m_echo "Extracting $TMP_MAHOUT_FILE"
-	tar -xzf $TMP_MAHOUT_FILE -C $THIRD_PARTY_DIR
+	tar -xzf $TMP_MAHOUT_FILE -C $BDEV_TOOLS_DIR
 	mv $TMP_MAHOUT_DIR $MAHOUT_HOME
 	rm -f $TMP_MAHOUT_FILE >& /dev/null
 fi

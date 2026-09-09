@@ -7,17 +7,17 @@ configure_network
 . ${BDEV_BIN_DIR}/conf-params.sh
 
 #Init framework
-m_echo "Initiliazing $SOLUTION"
+m_echo "Initiliazing $FRAMEWORK"
 . ${BDEV_BIN_DIR}/init-framework.sh
 
 #Start framework
-m_echo "Starting $SOLUTION"
-. ${SOLUTION_DIR}/bin/start.sh
+m_echo "Starting $FRAMEWORK"
+. ${FRAMEWORK_DIR}/bin/start.sh
 
 #Generate input datasets
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
-if [[ -f ${SOLUTION_BENCH_DIR}/bin/prepare.sh ]]; then
-	. ${SOLUTION_BENCH_DIR}/bin/prepare.sh
+if [[ -f ${FRAMEWORK_BENCH_DIR}/bin/prepare.sh ]]; then
+	. ${FRAMEWORK_BENCH_DIR}/bin/prepare.sh
 fi
 
 setup_phase
@@ -46,12 +46,12 @@ do
 			sleep $BENCHMARK_WAIT_SECONDS
 		fi
 
-		if [[ -f ${SOLUTION_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
-			. ${SOLUTION_BENCH_DIR}/bin/${BENCHMARK}/run.sh
+		if [[ -f ${FRAMEWORK_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
+			. ${FRAMEWORK_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		elif [[ -f ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh ]]; then
 			. ${COMMON_BENCH_DIR}/bin/${BENCHMARK}/run.sh
 		else
-			m_warn "${BENCHMARK^} benchmark is not currently supported by ${SOLUTION}"
+			m_warn "${BENCHMARK^} benchmark is not currently supported by ${FRAMEWORK}"
 			break
 		fi
 
@@ -70,5 +70,5 @@ done
 cleanup_phase
 
 #Stop framework
-m_echo "Stopping $SOLUTION"
-. ${SOLUTION_DIR}/bin/stop.sh
+m_echo "Stopping $FRAMEWORK"
+. ${FRAMEWORK_DIR}/bin/stop.sh

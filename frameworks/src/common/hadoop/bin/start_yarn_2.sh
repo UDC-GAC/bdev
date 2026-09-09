@@ -3,7 +3,7 @@
 if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	if [[ $FORCE_FORMAT_HDFS == "true" ]]; then
 		#Format HDFS
-		HDFS_FORMAT_LOG=$SOLUTION_REPORT_DIR/hdfs-format.log
+		HDFS_FORMAT_LOG=$FRAMEWORK_REPORT_DIR/hdfs-format.log
 		m_echo "Formatting HDFS, logging to $HDFS_FORMAT_LOG"
 		$HDFS_CONFIG "$HADOOP_CONF_DIR" namenode -format -force -clusterID CID-bdev > "$HDFS_FORMAT_LOG" 2>&1
 	fi

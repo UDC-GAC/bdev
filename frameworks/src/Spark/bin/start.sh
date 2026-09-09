@@ -5,7 +5,7 @@
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Spark cluster"
 	"$SPARK_HOME/sbin/start-master.sh"
-	bash "$SOLUTION_DIR/bin/start-workers.sh"
+	bash "$FRAMEWORK_DIR/bin/start-workers.sh"
 fi
 
 if [[ "$SPARK_HISTORY_SERVER" == "true" ]]; then

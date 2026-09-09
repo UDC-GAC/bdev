@@ -5,7 +5,7 @@
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Flink cluster (Session Mode)"
 	"$FLINK_HOME/bin/jobmanager.sh" start
-	bash "$SOLUTION_DIR/bin/start-workers.sh"
+	bash "$FRAMEWORK_DIR/bin/start-workers.sh"
 else
 	echo "containerized.master.env.CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"
 	echo "containerized.taskmanager.env.CLASSPATH: $HADOOP_CLASSPATH" >> "$FLINK_CONFIG_YAML_FILE"

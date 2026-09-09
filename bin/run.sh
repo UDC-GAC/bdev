@@ -15,11 +15,11 @@ for CLUSTER_SIZE in $CLUSTER_SIZES
 do
 	set_cluster_size
 
-	if [[ "$NUM_SOLUTIONS" -eq 0 ]]; then
+	if [[ "$NUM_FRAMEWORKS" -eq 0 ]]; then
 		set_no_framework
 		bash ${BDEV_BIN_DIR}/run-command.sh
 	else
-		SOLUTION_NUMBER=0
+		FRAMEWORK_NUMBER=0
 		export FORCE_DELETE_HDFS=$DELETE_HDFS
 
 		if [[ $NUM_CLUSTERS -gt 1 || $FORMAT_HDFS == "true" ]]; then
@@ -29,17 +29,17 @@ do
 		. $CLEANUP_DATA_SCRIPT --check-disk
 
 		# For each framework
-		for SOLUTION in $SOLUTIONS
+		for FRAMEWORK in $FRAMEWORKS
 		do
-			SOLUTION_NUMBER=$((SOLUTION_NUMBER+1))
-			set_framework $SOLUTION_NUMBER
+			FRAMEWORK=$((FRAMEWORK+1))
+			set_framework $FRAMEWORK
 			export FORCE_FORMAT_HDFS=false
 
-			if [[ $SOLUTION_NUMBER -eq 1 ]]; then
+			if [[ $FRAMEWORK -eq 1 ]]; then
 			    if [[ $FORMAT_HDFS == "true" || $FORCE_DELETE_HDFS == "true" ]]; then
 					export FORCE_FORMAT_HDFS=true
 			    fi
-		    	elif [[ $NUM_SOLUTIONS -gt 1 ]]; then
+		    	elif [[ $NUM_FRAMEWORKS -gt 1 ]]; then
 			    if [[ $LAST_HADOOP_VERSION != "null" && $CURRENT_HADOOP_VERSION != $LAST_HADOOP_VERSION ]]; then
 					export FORCE_FORMAT_HDFS=true
 					if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then

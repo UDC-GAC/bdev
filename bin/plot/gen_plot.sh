@@ -2,9 +2,9 @@
 
 DAT_HEADER="cluster_size"
 
-for SOLUTION in $SOLUTIONS
+for FRAMEWORK in $FRAMEWORKS
 do
-	DAT_HEADER="$DAT_HEADER ${SOLUTION} ${SOLUTION}_MIN ${SOLUTION}_MAX"
+	DAT_HEADER="$DAT_HEADER ${FRAMEWORK} ${FRAMEWORK}_MIN ${FRAMEWORK}_MAX"
 done
 
 echo "$DAT_HEADER" > $DAT_FILE
@@ -13,13 +13,13 @@ for CLUSTER_SIZE in $CLUSTER_SIZES
 do
 	OUTPUTLINE=""
 
-	for SOLUTION in $SOLUTIONS
+	for FRAMEWORK in $FRAMEWORKS
 	do
-		LINE=`echo "$REPORT_CONTENTS" | grep $SOLUTION | grep -E "^\s*$CLUSTER_SIZE"`
-		SOLUTION_TIMES=`echo "$LINE" | cut -f 4`
+		LINE=`echo "$REPORT_CONTENTS" | grep $FRAMEWORK | grep -E "^\s*$CLUSTER_SIZE"`
+		FRAMEWORK_TIMES=`echo "$LINE" | cut -f 4`
 
-		avg $SOLUTION_TIMES
-		maxmin $SOLUTION_TIMES
+		avg $FRAMEWORK_TIMES
+		maxmin $FRAMEWORK_TIMES
 
 		if [[ $COUNT -eq 0 ]]
 		then
@@ -37,7 +37,7 @@ do
 	fi
 done
 
-COLS=`echo $SOLUTIONS | wc -w`
+COLS=`echo $FRAMEWORKS | wc -w`
 CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
 #BOX_SIZE=0.15
 #STEP=`op "$COLS * $BOX_SIZE"`

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [[ -z "${SOLUTION_BENCH_DIR:-}" ]]; then
+if [[ -z "${FRAMEWORK_BENCH_DIR:-}" ]]; then
 	# --- Rol: FRAMEWORK PRINCIPAL ---
-	export HADOOP_HOME="$SOLUTION_HOME"
+	export HADOOP_HOME="$FRAMEWORK_HOME"
 else
 	# --- Rol: COMPONENTE AUXILIAR (Spark / Flink) ---
 	if [[ -z "${HADOOP_HOME:-}" ]]; then
@@ -16,21 +16,21 @@ fi
 
 export HADOOP_CONF_DIR_SRC="$HADOOP_HOME/etc/hadoop"
 
-if [[ -z "${SOLUTION_BENCH_DIR:-}" ]]; then
+if [[ -z "${FRAMEWORK_BENCH_DIR:-}" ]]; then
 	# --- Rol: FRAMEWORK PRINCIPAL ---
-	export SOLUTION_CONF_DIR_SRC="$HADOOP_CONF_DIR_SRC"
-	export SOLUTION_CONF_DIR="$SOLUTION_REPORT_DIR/conf/hadoop"
-	export SOLUTION_LOG_DIR="$SOLUTION_REPORT_DIR/logs/hadoop"
-	export SOLUTION_LIB_DIR="$SOLUTION_REPORT_DIR/lib"
-	export SOLUTION_BENCH_DIR="$BENCHMARKS_DIR/Hadoop"
-	export HADOOP_CONF_DIR="$SOLUTION_CONF_DIR"
-	export HADOOP_LOG_DIR="$SOLUTION_LOG_DIR"
-	export HADOOP_LIB_DIR="$SOLUTION_LIB_DIR"
+	export FRAMEWORK_CONF_DIR_SRC="$HADOOP_CONF_DIR_SRC"
+	export FRAMEWORK_CONF_DIR="$FRAMEWORK_REPORT_DIR/conf/hadoop"
+	export FRAMEWORK_LOG_DIR="$FRAMEWORK_REPORT_DIR/logs/hadoop"
+	export FRAMEWORK_LIB_DIR="$FRAMEWORK_REPORT_DIR/lib"
+	export FRAMEWORK_BENCH_DIR="$BENCHMARKS_DIR/Hadoop"
+	export HADOOP_CONF_DIR="$FRAMEWORK_CONF_DIR"
+	export HADOOP_LOG_DIR="$FRAMEWORK_LOG_DIR"
+	export HADOOP_LIB_DIR="$FRAMEWORK_LIB_DIR"
 else
 	# --- Rol: COMPONENTE AUXILIAR (Spark / Flink) ---
-	export HADOOP_CONF_DIR="$SOLUTION_REPORT_DIR/conf/hadoop"
-	export HADOOP_LOG_DIR="$SOLUTION_REPORT_DIR/logs/hadoop"
-	export HADOOP_LIB_DIR="$SOLUTION_REPORT_DIR/lib"
+	export HADOOP_CONF_DIR="$FRAMEWORK_REPORT_DIR/conf/hadoop"
+	export HADOOP_LOG_DIR="$FRAMEWORK_REPORT_DIR/logs/hadoop"
+	export HADOOP_LIB_DIR="$FRAMEWORK_REPORT_DIR/lib"
 fi
 
 export PATH="$HADOOP_HOME/bin:$PATH"
@@ -51,8 +51,8 @@ else
     m_exit "Hadoop version is not supported: $HADOOP_VERSION"
 fi
 
-if [[ -z "${SOLUTION_TEMPLATE_DIR:-}" ]]; then
+if [[ -z "${FRAMEWORK_TEMPLATE_DIR:-}" ]]; then
 	# --- Rol: FRAMEWORK PRINCIPAL ---
-	export SOLUTION_TEMPLATE_DIR="$HADOOP_TEMPLATE_DIR"
+	export FRAMEWORK_TEMPLATE_DIR="$HADOOP_TEMPLATE_DIR"
 	export WORKERSFILE="$HADOOP_WORKERSFILE"
 fi

@@ -11,7 +11,7 @@ SCRIPT_MASTER="$FLINK_HOME/bin/jobmanager.sh"
 
 if [[ -f "$SCRIPT_MASTER" ]]; then
 	bash "$SCRIPT_MASTER" stop
-	bash "$SOLUTION_DIR/bin/stop-workers.sh"
+	bash "$FRAMEWORK_DIR/bin/stop-workers.sh"
 fi
 
 "$COMMON_HADOOP_DIR/bin/stop_hdfs.sh"

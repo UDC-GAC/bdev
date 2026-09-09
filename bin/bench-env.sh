@@ -6,7 +6,7 @@ if [[ -n "$1" ]]; then
 	execution_number="$1"
 fi
 
-export BENCHMARK_OUTPUT_DIR=$SOLUTION_REPORT_DIR/${BENCHMARK}_${execution_number}
+export BENCHMARK_OUTPUT_DIR=$FRAMEWORK_REPORT_DIR/${BENCHMARK}_${execution_number}
 export TMPLOGFILE=$BENCHMARK_OUTPUT_DIR/output
 export POWERLOGDIR=$BENCHMARK_OUTPUT_DIR/pow_records
 export STATLOGDIR=$BENCHMARK_OUTPUT_DIR/stat_records

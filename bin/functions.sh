@@ -45,8 +45,8 @@ export -f m_exit
 
 function m_start_message() {
 	m_echo "Frameworks directory: $BDEV_FRAMEWORKS_DIR"
-	if [[ ${NUM_SOLUTIONS:-0} -gt 0 ]]; then
-		m_echo "Frameworks ($NUM_SOLUTIONS): $SOLUTIONS"
+	if [[ ${NUM_FRAMEWORKS:-0} -gt 0 ]]; then
+		m_echo "Frameworks ($NUM_FRAMEWORKS): $FRAMEWORKS"
 	fi
 	if [[ ${NUM_BENCHMARKS:-0} -gt 0 ]]; then
 		m_echo "Benchmarks ($NUM_BENCHMARKS): $BENCHMARKS"
@@ -317,9 +317,9 @@ function generate_framework_config() {
     
     m_echo "Rendering template files from: $template_dir"
 
-    add_conf_param "sol_conf_dir" "$target_dir"
-    add_conf_param "sol_log_dir" "$target_log_dir"
-    add_conf_param "sol_lib_dir" "$target_lib_dir"
+    add_conf_param "framework_conf_dir" "$target_dir"
+    add_conf_param "framework_log_dir" "$target_log_dir"
+    add_conf_param "framework_lib_dir" "$target_lib_dir"
     add_conf_param "hadoop_conf_dir" "${HADOOP_CONF_DIR:-}"
     add_conf_param "hadoop_home" "${HADOOP_HOME:-}"
 	
@@ -584,12 +584,12 @@ function configure_network() {
 	local net_interface
 	local file
 	
-	if [[ "${SOLUTION}" == "NONE" ]]; then
+	if [[ "${FRAMEWORK}" == "NONE" ]]; then
 		nodes="$COMPUTE_NODES"
 		net_interface=default
 		file="$HOSTFILE_REPORT"
 	else
-		case "$SOLUTION_NET_INTERFACE" in
+		case "$FRAMEWORK_NET_INTERFACE" in
 		    ethernet)
                 	if [[ -n "${ETHERNET_COMPUTE_NODES:-}" ]]; then
                     		nodes="$ETHERNET_COMPUTE_NODES"
@@ -614,7 +614,7 @@ function configure_network() {
                 	;;
 
             	    *)
-                	m_exit "Invalid network interface '$SOLUTION_NET_INTERFACE' for $SOLUTION. Revise the configured frameworks (framework.lst)"
+                	m_exit "Invalid network interface '$FRAMEWORK_NET_INTERFACE' for $FRAMEWORK. Revise the configured frameworks (framework.lst)"
                 	;;
         	esac
         fi
@@ -624,29 +624,29 @@ function configure_network() {
 	export HOSTFILE="$file"
 		
 	if [[ ! -f ${HOSTFILE} ]]; then
-		m_exit "Hostfile for $SOLUTION does not exist: $HOSTFILE"
+		m_exit "Hostfile for $FRAMEWORK does not exist: $HOSTFILE"
 	fi
 
 	if [[ -z ${NETWORK_INTERFACE} ]]; then
-		m_exit "Invalid network interface for $SOLUTION. Revise network settings"
+		m_exit "Invalid network interface for $FRAMEWORK. Revise network settings"
 	fi
 
 	export RDMA_HADOOP_IB_ENABLED=false
 	export RDMA_HADOOP_ROCE_ENABLED=false
 	HOSTFILE_SHORT_PATH="$(basename "$(dirname "$HOSTFILE")")/$(basename "$HOSTFILE")"
 
-	if [[ "${SOLUTION_NET_INTERFACE}" == "ib" ]]; then
+	if [[ "${FRAMEWORK_NET_INTERFACE}" == "ib" ]]; then
 		m_echo "Using RDMA interface '$RDMA_INTERFACE' for InfiniBand and hostfile: $HOSTFILE_SHORT_PATH"
 		export RDMA_HADOOP_IB_ENABLED=true
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "roce" ]]; then
+	elif [[ "${FRAMEWORK_NET_INTERFACE}" == "roce" ]]; then
 		m_echo "Using RDMA interface '$RDMA_INTERFACE' for RoCE and hostfile: $HOSTFILE_SHORT_PATH"
 		export RDMA_HADOOP_ROCE_ENABLED=true
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+	elif [[ "${FRAMEWORK_NET_INTERFACE}" == "ethernet" ]]; then
 		m_echo "Using network interface '$NETWORK_INTERFACE' for TCP/IP over Ethernet and hostfile: $HOSTFILE_SHORT_PATH"
-	elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
+	elif [[ "${FRAMEWORK_NET_INTERFACE}" == "ipoib" ]]; then
 		m_echo "Using network interface '$NETWORK_INTERFACE' for IP over InfiniBand (IPoIB) and hostfile: $HOSTFILE_SHORT_PATH"
 	else
-		m_exit "Invalid network interface '${SOLUTION_NET_INTERFACE}' for $SOLUTION. Revise the configured frameworks (framework.lst)"
+		m_exit "Invalid network interface '${FRAMEWORK_NET_INTERFACE}' for $FRAMEWORK. Revise the configured frameworks (framework.lst)"
 	fi	
 }
 
@@ -662,64 +662,64 @@ function set_cluster_size() {
 export -f set_cluster_size
 
 function set_framework() {
-	export SOLUTION
-	export SOLUTION_NAME=$(echo $SOLUTION | cut -d '_' -f 1)
-	export SOLUTION_VERSION=$(echo $SOLUTION | cut -d '_' -f 2)
-	export SOLUTION_NET_INTERFACE=$(echo $SOLUTION | cut -d '_' -f 3 | awk '{print tolower($0)}')
+	export FRAMEWORK
+	export FRAMEWORK_NAME=$(echo $FRAMEWORK | cut -d '_' -f 1)
+	export FRAMEWORK_VERSION=$(echo $FRAMEWORK | cut -d '_' -f 2)
+	export FRAMEWORK_NET_INTERFACE=$(echo $FRAMEWORK | cut -d '_' -f 3 | awk '{print tolower($0)}')
 	export RESOURCE_MANAGER="standalone"
-	SOLUTION_NUM="$1"
+	FRAMEWORK_NUM="$1"
 
-	if [[ "$SOLUTION_NAME" == "Spark-YARN" ]]; then
-	    SOLUTION_NAME="Spark"
+	if [[ "$FRAMEWORK_NAME" == "Spark-YARN" ]]; then
+	    FRAMEWORK_NAME="Spark"
 	    RESOURCE_MANAGER="yarn"
-	elif [[ "$SOLUTION_NAME" == "Flink-YARN" ]]; then
-	    SOLUTION_NAME="Flink"
+	elif [[ "$FRAMEWORK_NAME" == "Flink-YARN" ]]; then
+	    FRAMEWORK_NAME="Flink"
 	    RESOURCE_MANAGER="yarn"
 	fi
 
-	export SOLUTION_HOME="${BDEV_FRAMEWORKS_DIR}/${SOLUTION_NAME}/${SOLUTION_VERSION}"
-	export SOLUTION_DIR="${SOLUTIONS_SRC_DIR}/${SOLUTION_NAME}"
-	export SOLUTION_REPORT_DIR="${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}"
+	export FRAMEWORK_HOME="${BDEV_FRAMEWORKS_DIR}/${FRAMEWORK_NAME}/${FRAMEWORK_VERSION}"
+	export FRAMEWORK_DIR="${FRAMEWORKS_SRC_DIR}/${FRAMEWORK_NAME}"
+	export FRAMEWORK_REPORT_DIR="${CLUSTER_SIZE_REPORT_DIR}/${FRAMEWORK}"
 
-	if [[ ! -d "$SOLUTION_HOME" ]]; then
-		m_exit "Framework $SOLUTION not found at $SOLUTION_HOME"
+	if [[ ! -d "$FRAMEWORK_HOME" ]]; then
+		m_exit "Framework $FRAMEWORK not found at $FRAMEWORK_HOME"
 	else
-		m_echo "Framework set to $SOLUTION: $SOLUTION_HOME"
+		m_echo "Framework set to $FRAMEWORK: $FRAMEWORK_HOME"
 	fi
 
-	if [[ "$SOLUTION_NAME" == "Spark" ]]; then
+	if [[ "$FRAMEWORK_NAME" == "Spark" ]]; then
         	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d "$SPARK_HADOOP_HOME" ]]; then
             		m_exit "Hadoop distribution not found at $SPARK_HADOOP_HOME"
         	fi
 		HADOOP_VERSION=$(echo ${SPARK_HADOOP_HOME##*/})
-	elif [[ "$SOLUTION_NAME" == "Flink" ]]; then
+	elif [[ "$FRAMEWORK_NAME" == "Flink" ]]; then
         	if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]  && [[ ! -d "$FLINK_HADOOP_HOME" ]]; then
             		m_exit "Hadoop distribution not found at $FLINK_HADOOP_HOME"
         	fi
 		HADOOP_VERSION=$(echo ${FLINK_HADOOP_HOME##*/})
-	elif [[ "$SOLUTION_NAME" == "RDMA-Hadoop-3" ]]; then
+	elif [[ "$FRAMEWORK_NAME" == "RDMA-Hadoop-3" ]]; then
 		RESOURCE_MANAGER="yarn"
 		
-		if [[ "${SOLUTION_NET_INTERFACE}" == "ethernet" ]]; then
+		if [[ "${FRAMEWORK_NET_INTERFACE}" == "ethernet" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use TCP/IP over Ethernet instead of RDMA"
-		elif [[ "${SOLUTION_NET_INTERFACE}" == "ipoib" ]]; then
+		elif [[ "${FRAMEWORK_NET_INTERFACE}" == "ipoib" ]]; then
 			m_warn "RDMA-Hadoop-3 configured to use IP over InfiniBand (IPoIB) instead of RDMA"
 		fi
-		HADOOP_VERSION="$SOLUTION_VERSION"
-	elif [[ "$SOLUTION_NAME" == "Hadoop-YARN" ]]; then
+		HADOOP_VERSION="$FRAMEWORK_VERSION"
+	elif [[ "$FRAMEWORK_NAME" == "Hadoop-YARN" ]]; then
 		RESOURCE_MANAGER="yarn"
-		SOLUTION_DIR="$COMMON_HADOOP_DIR"
-		HADOOP_VERSION=$(echo ${SOLUTION_HOME##*/})
+		FRAMEWORK_DIR="$COMMON_HADOOP_DIR"
+		HADOOP_VERSION=$(echo ${FRAMEWORK_HOME##*/})
 	else
-		m_exit "Unknown framework: $SOLUTION"
+		m_exit "Unknown framework: $FRAMEWORK"
 	fi
 
-	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
-		m_exit "Could not create framework output directory at $SOLUTION_REPORT_DIR"
+	if ! mkdir -p "$FRAMEWORK_REPORT_DIR" ; then
+		m_exit "Could not create framework output directory at $FRAMEWORK_REPORT_DIR"
 	fi
 	
-	if [[ "$NUM_SOLUTIONS" -gt 1 ]]; then
-		if [[ $SOLUTION_NUM -gt 1 ]]; then
+	if [[ "$NUM_FRAMEWORKS" -gt 1 ]]; then
+		if [[ $FRAMEWORK_NUM -gt 1 ]]; then
 			export LAST_HADOOP_VERSION="$CURRENT_HADOOP_VERSION"
 		else
 			export LAST_HADOOP_VERSION="null"
@@ -740,17 +740,17 @@ export -f set_framework
 
 function set_no_framework() {
 	m_warn "No framework was configured. Running in command mode"
-	export SOLUTIONS=""
-	export SOLUTION=NONE
+	export FRAMEWORKS=""
+	export FRAMEWORK="NONE"
 	export BENCHMARKS=command
 	export GEN_COMMAND="true"
 	export NUM_BENCHMARKS=1
 	export NUM_EXECUTIONS=1
-	export SOLUTION_HOME=""
-        export SOLUTION_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${SOLUTION}
+	export FRAMEWORK_HOME=""
+        export FRAMEWORK_REPORT_DIR=${CLUSTER_SIZE_REPORT_DIR}/${FRAMEWORK}
 
-	if ! mkdir -p "$SOLUTION_REPORT_DIR" ; then
-		m_exit "Could not create framework output directory at $SOLUTION_REPORT_DIR"
+	if ! mkdir -p "$FRAMEWORK_REPORT_DIR" ; then
+		m_exit "Could not create framework output directory at $FRAMEWORK_REPORT_DIR"
 	fi
 
 	unset FINISH
@@ -760,7 +760,7 @@ export -f set_no_framework
 
 function setup_phase() {
 	if [[ -n "$FRAMEWORK_SETUP" ]]; then
-		m_echo "Setting up $SOLUTION: $FRAMEWORK_SETUP"
+		m_echo "Setting up $FRAMEWORK: $FRAMEWORK_SETUP"
 		bash -c "$FRAMEWORK_SETUP"
 	fi
 	
@@ -771,9 +771,9 @@ function setup_phase() {
 		export EXPERIMENTS_POST_ENDPOINT=$BDWATCHDOG_EXPERIMENTS_POST_ENDPOINT
 
 		### MARK start of experiments
-		MY_DATE=$(date '+%d-%m-%Y-%H:%M')
-		MY_SOLUTION=$(echo $SOLUTION | cut -d"-" -f1)
-		EXPERIMENT_NAME="$MY_DATE"_"$MY_SOLUTION"
+		BDWATCHDOG_START_DATE=$(date '+%d-%m-%Y-%H:%M')
+		BDWATCHDOG_FRAMEWORK=$(echo $FRAMEWORK | cut -d"-" -f1)
+		EXPERIMENT_NAME="$BDWATCHDOG_START_DATE"_"$BDWATCHDOG_FRAMEWORK"
 		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_experiment.py start "$EXPERIMENT_NAME" --username $BDWATCHDOG_USERNAME | \
 		${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
 	fi	
@@ -789,7 +789,7 @@ function cleanup_phase() {
 	fi
 
 	if [[ -n "$FRAMEWORK_CLEANUP" ]]; then
-		m_echo "Cleaning up $SOLUTION: $FRAMEWORK_CLEANUP"
+		m_echo "Cleaning up $FRAMEWORK: $FRAMEWORK_CLEANUP"
 		bash -c "$FRAMEWORK_CLEANUP"
 	fi
 }
@@ -797,7 +797,7 @@ function cleanup_phase() {
 export -f cleanup_phase
 
 function write_report() {
-	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $SOLUTION $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $FRAMEWORK $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
 	printf "\n" >> $REPORT_FILE
 
 	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
@@ -836,8 +836,8 @@ function begin_report() {
 	REPORT="$REPORT \n Frameworks directory: \n"
 	REPORT="$REPORT \t $BDEV_FRAMEWORKS_DIR \n"
 	REPORT="$REPORT \n Configuration: \n"
-	if [[ "$NUM_SOLUTIONS" -gt 0 ]]; then
-		REPORT="$REPORT \t Frameworks  \t\t\t\t $SOLUTIONS \n"
+	if [[ "$NUM_FRAMEWORKS" -gt 0 ]]; then
+		REPORT="$REPORT \t Frameworks  \t\t\t\t $FRAMEWORKS \n"
 	fi
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
 	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then

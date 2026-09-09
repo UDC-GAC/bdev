@@ -31,9 +31,9 @@ if [ "$JAVA_HOME" = "" ]; then
   exit 1
 fi
 
-export HADOOP_CONF_DIR=$sol_conf_dir
-export HADOOP_LOG_DIR=$sol_log_dir
-export HADOOP_SECURE_DN_LOG_DIR=$sol_log_dir
+export HADOOP_CONF_DIR=$framework_conf_dir
+export HADOOP_LOG_DIR=$framework_log_dir
+export HADOOP_SECURE_DN_LOG_DIR=$framework_log_dir
 export HADOOP_NAMENODE_HEAPSIZE=$namenode_d_heapsize
 export HADOOP_DATANODE_HEAPSIZE=$datanode_d_heapsize
 export HADOOP_SECONDARYNAMENODE_HEAPSIZE=$secondary_namenode_d_heapsize
@@ -80,8 +80,8 @@ fi
 export HADOOPHOSTNAME="${HADOOPHOSTNAME:-$(hostname -f 2>/dev/null || hostname -s)}"
 export HADOOP_OPTS="-Djava.net.preferIPv4Stack=true -Djava.io.tmpdir=$tmp_dir -DHADOOPHOSTNAME=${HADOOPHOSTNAME} $java_jpms_opts"
 
-if [[ -d "$sol_lib_dir" ]]; then
-    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$sol_lib_dir/*"
+if [[ -d "$framework_lib_dir" ]]; then
+    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$framework_lib_dir/*"
 fi
 
 # Command specific options appended to HADOOP_OPTS when specified

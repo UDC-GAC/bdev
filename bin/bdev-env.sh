@@ -13,16 +13,16 @@ export BDEV_WEBPAGE="https://bdev.des.udc.es"
 export BDEV_DEFAULT_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
 export BDEV_LIB_DIR=$BDEV_HOME/lib
+export BDEV_TOOLS_DIR=$BDEV_HOME/third-party
 export BDEV_CLEANUP_DIR=$BDEV_HOME/bin/cleanup
-export SOLUTIONS_SRC_DIR=$BDEV_HOME/frameworks/src
+export FRAMEWORKS_SRC_DIR=$BDEV_HOME/frameworks/src
 export BENCHMARKS_DIR=$BDEV_HOME/benchmarks
 export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
-export COMMON_SRC_DIR=$SOLUTIONS_SRC_DIR/common
-export COMMON_HADOOP_DIR=$SOLUTIONS_SRC_DIR/common/hadoop
+export COMMON_SRC_DIR=$FRAMEWORKS_SRC_DIR/common
+export COMMON_HADOOP_DIR=$FRAMEWORKS_SRC_DIR/common/hadoop
 export STORAGE_BACKEND_LIB=$COMMON_SRC_DIR/storage/storage_backend.sh
-export SOLUTIONS_LIB_DIR=$BDEV_HOME/frameworks/lib
+export FRAMEWORKS_LIB_DIR=$BDEV_HOME/frameworks/lib
 export TEMPLATES_DIR=$BDEV_HOME/frameworks/templates
-export THIRD_PARTY_DIR=$BDEV_HOME/third-party
 export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
 export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
@@ -31,7 +31,7 @@ export USER=${USER:-$(id -nu)}
 
 #ILO
 export ILO_HOME=$BDEV_BIN_DIR/ilo
-export ILO_SCRIPTS=$THIRD_PARTY_DIR/ilo-6.00.0
+export ILO_SCRIPTS=$BDEV_TOOLS_DIR/ilo-6.00.0
 export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
 export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
 
@@ -41,7 +41,7 @@ export PLOT_HOME=$BDEV_BIN_DIR/plot
 #STAT
 export STAT_HOME=$BDEV_BIN_DIR/stat
 export STAT_PLOT_HOME=$PLOT_HOME/stat
-export DOOL_HOME=$THIRD_PARTY_DIR/dool-1.3.8
+export DOOL_HOME=$BDEV_TOOLS_DIR/dool-1.3.8
 export DOOL_COMMAND_NAME=dool
 export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
@@ -56,7 +56,7 @@ export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
 
 #BDWatchdog
 export BDWATCHDOG_HOME=$BDEV_BIN_DIR/bdwatchdog
-export BDWATCHDOG_SRC_DIR=$THIRD_PARTY_DIR/BDWatchdog
+export BDWATCHDOG_SRC_DIR=$BDEV_TOOLS_DIR/BDWatchdog
 export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
@@ -208,10 +208,10 @@ fi
 
 export CLUSTER_SIZES=$(read_list "$BDEV_CONF_DIR/cluster_sizes.lst")
 export BENCHMARKS=$(read_list "$BDEV_CONF_DIR/benchmarks.lst")
-export SOLUTIONS=$(read_frameworks_list "$BDEV_CONF_DIR/frameworks.lst")
+export FRAMEWORKS=$(read_frameworks_list "$BDEV_CONF_DIR/frameworks.lst")
 export NUM_CLUSTERS=$(wc -w <<< "$CLUSTER_SIZES")
 export NUM_BENCHMARKS=$(wc -w <<< "$BENCHMARKS")
-export NUM_SOLUTIONS=$(wc -w <<< "$SOLUTIONS")
+export NUM_FRAMEWORKS=$(wc -w <<< "$FRAMEWORKS")
 
 if [[ "$NUM_CLUSTERS" -lt 1 ]]; then
 	m_exit "No cluster sizes specified. Revise cluster_sizes.lst"

@@ -29,7 +29,7 @@ add_conf_param "hostfile" $HOSTFILE
 # Storage backend
 export STORAGE_BACKEND_URI=$(get_storage_uri_prefix)
 add_conf_param "storage_backend_uri" $STORAGE_BACKEND_URI
-if [[ "$SOLUTION" != "NONE" ]]; then
+if [[ "$FRAMEWORK" != "NONE" ]]; then
 	m_echo "Storage backend URI: $STORAGE_BACKEND_URI"
 fi
 
@@ -38,7 +38,7 @@ if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	export YARN_APP_STAGING_DIR=/tmp/hadoop-yarn/staging
 
 	if [[ $HDFS_REPLICATION_FACTOR -gt $WORKES_NUMBER ]]; then
-		if [[ "$SOLUTION" != "NONE" ]]; then
+		if [[ "$FRAMEWORK" != "NONE" ]]; then
 			m_warn "HDFS replication factor changed from $HDFS_REPLICATION_FACTOR to $WORKES_NUMBER due to insufficient DataNodes"
 		fi
 		export HDFS_REPLICATION_FACTOR=$WORKES_NUMBER

@@ -18,8 +18,8 @@ export HADOOP_YARN_USER=${HADOOP_YARN_USER:-yarn}
 
 # resolve links - $0 may be a softlink
 #export YARN_CONF_DIR="${YARN_CONF_DIR:-$HADOOP_YARN_HOME/conf}"
-export YARN_CONF_DIR=$sol_conf_dir
-export YARN_LOG_DIR=$sol_log_dir
+export YARN_CONF_DIR=$framework_conf_dir
+export YARN_LOG_DIR=$framework_log_dir
 export YARN_PID_DIR=$tmp_dir/yarn/pid
 
 # some Java parameters
@@ -125,8 +125,8 @@ if [ "x$JAVA_LIBRARY_PATH" != "x" ]; then
 fi  
 YARN_OPTS="$YARN_OPTS -Dyarn.policy.file=$YARN_POLICYFILE"
 
-if [[ -d "$sol_lib_dir" ]]; then
-    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$sol_lib_dir/*"
+if [[ -d "$framework_lib_dir" ]]; then
+    export HADOOP_CLASSPATH="$HADOOP_CLASSPATH:$framework_lib_dir/*"
 fi
 
 ###
