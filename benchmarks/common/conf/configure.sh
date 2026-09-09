@@ -202,7 +202,8 @@ function prepare_sql() {
 	export HIVE_TMP_DIR=/hive/tmp
 	export HADOOP_CLIENT_OPTS="-Djavax.jdo.option.ConnectionURL=jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true"
 	export HIVE_OPTS="--hiveconf hive.execution.engine=mr \
-		--hiveconf javax.jdo.option.ConnectionURL='jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true' \
+	--exitOnError=true
+	--hiveconf javax.jdo.option.ConnectionURL='jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true' \
         --hiveconf hive.exec.scratchdir=${HIVE_TMP_DIR} \
         --hiveconf hive.exec.local.scratchdir=${TMP_DIR}/hive \
         --hiveconf hive.input.format=org.apache.hadoop.hive.ql.io.HiveInputFormat \

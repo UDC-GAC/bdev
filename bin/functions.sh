@@ -394,6 +394,57 @@ function load_hostfile() {
 
 export -f load_hostfile
 
+function get_nodes_by_hostname() {
+	local node_file="$1"
+	shift
+	local nodes="$*"
+	local tmp_file="${node_file}.tmp"
+	local out_nodes=()
+	
+	> "$tmp_file"
+	
+        for node in $nodes; do
+        	local node_ip=""
+        	local node_name=""
+        	
+        	if [[ "$node" == "localhost" || "$node" == "$LOOPBACK_IP" ]]; then
+        		node_ip="$LOOPBACK_IP"
+        		node_name="$node"
+        	else
+        		local out
+        		local resolve_status
+        		out=$($RESOLVEIP_COMMAND hosts "$node" 2>&1)
+			resolve_status=$?
+			
+			if [[ $resolve_status -ne 0 || -z "$out" ]]; then
+				m_error "Could not resolve hostname for node: '$node'"
+				m_error "Command failed: $RESOLVEIP_COMMAND hosts \"$node\" (exit code: $resolve_status)"
+				[[ -n "$out" ]] && m_error "Details: $out"
+				rm -f "$tmp_file"
+				return 1
+			fi
+            
+			node_ip=$(awk '{print $1}' <<< "$out")
+			node_name=$(awk '{print $2}' <<< "$out")
+		fi
+		
+		if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
+			out_nodes+=("$node_name")
+		else
+			out_nodes+=("$node_ip")
+		fi
+
+                echo "$node_name $node_ip" >> "$tmp_file"
+        done
+
+	# Consolidate the file
+	mv "$tmp_file" "$node_file"
+        echo "${out_nodes[*]}"
+        return 0
+}
+
+export -f get_nodes_by_hostname
+
 function network_discovery() {
 	# Define network hostfile paths if applicable
 	[[ -n "${ETHERNET_INTERFACE:-}" ]] && export HOSTFILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
@@ -458,7 +509,7 @@ function probe_and_network_discovery() {
         # Abort on critical failure when SSH fails
         if [[ $exit_code -ne 0 ]]; then
             m_error "SSH pre-flight check failed on node: $node"
-            m_error "Command executed: $SSH_CMD $node \"...\""
+            m_error "Command executed: $SSH_CMD $node"
             m_error "Exit code: $exit_code" >&2
             m_error "Details: $ssh_output" >&2
             rm -f "$eth_tmp" "$ib_tmp"
@@ -566,57 +617,6 @@ function probe_and_network_discovery() {
 }
 
 export -f probe_and_network_discovery
-
-function get_nodes_by_hostname() {
-	local node_file="$1"
-	shift
-	local nodes="$*"
-	local tmp_file="${node_file}.tmp"
-	local out_nodes=()
-	
-	> "$tmp_file"
-	
-        for node in $nodes; do
-        	local node_ip=""
-        	local node_name=""
-        	
-        	if [[ "$node" == "localhost" || "$node" == "$LOOPBACK_IP" ]]; then
-        		node_ip="$LOOPBACK_IP"
-        		node_name="$node"
-        	else
-        		local out
-        		local resolve_status
-        		out=$($RESOLVEIP_COMMAND hosts "$node" 2>&1)
-			resolve_status=$?
-			
-			if [[ $resolve_status -ne 0 || -z "$out" ]]; then
-				m_error "Could not resolve hostname for node: '$node'"
-				m_error "Command failed: $RESOLVEIP_COMMAND hosts \"$node\" (exit code: $resolve_status)"
-				[[ -n "$out" ]] && m_error "Details: $out"
-				rm -f "$tmp_file"
-				return 1
-			fi
-            
-			node_ip=$(awk '{print $1}' <<< "$out")
-			node_name=$(awk '{print $2}' <<< "$out")
-		fi
-		
-		if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
-			out_nodes+=("$node_name")
-		else
-			out_nodes+=("$node_ip")
-		fi
-
-                echo "$node_name $node_ip" >> "$tmp_file"
-        done
-
-	# Consolidate the file
-	mv "$tmp_file" "$node_file"
-        echo "${out_nodes[*]}"
-        return 0
-}
-
-export -f get_nodes_by_hostname
 
 function configure_nodes()  {
 	export MASTERNODE="$1"
