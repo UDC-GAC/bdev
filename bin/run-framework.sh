@@ -23,14 +23,12 @@ fi
 setup_phase
 
 #For each benchmark
-for BENCHMARK in $BENCHMARKS
-do
+for BENCHMARK in $BENCHMARKS; do
 	export BENCHMARK
 	unset ELAPSED_TIMES
 	i=1
 
-	while [[ "$i" -le "$NUM_EXECUTIONS" ]]
-	do
+	while [[ "$i" -le "$NUM_EXECUTIONS" ]]; do
 		. ${BDEV_BIN_DIR}/bench-env.sh $i
 		# Starting workload
 		m_echo "Running ${BENCHMARK^}, logging to ${BENCHMARK_OUTPUT_DIR}"

@@ -11,8 +11,7 @@ export BDEV_HOME=`cd "$bin"/..; pwd`
 . ${BDEV_BIN_DIR}/init.sh
 
 # For each cluster size
-for CLUSTER_SIZE in $CLUSTER_SIZES
-do
+for CLUSTER_SIZE in $CLUSTER_SIZES; do
 	set_cluster_size
 
 	if [[ "$NUM_FRAMEWORKS" -eq 0 ]]; then
@@ -29,8 +28,7 @@ do
 		. $CLEANUP_DATA_SCRIPT --check-disk
 
 		# For each framework
-		for FRAMEWORK in $FRAMEWORKS
-		do
+		for FRAMEWORK in $FRAMEWORKS; do
 			FRAMEWORK_NUMBER=$((FRAMEWORK_NUMBER+1))
 			set_framework $FRAMEWORK_NUMBER
 			export FORCE_FORMAT_HDFS=false

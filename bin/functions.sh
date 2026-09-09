@@ -389,46 +389,20 @@ function load_hostfile() {
 
 	export COMPUTE_NODES
 	export NUM_NODES=$(echo "$COMPUTE_NODES" | wc -w)
-	m_echo "Cluster nodes from hostfile ($NUM_NODES): $COMPUTE_NODES"
+	m_echo "Cluster nodes loaded from hostfile ($NUM_NODES): $COMPUTE_NODES"
+}
 
-	# Check connectivity to validate SSH and the network (fail fast)
-	FIRST_NODE="${COMPUTE_NODES%% *}"
-	check_ssh_connectivity "$FIRST_NODE"
+export -f load_hostfile
 
-	# Enable cleanup on exit
-	export CLEANUP_ON_EXIT="true"
+function network_discovery() {
+	# Define network hostfile paths if applicable
+	[[ -n "${ETHERNET_INTERFACE:-}" ]] && export HOSTFILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
+	[[ -n "${IPOIB_INTERFACE:-}" ]]    && export HOSTFILE_IPOIB="$REPORT_DIR/hostfile.ipoib"
 
-	if [[ -n "${ETHERNET_INTERFACE:-}" ]]; then
-		export HOSTFILE_ETHERNET="$REPORT_DIR/hostfile.ethernet"
-	
-		ETHERNET_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_ETHERNET" "$ETHERNET_INTERFACE" $COMPUTE_NODES)
-		ETH_STATUS=$?
-	
-		if [[ $ETH_STATUS -ne 0 || -z "${ETHERNET_COMPUTE_NODES}" ]]; then
-			export ETHERNET_COMPUTE_NODES=""
-			rm -f "$HOSTFILE_ETHERNET"
-			m_warn "Ethernet ($ETHERNET_INTERFACE): interface validation failed across nodes; interface will be ignored"
-		else
-			export ETHERNET_COMPUTE_NODES
-			m_echo "Ethernet ($ETHERNET_INTERFACE): $ETHERNET_COMPUTE_NODES"
-		fi
-	fi
-
-	if [[ -n "${IPOIB_INTERFACE:-}" ]]; then
-		export HOSTFILE_IPOIB="$REPORT_DIR/hostfile.ipoib"
-		
-		IPOIB_COMPUTE_NODES=$(get_nodes_by_interface "$HOSTFILE_IPOIB" "$IPOIB_INTERFACE" $COMPUTE_NODES)
-		IB_STATUS=$?
-       	
-		if [[ $IB_STATUS -ne 0 || -z "${IPOIB_COMPUTE_NODES}" ]]; then
-			export IPOIB_COMPUTE_NODES=""
-			rm -f "$HOSTFILE_IPOIB"
-			m_warn "IPoIB ($IPOIB_INTERFACE): interface validation failed across nodes; interface will be ignored"
-		else
-			export IPOIB_COMPUTE_NODES
-			m_echo "IPoIB ($IPOIB_INTERFACE): $IPOIB_COMPUTE_NODES"
-		fi
-	fi
+	# SSH check + Process Cleanup + Network Discovery (Ethernet and IPoIB)
+	probe_and_network_discovery "${ETHERNET_INTERFACE:-}" "${HOSTFILE_ETHERNET:-}" \
+		"${IPOIB_INTERFACE:-}" "${HOSTFILE_IPOIB:-}" \
+		$COMPUTE_NODES
 
 	if [[ -z "${ETHERNET_COMPUTE_NODES:-}" && -z "${IPOIB_COMPUTE_NODES:-}" ]]; then
 		m_warn "No valid network interface configured. Using default network configuration"
@@ -441,7 +415,157 @@ function load_hostfile() {
 	export CLUSTER_SIZES=$(sed "s/MAX/$MAX_NODES/gI" <<< "$CLUSTER_SIZES")
 }
 
-export -f load_hostfile
+export -f network_discovery
+
+function probe_and_network_discovery() {
+    local eth_iface="${1:-}"
+    local eth_file="${2:-}"
+    local ib_iface="${3:-}"
+    local ib_file="${4:-}"
+    shift 4
+    local nodes="$*"
+
+    local eth_tmp="${eth_file}.tmp"
+    local ib_tmp="${ib_file}.tmp"
+    local eth_failed=0
+    local ib_failed=0
+    local eth_resolution_warning=0
+    local ib_resolution_warning=0
+    local eth_out_nodes=()
+    local ib_out_nodes=()
+
+    [[ -n "$eth_iface" ]] && > "$eth_tmp"
+    [[ -n "$ib_iface" ]]  && > "$ib_tmp"
+
+    m_echo "Performing SSH checks, process cleanup and network discovery for all nodes"
+    for node in $nodes; do
+        local ssh_output
+        local exit_code
+
+	# Execute the remote script via SSH
+	ssh_output=$($SSH_CMD "$node" \
+            "USER='${USER}' \
+             JPS='${JPS}' \
+             DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}' \
+             PYTHON_BIN='${PYTHON_BIN}' \
+             IP_COMMAND='${IP_COMMAND}' \
+             ENABLE_OPROFILE='${ENABLE_OPROFILE:-}' \
+             ENABLE_RAPL='${ENABLE_RAPL:-}' \
+             OPROFILE_BIN='${OPROFILE_BIN:-}' \
+             '$HELPER_SCRIPTS_DIR/probe_node.sh' '$eth_iface' '$ib_iface'" 2>&1)
+        exit_code=$?
+        
+        # Abort on critical failure when SSH fails
+        if [[ $exit_code -ne 0 ]]; then
+            m_error "SSH pre-flight check failed on node: $node"
+            m_error "Command executed: $SSH_CMD $node \"...\""
+            m_error "Exit code: $exit_code" >&2
+            m_error "Details: $ssh_output" >&2
+            rm -f "$eth_tmp" "$ib_tmp"
+            m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
+        fi
+
+	# Enable cleanup on exit
+	export CLEANUP_ON_EXIT="true"
+	
+        # Separate kill-process.sh logs from the IP line
+        local net_line
+        local cleanup_logs
+        net_line=$(grep '^__BDEV_NET__:' <<< "$ssh_output" || true)
+        cleanup_logs=$(grep -v '^__BDEV_NET__:' <<< "$ssh_output" || true)
+        
+        if [[ -n "$cleanup_logs" ]]; then
+            echo "$cleanup_logs"
+        fi
+
+        local eth_ip ib_ip
+        IFS=':' read -r _ eth_ip ib_ip <<< "$net_line"
+
+        # Process Ethernet interface
+        if [[ -n "$eth_iface" && $eth_failed -eq 0 ]]; then
+            if [[ -z "$eth_ip" || "$eth_ip" == "NONE" ]]; then
+                eth_failed=1
+            else
+                local out_eth eth_node_ip eth_node_name
+                out_eth=$($RESOLVEIP_COMMAND hosts "$eth_ip" 2>/dev/null)
+                if [[ -z "$out_eth" ]]; then
+                    eth_resolution_warning=1
+                    eth_node_ip="$eth_ip"
+                    eth_node_name="$node"
+                else
+                    eth_node_ip=$(awk '{print $1}' <<< "$out_eth")
+                    eth_node_name=$(awk '{print $2}' <<< "$out_eth")
+                fi
+
+                if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
+                    eth_out_nodes+=("$eth_node_name")
+                else
+                    eth_out_nodes+=("$eth_node_ip")
+                fi
+                echo "$eth_node_name $eth_node_ip" >> "$eth_tmp"
+            fi
+        fi
+
+        # Process IPoIB interface
+        if [[ -n "$ib_iface" && $ib_failed -eq 0 ]]; then
+            if [[ -z "$ib_ip" || "$ib_ip" == "NONE" ]]; then
+                ib_failed=1
+            else
+                local out_ib ib_node_ip ib_node_name
+                out_ib=$($RESOLVEIP_COMMAND hosts "$ib_ip" 2>/dev/null)
+                if [[ -z "$out_ib" ]]; then
+                    ib_resolution_warning=1
+                    ib_node_ip="$ib_ip"
+                    ib_node_name="$node"
+                else
+                    ib_node_ip=$(awk '{print $1}' <<< "$out_ib")
+                    ib_node_name=$(awk '{print $2}' <<< "$out_ib")
+                fi
+
+                if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
+                    ib_out_nodes+=("$ib_node_name")
+                else
+                    ib_out_nodes+=("$ib_node_ip")
+                fi
+                echo "$ib_node_name $ib_node_ip" >> "$ib_tmp"
+            fi
+        fi
+    done
+
+    # Consolidate Ethernet with graceful degradation
+    if [[ -n "$eth_iface" ]]; then
+        if [[ $eth_failed -ne 0 || ${#eth_out_nodes[@]} -eq 0 ]]; then
+            export ETHERNET_COMPUTE_NODES=""
+            rm -f "$eth_tmp" "$eth_file"
+            m_warn "Ethernet ($eth_iface): interface validation failed across nodes; interface will be ignored"
+        else
+            mv "$eth_tmp" "$eth_file"
+            export ETHERNET_COMPUTE_NODES="${eth_out_nodes[*]}"
+            m_echo "Ethernet ($eth_iface): $ETHERNET_COMPUTE_NODES"
+            if [[ $eth_resolution_warning -eq 1 ]]; then
+                m_warn "Reverse resolution failed for some nodes on interface '$eth_iface'. Using base hostnames as fallback"
+            fi
+        fi
+    fi
+
+    # Consolidate IPoIB with graceful degradation
+    if [[ -n "$ib_iface" ]]; then
+        if [[ $ib_failed -ne 0 || ${#ib_out_nodes[@]} -eq 0 ]]; then
+            export IPOIB_COMPUTE_NODES=""
+            rm -f "$ib_tmp" "$ib_file"
+            m_warn "IPoIB ($ib_iface): interface validation failed across nodes; interface will be ignored"
+        else
+            mv "$ib_tmp" "$ib_file"
+            export IPOIB_COMPUTE_NODES="${ib_out_nodes[*]}"
+            m_echo "IPoIB ($ib_iface): $IPOIB_COMPUTE_NODES"
+            if [[ $ib_resolution_warning -eq 1 ]]; then
+                m_warn "Reverse resolution failed for some nodes on interface '$ib_iface'. Using base hostnames as fallback"
+            fi
+        fi
+    fi
+}
+
+export -f probe_and_network_discovery
 
 function get_nodes_by_hostname() {
 	local node_file="$1"
@@ -493,76 +617,6 @@ function get_nodes_by_hostname() {
 }
 
 export -f get_nodes_by_hostname
-
-function get_nodes_by_interface() {
-	local node_file="$1"
-	local interface="$2"
-	shift 2
-	local nodes="$*"
-	local tmp_file="${node_file}.tmp"
-	local out_nodes=()
-	local resolution_warning=0
-	
-	> "$tmp_file"
-	
-        for node in $nodes; do
-        	# Obtain data from the remote interface via SSH
-        	local interface_data
-        	interface_data=$($SSH_CMD "$node" "$IP_COMMAND a s $interface" 2>/dev/null | grep 'inet ')
-        	
-        	if [[ -z "$interface_data" ]]; then
-        		m_error "Interface '$interface' not found or inactive on node '$node'"
-			rm -f "$tmp_file"
-			return 1
-                fi
-                
-                # Extract the clean IP address (without CIDR mask)
-                local interface_ip
-                interface_ip=$(echo "$interface_data" | awk '{print $2}' | cut -d '/' -f 1 | head -n 1)
-                
-                if [[ -z "$interface_ip" ]]; then
-                	m_error "Could not parse IPv4 address for interface '$interface' on node '$node'"
-                	rm -f "$tmp_file"
-                	return 1
-                fi
-                
-                # Reverse resolution (IP -> Hostname)
-                local out
-                local node_ip
-                local node_name
-                out=$($RESOLVEIP_COMMAND hosts "$interface_ip" 2>/dev/null)
-                
-                if [[ -z "$out" ]]; then
-                	# In clusters it is common for interfaces like ib0 not to have reverse PTR registration; we degrade with warning without aborting execution
-                        resolution_warning=1
-                        node_ip="$interface_ip"
-                        node_name="$node"
-                else
-                        node_ip=$(awk '{print $1}' <<< "$out")
-                        node_name=$(awk '{print $2}' <<< "$out")
-                fi
-
-                if [[ "${ENABLE_HOSTNAMES}" == "true" ]]; then
-                        out_nodes+=("$node_name")
-                else
-                        out_nodes+=("$node_ip")
-                fi
-
-                echo "$node_name $node_ip" >> "$tmp_file"
-        done
-
-	# If all nodes responded, we consolidate the file
-	mv "$tmp_file" "$node_file"
-	
-	if [[ $resolution_warning -eq 1 ]]; then
-		m_warn "Reverse resolution failed for some nodes on interface '$interface'. Using base hostnames as fallback"
-    	fi
-    
-	echo "${out_nodes[*]}"
-	return 0
-}
-
-export -f get_nodes_by_interface
 
 function configure_nodes()  {
 	export MASTERNODE="$1"
@@ -1292,27 +1346,6 @@ get_interactive_shell() {
 }
 
 export -f get_interactive_shell
-
-check_ssh_connectivity() {
-    local test_node="$1"
-    local ssh_output
-    local exit_code
-
-    # Execute the null command ':' or 'true' by capturing the error output
-    m_echo "Checking SSH connectivity to $test_node"
-    ssh_output=$($SSH_CMD "$test_node" ":" 2>&1)
-    exit_code=$?
-
-    if [ $exit_code -ne 0 ]; then
-    	m_error "SSH pre-flight check failed on node: $test_node"
-        m_error "Command executed: $SSH_CMD $test_node \":\""
-        m_error "Exit code: $exit_code" >&2
-        m_error "Details: $ssh_output" >&2
-        m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
-    fi
-}
-
-export -f check_ssh_connectivity
 
 function download_jar_if_missing() {
     local target_jar="$1"
