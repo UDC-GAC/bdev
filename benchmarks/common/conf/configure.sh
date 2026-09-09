@@ -17,7 +17,7 @@ function resolve_hive_issues() {
         BACKUP_FILE="${ORIGINAL_JAR}-original.bak"
     fi
 
-    rm -f ${HIVE_LIB}/guava-*.jar
+    rm -f ${HIVE_LIB}/guava-*.jar >& /dev/null
 
     if [[ "${HADOOP_SERIES}" == 3 ]]; then
         cp ${HADOOP_LIB}/guava-*.jar ${HIVE_LIB}/
@@ -77,7 +77,7 @@ export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.Sequenc
 export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
 export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
 export MAHOUT_VERSION=$HADOOP_MAHOUT_VERSION
-export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION-hadoop-yarn
+export MAHOUT_HOME=$THIRD_PARTY_DIR/mahout-$MAHOUT_VERSION
 export HIVE_VERSION=$HADOOP_HIVE_VERSION
 export HIVE_HOME=$THIRD_PARTY_DIR/hive-$HIVE_VERSION
 
@@ -173,21 +173,21 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 		wget -q -O $TMP_HIVE_FILE $URL/hive-$HIVE_VERSION/apache-hive-${HIVE_VERSION}-bin.tar.gz
 
 		if [[ $? != 0 ]]; then
-			rm $TMP_HIVE_FILE >& /dev/null
+			rm -f $TMP_HIVE_FILE >& /dev/null
 			TMP_HIVE_FILE=$THIRD_PARTY_DIR/hive-${HIVE_VERSION}-bin.tar.gz
 			TMP_HIVE_DIR=$THIRD_PARTY_DIR/hive-${HIVE_VERSION}-bin
 			wget -q -O $TMP_HIVE_FILE $URL/hive-$HIVE_VERSION/hive-${HIVE_VERSION}-bin.tar.gz
 			
 			if [[ $? != 0 ]]; then
-				rm $TMP_HIVE_FILE >& /dev/null
-				m_exit "Error when downloading hive-$HIVE_VERSION"
+				rm -f $TMP_HIVE_FILE >& /dev/null
+				m_exit "Error when downloading hive-$HIVE_VERSION from $URL"
     			fi
 		fi
 
 		m_echo "Extracting $TMP_HIVE_FILE"
 		tar -xzf $TMP_HIVE_FILE -C $THIRD_PARTY_DIR
 		mv $TMP_HIVE_DIR $HIVE_HOME
-		rm $TMP_HIVE_FILE >& /dev/null
+		rm -f $TMP_HIVE_FILE >& /dev/null
 	fi
 
 	# Manage Hive issues (Guava, commons-collections)
@@ -215,7 +215,7 @@ function prepare_sql() {
     export HIVE_OPTS="${HIVE_OPTS//$'\n'/ }"
     export HIVE_OPTS="${HIVE_OPTS//$'\t'/ }"
 
-    rm -rf ${BENCHMARK_OUTPUT_DIR}/metastore_db
+    rm -rf ${BENCHMARK_OUTPUT_DIR}/metastore_db >& /dev/null
 }
 
 export -f prepare_sql
