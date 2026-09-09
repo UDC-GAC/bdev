@@ -20,8 +20,10 @@ fi
 # Deduplicate nodes in case the master is also a worker
 UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
 
+cleanup_failed_nodes=()
+
 for NODE in $UNIQUE_NODES; do
-	NODE_RESULT=$($SSH_CMD $NODE "export USER='${USER}';\
+	NODE_OUTPUT=$($SSH_CMD $NODE "export USER='${USER}';\
 		export TMP_DIR='${TMP_DIR:-}'; \
          	export LOCAL_DIRS='${LOCAL_DIRS:-}'; \
          	export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS:-}'; \
@@ -32,18 +34,15 @@ for NODE in $UNIQUE_NODES; do
          	'$HELPER_SCRIPTS_DIR/clean-data.sh'" 2>&1)
 	
 	NODE_STATUS=$?
-	
 	if [[ $NODE_STATUS -ne 0 ]]; then
         	m_error "Failed cleanup data on $NODE (exit code $NODE_STATUS)"
-        	[[ -n "$NODE_RESULT" ]] && echo "$NODE_RESULT" >&2
+        	[[ -n "$NODE_OUTPUT" ]] && echo "$NODE_OUTPUT" >&2
         	cleanup_failed_nodes+=("$NODE")
-    	elif [[ -n "$NODE_RESULT" ]]; then
-        	echo "$NODE_RESULT"
+    	elif [[ -n "$NODE_OUTPUT" ]]; then
+        	echo "$NODE_OUTPUT"
     	fi
 done
 
 if [[ ${#cleanup_failed_nodes[@]} -gt 0 ]]; then
     m_error "Data cleanup failed on nodes: ${cleanup_failed_nodes[*]}"
-else
-    m_echo "Cleanup done"
 fi
