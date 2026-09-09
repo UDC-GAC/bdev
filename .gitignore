@@ -1,7 +1,9 @@
 BDEv_OUTPUT
 frameworks/dist
 lib/*bench-*.jar
+lib/flink-*.jar
 lib/tpcx-hs-*.jar
+lib/hive-*.jar
 benchmarks/Spark/src/sparkbench/*.jar
 benchmarks/Spark/src/sparkbench/project/target
 benchmarks/Spark/src/sparkbench/project/project/target
