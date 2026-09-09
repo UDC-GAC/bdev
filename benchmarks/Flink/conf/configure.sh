@@ -37,7 +37,7 @@ if [[ "$GEN_AGGREGATION" == "true" || "$GEN_JOIN" == "true" || "$GEN_SCAN" == "t
 fi
 
 # Project Flink base libraries while respecting the Table Planner
-for jar in "$FLINK_LIB_ORIGINAL"/*.jar; do
+for jar in "$FLINK_LIB"/*.jar; do
     [[ -f "$jar" ]] || continue
     jar_name="${jar##*/}"
 
@@ -105,7 +105,7 @@ if [[ "$is_hive" == "true" ]]; then
 
 	# Link the actual Table Planner from opt/
 	planner_found="false"
-	for planner in "$FLINK_OPT_ORIGINAL"/flink-table-planner*.jar; do
+	for planner in "$FLINK_OPT"/flink-table-planner*.jar; do
 		[[ -f "$planner" ]] || continue
 		[[ "$planner" == *loader* ]] && continue
 		ln -sf "$planner" "$FLINK_LIB_DIR/"
@@ -113,7 +113,7 @@ if [[ "$is_hive" == "true" ]]; then
 	done
 
 	if [[ "$planner_found" == "false" ]]; then
-		m_exit "Could not find Flink table planner JAR in $FLINK_OPT_ORIGINAL"
+		m_exit "Could not find Flink table planner JAR in $FLINK_OPT"
 	fi
 
 	# Set classpath excluding problematic jars
