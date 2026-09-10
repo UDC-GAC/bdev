@@ -292,9 +292,7 @@ function generate_framework_config() {
     [[ ! -d "$src_dir" ]] && m_exit "Source conf dir does not exist: $src_dir"
     [[ ! -d "$template_dir" ]] && m_exit "Template dir does not exist: $template_dir"
     
-    m_echo "Generating configuration files in: $target_dir"
 
-    # Copy base configuration from tarball
     if ! mkdir -p "$target_dir"; then
         m_exit "Could not create configuration folder: $target_dir"
     fi
@@ -307,6 +305,10 @@ function generate_framework_config() {
         m_exit "Could not create lib folder: $target_lib_dir"
     fi
 
+    m_echo "Copy configuration files from: $src_dir"
+    m_echo "Copied files to: $target_dir"
+    
+    # Copy base configuration from tarball
     if ! cp -r "$src_dir"/* "$target_dir"/; then
         m_exit "Could not copy configuration files from $src_dir to $target_dir"
     fi

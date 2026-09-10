@@ -17,7 +17,7 @@ fi
 bash "$CLEANUP_PROCESS_SCRIPT"
 
 # Get rid of jar files in user logs
-find "$FRAMEWORK_REPORT_DIR" \
+find "$SPARK_LOG_DIR" \
     -name "*${SPARK_SCALA_VERSION}.jar" \
     -type f \
     -delete
