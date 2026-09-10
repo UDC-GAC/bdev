@@ -92,8 +92,11 @@ export -f op_dat_file
 function sum_dat_file() {
 	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
 
-	awk -F ',' "\$1 <= $ELAPSED_TIME {for(i=2;i<=NF;i++)sum+=\$i; next} END {print sum}" <(echo "$OUTPUT_FILE_CONTENT") > $OUTPUT_TOT_SUM_FILE
-
+	if [[ "$VALID_WORKLOAD_RUNTIME" == false ]]; then
+		return 0
+	fi
+    
+	awk -F ',' "\$1 <= $WORKLOAD_RUNTIME {for(i=2;i<=NF;i++)sum+=\$i; next} END {print sum}" <(echo "$OUTPUT_FILE_CONTENT") > $OUTPUT_TOT_SUM_FILE
 }
 
 export -f sum_dat_file
