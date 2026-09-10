@@ -58,6 +58,16 @@ export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
 export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 
+if [[ ! -d "$BDEV_BIN_DIR" ]]; then
+	echo "bin directory does not exist or is not a directory: $BDEV_BIN_DIR"
+	exit
+fi
+
+if [[ ! -f "$BDEV_BIN_DIR/functions.sh" ]]; then
+	echo "bin/functions.sh not found"
+	exit
+fi
+
 # Load BDEv functions
 . $BDEV_BIN_DIR/functions.sh
 
@@ -75,6 +85,10 @@ if [[ -z "$BDEV_OUTPUT_DIR" ]]; then
 	export BDEV_OUTPUT_DIR="$PWD/${APP_NAME}_${APP_VERSION}_OUTPUT"
 else
 	export BDEV_OUTPUT_DIR="$BDEV_OUTPUT_DIR/${APP_NAME}_${APP_VERSION}_OUTPUT"
+fi
+
+if [[ ! -d "$BDEV_CONF_DIR" ]]; then
+	m_exit "BDEV_CONF_DIR does not exist or is not a directory: $BDEV_CONF_DIR"
 fi
 
 # Load BDEv and system configuration files
