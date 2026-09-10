@@ -59,12 +59,12 @@ export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
 export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
 
 if [[ ! -d "$BDEV_BIN_DIR" ]]; then
-	echo "bin directory does not exist or is not a directory: $BDEV_BIN_DIR"
+	echo "Error: bin directory does not exist or is not a directory: $BDEV_BIN_DIR"
 	exit
 fi
 
 if [[ ! -f "$BDEV_BIN_DIR/functions.sh" ]]; then
-	echo "bin/functions.sh not found"
+	echo "Error: bin/functions.sh not found"
 	exit
 fi
 
