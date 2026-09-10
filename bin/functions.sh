@@ -789,7 +789,6 @@ function set_framework() {
 	fi
 
 	export CURRENT_HADOOP_VERSION=$(echo ${HADOOP_VERSION##*/})
-	unset FINISH
 }
 
 export -f set_framework
@@ -808,8 +807,6 @@ function set_no_framework() {
 	if ! mkdir -p "$FRAMEWORK_REPORT_DIR" ; then
 		m_exit "Could not create framework output directory at $FRAMEWORK_REPORT_DIR"
 	fi
-
-	unset FINISH
 }
 
 export -f set_no_framework
@@ -853,7 +850,7 @@ function cleanup_phase() {
 export -f cleanup_phase
 
 function write_report() {
-	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $FRAMEWORK $BENCHMARK $ELAPSED_TIMES >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $FRAMEWORK $BENCHMARK $RUNTIMES >> $REPORT_FILE
 	printf "\n" >> $REPORT_FILE
 
 	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
@@ -1024,7 +1021,7 @@ function begin_report() {
 	REPORT="$REPORT \n Benchmarks: \n"
 	
 	echo -e "$REPORT" > $REPORT_FILE
-	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME(s)' >> $REPORT_FILE
+	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME (seconds)' >> $REPORT_FILE
 
 	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
 		if [[ ! -d "$PLOT_DIR" ]]; then
@@ -1116,6 +1113,7 @@ function start_benchmark() {
 		fi
 	fi
 
+	unset BENCHMARK_FAILED
 	CURRENT_TIME=`timestamp`
 	START_TIME=$(($START_TIME+$CURRENT_TIME))
 }
@@ -1180,16 +1178,21 @@ function end_benchmark() {
 
 	#124 is the standard POSIX code for GNU timeout
 	if [[ ${TIMEOUT:-0} -gt 0 && $code -eq 124 ]]; then
-		export ELAPSED_TIME="TIMEOUT"
-		export ELAPSED_TOTAL_TIME="TIMEOUT"
+		export WORKLOAD_RUNTIME="TIMEOUT"
+		export TOTAL_RUNTIME="TIMEOUT"
+		export BENCHMARK_FAILED="false"
 		m_error "${BENCHMARK^} timeout exceeded (${TIMEOUT} seconds)"
 	elif [[ $code -ne 0 ]]; then
-		export ELAPSED_TIME="FAILED"
-		export ELAPSED_TOTAL_TIME="FAILED"
+		export WORKLOAD_RUNTIME="FAILED"
+		export TOTAL_RUNTIME="FAILED"
+		export BENCHMARK_FAILED="true"
 		m_error "${BENCHMARK^} execution failed (exit code: $code)"
 	else
-		export ELAPSED_TIME=$(op "($END_TIME - $START_TIME) / 1000")
-		export ELAPSED_TOTAL_TIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
+		export WORKLOAD_RUNTIME=$(op "($END_TIME - $START_TIME) / 1000")
+		export TOTAL_RUNTIME=$(op "($END_TOTAL_TIME - $START_TOTAL_TIME) / 1000")
+		export BENCHMARK_FAILED="false"
+		m_echo "Workload runtime: $WORKLOAD_RUNTIME seconds"
+		m_echo "Total runtime: $TOTAL_RUNTIME seconds"
 	fi
 
 	if [[ -n "$BENCHMARK_CLEANUP" ]]; then
@@ -1212,7 +1215,7 @@ function end_benchmark() {
 		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
 	fi
 	
-	save_elapsed_time
+	save_runtime
 	
 	return $code
 }
@@ -1242,21 +1245,12 @@ function run_benchmark() {
 
 export -f run_benchmark
 
-function save_elapsed_time() {
-	if [[ "$ELAPSED_TIME" == "FAILED" ]]; then
-		FINISH="true"
-	elif [[ "$ELAPSED_TIME" == "TIMEOUT" ]]; then
-		FINISH="true"
-	else
-		m_echo "Workload runtime: $ELAPSED_TIME seconds"
-		m_echo "Total runtime: $ELAPSED_TOTAL_TIME seconds"
-	fi
-
-	echo "$ELAPSED_TIME" > $ELAPSED_TIME_FILE
-	ELAPSED_TIMES="$ELAPSED_TIMES $ELAPSED_TIME"
+function save_runtime() {
+	echo "$WORKLOAD_RUNTIME" > $RUNTIME_FILE
+	RUNTIMES="$RUNTIMES $WORKLOAD_RUNTIME"
 }
 
-export -f save_elapsed_time
+export -f save_runtime
 
 function is_nfs() {
     local target_path="$1"

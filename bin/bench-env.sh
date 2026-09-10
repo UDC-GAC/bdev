@@ -13,9 +13,7 @@ export STATLOGDIR=$BENCHMARK_OUTPUT_DIR/stat_records
 export RAPLLOGDIR=$BENCHMARK_OUTPUT_DIR/rapl_records
 export OPROFILELOGDIR=$BENCHMARK_OUTPUT_DIR/oprofile_records
 export BDW_LOG_DIR=$BENCHMARK_OUTPUT_DIR/bdwatchdog
-export ELAPSED_TIME_FILE=$BENCHMARK_OUTPUT_DIR/runtime
-unset ELAPSED_TIME
-unset READ_SIZE
+export RUNTIME_FILE=$BENCHMARK_OUTPUT_DIR/runtime
 
 if ! mkdir -p "$BENCHMARK_OUTPUT_DIR" ; then
 	m_exit "Could not create benchmark output directory at $BENCHMARK_OUTPUT_DIR"

@@ -10,7 +10,7 @@ configure_network
 . ${COMMON_BENCH_DIR}/bin/prepare.sh
 
 export BENCHMARK=command
-unset ELAPSED_TIMES
+unset RUNTIMES
 
 setup_phase
 

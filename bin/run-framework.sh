@@ -6,9 +6,9 @@ configure_network
 #Init and load configuration parameters
 . ${BDEV_BIN_DIR}/conf-params.sh
 
-#Init framework
-m_echo "Initiliazing $FRAMEWORK"
-. ${BDEV_BIN_DIR}/init-framework.sh
+#Configure framework
+m_echo "Configuring $FRAMEWORK"
+. ${BDEV_BIN_DIR}/setup-framework.sh
 
 #Start framework
 m_echo "Starting $FRAMEWORK"
@@ -25,7 +25,7 @@ setup_phase
 #For each benchmark
 for BENCHMARK in $BENCHMARKS; do
 	export BENCHMARK
-	unset ELAPSED_TIMES
+	unset RUNTIMES
 	i=1
 
 	while [[ "$i" -le "$NUM_EXECUTIONS" ]]; do
@@ -53,16 +53,12 @@ for BENCHMARK in $BENCHMARKS; do
 			break
 		fi
 
-		if [[ $FINISH == "true" ]]; then
+		if [[ $BENCHMARK_FAILED == "true" ]]; then
 			break
 		fi
 	done
 
 	write_report
-	
-	if [[ $FINISH == "true" ]]; then
-		break
-	fi
 done
 
 cleanup_phase
