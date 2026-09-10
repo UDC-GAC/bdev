@@ -1366,7 +1366,7 @@ function inject_custom_dependencies() {
     local target_lib_dir="$2"  # Framework 'lib' directory in REPORT_DIR
     local explicit_jars="$3"   # Variable with user paths/wildcards (optional)
 
-    mkdir -p "$target_lib_dir"
+    mkdir -p "$target_lib_dir" 2>/dev/null || true
 
     # Internal helper for copying with link dereferencing
     copy_jar() {
