@@ -27,14 +27,6 @@ export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
 export CLEANUP_ON_EXIT="false"
 export USER=${USER:-$(id -nu)}
-
-#ILO
-export ILO_HOME=$BDEV_BIN_DIR/ilo
-export ILO_SCRIPTS=$BDEV_TOOLS_DIR/ilo-6.00.0
-export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
-export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
-
-#PLOT
 export PLOT_HOME=$BDEV_BIN_DIR/plot
 
 #STAT
@@ -52,6 +44,12 @@ export RAPL_PLOT_HOME=$PLOT_HOME/rapl
 #OPROFILE
 export OPROFILE_HOME=$BDEV_BIN_DIR/oprofile
 export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
+
+#ILO
+export ILO_HOME=$BDEV_BIN_DIR/ilo
+export ILO_SCRIPTS=$BDEV_TOOLS_DIR/ilo-6.00.0
+export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
+export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
 
 #BDWatchdog
 export BDWATCHDOG_HOME=$BDEV_BIN_DIR/bdwatchdog
