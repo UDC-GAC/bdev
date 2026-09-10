@@ -5,7 +5,11 @@ the Big Data Evaluator (BDEv) software package.
 
 BDEv 4.X.X - 2026-XX-XX
 -----------------------
-	NEW FEATURES
+	NEW FEATURES		
+		- Implement non-intrusive dependency isolation via per-framework runtime directories (symlink/copy model) to preserve read-only distributions
+
+		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
+
 		- Remove all custom scripts and the `daemons` directory, keeping the original scripts bundled with the frameworks untouched
 
 		- Add ad-hoc launcher scripts for Spark and Flink to explicitly inject configuration paths into remote workers
