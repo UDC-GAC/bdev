@@ -67,7 +67,7 @@ if [[ -z $BDEV_CONF_DIR ]]; then
 fi
 
 if [[ -z "$BDEV_FRAMEWORKS_DIR" ]]; then
-	export BDEV_FRAMEWORKS_DIR=$BDEV_HOME/frameworks/dist
+	export BDEV_FRAMEWORKS_DIR=$BDEV_HOME/frameworks
 fi
 
 if [[ -z "$BDEV_OUTPUT_DIR" ]]; then
