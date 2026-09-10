@@ -306,7 +306,7 @@ function generate_framework_config() {
     fi
 
     m_echo "Copy configuration files from: $src_dir"
-    m_echo "Copied files to: $target_dir"
+    m_echo "Configuration files copied to: $target_dir"
     
     # Copy base configuration from tarball
     if ! cp -r "$src_dir"/* "$target_dir"/; then
@@ -317,7 +317,7 @@ function generate_framework_config() {
         m_exit "Could not make configuration folder writable: $target_dir"
     fi
     
-    m_echo "Rendering template files from: $template_dir"
+    m_echo "Rendering templates from: $template_dir"
 
     add_conf_param "framework_conf_dir" "$target_dir"
     add_conf_param "framework_log_dir" "$target_log_dir"
