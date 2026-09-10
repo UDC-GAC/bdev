@@ -34,9 +34,10 @@ while IFS= read -r host || [[ -n "$host" ]]; do
     [[ -z "${host// }" ]] && continue
     
     $SSH_CMD -n $SPARK_SSH_OPTS "$host" \
-        "export SPARK_CONF_DIR=\"$SPARK_CONF_DIR\"; \
-         export SPARK_LOG_DIR=\"${SPARK_LOG_DIR:-}\"; \
+	"export SPARK_CONF_DIR=\"$SPARK_CONF_DIR\"; \
+	 export SPARK_LOG_DIR=\"${SPARK_LOG_DIR:-}\"; \
          export SPARK_PID_DIR=\"${SPARK_PID_DIR:-}\"; \
+	 export SPARK_LIB_DIR=\"${SPARK_LIB_DIR:-}\"; \
          \"${SPARK_HOME}/sbin/${WORKER_SCRIPT}\" \"$MASTER_URL\"" 2>&1 | sed "s/^/$host: /" &
 done < "$WORKERSFILE"
 

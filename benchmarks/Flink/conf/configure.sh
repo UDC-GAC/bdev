@@ -4,15 +4,19 @@ install_dependency_jar() {
     local jar_name="$1"
     local url="$2"
     local desc="$3"
+    local target_dest="$FLINK_LIB_DIR/$jar_name"
+    
+    # Remove any existing link or file at the destination
+    rm -f "$target_dest" 2>/dev/null
 
     # If it exists in the tarball's opt/ directory, we link from there
     if [[ -f "$FLINK_TARBALL_OPT/$jar_name" ]]; then
-        ln -sf "$FLINK_TARBALL_OPT/$jar_name" "$FLINK_LIB_DIR/"
+        ln -sf "$FLINK_TARBALL_OPT/$jar_name" "$target_dest"
     else
-        # Otherwise, we cache it in BDEV_LIB_DIR and create the symlink
+        # If it comes from the BDEv cache, we copy it to the report dir to ensure visibility across all remote nodes
         local cached_jar="$BDEV_LIB_DIR/$jar_name"
         download_jar_if_missing "$cached_jar" "$url" "$desc"
-        ln -sf "$cached_jar" "$FLINK_LIB_DIR/"
+        cp -f "$cached_jar" "$target_dest"
     fi
 }
 
@@ -23,10 +27,10 @@ FLINK_SCALA_VERSION=2.12
 FLINK_TARBALL_LIB="$FLINK_HOME/lib"
 FLINK_TARBALL_OPT="$FLINK_HOME/opt"
 export SORT_PARTITIONS="$FLINK_PARALLELISM"
-export FLINK_HIVE_VERSION=3.1.3
+export FLINK_HIVE_VERSION="3.1.3"
 	
 if [[ "$FLINK_MAJOR_VERSION" == "1.15" || "$FLINK_MAJOR_VERSION" == "1.16" ]]; then
-	export FLINK_HIVE_VERSION=3.1.2
+	export FLINK_HIVE_VERSION="3.1.2"
 fi
 
 # Determine whether integration with Hive is required
@@ -112,7 +116,7 @@ if [[ "$is_hive" == "true" ]]; then
 	done
 
 	if [[ "$planner_found" == "false" ]]; then
-		m_exit "Could not find Flink table planner JAR in $FLINK_OPT"
+		m_exit "Could not find Flink table planner JAR in $FLINK_TARBALL_OPT"
 	fi
 
 	# Set classpath excluding problematic jars

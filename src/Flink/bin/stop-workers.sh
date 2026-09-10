@@ -23,7 +23,7 @@ while IFS= read -r host || [[ -n "$host" ]]; do
         "export FLINK_CONF_DIR=\"$FLINK_CONF_DIR\"; \
          export FLINK_LOG_DIR=\"${FLINK_LOG_DIR:-}\"; \
          export FLINK_PID_DIR=\"${FLINK_PID_DIR:-}\"; \
-         export FLINK_LIB_DIR=\"${FLINK_PID_DIR:-}\"; \
+         export FLINK_LIB_DIR=\"${FLINK_LIB_DIR:-}\"; \
          \"${FLINK_HOME}/bin/taskmanager.sh\" stop" 2>&1 | sed "s/^/$host: /" &
 done < "$WORKERSFILE"
 

@@ -112,4 +112,5 @@ SPARK_PID_DIR=$tmp_dir/spark/pid
 export JAVA_HOME=$java_home
 export PYSPARK_PYTHON=$python_bin_path
 export LD_LIBRARY_PATH=$hadoop_home/lib/native:$LD_LIBRARY_PATH
-export SPARK_DIST_CLASSPATH=$($hadoop_home/bin/hadoop classpath)
+HADOOP_CP=$("$hadoop_home/bin/hadoop" classpath 2>/dev/null)
+export SPARK_DIST_CLASSPATH="$SPARK_LIB_DIR/*${HADOOP_CP:+:$HADOOP_CP}"
