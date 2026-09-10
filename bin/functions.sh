@@ -1361,6 +1361,54 @@ function download_jar_if_missing() {
 
 export -f download_jar_if_missing
 
+function inject_custom_dependencies() {
+    local framework="$1"       # hadoop, spark or flink
+    local target_lib_dir="$2"  # Framework 'lib' directory in REPORT_DIR
+    local explicit_jars="$3"   # Variable with user paths/wildcards (optional)
+
+    mkdir -p "$target_lib_dir"
+
+    # Internal helper for copying with link dereferencing
+    copy_jar() {
+        local file="$1"
+        if [[ -f "$file" ]]; then
+            local fname="${file##*/}"
+            m_echo "[$framework] Injecting custom JAR: $fname"
+            # -L resolves symbolic links so that the actual binary travels to NFS
+            cp -f -L "$file" "$target_lib_dir/"
+        fi
+    }
+
+    # Convention-based injection: Common folder (if applicable)
+    local common_dropin="$BDEV_LIB_DIR/extra/common"
+    if [[ -d "$common_dropin" ]]; then
+        for jar in "$common_dropin"/*.jar; do
+            copy_jar "$jar"
+        done
+    fi
+
+    # Convention-based injection: Framework-specific folder
+    local framework_dropin="$BDEV_LIB_DIR/extra/$framework"
+    if [[ -d "$framework_dropin" ]]; then
+        for jar in "$framework_dropin"/*.jar; do
+            copy_jar "$jar"
+        done
+    fi
+
+    # Declarative injection: Configuration variable
+    # Allows absolute paths, relative paths, or space-separated lists
+    if [[ -n "$explicit_jars" ]]; then
+        for item in $explicit_jars; do
+            # Expand possible wildcards (globs)
+            for jar in $item; do
+                copy_jar "$jar"
+            done
+        done
+    fi
+}
+
+export -f inject_custom_dependencies
+
 function sum() {
     SUM=0
     local -a values=($*)

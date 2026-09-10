@@ -2,6 +2,9 @@
 
 "$COMMON_HADOOP_DIR/bin/start.sh"
 
+# Inyect custom dependencies
+inject_custom_dependencies "spark" "$SPARK_LIB_DIR" "${SPARK_CUSTOM_JARS:-}"
+
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Spark cluster"
 	"$SPARK_HOME/sbin/start-master.sh"

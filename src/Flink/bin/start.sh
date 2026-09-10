@@ -2,6 +2,9 @@
 
 "$COMMON_HADOOP_DIR/bin/start.sh"
 
+# Inyect custom dependencies
+inject_custom_dependencies "flink" "$FLINK_LIB_DIR" "${FLINK_CUSTOM_JARS:-}"
+
 if [[ "${RESOURCE_MANAGER:-standalone}" == "standalone" ]]; then
 	m_echo "Starting the standalone Flink cluster (Session Mode)"
 	"$FLINK_HOME/bin/jobmanager.sh" start

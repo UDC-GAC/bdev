@@ -9,6 +9,9 @@ done
 # Avoid warnings
 mkdir -p "$HADOOP_LOG_DIR" 2>/dev/null || true
 
+# Inyect custom dependencies
+inject_custom_dependencies "hadoop" "$HADOOP_LIB_DIR" "${HADOOP_CUSTOM_JARS:-}"
+
 if [[ "$HADOOP_SERIES" == "3" ]]; then
 	"$COMMON_HADOOP_DIR/bin/start_yarn_3.sh"
 else
