@@ -134,7 +134,8 @@ if [[ "$is_hive" == "true" ]]; then
 			;;
 		hive-*|antlr*|derby*|libfb303*|libthrift*|datanucleus-*|jdo-api-*)
 			HIVE_FILTERED_CLASSPATH="${HIVE_FILTERED_CLASSPATH:+${HIVE_FILTERED_CLASSPATH}:}$f"
-                *)
+                	;;
+		*)
 			;;
             esac
         done
