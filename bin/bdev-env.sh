@@ -87,14 +87,6 @@ else
 	export BDEV_OUTPUT_DIR="$BDEV_OUTPUT_DIR/${APP_NAME}_${APP_VERSION}_OUTPUT"
 fi
 
-if [[ ! -d "$BDEV_CONF_DIR" ]]; then
-	m_exit "BDEV_CONF_DIR does not exist or is not a directory: $BDEV_CONF_DIR"
-fi
-
-# Load BDEv and system configuration files
-. $BDEV_CONF_DIR/bdev-conf.sh
-. $BDEV_CONF_DIR/system-conf.sh
-
 export REPORT_DIR="${BDEV_OUTPUT_DIR}/${APP_NAME}_report_${BDEV_START_DATE}"
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
@@ -112,12 +104,11 @@ if [[ ! -d "$REPORT_DIR" ]]; then
 fi
 
 m_echo "Running $APP_NAME v$APP_VERSION from BDEV_HOME=$BDEV_HOME"
+m_echo "Reporting to $REPORT_DIR"
 
 if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"
 fi
-
-m_echo "Reporting to $REPORT_DIR"
 
 if ! is_nfs "$BDEV_OUTPUT_DIR"; then
 	m_warn "BDEV_OUTPUT_DIR is not a shared directory mounted using NFS, which will likely cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
@@ -142,6 +133,10 @@ fi
 export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
 export BDEV_CONF_DIR_ORIG="$BDEV_CONF_DIR"
 m_echo "Configuration directory: $BDEV_CONF_DIR"
+
+# Load BDEv and system configuration files
+. $BDEV_CONF_DIR/bdev-conf.sh
+. $BDEV_CONF_DIR/system-conf.sh
 
 # Storage backend
 if [[ -z "$STORAGE_BACKEND" ]]; then
