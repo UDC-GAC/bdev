@@ -126,19 +126,21 @@ if [[ "$is_hive" == "true" ]]; then
             filename="${f##*/}"
             
             case "$filename" in
-            	log4j-*|slf4j-*|guava-*|protobuf-*|zookeeper-*|curator-*|netty-*|jackson-*|avro-*|commons-*)
-            		continue
+		log4j-*|slf4j-*|commons-cli-*)
             		;;
-                hive-exec-*.jar|calcite-*|scala-*.jar|spark-*.jar)
-                	continue
+		hive-exec-*.jar|calcite-*|scala-*.jar|spark-*.jar|jdo-api-*)
 			;;
-		hive-*|antlr*|derby*|libfb303*|libthrift*|datanucleus-*|jdo-api-*)
-			HIVE_FILTERED_CLASSPATH="${HIVE_FILTERED_CLASSPATH:+${HIVE_FILTERED_CLASSPATH}:}$f"
-                	;;
 		*)
+			HIVE_FILTERED_CLASSPATH="${HIVE_FILTERED_CLASSPATH:+${HIVE_FILTERED_CLASSPATH}:}$f"
 			;;
             esac
         done
+
+	num_hive_jars=$(grep -o ":" <<< "$HIVE_FILTERED_CLASSPATH" | wc -l)
+	if [[ "$num_hive_jars" -eq 0 ]]; then
+		m_exit "HIVE_FILTERED_CLASSPATH is empty. Check path: $HIVE_LIB"
+	fi
+	m_echo "Injected $((num_hive_jars + 1)) Hive JARs into HADOOP_CLASSPATH"
 
 	export HADOOP_CLASSPATH="$HIVE_FILTERED_CLASSPATH:${HADOOP_CLASSPATH:-}"
 fi
