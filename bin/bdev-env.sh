@@ -130,6 +130,33 @@ export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
 export BDEV_CONF_DIR_ORIG="$BDEV_CONF_DIR"
 m_echo "Configuration directory: $BDEV_CONF_DIR"
 
+REQUIRED_FILES=(
+    "$BDEV_CONF_DIR/bdev-conf.sh"
+    "$BDEV_CONF_DIR/system-conf.sh"
+    "$BDEV_CONF_DIR/hdfs.sh"
+    "$BDEV_CONF_DIR/yarn.sh"
+    "$BDEV_CONF_DIR/mapreduce.sh"
+    "$BDEV_CONF_DIR/benchmarks-conf.sh"
+    "$BDEV_CONF_DIR/frameworks-conf.sh"
+    "$BDEV_CONF_DIR/cluster_sizes.lst"
+    "$BDEV_CONF_DIR/benchmarks.lst"
+    "$BDEV_CONF_DIR/frameworks.lst"
+)
+
+MISSING_FILES=()
+
+for FILE in "${REQUIRED_FILES[@]}"; do
+    if [[ ! -f "$FILE" ]]; then
+        MISSING_FILES+=("$FILE")
+    fi
+done
+
+if [[ ${#MISSING_FILES[@]} -gt 0 ]]; then
+    m_error "Required configuration files not found:"
+    printf '  %s\n' "${MISSING_FILES[@]}"
+    m_exit "Missing configuration files at $BDEV_CONF_DIR"
+fi
+
 # Load BDEv and system configuration files
 . $BDEV_CONF_DIR/bdev-conf.sh
 . $BDEV_CONF_DIR/system-conf.sh
