@@ -123,14 +123,18 @@ if [[ "$is_hive" == "true" ]]; then
 	HIVE_FILTERED_CLASSPATH=""
 	for f in "$HIVE_LIB"/*.jar; do
 	    [[ -f "$f" ]] || continue
-	    
             filename="${f##*/}"
             
             case "$filename" in
+            	log4j-*|slf4j-*|guava-*|protobuf-*|zookeeper-*|curator-*|netty-*|jackson-*|avro-*|commons-*)
+            		continue
+            		;;
                 hive-exec-*.jar|calcite-*|scala-*.jar|spark-*.jar)
+                	continue
 			;;
-                *)
+		hive-*|antlr*|derby*|libfb303*|libthrift*|datanucleus-*|jdo-api-*)
 			HIVE_FILTERED_CLASSPATH="${HIVE_FILTERED_CLASSPATH:+${HIVE_FILTERED_CLASSPATH}:}$f"
+                *)
 			;;
             esac
         done
