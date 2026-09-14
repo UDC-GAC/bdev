@@ -120,8 +120,8 @@ if [[ "$is_hive" == "true" ]]; then
 	fi
 
 	# Copỳ Hive lib to REPORT_TOOLS_DIR excluding problematic jars and set Hadoop classpath
-	local hive_target_dir="$REPORT_TOOLS_DIR/hive"
-	local num_hive_jars=0
+	hive_target_dir="$REPORT_TOOLS_DIR/hive"
+	num_hive_jars=0
 	mkdir -p "$hive_target_dir"
 
 	for f in "$HIVE_LIB"/*.jar; do
