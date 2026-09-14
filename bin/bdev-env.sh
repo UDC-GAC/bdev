@@ -432,3 +432,6 @@ export BDWATCHDOG_DAEMONS_BIN_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin"
 export BDWATCHDOG_TIMESTAMPING_SERVICE="$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src"
 export ATOP_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop"
 export NETHOGS_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs"
+
+# Print environment for debugging
+env > $REPORT_DIR/env"

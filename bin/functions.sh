@@ -6,10 +6,19 @@ function get_date() {
 
 export -f get_date
 
+function log_msg() {
+    local SYMBOL="$1"
+    shift
+
+    [[ -n "$REPORT_LOG" ]] && printf '%s %s %s\n' "$DATE" "$SYMBOL" "$*" >> "$REPORT_LOG"
+}
+
+export -f log_msg
+
 function m_echo() {
 	get_date
 	printf '\e[48;5;2m[%s INFO]\e[0m %s\n' "$DATE" "$*"
-	[[ -n "$REPORT_LOG" ]] && printf '%s > %s\n' "$DATE" "$*" >> "$REPORT_LOG"
+	log_msg ">" "$*"
 }
 
 export -f m_echo
@@ -17,7 +26,7 @@ export -f m_echo
 function m_error() {
 	get_date
 	printf '\e[48;5;1m[%s ERR ]\e[0m %s\n' "$DATE" "$*" >&2
-	[[ -n "$REPORT_LOG" ]] && printf '%s ! %s\n' "$DATE" "$*" >> "$REPORT_LOG"
+	log_msg "#" "$*"
 }
 
 export -f m_error
@@ -25,7 +34,7 @@ export -f m_error
 function m_warn() {
 	get_date
 	printf '\e[48;5;208m[%s WARN]\e[0m %s\n' "$DATE" "$*"
-	[[ -n "$REPORT_LOG" ]] && printf '%s ! %s\n' "$DATE" "$*" >> "$REPORT_LOG"
+	log_msg "!" "$*"
 }
 
 export -f m_warn
