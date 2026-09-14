@@ -32,6 +32,7 @@ export USER=${USER:-$(id -nu)}
 export DOOL_VERSION="1.3.8"
 export ILO_SCRIPTS_VERSION="6.00.0"
 export DOOL_HOME="$BDEV_TOOLS_DIR/dool-$DOOL_VERSION"
+export DOOL_COMMAND_NAME="dool"
 export RAPL_HOME="$BDEV_BIN_DIR/rapl"
 export ILO_SCRIPTS="$BDEV_TOOLS_DIR/ilo-$ILO_SCRIPTS_VERSION"
 export BDWATCHDOG_SRC_DIR="$BDEV_TOOLS_DIR/BDWatchdog"
@@ -336,8 +337,8 @@ else
 fi
 
 # Copy dool tool
-if [[ $ENABLE_STAT == "true" ]]; then
-	if ! cp -r "$DOOL_HOME" "$REPORT_TOOLS_DIR/"; then
+if [[ $ENABLE_STAT == "true" ]]; then    
+	if ! rsync -a "$DOOL_HOME/dool" "$DOOL_HOME/plugins/" "$REPORT_TOOLS_DIR/"; then
     		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_DIR/"
 	fi
 fi
@@ -406,7 +407,6 @@ fi
 export STAT_HOME="$REPORT_BIN_DIR/stat"
 export STAT_PLOT_HOME="$PLOT_HOME/stat"
 export DOOL_HOME="$REPORT_TOOLS_DIR/dool-$DOOL_VERSION"
-export DOOL_COMMAND_NAME="dool"
 export DOOL_COMMAND="$DOOL_HOME/$DOOL_COMMAND_NAME"
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
 
