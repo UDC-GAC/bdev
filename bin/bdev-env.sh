@@ -218,7 +218,7 @@ if ! mkdir -p "$REPORT_TOOLS_DIR"; then
 	m_exit "Could not create the required tools directory at $REPORT_TOOLS_DIR"
 fi
 
-# Copy configuration to REPORT_DIR
+# Copy configuration files into REPORT_DIR
 if ! cp -r "$BDEV_CONF_DIR"/* "$REPORT_DIR/etc/"; then
     m_exit "Could not copy configuration files to $REPORT_DIR/etc"
 fi
@@ -340,9 +340,9 @@ else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
-# Copy helper scripts
-if ! cp "$BDEV_BIN_DIR/helpers"/* "$REPORT_BIN_DIR/"; then
-    m_exit "Could not copy bin directoy to $REPORT_BIN_DIR"
+# Copy binary files into REPORT_DIR
+if ! cp -r "$BDEV_BIN_DIR"/* "$REPORT_BIN_DIR/"; then
+    m_exit "Could not copy binary files to $REPORT_DIR/etc"
 fi
 
 # Define IP script
