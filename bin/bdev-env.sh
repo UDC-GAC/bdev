@@ -27,36 +27,15 @@ export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
 export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
 export CLEANUP_ON_EXIT="false"
 export USER=${USER:-$(id -nu)}
-export PLOT_HOME=$BDEV_BIN_DIR/plot
 
-#STAT
-export STAT_HOME=$BDEV_BIN_DIR/stat
-export STAT_PLOT_HOME=$PLOT_HOME/stat
-export DOOL_HOME=$BDEV_TOOLS_DIR/dool-1.3.8
-export DOOL_COMMAND_NAME=dool
-export DOOL_COMMAND=$DOOL_HOME/$DOOL_COMMAND_NAME
-export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
-
-#RAPL
-export RAPL_HOME=$BDEV_BIN_DIR/rapl
-export RAPL_PLOT_HOME=$PLOT_HOME/rapl
-
-#OPROFILE
-export OPROFILE_HOME=$BDEV_BIN_DIR/oprofile
-export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
-
-#ILO
-export ILO_HOME=$BDEV_BIN_DIR/ilo
-export ILO_SCRIPTS=$BDEV_TOOLS_DIR/ilo-6.00.0
-export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
-export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
-
-#BDWatchdog
-export BDWATCHDOG_HOME=$BDEV_BIN_DIR/bdwatchdog
-export BDWATCHDOG_SRC_DIR=$BDEV_TOOLS_DIR/BDWatchdog
-export BDWATCHDOG_DAEMONS_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons
-export BDWATCHDOG_DAEMONS_BIN_DIR=$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin
-export BDWATCHDOG_TIMESTAMPING_SERVICE=$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src
+# Monitoring tools
+export DOOL_VERSION="1.3.8"
+export ILO_SCRIPTS_VERSION="6.00.0"
+export DOOL_HOME="$BDEV_TOOLS_DIR/dool-$DOOL_VERSION"
+export RAPL_HOME="$BDEV_BIN_DIR/rapl"
+export ILO_SCRIPTS="$BDEV_TOOLS_DIR/ilo-$ILO_SCRIPTS_VERSION"
+export BDWATCHDOG_SRC_DIR="$BDEV_TOOLS_DIR/BDWatchdog"
+export BDWATCHDOG_DAEMONS_BIN_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin"
 
 if [[ ! -d "$BDEV_BIN_DIR" ]]; then
 	echo "Error: bin directory does not exist or is not a directory: $BDEV_BIN_DIR"
@@ -93,6 +72,7 @@ export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=$REPORT_DIR/gen_all_plots.sh
 export REPORT_BIN_DIR=$REPORT_DIR/bin
 export REPORT_TOOLS_DIR=$REPORT_DIR/tools
+export PLOT_HOME=$REPORT_BIN_DIR/plot
 export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
@@ -340,6 +320,86 @@ else
 	export JAVA_JPMS_OPTS="--add-exports=java.base/sun.net.util=ALL-UNNAMED --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/sun.nio.cs=ALL-UNNAMED --add-opens=java.base/sun.security.action=ALL-UNNAMED --add-opens=java.base/sun.util.calendar=ALL-UNNAMED"
 fi
 
+# YARN scheduler class
+if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
+	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+else
+	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
+	    export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
+	else
+	    if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
+		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
+	    else
+		m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
+	    fi
+	fi
+fi
+
+# Compile RAPL plot (if needed)
+if [[ $ENABLE_RAPL == "true" ]]; then
+	OLD_PWD="$PWD"
+	cd $RAPL_HOME/rapl_plot
+
+	if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
+		if ! make; then
+			cd "$OLD_PWD"
+			m_exit "Failed to compile RAPL monitor"
+		fi
+		
+		if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
+			cd "$OLD_PWD"
+			m_exit "RAPL monitor is missing (make did not successfully build the tool)"
+		fi
+	fi
+
+	cd "$OLD_PWD"
+fi
+
+# Copy dool tool
+if [[ $ENABLE_STAT == "true" ]]; then
+	if ! cp -r "$DOOL_HOME" "$REPORT_TOOLS_DIR/"; then
+    		m_exit "Could not copy dool files to $REPORT_DIR/"
+	fi
+fi
+
+# Check ocount command for Oprofile
+if [[ $ENABLE_OPROFILE == "true" ]]; then
+	require_binary OPROFILE_BIN $OPROFILE_BIN
+fi
+
+# Copy ILO scripts
+if [[ $ENABLE_ILO == "true" ]]; then
+	if ! cp -r "$ILO_SCRIPTS" "$REPORT_TOOLS_DIR/"; then
+    		m_exit "Could not copy ILO scripts files to $REPORT_DIR/"
+	fi
+fi
+
+# Copy BDWatchdog
+if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+	# Define variables for BDWatchdog binary daemons
+        if [[ $BDWATCHDOG_ATOP == "true" ]]; then
+            export ATOP_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop
+	    if [[ ! -f "$ATOP_BIN" || ! -x "$ATOP_BIN" ]]; then
+                m_exit "atop is enabled but the binary $ATOP_BIN is not found or is not executable"
+            fi
+        fi
+
+        if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
+	    require_binary TURBOSTAT_BIN $TURBOSTAT_BIN
+        fi
+
+        if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
+            export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
+	    if [[ ! -f "$NETHOGS_BIN" || ! -x "$NETHOGS_BIN" ]]; then
+                m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
+            fi
+        fi
+        
+	if ! cp -r "$BDWATCHDOG_SRC_DIR" "$REPORT_TOOLS_DIR/"; then
+    		m_exit "Could not copy BDWatchdog files to $REPORT_DIR/"
+	fi
+fi
+
 # Copy binary files into REPORT_DIR
 if ! cp -r "$BDEV_BIN_DIR"/* "$REPORT_BIN_DIR/"; then
     m_exit "Could not copy binary files to $REPORT_DIR/etc"
@@ -355,41 +415,33 @@ else
 	export GET_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_ip_from_hostname.sh"
 fi
 
-# Check ocount command for Oprofile
-if [[ $ENABLE_OPROFILE == "true" ]]; then
-	require_binary OPROFILE_BIN $OPROFILE_BIN
-fi
+#STAT
+export STAT_HOME="$REPORT_BIN_DIR/stat"
+export STAT_PLOT_HOME="$PLOT_HOME/stat"
+export DOOL_HOME="$REPORT_TOOLS_DIR/dool-$DOOL_VERSION"
+export DOOL_COMMAND_NAME="dool"
+export DOOL_COMMAND="$DOOL_HOME/$DOOL_COMMAND_NAME"
+export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
 
-# Define variables for BDWatchdog binary daemons
-if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
-        if [[ $BDWATCHDOG_ATOP == "true" ]]; then
-            export ATOP_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop
-	    if [[ ! -f "$ATOP_BIN" || ! -x "$ATOP_BIN" ]]; then
-                m_exit "atop is enabled but the binary $ATOP_BIN is not found or is not executable"
-            fi
-        fi
-        if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
-	    require_binary TURBOSTAT_BIN $TURBOSTAT_BIN
-        fi
-        if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
-            export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
-	    if [[ ! -f "$NETHOGS_BIN" || ! -x "$NETHOGS_BIN" ]]; then
-                m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
-            fi
-        fi
-fi
+#RAPL
+export RAPL_HOME="$REPORT_TOOLS_DIR/rapl"
+export RAPL_PLOT_HOME="$PLOT_HOME/rapl"
 
-# YARN scheduler class
-if [[ ${SCHEDULER_CLASS} == "capacity" ]]; then
-	export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
-else
-	if [[ ${SCHEDULER_CLASS} == "fair" ]]; then
-	    export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler
-	else
-	    if [[ ${SCHEDULER_CLASS} == "fifo" ]]; then
-		export SCHEDULER_CLASS=org.apache.hadoop.yarn.server.resourcemanager.scheduler.fifo.FifoScheduler
-	    else
-		m_exit "Invalid YARN scheduler (SCHEDULER_CLASS=$SCHEDULER_CLASS). Revise YARN settings (yarn-default.sh/yarn-conf.sh)"
-	    fi
-	fi
-fi
+#OPROFILE
+export OPROFILE_HOME=$REPORT_BIN_DIR/oprofile
+export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
+
+#ILO
+export ILO_HOME=$REPORT_BIN_DIR/ilo
+export ILO_SCRIPTS="$REPORT_TOOLS_DIR/ilo-$ILO_SCRIPTS_VERSION"
+export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
+export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
+
+#BDWatchdog
+export BDWATCHDOG_HOME="$REPORT_BIN_DIR/bdwatchdog"
+export BDWATCHDOG_SRC_DIR="$REPORT_TOOLS_DIR/BDWatchdog"
+export BDWATCHDOG_DAEMONS_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons"
+export BDWATCHDOG_DAEMONS_BIN_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin"
+export BDWATCHDOG_TIMESTAMPING_SERVICE="$BDWATCHDOG_SRC_DIR/TimestampsSnitch/src"
+export ATOP_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop"
+export NETHOGS_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs"

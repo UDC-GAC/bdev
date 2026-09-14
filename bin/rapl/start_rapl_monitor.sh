@@ -1,17 +1,6 @@
 #!/bin/bash
 
 mkdir -p $RAPLLOGDIR
-
-OLD_PWD=$PWD
-
-cd $RAPL_HOME/rapl_plot
-
-if [[ ! -f ${RAPL_HOME}/rapl_plot/rapl_plot ]]; then
-	make >> ${RAPLLOGDIR}/log 2>&1
-fi
-
-cd $OLD_PWD
-
 NODE_NUMBER=0
 
 # Deduplicate nodes in case the master is also a worker
@@ -30,5 +19,3 @@ for NODE in $UNIQUE_NODES; do
 	
 	NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
 done
-
-
