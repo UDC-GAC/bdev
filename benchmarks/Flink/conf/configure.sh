@@ -119,9 +119,8 @@ if [[ "$is_hive" == "true" ]]; then
 		m_exit "Could not find Flink table planner JAR in $FLINK_TARBALL_OPT"
 	fi
 
-	# Set Hive classpath excluding problematic jars and copy them to REPORT_TOOLS_DIR
+	# Copỳ Hive lib to REPORT_TOOLS_DIR excluding problematic jars and set Hadoop classpath
 	mkdir -p "$REPORT_TOOLS_DIR/hive"
-	HIVE_FILTERED_CLASSPATH=""
 	for f in "$HIVE_LIB"/*.jar; do
 	    [[ -f "$f" ]] || continue
             filename="${f##*/}"
@@ -139,7 +138,7 @@ if [[ "$is_hive" == "true" ]]; then
     
 	num_hive_jars=$(grep -o ":" <<< "$REPORT_TOOLS_DIR/hive" | wc -l)
 	if [[ "$num_hive_jars" -eq 0 ]]; then
-		m_exit "HIVE_FILTERED_CLASSPATH is empty. Check path: $HIVE_LIB"
+		m_exit "No Hive JARs were copied. Check path: $HIVE_LIB"
 	fi
 	
 	m_echo "Injected $((num_hive_jars + 1)) Hive JARs into HADOOP_CLASSPATH"
