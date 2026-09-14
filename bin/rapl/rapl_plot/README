@@ -1,5 +1,0 @@
-This tool can be used to gather Energy measurements on a Intel
-CPUs from Sandy Bridge onwards using RAPL interface.
-
-Be sure to configure PAPI with --with-components="rapl" and have
-read permissions on the /dev/cpu/*/msr files.

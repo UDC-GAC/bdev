@@ -16,4 +16,4 @@ benchmarks/Flink/src/flinkbench/project/project/target
 benchmarks/Flink/src/flinkbench/target
 tools/mahout*
 tools/hive*
-tools/papi*
+bin/rapl/rapl_monitor/papi*

@@ -337,9 +337,9 @@ else
 fi
 
 # Copy dool tool
-if [[ $ENABLE_STAT == "true" ]]; then    
-	if ! rsync -a "$DOOL_HOME/dool" "$DOOL_HOME/plugins/" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_DIR/"
+if [[ $ENABLE_STAT == "true" ]]; then
+	if ! mkdir -p "$REPORT_TOOLS_DIR/dool" || ! cp -r "$DOOL_HOME/dool" "$DOOL_HOME/plugins" "$REPORT_TOOLS_DIR/dool/"; then
+    		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_TOOLS_DIR"
 	fi
 fi
 
@@ -358,7 +358,7 @@ fi
 # Copy ILO scripts
 if [[ $ENABLE_ILO == "true" ]]; then
 	if ! cp -r "$ILO_SCRIPTS" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy ILO scripts from $ILO_SCRIPTS to $REPORT_DIR/"
+    		m_exit "Could not copy ILO scripts from $ILO_SCRIPTS to $REPORT_TOOLS_DIR"
 	fi
 fi
 
@@ -384,13 +384,13 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         fi
         
 	if ! cp -r "$BDWATCHDOG_SRC_DIR" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy BDWatchdog from $BDWATCHDOG_SRC_DIR to $REPORT_DIR/"
+    		m_exit "Could not copy BDWatchdog from $BDWATCHDOG_SRC_DIR to $REPORT_TOOLS_DIR"
 	fi
 fi
 
 # Copy binary files into REPORT_DIR
 if ! cp -r "$BDEV_BIN_DIR"/* "$REPORT_BIN_DIR/"; then
-    m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_DIR/etc"
+    m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_BIN_DIR"
 fi
 
 # Define IP script
@@ -406,12 +406,12 @@ fi
 #STAT
 export STAT_HOME="$REPORT_BIN_DIR/stat"
 export STAT_PLOT_HOME="$PLOT_HOME/stat"
-export DOOL_HOME="$REPORT_TOOLS_DIR/dool-$DOOL_VERSION"
+export DOOL_HOME="$REPORT_TOOLS_DIR/dool"
 export DOOL_COMMAND="$DOOL_HOME/$DOOL_COMMAND_NAME"
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
 
 #RAPL
-export RAPL_HOME="$REPORT_TOOLS_DIR/rapl"
+export RAPL_HOME="$REPORT_BIN_DIR/rapl"
 export RAPL_PLOT_HOME="$PLOT_HOME/rapl"
 
 #OPROFILE
@@ -434,4 +434,4 @@ export ATOP_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop"
 export NETHOGS_BIN="$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs"
 
 # Print environment for debugging
-env > $REPORT_DIR/env"
+env > "$REPORT_DIR/env"
