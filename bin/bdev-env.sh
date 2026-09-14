@@ -358,7 +358,7 @@ fi
 # Copy dool tool
 if [[ $ENABLE_STAT == "true" ]]; then
 	if ! cp -r "$DOOL_HOME" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy dool files to $REPORT_DIR/"
+    		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_DIR/"
 	fi
 fi
 
@@ -370,7 +370,7 @@ fi
 # Copy ILO scripts
 if [[ $ENABLE_ILO == "true" ]]; then
 	if ! cp -r "$ILO_SCRIPTS" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy ILO scripts files to $REPORT_DIR/"
+    		m_exit "Could not copy ILO scripts from $ILO_SCRIPTS to $REPORT_DIR/"
 	fi
 fi
 
@@ -396,13 +396,13 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         fi
         
 	if ! cp -r "$BDWATCHDOG_SRC_DIR" "$REPORT_TOOLS_DIR/"; then
-    		m_exit "Could not copy BDWatchdog files to $REPORT_DIR/"
+    		m_exit "Could not copy BDWatchdog from $BDWATCHDOG_SRC_DIR to $REPORT_DIR/"
 	fi
 fi
 
 # Copy binary files into REPORT_DIR
 if ! cp -r "$BDEV_BIN_DIR"/* "$REPORT_BIN_DIR/"; then
-    m_exit "Could not copy binary files to $REPORT_DIR/etc"
+    m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_DIR/etc"
 fi
 
 # Define IP script
