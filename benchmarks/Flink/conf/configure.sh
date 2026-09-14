@@ -120,7 +120,10 @@ if [[ "$is_hive" == "true" ]]; then
 	fi
 
 	# Copỳ Hive lib to REPORT_TOOLS_DIR excluding problematic jars and set Hadoop classpath
-	mkdir -p "$REPORT_TOOLS_DIR/hive"
+	local hive_target_dir="$REPORT_TOOLS_DIR/hive"
+	local num_hive_jars=0
+	mkdir -p "$hive_target_dir"
+
 	for f in "$HIVE_LIB"/*.jar; do
 	    [[ -f "$f" ]] || continue
             filename="${f##*/}"
@@ -128,15 +131,17 @@ if [[ "$is_hive" == "true" ]]; then
             case "$filename" in
 		log4j-*|slf4j-*|commons-cli-*)
             		;;
+            	protobuf-*|netty-*|zookeeper-*|curator-*|asm-*)
+            		;;
 		hive-exec-*.jar|calcite-*|scala-*.jar|spark-*.jar|jdo-api-*)
 			;;
 		*)
-			cp -f "$f" "$REPORT_TOOLS_DIR/hive"
+			cp -f "$f" "$hive_target_dir/"
+			((num_hive_jars++))
 			;;
             esac
         done
-    
-	num_hive_jars=$(grep -o ":" <<< "$REPORT_TOOLS_DIR/hive" | wc -l)
+
 	if [[ "$num_hive_jars" -eq 0 ]]; then
 		m_exit "No Hive JARs were copied. Check path: $HIVE_LIB"
 	fi
