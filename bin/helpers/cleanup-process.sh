@@ -16,7 +16,7 @@ for NODE in $UNIQUE_NODES; do
 		export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
 		export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
 		export RAPL_TOOL_BIN='${RAPL_TOOL_BIN:-}'; \
-		'$REPORT_BIN_DIR/helpers/kill-process.sh'" 2>&1)
+		'$BDEV_BIN_DIR/helpers/kill-process.sh'" 2>&1)
     	
     	NODE_STATUS=$?
     	if [[ $NODE_STATUS -ne 0 ]]; then

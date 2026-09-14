@@ -31,7 +31,7 @@ for NODE in $UNIQUE_NODES; do
          	export FORCE_DELETE_HDFS='${FORCE_DELETE_HDFS:-}'; \
          	export DISK_SPACE_CHECK='${DISK_SPACE_CHECK:-}'; \
          	export DISK_SPACE_THRESHOLD='${DISK_SPACE_THRESHOLD:-}'; \
-         	'$REPORT_BIN_DIR/helpers/clean-data.sh'" 2>&1)
+         	'$BDEV_BIN_DIR/helpers/clean-data.sh'" 2>&1)
 	
 	NODE_STATUS=$?
 	if [[ $NODE_STATUS -ne 0 ]]; then

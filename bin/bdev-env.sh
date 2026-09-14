@@ -72,7 +72,7 @@ export REPORT_DIR="${BDEV_OUTPUT_DIR}/${APP_NAME}_report_${BDEV_START_DATE}"
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
 export REPORT_GEN_GRAPHS_FILE=$REPORT_DIR/gen_all_plots.sh
-export REPORT_BIN_DIR=$REPORT_DIR/bin
+REPORT_BIN_DIR=$REPORT_DIR/bin
 export REPORT_TOOLS_DIR=$REPORT_DIR/tools
 export PLOT_HOME=$REPORT_BIN_DIR/plot
 export PLOT_DIR=$REPORT_DIR/plots
@@ -414,39 +414,42 @@ if ! cp -r "$BDEV_BIN_DIR"/*.sh "$BDEV_BIN_DIR"/plot "$BDEV_HELPERS_DIR"/ "$REPO
     m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_BIN_DIR"
 fi
 
+# Redefine BDEv bin dir to the report directory
+export BDEV_BIN_DIR=$REPORT_BIN_DIR
+
 # Define IP script
-export GET_IP_FROM_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_ip_from_hostname.sh"
+export GET_IP_FROM_HOSTNAME_SCRIPT="$BDEV_BIN_DIR/helpers/get_ip_from_hostname.sh"
 
 # Define hostname script depending on the configured mode
 if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-	export GET_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_hostname.sh"
+	export GET_HOSTNAME_SCRIPT="$BDEV_BIN_DIR/helpers/get_hostname.sh"
 else
-	export GET_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_ip_from_hostname.sh"
+	export GET_HOSTNAME_SCRIPT="$BDEV_BIN_DIR/helpers/get_ip_from_hostname.sh"
 fi
 
 #STAT
-export STAT_HOME="$REPORT_BIN_DIR/stat"
+export STAT_HOME="$BDEV_BIN_DIR/stat"
 export STAT_PLOT_HOME="$PLOT_HOME/stat"
 export DOOL_HOME="$REPORT_TOOLS_DIR/dool"
 export DOOL_COMMAND="$DOOL_HOME/$DOOL_COMMAND_NAME"
 export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
 
 #RAPL
-export RAPL_HOME="$REPORT_BIN_DIR/rapl"
+export RAPL_HOME="$BDEV_BIN_DIR/rapl"
 export RAPL_PLOT_HOME="$PLOT_HOME/rapl"
 
 #OPROFILE
-export OPROFILE_HOME=$REPORT_BIN_DIR/oprofile
+export OPROFILE_HOME=$BDEV_BIN_DIR/oprofile
 export OPROFILE_PLOT_HOME=$PLOT_HOME/oprofile
 
 #ILO
-export ILO_HOME=$REPORT_BIN_DIR/ilo
+export ILO_HOME=$BDEV_BIN_DIR/ilo
 export ILO_SCRIPTS="$REPORT_TOOLS_DIR/ilo-$ILO_SCRIPTS_VERSION"
 export ILO_POWER_SCRIPT_TEMPLATE=$ILO_SCRIPTS/Get_Power_Readings.xml
 export ILO_CONFIG_SCRIPT=$ILO_SCRIPTS/locfg.pl
 
 #BDWatchdog
-export BDWATCHDOG_HOME="$REPORT_BIN_DIR/bdwatchdog"
+export BDWATCHDOG_HOME="$BDEV_BIN_DIR/bdwatchdog"
 export BDWATCHDOG_SRC_DIR="$REPORT_TOOLS_DIR/BDWatchdog"
 export BDWATCHDOG_DAEMONS_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/src/daemons"
 export BDWATCHDOG_DAEMONS_BIN_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin"
