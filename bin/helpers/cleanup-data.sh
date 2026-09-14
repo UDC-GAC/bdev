@@ -35,7 +35,7 @@ for NODE in $UNIQUE_NODES; do
 	
 	NODE_STATUS=$?
 	if [[ $NODE_STATUS -ne 0 ]]; then
-        	m_error "Failed cleanup data on $NODE (exit code $NODE_STATUS)"
+        	m_error "Data cleanup failed on $NODE (exit code $NODE_STATUS)"
         	[[ -n "$NODE_OUTPUT" ]] && echo "$NODE_OUTPUT" >&2
         	cleanup_failed_nodes+=("$NODE")
     	elif [[ -n "$NODE_OUTPUT" ]]; then
