@@ -3,7 +3,6 @@
 # Deduplicate nodes in case the master is also a worker
 UNIQUE_NODES=$(printf '%s\n' $MASTERNODE $WORKERNODES | sort -u)
 
-for NODE in $UNIQUE_NODES
-do
-	$SSH_CMD $NODE "killall -u $USER -q -9 rapl_plot"
+for NODE in $UNIQUE_NODES; do
+	$SSH_CMD $NODE "killall -u $USER -q -9 $RAPL_COMMAND_NAME"
 done

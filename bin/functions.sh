@@ -1049,16 +1049,16 @@ function begin_report() {
 	fi
 
 	if [[ $ENABLE_ILO == "true" ]]; then
-        	if [[ ! -d "$ILO_DIR" ]]; then
-        	        mkdir -p $ILO_DIR
+        	if [[ ! -d "$ILO_PLOT_DIR" ]]; then
+        	        mkdir -p $ILO_PLOT_DIR
 	        fi
 
         	file=$(basename ${ILO_POWER_SCRIPT_TEMPLATE})
 	        ilo_script_content="$(cat ${ILO_POWER_SCRIPT_TEMPLATE})"
         	ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/adminname/$ILO_USERNAME/g")
 	        ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/password/$ILO_PASSWD/g")
-        	echo "${ilo_script_content}" > ${ILO_DIR}/${file}
-	        export ILO_POWER_SCRIPT=${ILO_DIR}/${file}
+        	echo "${ilo_script_content}" > ${ILO_PLOT_DIR}/${file}
+	        export ILO_POWER_SCRIPT=${ILO_PLOT_DIR}/${file}
 	fi
 }
 

@@ -14,6 +14,7 @@ for NODE in $UNIQUE_NODES; do
 	nohup $SSH_CMD $NODE "export RAPLLOGFILE=${RAPLNODEDIR}/rapl; \
 		export RAPLTMPDIR=${RAPLTMPDIR}; \
 		export RAPL_HOME=${RAPL_HOME}; \
+		export RAPL_COMMAND_NAME=${RAPL_COMMAND_NAME}; \
 		export RAPL_SECONDS_INTERVAL=${RAPL_SECONDS_INTERVAL}; \
 		bash $RAPL_HOME/rapl_monitor.sh" > ${RAPLNODEDIR}/rapl.out 2>&1 &
 	

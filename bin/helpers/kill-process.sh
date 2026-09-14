@@ -30,5 +30,5 @@ if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 fi
 
 if [[ "$ENABLE_RAPL" == "true" ]]; then
-	killall -u "$USER" -q -9 rapl_plot 2>/dev/null
+	killall -u "$USER" -q -9 "$RAPL_TOOL_BIN" 2>/dev/null
 fi

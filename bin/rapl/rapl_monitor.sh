@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir -p $RAPLTMPDIR
-cp $RAPL_HOME/rapl_plot/rapl_plot $RAPLTMPDIR/rapl_plot
-sudo setcap cap_sys_rawio=ep $RAPLTMPDIR/rapl_plot
+cp $RAPL_HOME/rapl_monitor/$RAPL_COMMAND_NAME $RAPLTMPDIR/$RAPL_COMMAND_NAME
+sudo setcap cap_sys_rawio=ep $RAPLTMPDIR/$RAPL_COMMAND_NAME
 
-$RAPLTMPDIR/rapl_plot $RAPLLOGFILE $RAPL_SECONDS_INTERVAL
+$RAPLTMPDIR/$RAPL_COMMAND_NAME $RAPLLOGFILE $RAPL_SECONDS_INTERVAL

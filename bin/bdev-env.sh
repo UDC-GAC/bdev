@@ -14,7 +14,7 @@ export BDEV_DEFAULT_CONF_DIR=$BDEV_HOME/etc
 export BDEV_BIN_DIR=$BDEV_HOME/bin
 export BDEV_LIB_DIR=$BDEV_HOME/lib
 export BDEV_TOOLS_DIR=$BDEV_HOME/tools
-export BDEV_CLEANUP_DIR=$BDEV_HOME/bin/cleanup
+export BDEV_HELPERS_DIR=$BDEV_BIN_DIR/helpers
 export BENCHMARKS_DIR=$BDEV_HOME/benchmarks
 export TEMPLATES_DIR=$BDEV_HOME/templates
 export FRAMEWORKS_SRC_DIR=$BDEV_HOME/src
@@ -22,9 +22,9 @@ export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
 export COMMON_SRC_DIR=$FRAMEWORKS_SRC_DIR/common
 export COMMON_HADOOP_DIR=$FRAMEWORKS_SRC_DIR/common/hadoop
 export STORAGE_BACKEND_LIB=$COMMON_SRC_DIR/storage/storage_backend.sh
-export CLEANUP_PROCESS_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-process.sh
-export CLEANUP_DATA_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-data.sh
-export CLEANUP_YARN_SCRIPT=$BDEV_CLEANUP_DIR/cleanup-yarn.sh
+export CLEANUP_PROCESS_SCRIPT=$BDEV_HELPERS_DIR/cleanup-process.sh
+export CLEANUP_DATA_SCRIPT=$BDEV_HELPERS_DIR/cleanup-data.sh
+export CLEANUP_YARN_SCRIPT=$BDEV_HELPERS_DIR/cleanup-yarn.sh
 export CLEANUP_ON_EXIT="false"
 export USER=${USER:-$(id -nu)}
 
@@ -34,6 +34,7 @@ export ILO_SCRIPTS_VERSION="6.00.0"
 export DOOL_HOME="$BDEV_TOOLS_DIR/dool-$DOOL_VERSION"
 export DOOL_COMMAND_NAME="dool"
 export RAPL_HOME="$BDEV_BIN_DIR/rapl"
+export RAPL_COMMAND_NAME="rapl_monitor"
 export ILO_SCRIPTS="$BDEV_TOOLS_DIR/ilo-$ILO_SCRIPTS_VERSION"
 export BDWATCHDOG_SRC_DIR="$BDEV_TOOLS_DIR/BDWatchdog"
 export BDWATCHDOG_DAEMONS_BIN_DIR="$BDWATCHDOG_SRC_DIR/MetricsFeeder/bin"
@@ -77,7 +78,7 @@ export PLOT_HOME=$REPORT_BIN_DIR/plot
 export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
-export ILO_DIR=$PLOT_DIR/ilo
+export ILO_PLOT_DIR=$PLOT_DIR/ilo
 
 if [[ ! -d "$REPORT_DIR" ]]; then
 	if ! mkdir -p "$REPORT_DIR" ; then
@@ -341,24 +342,40 @@ if [[ $ENABLE_STAT == "true" ]]; then
 	if ! mkdir -p "$REPORT_TOOLS_DIR/dool" || ! cp -r "$DOOL_HOME/dool" "$DOOL_HOME/plugins" "$REPORT_TOOLS_DIR/dool/"; then
     		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_TOOLS_DIR"
 	fi
+
+	if ! cp -r "$BDEV_BIN_DIR"/stat "$REPORT_BIN_DIR/"; then
+		m_exit "Could not copy dool scripts from "$BDEV_BIN_DIR"/stat to $REPORT_BIN_DIR"
+	fi
 fi
 
 # Check RAPL binary
 if [[ $ENABLE_RAPL == "true" ]]; then
-	if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" || ! -x "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
+	if [[ ! -f "$RAPL_HOME/rapl_monitor/$RAPL_COMMAND_NAME" || ! -x "$RAPL_HOME/rapl_monitor/$RAPL_COMMAND_NAME" ]]; then
 		m_exit "RAPL binary is missing or is not executable"
+	fi
+
+	if ! mkdir -p "$REPORT_BIN_DIR/rapl/rapl_monitor" || ! cp "$BDEV_BIN_DIR"/rapl/*.sh "$REPORT_BIN_DIR/rapl/" || ! cp "$BDEV_BIN_DIR"/rapl/rapl_monitor/$RAPL_COMMAND_NAME "$REPORT_BIN_DIR/rapl/rapl_monitor/$RAPL_COMMAND_NAME"; then
+		m_exit "Could not copy RAPL scripts from "$BDEV_BIN_DIR"/rapl to $REPORT_BIN_DIR/rapl"
 	fi
 fi
 
 # Check ocount command for Oprofile
 if [[ $ENABLE_OPROFILE == "true" ]]; then
 	require_binary OPROFILE_BIN $OPROFILE_BIN
+
+	if ! cp -r "$BDEV_BIN_DIR"/oprofile "$REPORT_BIN_DIR/"; then
+		m_exit "Could not copy Oprofile scripts from "$BDEV_BIN_DIR"/oprofile to $REPORT_BIN_DIR"
+	fi
 fi
 
 # Copy ILO scripts
 if [[ $ENABLE_ILO == "true" ]]; then
 	if ! cp -r "$ILO_SCRIPTS" "$REPORT_TOOLS_DIR/"; then
     		m_exit "Could not copy ILO scripts from $ILO_SCRIPTS to $REPORT_TOOLS_DIR"
+	fi
+
+	if ! cp -r "$BDEV_BIN_DIR"/ilo "$REPORT_BIN_DIR/"; then
+		m_exit "Could not copy ILO scripts from "$BDEV_BIN_DIR"/ilo to $REPORT_BIN_DIR"
 	fi
 fi
 
@@ -386,10 +403,14 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
 	if ! cp -r "$BDWATCHDOG_SRC_DIR" "$REPORT_TOOLS_DIR/"; then
     		m_exit "Could not copy BDWatchdog from $BDWATCHDOG_SRC_DIR to $REPORT_TOOLS_DIR"
 	fi
+	
+	if ! cp -r "$BDEV_BIN_DIR"/bdwatchdog "$REPORT_BIN_DIR/"; then
+		m_exit "Could not copy BDWatchdog scripts from "$BDEV_BIN_DIR"/bdwatchdog to $REPORT_BIN_DIR"
+	fi
 fi
 
-# Copy binary files into REPORT_DIR
-if ! cp -r "$BDEV_BIN_DIR"/* "$REPORT_BIN_DIR/"; then
+# Copy main binary files into REPORT_DIR
+if ! cp -r "$BDEV_BIN_DIR"/*.sh "$BDEV_BIN_DIR"/plot "$BDEV_HELPERS_DIR"/ "$REPORT_BIN_DIR/"; then
     m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_BIN_DIR"
 fi
 
