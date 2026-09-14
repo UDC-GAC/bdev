@@ -335,30 +335,17 @@ else
 	fi
 fi
 
-# Compile RAPL plot (if needed)
-if [[ $ENABLE_RAPL == "true" ]]; then
-	OLD_PWD="$PWD"
-	cd $RAPL_HOME/rapl_plot
-
-	if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
-		if ! make; then
-			cd "$OLD_PWD"
-			m_exit "Failed to compile RAPL monitor"
-		fi
-		
-		if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
-			cd "$OLD_PWD"
-			m_exit "RAPL monitor is missing (make did not successfully build the tool)"
-		fi
-	fi
-
-	cd "$OLD_PWD"
-fi
-
 # Copy dool tool
 if [[ $ENABLE_STAT == "true" ]]; then
 	if ! cp -r "$DOOL_HOME" "$REPORT_TOOLS_DIR/"; then
     		m_exit "Could not copy dool files from $DOOL_HOME to $REPORT_DIR/"
+	fi
+fi
+
+# Check RAPL binary
+if [[ $ENABLE_RAPL == "true" ]]; then
+	if [[ ! -f "$RAPL_HOME/rapl_plot/rapl_plot" || ! -x "$RAPL_HOME/rapl_plot/rapl_plot" ]]; then
+		m_exit "RAPL binary is missing or is not executable"
 	fi
 fi
 
@@ -380,7 +367,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         if [[ $BDWATCHDOG_ATOP == "true" ]]; then
             export ATOP_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/atop/atop
 	    if [[ ! -f "$ATOP_BIN" || ! -x "$ATOP_BIN" ]]; then
-                m_exit "atop is enabled but the binary $ATOP_BIN is not found or is not executable"
+                m_exit "atop is enabled but the binary $ATOP_BIN is missing or is not executable"
             fi
         fi
 
@@ -391,7 +378,7 @@ if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
         if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
             export NETHOGS_BIN=$BDWATCHDOG_DAEMONS_BIN_DIR/nethogs/nethogs
 	    if [[ ! -f "$NETHOGS_BIN" || ! -x "$NETHOGS_BIN" ]]; then
-                m_exit "nethogs is enabled but the binary $NETHOGS_BIN is not found or is not executable"
+                m_exit "nethogs is enabled but the binary $NETHOGS_BIN is missing or is not executable"
             fi
         fi
         
