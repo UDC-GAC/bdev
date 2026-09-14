@@ -90,8 +90,9 @@ fi
 export REPORT_DIR="${BDEV_OUTPUT_DIR}/${APP_NAME}_report_${BDEV_START_DATE}"
 export REPORT_FILE=$REPORT_DIR/summary
 export REPORT_LOG=$REPORT_DIR/log
-export REPORT_GEN_GRAPHS_FILE=${REPORT_DIR}/gen_all_plots.sh
-export HELPER_SCRIPTS_DIR=${REPORT_DIR}/helper_scripts
+export REPORT_GEN_GRAPHS_FILE=$REPORT_DIR/gen_all_plots.sh
+export REPORT_BIN_DIR=$REPORT_DIR/bin
+export REPORT_TOOLS_DIR=$REPORT_DIR/tools
 export PLOT_DIR=$REPORT_DIR/plots
 export RAPL_PLOT_DIR=$PLOT_DIR/rapl
 export OPROFILE_PLOT_DIR=$PLOT_DIR/oprofile
@@ -204,11 +205,20 @@ fi
 export SPARK_LOCAL_DIRS=$(add_prefix_suffix "$LOCAL_DIRS" "" "/spark/local")
 export FLINK_LOCAL_DIRS=$(add_prefix_suffix "$LOCAL_DIRS" "" "/flink/local")
 
-# Copy configuration to REPORT_DIR
-if ! mkdir -p "$REPORT_DIR/etc" "$HELPER_SCRIPTS_DIR"; then
-	m_exit "Could not create the required report subdirectories"
+# Create the required subdirectories in REPORT_DIR
+if ! mkdir -p "$REPORT_DIR/etc" ; then
+	m_exit "Could not create the required configuration directory at $REPORT_DIR/etc"
 fi
 
+if ! mkdir -p "$REPORT_BIN_DIR"; then
+	m_exit "Could not create the required bin directory at $REPORT_BIN_DIR"
+fi
+
+if ! mkdir -p "$REPORT_TOOLS_DIR"; then
+	m_exit "Could not create the required tools directory at $REPORT_TOOLS_DIR"
+fi
+
+# Copy configuration to REPORT_DIR
 if ! cp -r "$BDEV_CONF_DIR"/* "$REPORT_DIR/etc/"; then
     m_exit "Could not copy configuration files to $REPORT_DIR/etc"
 fi
@@ -331,18 +341,18 @@ else
 fi
 
 # Copy helper scripts
-if ! cp "$BDEV_BIN_DIR/helpers"/* "$HELPER_SCRIPTS_DIR/"; then
-    m_exit "Could not copy helper scripts to $HELPER_SCRIPTS_DIR"
+if ! cp "$BDEV_BIN_DIR/helpers"/* "$REPORT_BIN_DIR/"; then
+    m_exit "Could not copy bin directoy to $REPORT_BIN_DIR"
 fi
 
 # Define IP script
-export GET_IP_FROM_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh"
+export GET_IP_FROM_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_ip_from_hostname.sh"
 
 # Define hostname script depending on the configured mode
 if [[ ${ENABLE_HOSTNAMES} == "true" ]]; then
-	export GET_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_hostname.sh"
+	export GET_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_hostname.sh"
 else
-	export GET_HOSTNAME_SCRIPT="$HELPER_SCRIPTS_DIR/get_ip_from_hostname.sh"
+	export GET_HOSTNAME_SCRIPT="$REPORT_BIN_DIR/helpers/get_ip_from_hostname.sh"
 fi
 
 # Check ocount command for Oprofile

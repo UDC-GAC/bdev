@@ -507,7 +507,7 @@ function probe_and_network_discovery() {
              export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
              export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
              export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
-             '$HELPER_SCRIPTS_DIR/probe_node.sh' '$eth_iface' '$ib_iface'" 2>&1)
+             '$REPORT_BIN_DIR/helpers/probe_node.sh' '$eth_iface' '$ib_iface'" 2>&1)
 
         # Abort on critical failure when SSH fails        
         exit_code=$?
