@@ -21,7 +21,11 @@ for NODE in $UNIQUE_NODES; do
     	NODE_STATUS=$?
     	if [[ $NODE_STATUS -ne 0 ]]; then
         	m_warn "Process cleanup failed on $NODE (exit code $NODE_STATUS)"
-        	[[ -n "$NODE_OUTPUT" ]] && echo "$NODE_OUTPUT" >&2
+        	if [[ -n "$NODE_OUTPUT" ]]; then
+        		echo "$NODE_OUTPUT" >&2
+        	else
+        		echo "  (No stderr/stdout captured from $NODE)" >&2
+        	fi
         	cleanup_pids_failed_nodes+=("$NODE")
     	elif [[ -n "$NODE_OUTPUT" ]]; then
         	echo "$NODE_OUTPUT"
@@ -29,5 +33,5 @@ for NODE in $UNIQUE_NODES; do
 done
 
 if [[ ${#cleanup_pids_failed_nodes[@]} -gt 0 ]]; then
-    m_warn "Process cleanup finished with warnings on nodes: ${cleanup_pids_failed_nodes[*]}"
+	m_warn "Process cleanup finished with warnings on nodes: ${cleanup_pids_failed_nodes[*]}"
 fi

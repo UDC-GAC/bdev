@@ -25,10 +25,12 @@ if [[ -n "${DOOL_COMMAND_NAME:-}" ]]; then
     fi
 fi
 
-if [[ "$ENABLE_OPROFILE" == "true" ]]; then
-	killall -u "$USER" -q -9 "$OPROFILE_BIN" 2>/dev/null
+if [[ "$ENABLE_OPROFILE" == "true" && -n "${OPROFILE_BIN:-}" ]]; then
+	killall -u "$USER" -q -9 "${OPROFILE_BIN##*/}" 2>/dev/null || true
 fi
 
-if [[ "$ENABLE_RAPL" == "true" ]]; then
-	killall -u "$USER" -q -9 "$RAPL_TOOL_BIN" 2>/dev/null
+if [[ "$ENABLE_RAPL" == "true" && -n "${RAPL_TOOL_BIN:-}" ]]; then
+	killall -u "$USER" -q -9 "${RAPL_TOOL_BIN##*/}" 2>/dev/null || true
 fi
+
+exit 0

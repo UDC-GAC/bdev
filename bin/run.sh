@@ -25,7 +25,7 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 			export FORCE_DELETE_HDFS=true
 		fi
 
-		. $CLEANUP_DATA_SCRIPT --check-disk
+		. $CLEANUP_DATA_SCRIPT -c -m
 
 		# For each framework
 		for FRAMEWORK in $FRAMEWORKS; do

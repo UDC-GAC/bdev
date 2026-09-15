@@ -2,8 +2,8 @@
 
 # Copy configuration files for YARN schedulers
 for F in "$BDEV_CONF_DIR"/yarn/*.xml; do
-    [[ -f "$F" ]] || continue
-    cp "$F" "$HADOOP_CONF_DIR" || exit 1
+	[[ -f "$F" ]] || continue
+	cp "$F" "$HADOOP_CONF_DIR" || exit 1
 done
 
 # Avoid warnings

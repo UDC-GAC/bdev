@@ -22,9 +22,8 @@ check_disk_space() {
         df_info=$(df -Pk "$target" 2>/dev/null | awk 'NR==2 {print $2, $4, $6}')
         [[ -z "$df_info" ]] && continue
 
-        local total_kb=$(echo "$df_info" | awk '{print $1}')
-        local avail_kb=$(echo "$df_info" | awk '{print $2}')
-        local mount_point=$(echo "$df_info" | awk '{print $3}')
+	local total_kb avail_kb mount_point
+        read -r total_kb avail_kb mount_point <<< "$df_info"
 
         # Deduplicate: skip if this same assembly point has already been evaluated
         if [[ " ${CHECKED_MOUNTS[*]} " =~ " ${mount_point} " ]]; then
@@ -47,11 +46,7 @@ check_disk_space() {
 
 # Cleaning of temporary files
 if [[ -n "$USER" ]]; then
-	rm -rf /tmp/hadoop-"$USER" /tmp/spark-"$USER" /tmp/flink-"$USER" /tmp/jna-"$USER" 2>/dev/null
-
-	if [[ -d "/tmp/hsperfdata_${USER}" ]]; then
-		rm -rf "/tmp/hsperfdata_${USER}"
-	fi
+	rm -rf /tmp/hadoop-"$USER" /tmp/spark-"$USER" /tmp/flink-"$USER" /tmp/jna-"$USER" "/tmp/hsperfdata_${USER}" 2>/dev/null
 fi
 
 # Normalize separators (replace commas with spaces) and unify paths
@@ -70,27 +65,29 @@ for dir in $RAW_DIRS; do
 done
 
 for dir in "${CLEAN_DIRS[@]}"; do
-	if [[ ! -d "$dir" ]]; then
-		continue
-	fi
+	[[ -d "$dir" ]] || continue
 
 	if [[ "$FORCE_DELETE_HDFS" == "true" ]]; then
-		rm -rf "$dir"
+		rm -rf "$dir" 2>/dev/null
 	else
-        # Delete top-level content except for anything named "dfs"
-        find "$dir" -mindepth 1 -maxdepth 1 ! -name "dfs" -exec rm -rf {} + 2>/dev/null
-    fi
+		# Delete top-level content except for anything named "dfs"
+		find "$dir" -mindepth 1 -maxdepth 1 ! -name "dfs" -exec rm -rf {} + 2>/dev/null
+	fi
 done
 
 # Recreate a clean structure for subsequent executions
-# Normalize commas to spaces so that mkdir creates the actual paths
-MKDIR_TARGETS="${TMP_DIR} ${LOCAL_DIRS//,/ } ${SPARK_LOCAL_DIRS//,/ } ${FLINK_LOCAL_DIRS//,/ }"
+if [[ -n "${MKDIRS:-}" && "$MKDIRS" == "true" ]]; then
+	# Normalize commas to spaces so that mkdir creates the actual paths
+	MKDIR_TARGETS="${TMP_DIR} ${LOCAL_DIRS//,/ } ${SPARK_LOCAL_DIRS//,/ } ${FLINK_LOCAL_DIRS//,/ }"
 
-if [[ -n "${MKDIR_TARGETS// /}" ]]; then
-	mkdir -p $MKDIR_TARGETS 2>/dev/null
+	if [[ -n "${MKDIR_TARGETS// /}" ]]; then
+		mkdir -p $MKDIR_TARGETS 2>/dev/null
+	fi
 fi
 
 # Disk space check
-if [[ "$DISK_SPACE_CHECK" == "true" ]]; then
+if [[ -n "${DISK_SPACE_CHECK:-}" && "$DISK_SPACE_CHECK" == "true" ]]; then
 	check_disk_space "$TMP_DIR" "$LOCAL_DIRS"
 fi
+
+exit 0
