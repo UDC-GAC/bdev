@@ -5,11 +5,6 @@ PALETTE_FILE="$STAT_PLOT_HOME/palette.plt"
 export SCRIPT_HEADER='#!/bin/bash
 dir=`dirname $0`
 cd $dir 
-
-if [[ -v $BDEV_HOME ]]; then
-	echo "BDEV_HOME is not set"
-	exit
-fi
 '
 
 CPU_TAG='"total cpu usage"'
