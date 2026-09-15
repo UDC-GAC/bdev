@@ -15,6 +15,7 @@ fi
 
 "$COMMON_HADOOP_DIR/bin/stop_hdfs.sh"
 bash "$CLEANUP_PROCESS_SCRIPT"
+cleanup_report "$FRAMEWORK_REPORT_DIR"
 
 # Get rid of jar files in user logs
 find "$SPARK_LOG_DIR" \

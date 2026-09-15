@@ -33,19 +33,13 @@ if [[ "$FLINK_MAJOR_VERSION" == "1.15" || "$FLINK_MAJOR_VERSION" == "1.16" ]]; t
 	export FLINK_HIVE_VERSION="3.1.2"
 fi
 
-# Determine whether integration with Hive is required
-is_hive="false"
-if [[ "$GEN_AGGREGATION" == "true" || "$GEN_JOIN" == "true" || "$GEN_SCAN" == "true" ]]; then
-    is_hive="true"
-fi
-
 # Project Flink base libraries while respecting the Table Planner
 for jar in "$FLINK_TARBALL_LIB"/*.jar; do
     [[ -f "$jar" ]] || continue
     jar_name="${jar##*/}"
 
-    # If we use Hive, we skip the isolated loader to avoid conflicts.
-    if [[ "$is_hive" == "true" && "$jar_name" == flink-table-planner-loader-* ]]; then
+    # If we use Hive, we skip the isolated loader to avoid conflicts
+    if [[ "$HIVE_WORKLOADS" == "true" && "$jar_name" == flink-table-planner-loader-* ]]; then
         continue
     fi
     ln -sf "$jar" "$FLINK_LIB_DIR/"
@@ -86,7 +80,7 @@ if [[ "$GEN_TPCX_HS" == "true" ]]; then
 fi
 
 # Hive-specific configuration
-if [[ "$is_hive" == "true" ]]; then
+if [[ "$HIVE_WORKLOADS" == "true" ]]; then
 	if [[ -z "$HIVE_HOME" ]]; then
 		m_exit "HIVE_HOME is not defined or is empty"
 	fi

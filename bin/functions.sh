@@ -45,6 +45,7 @@ function m_exit() {
 	if [[ "$CLEANUP_ON_EXIT" == "true" ]]; then
 		[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
 		[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
+		[[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 	fi
 
 	exit 1
@@ -1353,6 +1354,33 @@ get_interactive_shell() {
 }
 
 export -f get_interactive_shell
+
+function cleanup_report() {
+    local target_report="${1:-$REPORT_DIR}"
+
+    [[ -d "$target_report" ]] || return 0
+
+    # Save library traceability before deleting them
+    local lib_dir="$target_report/lib"
+    if [[ -d "$lib_dir" ]]; then
+        local manifest="$lib_dir/jars_manifest.txt"
+        ls -la "$lib_dir"/* > "$manifest" 2>/dev/null || true
+        rm -rf "${lib_dir:?}"/* 2>/dev/null || true
+    fi
+
+    # Delete auxiliary JARs in tools
+    if [[ -d "$target_report/tools" ]]; then
+        rm -rf "$target_report/tools" 2>/dev/null || true
+    fi
+
+    if [[ "$HIVE_WORKLOADS" == "true" ]]; then
+        # Delete temporary local Derby/Hive databases and Derby logs
+        find "$target_report" -maxdepth 3 -type d -name "metastore_db*" -exec rm -rf {} + 2>/dev/null || true
+        find "$target_report" -maxdepth 3 -type f -name "derby.log" -exec rm -f {} + 2>/dev/null || true
+    fi
+}
+
+export -f cleanup_report
 
 function download_jar_if_missing() {
     local target_jar="$1"

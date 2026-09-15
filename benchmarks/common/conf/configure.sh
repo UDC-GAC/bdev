@@ -76,20 +76,21 @@ export KEY_VALUE_TEXT_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.KeyVal
 export SEQUENCE_FILE_INPUT_FORMAT="org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat"
 export TEXT_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.TextOutputFormat"
 export SEQUENCE_FILE_OUTPUT_FORMAT="org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat"
-export MAHOUT_VERSION=$HADOOP_MAHOUT_VERSION
-export MAHOUT_HOME=$BDEV_TOOLS_DIR/mahout-$MAHOUT_VERSION
-export HIVE_VERSION=$HADOOP_HIVE_VERSION
-export HIVE_HOME=$BDEV_TOOLS_DIR/hive-$HIVE_VERSION
-
+export MAHOUT_VERSION="$HADOOP_MAHOUT_VERSION"
+export MAHOUT_HOME="$BDEV_TOOLS_DIR/mahout-$MAHOUT_VERSION"
+export HIVE_VERSION="$HADOOP_HIVE_VERSION"
+export HIVE_HOME="$BDEV_TOOLS_DIR/hive-$HIVE_VERSION"
+export HIVE_WORKLOADS="false"
+	
 if [[ "x$EXAMPLES_DATA_FORMAT" == "xSequence" ]]; then
-	export EXAMPLES_INPUT_FORMAT=$SEQUENCE_FILE_INPUT_FORMAT
-	export EXAMPLES_OUTPUT_FORMAT=$SEQUENCE_FILE_OUTPUT_FORMAT
+	export EXAMPLES_INPUT_FORMAT="$SEQUENCE_FILE_INPUT_FORMAT"
+	export EXAMPLES_OUTPUT_FORMAT="$SEQUENCE_FILE_OUTPUT_FORMAT"
 elif [[ "x$EXAMPLES_DATA_FORMAT" == "xKeyValueText" ]]; then
-	export EXAMPLES_INPUT_FORMAT=$KEY_VALUE_TEXT_INPUT_FORMAT
-	export EXAMPLES_OUTPUT_FORMAT=$TEXT_OUTPUT_FORMAT
+	export EXAMPLES_INPUT_FORMAT="$KEY_VALUE_TEXT_INPUT_FORMAT"
+	export EXAMPLES_OUTPUT_FORMAT="$TEXT_OUTPUT_FORMAT"
 elif [[ "x$EXAMPLES_DATA_FORMAT" == "xText" ]]; then
-	export EXAMPLES_INPUT_FORMAT=$TEXT_INPUT_FORMAT
-	export EXAMPLES_OUTPUT_FORMAT=$TEXT_OUTPUT_FORMAT
+	export EXAMPLES_INPUT_FORMAT="$TEXT_INPUT_FORMAT"
+	export EXAMPLES_OUTPUT_FORMAT="$TEXT_OUTPUT_FORMAT"
 else 
 	m_exit "Unknown examples format $EXAMPLES_DATA_FORMAT"
 fi
@@ -163,7 +164,7 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 	if [[ "${HIVE_VERSION}" == 4.* ]]; then
 		m_exit "Hive 4.x is not supported: $HIVE_VERSION"
 	fi
-	
+
 	if [[ ! -d $HIVE_HOME ]]; then
 		URL="https://archive.apache.org/dist/hive/"
 		TMP_HIVE_FILE=$BDEV_TOOLS_DIR/apache-hive-${HIVE_VERSION}-bin.tar.gz
@@ -192,6 +193,7 @@ if [[ ( $GEN_AGGREGATION == "true" || $GEN_JOIN == "true" || $GEN_SCAN == "true"
 
 	# Manage Hive issues (Guava, commons-collections)
 	resolve_hive_issues
+	export HIVE_WORKLOADS="true"
 fi
 
 # Hive SQL queries adapted from HiBench
