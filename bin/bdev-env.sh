@@ -348,7 +348,7 @@ if [[ $ENABLE_STAT == "true" ]]; then
 	fi
 fi
 
-# Check RAPL binary
+# Check and copy RAPL binary
 if [[ $ENABLE_RAPL == "true" ]]; then
 	if [[ ! -f "$RAPL_HOME/rapl_monitor/$RAPL_COMMAND_NAME" || ! -x "$RAPL_HOME/rapl_monitor/$RAPL_COMMAND_NAME" ]]; then
 		m_exit "RAPL binary is missing or is not executable"
@@ -359,7 +359,7 @@ if [[ $ENABLE_RAPL == "true" ]]; then
 	fi
 fi
 
-# Check ocount command for Oprofile
+# Check and copy ocount command for Oprofile
 if [[ $ENABLE_OPROFILE == "true" ]]; then
 	require_binary OPROFILE_BIN $OPROFILE_BIN
 
@@ -411,10 +411,10 @@ fi
 
 # Copy main binary files into REPORT_DIR
 if ! cp -r "$BDEV_BIN_DIR"/*.sh "$BDEV_BIN_DIR"/plot "$BDEV_HELPERS_DIR"/ "$REPORT_BIN_DIR/"; then
-    m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_BIN_DIR"
+	m_exit "Could not copy $APP_NAME binary files from $BDEV_BIN_DIR to $REPORT_BIN_DIR"
 fi
 
-# Redefine BDEv bin dir to the report directory
+# Redefine BDEv bin dirdirectory to the report directory
 export BDEV_BIN_DIR=$REPORT_BIN_DIR
 
 # Define IP script
