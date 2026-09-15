@@ -142,5 +142,4 @@ if [[ "$HIVE_WORKLOADS" == "true" ]]; then
 	
 	m_echo "Injected $((num_hive_jars + 1)) Hive JARs into HADOOP_CLASSPATH"
 	export HADOOP_CLASSPATH="$REPORT_TOOLS_DIR/hive/*:${HADOOP_CLASSPATH:-}"
-	export FLINK_ENV_JAVA_OPTS="${FLINK_ENV_JAVA_OPTS:-} -Dderby.stream.error.file=/dev/null"
 fi

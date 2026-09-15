@@ -205,12 +205,14 @@ function prepare_sql() {
 	export HADOOP_CLIENT_OPTS="-Dderby.stream.error.file=/dev/null"
 	export HIVE_OPTS="--hiveconf hive.execution.engine=mr \
 	--exitOnError=true
-	--hiveconf javax.jdo.option.ConnectionURL='jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true' \
+	--hiveconf javax.jdo.option.ConnectionURL='jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db_hadoop;create=true' \
         --hiveconf hive.exec.scratchdir=${HIVE_TMP_DIR} \
         --hiveconf hive.exec.local.scratchdir=${TMP_DIR}/hive \
         --hiveconf hive.input.format=org.apache.hadoop.hive.ql.io.HiveInputFormat \
         --hiveconf hive.stats.autogather=false \
+        --hiveconf hive.metastore.schema.verification=false \
         --hiveconf hive.log.dir=${TMP_DIR}/hive \
+        --hiveconf datanucleus.schema.autoCreateAll=true \
         --hiveconf $CONFIG_MAP_NUMBER=$MAPPERS_NUMBER \
         --hiveconf $CONFIG_REDUCER_NUMBER=$REDUCERS_NUMBER"
 

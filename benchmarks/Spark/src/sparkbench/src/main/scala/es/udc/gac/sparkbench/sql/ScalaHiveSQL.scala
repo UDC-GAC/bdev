@@ -22,13 +22,15 @@ object ScalaHiveSQL {
     val hive_tmp_dir = System.getenv("HIVE_TMP_DIR")
     val tmp_dir = System.getenv("TMP_DIR")
 
+    System.setProperty("derby.stream.error.file", "/dev/null")
     System.setProperty("javax.jdo.option.ConnectionURL", s"jdbc:derby:;databaseName=$bench_output_dir/metastore_db_spark;create=true")
     System.setProperty("hive.exec.scratchdir", hive_tmp_dir)
     System.setProperty("hive.exec.local.scratchdir", s"$tmp_dir/hive")
-    System.setProperty("hive.input.format", "org.apache.hadoop.hive.ql.io.HiveInputFormat")
     System.setProperty("hive.stats.autogather", "false")
-    System.setProperty("derby.stream.error.file", s"$bench_output_dir/derby_spark.log")
     System.setProperty("hive.log.dir", s"$tmp_dir/hive")
+    System.setProperty("hive.metastore.schema.verification", "false")
+    System.setProperty("datanucleus.schema.autoCreateAll", "true")
+    System.setProperty("hive.input.format", "org.apache.hadoop.hive.ql.io.HiveInputFormat")
 
     val session = SparkSession.builder()
       .appName("SparkBench ScalaHiveSQL " + bench_name)
