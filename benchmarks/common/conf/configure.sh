@@ -230,7 +230,7 @@ function init_hive_metastore() {
 	${HIVE_HOME}/bin/schematool \
         -dbType derby \
         -initSchema \
-        -url "jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db;create=true" \
+        -url "jdbc:derby:${BENCHMARK_OUTPUT_DIR}/metastore_db_hadoop;create=true" \
         -userName APP \
         -passWord mine 2>&1 | grep -v '^[[:space:]]*$'
 }
