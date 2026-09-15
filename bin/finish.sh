@@ -9,5 +9,6 @@ if [[ "$NUM_CLUSTERS" -gt 1 ]]; then
 fi
 
 . $CLEANUP_DATA_SCRIPT
+[[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 
 m_stop_message

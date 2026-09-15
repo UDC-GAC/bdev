@@ -1364,7 +1364,7 @@ function cleanup_report() {
     local lib_dir="$target_report/lib"
     if [[ -d "$lib_dir" ]]; then
         ls -la "$lib_dir"/* > "$target_report/jars_manifest.txt" 2>/dev/null || true
-        ls -la "$lib_dir"/* > "$manifest" 2>/dev/null || true
+        rm -rf "${lib_dir:?}"/* 2>/dev/null || true
     fi
 
     # Delete auxiliary tools
