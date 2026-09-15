@@ -1373,9 +1373,8 @@ function cleanup_report() {
     fi
 
     if [[ "$HIVE_WORKLOADS" == "true" ]]; then
-        # Delete temporary local Derby/Hive databases and Derby logs
+        # Delete temporary local Derby/Hive databases
         find "$target_report" -maxdepth 3 -type d -name "metastore_db*" -exec rm -rf {} + 2>/dev/null || true
-        find "$target_report" -maxdepth 3 -type f -name "derby*.log" -exec rm -f {} + 2>/dev/null || true
     fi
 }
 
