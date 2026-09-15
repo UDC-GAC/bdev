@@ -8,6 +8,10 @@ BDEv 4.X.X - 2026-XX-XX
 	NEW FEATURES		
 		- Implement non-intrusive dependency isolation via per-framework runtime directories (symlink/copy model) to preserve read-only distributions
 
+		- Scripts and dependencies are now deployed into the shared report directory for self-contained execution, decoupling remote workers from the master's local storage
+
+		- Add per-framework and exit cleanup routines to purge temporary auxiliary tools and runtime files from the repor directory
+
 		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
 		
 		- Add sanity checks for required configuration files
