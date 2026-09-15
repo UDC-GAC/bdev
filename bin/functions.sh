@@ -1360,6 +1360,8 @@ function cleanup_report() {
 
     [[ -d "$target_report" ]] || return 0
 
+    m_echo "Performing report cleanup"
+
     # Save library traceability before deleting them
     local lib_dir="$target_report/lib"
     if [[ -d "$lib_dir" ]]; then
@@ -1372,9 +1374,16 @@ function cleanup_report() {
         rm -rf "$target_report/tools" 2>/dev/null || true
     fi
 
-    if [[ "$HIVE_WORKLOADS" == "true" ]]; then
-        # Delete temporary local Derby/Hive databases
-        find "$target_report" -maxdepth 3 -type d -name "metastore_db*" -exec rm -rf {} + 2>/dev/null || true
+    if [[ "$HIVE_WORKLOADS" == "true" && "$target_report" != "$REPORT_DIR" ]]; then
+        local -a metastores
+        shopt -s nullglob
+        metastores=("$target_report"/*/metastore_db*)
+        shopt -u nullglob
+
+        # rm is executed only if at least one metastore directory was found
+        if (( ${#metastores[@]} > 0 )); then
+            rm -rf "${metastores[@]}" 2>/dev/null || true
+        fi
     fi
 }
 
