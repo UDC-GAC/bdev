@@ -1,1 +1,1 @@
-Place the frameworks in this directory as $FRAMEWORK_NAME/$FRAMEWORK_VERSION, where $FRAMEWORK_NAME and $FRAMEWORK_VERSION must be the framework name and version, respectively, as they appear in the solutions.lst file
+Place the frameworks into this directory as $FRAMEWORK_NAME/$FRAMEWORK_VERSION, where $FRAMEWORK_NAME and $FRAMEWORK_VERSION must be the name and version, respectively, as they appear in the frameworks.lst file located at the etc directory
