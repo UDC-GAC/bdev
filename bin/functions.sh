@@ -1359,7 +1359,7 @@ function cleanup_report() {
     local target_report="${1:-$REPORT_DIR}"
 
     [[ -d "$target_report" ]] || return 0
-    
+
     # Save library traceability before deleting them
     local lib_dir="$target_report/lib"
     if [[ -d "$lib_dir" ]]; then
@@ -1375,7 +1375,7 @@ function cleanup_report() {
     if [[ "$HIVE_WORKLOADS" == "true" ]]; then
         # Delete temporary local Derby/Hive databases and Derby logs
         find "$target_report" -maxdepth 3 -type d -name "metastore_db*" -exec rm -rf {} + 2>/dev/null || true
-        find "$target_report" -maxdepth 3 -type f -name "derby.log" -exec rm -f {} + 2>/dev/null || true
+        find "$target_report" -maxdepth 3 -type f -name "derby*.log" -exec rm -f {} + 2>/dev/null || true
     fi
 }
 

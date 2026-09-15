@@ -20,12 +20,12 @@ object ScalaHiveSQL {
     val bench_output_dir = System.getenv("BENCHMARK_OUTPUT_DIR")
     val hive_tmp_dir = System.getenv("HIVE_TMP_DIR")
     val tmp_dir = System.getenv("TMP_DIR")
+    System.setProperty("derby.stream.error.file", s"$bench_output_dir/derby_flink.log")
     val hiveConf = new HiveConf()
         
     hiveConf.set("javax.jdo.option.ConnectionURL", s"jdbc:derby:;databaseName=$bench_output_dir/metastore_db_flink;create=true")
     hiveConf.set("hive.exec.scratchdir", hive_tmp_dir)
     hiveConf.set("hive.exec.local.scratchdir", s"$tmp_dir/hive")
-    hiveConf.set("derby.stream.error.file", s"$bench_output_dir/derby_flink.log")
     hiveConf.set("hive.stats.autogather", "false")
     hiveConf.set("hive.metastore.schema.verification", "false")
     hiveConf.set("datanucleus.schema.autoCreateAll", "true")
