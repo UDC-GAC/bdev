@@ -2,34 +2,34 @@
 
 ## Global configuration parameters
 
-export STORAGE_BACKEND=hdfs	# Supported backends: hdfs, nfs
-export NFS_MOUNT_POINT=${NFS_MOUNT_POINT:-""}	# Only required if STORAGE_BACKEND=nfs
-export ENABLE_HOSTNAMES=true	# When set to false, BDEv use IPs instead of hostnames for cluster nodes
-export DEFAULT_TIMEOUT=3600	# Default workload timeout (in seconds)
+export STORAGE_BACKEND=hdfs		# Supported backends: hdfs, nfs
+export NFS_MOUNT_POINT=""		# Only required if STORAGE_BACKEND=nfs
+export ENABLE_HOSTNAMES=true		# When set to false, BDEv use IPs instead of hostnames for cluster nodes
+export DEFAULT_TIMEOUT=3600		# Default workload timeout (in seconds)
 export ENABLE_RUNTIME_PLOTS=false	# Generates performance plots with the execution time of workloads
-export ENABLE_MODULES=false	# Enable use of environment modules & Lmod
-export MODULES_JAVA="java"	# Modules to load for enabling Java
-export MODULES_PYTHON="python"	# Modules to load for enabling Python
-export DISK_SPACE_THRESHOLD=10	# Free disk space percentage required before triggering a low-space warning
+export ENABLE_MODULES=false		# Enable use of environment modules & Lmod
+export MODULES_JAVA="java"		# Modules to load for enabling Java
+export MODULES_PYTHON="python"		# Modules to load for enabling Python
+export DISK_SPACE_THRESHOLD=10		# Free disk space percentage required before triggering a low-space warning
 
 # Monitoring
-export ENABLE_STAT=false	# Enable built-in resource monitoring using dool
-export ENABLE_RAPL=false	# Enable RAPL power monitoring
-export ENABLE_OPROFILE=false	# Enable Oprofile event counting
-export ENABLE_ILO=false		# Enable HPE iLO power monitoring
-export ENABLE_BDWATCHDOG=false	# Enable resource monitoring using BDWatchdog
-export MONITOR_DELAY_SECONDS=10	# Delay time (seconds) after/before starting/stopping all monitors
+export ENABLE_STAT=false		# Enable built-in resource monitoring using dool
+export ENABLE_RAPL=false		# Enable RAPL power monitoring
+export ENABLE_OPROFILE=false		# Enable Oprofile event counting
+export ENABLE_ILO=false			# Enable HPE iLO power monitoring
+export ENABLE_BDWATCHDOG=false		# Enable resource monitoring using BDWatchdog
+export MONITOR_DELAY_SECONDS=10		# Delay time (seconds) after/before starting/stopping all monitors
 
 # Resource stats
-export STAT_GEN_PLOTS=false	# Generate plots for all nodes during execution
-export STAT_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
+export STAT_GEN_PLOTS=false		# Generate plots for all nodes during execution
+export STAT_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
 
 # RAPL
-export RAPL_GEN_PLOTS=false	# Generate plots for all nodes during execution
-export RAPL_SECONDS_INTERVAL=2	# Interval (seconds) for each sample
+export RAPL_GEN_PLOTS=false		# Generate plots for all nodes during execution
+export RAPL_SECONDS_INTERVAL=2		# Interval (seconds) for each sample
 
 # OPROFILE
-export OPROFILE_BIN="ocount"	# OProfile command
+export OPROFILE_BIN="ocount"		# OProfile command
 export OPROFILE_EVENTS="inst_retired"	# Comma-separared list of events that will be logged. Supported events scan be queried using the ophelp command
 
 # HPE iLO
