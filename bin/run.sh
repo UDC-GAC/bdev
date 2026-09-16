@@ -39,10 +39,6 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 					export FORCE_FORMAT_HDFS=true
 					export FORCE_WIPE_HDFS=true
 					m_echo "Hadoop version changed ($LAST_HADOOP_VERSION -> $CURRENT_HADOOP_VERSION): Wiping and reformatting HDFS"
-				elif [[ "$FORMAT_HDFS" == "true" ]]; then
-					# If the user explicitly configured formatting between each framework
-					export FORCE_FORMAT_HDFS=true
-					export FORCE_WIPE_HDFS=true
 				fi
 			fi
 
