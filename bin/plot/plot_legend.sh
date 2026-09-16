@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 if [ -z "$1" ]; then
 	echo "Error: output directory not defined (\$1)." >&2
