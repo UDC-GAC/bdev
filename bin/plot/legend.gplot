@@ -1,13 +1,9 @@
 set terminal epscairo enhanced color font 'Arial,18' background rgb 'white' size 5in, 3.5in
-#set datafile missing '?'
 
 set style fill solid 1 border lt -1
-set boxwidth 1 relative
-set style data histograms 
-set style histogram 
 
 load palette_file
-bs=0.15 # width of a box
+bs = 0.15
 
 set noborder
 set noxtics
@@ -19,11 +15,9 @@ set yrange [-10:-9]
 
 set title "Legend" noenhanced
 
-#set key outside horiz center top
 set key horiz center top
-set key autotitle columnheader noenhanced
 
 set output legend_file
 
 plot for [col=1:cols] input_file \
-	u col:(bs) w boxes ls col fillstyle pattern col
+	u col:(bs) w boxes ls col fillstyle pattern col title columnheader(col)
