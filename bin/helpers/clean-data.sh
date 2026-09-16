@@ -67,7 +67,7 @@ done
 for dir in "${CLEAN_DIRS[@]}"; do
 	[[ -d "$dir" ]] || continue
 
-	if [[ "$FORCE_DELETE_HDFS" == "true" ]]; then
+	if [[ "$FORCE_WIPE_HDFS" == "true" ]]; then
 		rm -rf "$dir" 2>/dev/null
 	else
 		# Delete top-level content except for anything named "dfs"

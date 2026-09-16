@@ -979,7 +979,7 @@ function begin_report() {
 	REPORT="$REPORT \t HDFS block size (B)  \t\t\t $HDFS_BLOCKSIZE \n"
 	REPORT="$REPORT \t HDFS replication factor  \t\t $HDFS_REPLICATION_FACTOR \n"
 	REPORT="$REPORT \t HDFS format  \t\t\t\t $FORMAT_HDFS \n"
-	REPORT="$REPORT \t HDFS delete data \t\t\t $DELETE_HDFS \n"
+	REPORT="$REPORT \t HDFS wipe data on exit \t\t $WIPE_HDFS_ON_EXIT \n"
 	REPORT="$REPORT \t HDFS NN handlers \t\t\t $NAMENODE_HANDLER_COUNT \n"
 	REPORT="$REPORT \t HDFS NN access times \t\t\t $NAMENODE_ACCESTIME_PRECISION \n"
 	REPORT="$REPORT \t HDFS NN safe mode extension \t\t $NAMENODE_SAFEMODE_TIMEOUT \n"

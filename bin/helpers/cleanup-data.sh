@@ -30,7 +30,7 @@ for NODE in $UNIQUE_NODES; do
          	export LOCAL_DIRS='${LOCAL_DIRS:-}'; \
          	export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS:-}'; \
          	export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS:-}'; \
-         	export FORCE_DELETE_HDFS='${FORCE_DELETE_HDFS:-}'; \
+         	export FORCE_WIPE_HDFS='${FORCE_WIPE_HDFS:-}'; \
          	export DISK_SPACE_CHECK='${DISK_SPACE_CHECK:-}'; \
          	export DISK_SPACE_THRESHOLD='${DISK_SPACE_THRESHOLD:-}'; \
          	export MKDIRS='${MKDIRS:-}'; \

@@ -23,5 +23,5 @@ export NAMENODE_SAFEMODE_TIMEOUT=20000	# NameNode safe mode extension (in millis
 export IO_FILE_BUFFER_SIZE=131072	# Buffer size used in sequence files and stream read/write operations (bytes)
 export IPC_PING_INTERVAL_MS=90000       # Client will send ping when the interval is passed without receiving bytes
 export IPC_CLIENT_RPC_TIMEOUT_MS=120000 # Timeout on waiting response from server
-export FORMAT_HDFS=true                 # Format HDFS (only significant when running a single cluster size)
-export DELETE_HDFS=true                 # Delete previous & generated HDFS data (only significant when running a single cluster size)
+export FORMAT_HDFS=true			# Format HDFS at startup (false to reuse pre-existing data). Automatically forced to 'true' when required (eg, Hadoop version changes)
+export WIPE_HDFS_ON_EXIT=true		# Wipe HDFS data from all nodes on teardown (false to keep data on disk for subsequent runs)
