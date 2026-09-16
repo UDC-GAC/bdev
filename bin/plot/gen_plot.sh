@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 if [ -z "$DAT_FILE" ] || [ -z "$PLOT_FILE" ] || [ -z "$PLOT_HOME" ]; then
     echo "Error: DAT_FILE, PLOT_FILE or PLOT_HOME not defined" >&2
