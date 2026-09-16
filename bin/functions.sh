@@ -1046,6 +1046,13 @@ function begin_report() {
 		bash $PLOT_HOME/plot_legend.sh $PLOT_DIR >> $PLOT_DIR/log 2>&1
 	fi
 
+	if [[ $ENABLE_RAPL == "true" ]]; then
+		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
+			mkdir -p $RAPL_PLOT_DIR
+		fi
+		bash $PLOT_HOME/plot_legend.sh $RAPL_PLOT_DIR >> $RAPL_PLOT_DIR/log 2>&1
+	fi
+
 	if [[ $ENABLE_OPROFILE == "true" ]]; then
 		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p $OPROFILE_PLOT_DIR

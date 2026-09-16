@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 FILES=`find $REPORT_DIR -wholename */testdfsio_*/output`
 
