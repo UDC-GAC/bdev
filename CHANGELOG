@@ -3,20 +3,23 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 4.X.X - 2026-XX-XX
+BDEv 4.X.X - 2026-10-XX
 -----------------------
+	This is a minor release focused on runtime portability, non-intrusive dependency isolation, and cluster orchestration robustness.
+	The core highlight of this release is that BDEv now treats framework distributions as strictly immutable (supporting read-only mounts or identical local copies) and only requires the report directory to be shared with write permissions across the cluster nodes. To support this model, this release introduces self-contained runtime staging within the report directory, dynamic JAR injection, custom launchers for remote workers, and automated artifact cleanup routines to ensure experimental reproducibility while minimizing shared storage footprints.
+	
 	NEW FEATURES		
 		- Implement non-intrusive dependency isolation via per-framework runtime directories (symlink/copy model) to preserve read-only distributions
 
 		- Scripts and dependencies are now deployed into the shared report directory for self-contained execution, decoupling remote workers from the master's local storage
 
-		- Add per-framework and exit cleanup routines to purge temporary auxiliary tools and runtime files from the repor directory
+		- Add per-framework and exit cleanup routines to purge temporary auxiliary tools and runtime files from the report directory
 
 		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
 		
 		- Add sanity checks for required configuration files
 
-		- Remove all custom scripts and the `daemons` directory, keeping the original scripts bundled with the frameworks untouched
+		- Remove all custom scripts and the 'daemons' directory, keeping the original scripts bundled with the frameworks untouched
 
 		- Add ad-hoc launcher scripts for Spark and Flink to explicitly inject configuration paths into remote workers
 
@@ -27,8 +30,6 @@ BDEv 4.X.X - 2026-XX-XX
 		- Unify environment files for Spark, Flink and Hadoop frameworks into parameterized scripts that support both Standalone/YARN resource managers to remove code duplication
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
-		
-		- Fix network configuration issues
 
 		- Remove OUTPUT_DIR from bdev-conf file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
 
