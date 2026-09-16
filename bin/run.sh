@@ -43,7 +43,7 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 			fi
 
 			# Perform data cleanup before starting the framework
-			. $CLEANUP_DATA_SCRIPT -c -m
+			cleanup_data -c -m
 
 			if [[ "$NUM_BENCHMARKS" -eq 0 ]]; then
 				m_warn "No benchmark was configured. Running in command mode"

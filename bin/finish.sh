@@ -8,7 +8,7 @@ if [[ "$NUM_CLUSTERS" -gt 1 ]]; then
 	export FORCE_WIPE_HDFS=true
 fi
 
-. $CLEANUP_DATA_SCRIPT
+cleanup_data
 
 [[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 

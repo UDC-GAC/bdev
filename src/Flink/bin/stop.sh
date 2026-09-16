@@ -15,5 +15,5 @@ if [[ -f "$SCRIPT_MASTER" ]]; then
 fi
 
 "$COMMON_HADOOP_DIR/bin/stop_hdfs.sh"
-bash "$CLEANUP_PROCESS_SCRIPT"
+cleanup_process
 cleanup_report "$FRAMEWORK_REPORT_DIR"

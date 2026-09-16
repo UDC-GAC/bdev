@@ -22,9 +22,6 @@ export COMMON_BENCH_DIR=$BENCHMARKS_DIR/common
 export COMMON_SRC_DIR=$FRAMEWORKS_SRC_DIR/common
 export COMMON_HADOOP_DIR=$FRAMEWORKS_SRC_DIR/common/hadoop
 export STORAGE_BACKEND_LIB=$COMMON_SRC_DIR/storage/storage_backend.sh
-export CLEANUP_PROCESS_SCRIPT=$BDEV_HELPERS_DIR/cleanup-process.sh
-export CLEANUP_DATA_SCRIPT=$BDEV_HELPERS_DIR/cleanup-data.sh
-export CLEANUP_YARN_SCRIPT=$BDEV_HELPERS_DIR/cleanup-yarn.sh
 export CLEANUP_ON_EXIT="false"
 export USER=${USER:-$(id -nu)}
 

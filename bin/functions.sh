@@ -47,8 +47,8 @@ function m_exit() {
 	m_error "$@"
 	
 	if [[ "$CLEANUP_ON_EXIT" == "true" ]]; then
-		[[ -f "$CLEANUP_YARN_SCRIPT" ]] && bash "$CLEANUP_YARN_SCRIPT"
-		[[ -f "$CLEANUP_PROCESS_SCRIPT" ]] && bash "$CLEANUP_PROCESS_SCRIPT"
+		cleanup_yarn
+		cleanup_process
 		[[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 	fi
 
@@ -1358,6 +1358,157 @@ get_interactive_shell() {
 }
 
 export -f get_interactive_shell
+
+function cleanup_data() {
+    local disk_space_check="false"
+    local mkdirs="false"
+
+    for arg in "$@"; do
+        case "$arg" in
+            --check-disk|-c)
+                disk_space_check="true"
+                ;;
+            --make-dirs|-m)
+                mkdirs="true"
+                ;;
+        esac
+    done
+
+    if [[ "$disk_space_check" == "true" ]]; then
+        m_echo "Performing data cleanup and disk space checks (threshold: ${DISK_SPACE_THRESHOLD}%)"
+    else
+        m_echo "Performing data cleanup"
+    fi
+
+    # Deduplicate nodes in case the master is also a worker (or use nodes passed as arguments)
+    local target_nodes="${*:-$MASTERNODE $WORKERNODES}"
+    local unique_nodes
+    unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
+
+    local cleanup_failed_nodes=()
+
+    for node in $unique_nodes; do
+        local node_output
+        local node_status
+
+        node_output=$($SSH_CMD "$node" "export USER='${USER}'; \
+            export TMP_DIR='${TMP_DIR:-}'; \
+            export LOCAL_DIRS='${LOCAL_DIRS:-}'; \
+            export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS:-}'; \
+            export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS:-}'; \
+            export FORCE_WIPE_HDFS='${FORCE_WIPE_HDFS:-}'; \
+            export DISK_SPACE_CHECK='${disk_space_check}'; \
+            export DISK_SPACE_THRESHOLD='${DISK_SPACE_THRESHOLD:-}'; \
+            export MKDIRS='${mkdirs}'; \
+            '$BDEV_BIN_DIR/helpers/clean-data.sh'" 2>&1)
+        
+        node_status=$?
+        if [[ $node_status -ne 0 ]]; then
+            m_error "Data cleanup failed on $node (exit code $node_status)"
+            if [[ -n "$node_output" ]]; then
+                echo "$node_output" >&2
+            else
+                echo "  (No stderr/stdout captured from $node)" >&2
+            fi
+            cleanup_failed_nodes+=("$node")
+        elif [[ -n "$node_output" ]]; then
+            echo "$node_output"
+        fi
+    done
+
+    if [[ ${#cleanup_failed_nodes[@]} -gt 0 ]]; then
+        m_error "Data cleanup failed on nodes: ${cleanup_failed_nodes[*]}"
+        return 1
+    fi
+
+    return 0
+}
+
+export -f cleanup_data
+
+function cleanup_process() {
+    m_echo "Performing process cleanup"
+
+    # Deduplicate nodes in case the master is also a worker (or use nodes passed as arguments)
+    local target_nodes="${*:-$MASTERNODE $WORKERNODES}"
+    local unique_nodes
+    unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
+
+    local cleanup_pids_failed_nodes=()
+
+    for node in $unique_nodes; do
+        local node_output
+        local node_status
+
+        node_output=$($SSH_CMD "$node" "export USER='${USER}'; \
+            export JPS='${JPS}'; \
+            export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME:-}'; \
+            export PYTHON_BIN='${PYTHON_BIN:-}'; \
+            export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
+            export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
+            export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
+            export RAPL_TOOL_BIN='${RAPL_TOOL_BIN:-}'; \
+            '$BDEV_BIN_DIR/helpers/kill-process.sh'" 2>&1)
+        
+        node_status=$?
+        if [[ $node_status -ne 0 ]]; then
+            m_warn "Process cleanup failed on $node (exit code $node_status)"
+            if [[ -n "$node_output" ]]; then
+                echo "$node_output" >&2
+            else
+                echo "  (No stderr/stdout captured from $node)" >&2
+            fi
+            cleanup_pids_failed_nodes+=("$node")
+        elif [[ -n "$node_output" ]]; then
+            echo "$node_output"
+        fi
+    done
+
+    if [[ ${#cleanup_pids_failed_nodes[@]} -gt 0 ]]; then
+        m_warn "Process cleanup finished with warnings on nodes: ${cleanup_pids_failed_nodes[*]}"
+        return 1
+    fi
+
+    return 0
+}
+
+export -f cleanup_process
+
+function cleanup_yarn() {
+    local yarn_bin="${1:-$YARN_EXECUTABLE}"
+
+    if [[ -z "$yarn_bin" ]] || ! command -v "$yarn_bin" &> /dev/null; then
+        return 0
+    fi
+
+    m_echo "Performing YARN cleanup"
+    sleep 1
+
+    local yarn_cmd_opts="-D ipc.client.connect.max.retries=0 -D yarn.resourcemanager.connect.max-wait.ms=5000 -D yarn.resourcemanager.connect.retry-interval.ms=1000"
+    local yarn_output
+    yarn_output=$("$yarn_bin" application $yarn_cmd_opts -list -appStates RUNNING,ACCEPTED 2>/dev/null)
+
+    if [[ $? -ne 0 ]]; then
+        echo "YARN is not available. No cleanup is done."
+        return 0
+    fi
+
+    local yarn_apps
+    yarn_apps=$(grep "application_" <<< "$yarn_output" | awk '{print $1}')
+
+    if [[ -n "$yarn_apps" ]]; then
+        for app in $yarn_apps; do
+            echo "Killing YARN app $app"
+            "$yarn_bin" application -kill "$app"
+        done
+    else
+        m_echo "No YARN applications are running"
+    fi
+
+    return 0
+}
+
+export -f cleanup_yarn
 
 function cleanup_report() {
     local target_report="${1:-$REPORT_DIR}"
