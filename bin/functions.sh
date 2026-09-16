@@ -7,9 +7,13 @@ function get_date() {
 export -f get_date
 
 function log_msg() {
-    local SYMBOL="$1"
-    shift
-
+    local SYMBOL=">"
+    
+    if [[ $# -gt 1 ]]; then
+        SYMBOL="$1"
+        shift
+    fi
+    
     [[ -n "$REPORT_LOG" ]] && printf '%s %s %s\n' "$DATE" "$SYMBOL" "$*" >> "$REPORT_LOG"
 }
 
