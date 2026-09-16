@@ -1,7 +1,7 @@
 #!/bin/bash
 
 log_msg "FORCE_FORMAT_HDFS=$FORCE_FORMAT_HDFS"
-log_msg "FORCE_WIPE_HDFS=$FORCE_WIPE"
+log_msg "FORCE_WIPE_HDFS=$FORCE_WIPE_HDFS"
 
 #Loading framework environment
 m_echo "Loading environment: ${FRAMEWORK_DIR}/etc/env.sh"
