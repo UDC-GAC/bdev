@@ -73,7 +73,7 @@ do
 		fi
 	done
 
-	gnuplot -e "input_file='$EVENT_OUTPUT_FILE';output_file='$EVENT_PLOT_FILE'; \
+	$GNUPLOT_BIN -e "input_file='$EVENT_OUTPUT_FILE';output_file='$EVENT_PLOT_FILE'; \
 		palette_file='$PLOT_HOME/palette.plt'; \
 		box_size='$BOX_SIZE'; \
 		cols='$COLS'; label_y='$YLABEL'; label_xtics='$CLUSTER_SIZES'; \

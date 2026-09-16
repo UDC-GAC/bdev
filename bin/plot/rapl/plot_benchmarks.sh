@@ -36,7 +36,7 @@ fi
 
 ENERGY_OUTPUT_FILE=${RAPL_OUTPUT_DIR}/energy.dat
 ENERGY_PLOT_FILE=${RAPL_OUTPUT_DIR}/energy.eps
-TITLE_TAG="$BENCHMARK_TAG energy (J)"
+TITLE_TAG="$BENCHMARK_TAG Energy consumption (J)"
 echo "$DAT_HEADER" > $ENERGY_OUTPUT_FILE
 ENERGY_SUMMARY=`cat $RAPL_ENERGY_SUMMARY_FILE | grep ",${BENCHMARK},"`
 
@@ -68,7 +68,7 @@ do
 	fi
 done
 
-gnuplot -e "input_file='$ENERGY_OUTPUT_FILE';output_file='$ENERGY_PLOT_FILE'; \
+$GNUPLOT_BIN -e "input_file='$ENERGY_OUTPUT_FILE';output_file='$ENERGY_PLOT_FILE'; \
 	palette_file='$PLOT_HOME/palette.plt'; \
 	box_size='$BOX_SIZE'; \
 	cols='$COLS'; label_y='$YLABEL_ENERGY'; label_xtics='$CLUSTER_SIZES'; \
@@ -110,7 +110,7 @@ do
 	fi
 done
 
-gnuplot -e "input_file='$ED2P_OUTPUT_FILE';output_file='$ED2P_PLOT_FILE'; \
+$GNUPLOT_BIN -e "input_file='$ED2P_OUTPUT_FILE';output_file='$ED2P_PLOT_FILE'; \
 	palette_file='$PLOT_HOME/palette.plt'; \
 	box_size='$BOX_SIZE'; \
 	cols='$COLS'; label_y='$YLABEL_ED2P'; label_xtics='$CLUSTER_SIZES'; \

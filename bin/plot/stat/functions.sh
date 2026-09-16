@@ -248,7 +248,7 @@ function plot_dat_file_lines() {
 	then
 		TICS_INTERVAL=30
 	fi
-	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
+	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \
@@ -268,7 +268,7 @@ function plot_dat_file_boxes() {
 	then
 		TICS_INTERVAL=30
 	fi
-	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
+	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \
@@ -293,7 +293,7 @@ function plot_dat_file_stacked() {
 	then
 		TICS_INTERVAL=30
 	fi
-	echo gnuplot -e "\"input_file='$DAT_FILE';output_file='$STOCKED_PLOT_FILE'; \
+	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$STOCKED_PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \

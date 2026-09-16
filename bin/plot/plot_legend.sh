@@ -19,10 +19,10 @@ echo "$DAT_LINE" >> $DAT_LEGEND_FILE
 
 COLS=`echo $FRAMEWORKS | wc -w`
 
-echo gnuplot -e "input_file='$DAT_LEGEND_FILE'; \
+echo $GNUPLOT_BIN -e "input_file='$DAT_LEGEND_FILE'; \
 		legend_file='$PLOT_LEGEND_FILE';palette_file='$PLOT_HOME/palette.plt'; \
 		cols='$COLS'" $PLOT_HOME/legend.gplot 
 
-gnuplot -e "input_file='$DAT_LEGEND_FILE'; \
+$GNUPLOT_BIN -e "input_file='$DAT_LEGEND_FILE'; \
 		legend_file='$PLOT_LEGEND_FILE';palette_file='$PLOT_HOME/palette.plt'; \
 		cols='$COLS'" $PLOT_HOME/legend.gplot 

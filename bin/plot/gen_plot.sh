@@ -48,14 +48,14 @@ BOX_SIZE=`op "$STEP / $COLS"`
 MINX=`op_int "-1 "`
 MAXX=`op_int "$CLUSTERS "`
 
-echo gnuplot -e "input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
+echo $GNUPLOT_BIN -e "input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		palette_file='$PLOT_HOME/palette.plt'; \
 		box_size='$BOX_SIZE'; \
 		cols='$COLS'; label_y='$YLABEL'; label_xtics='$CLUSTER_SIZES'; \
 		benchmark_tag='$BENCHMARK_TAG'; \
 		minx='$MINX';maxx='$MAXX'" $PLOT_HOME/graph.gplot 
 
-gnuplot -e "input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
+$GNUPLOT_BIN -e "input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		palette_file='$PLOT_HOME/palette.plt'; \
 		box_size='$BOX_SIZE'; \
 		cols='$COLS'; label_y='$YLABEL'; label_xtics='$CLUSTER_SIZES'; \

@@ -151,6 +151,10 @@ if [[ -z "$STORAGE_BACKEND" ]]; then
 fi
 
 if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
+	if [[ -n "$NFS_MOUNT_POINT" ]]; then
+	        m_exit "NFS_MOUNT_POINT is empty"	
+	fi
+	
 	if [[ ! -d "$NFS_MOUNT_POINT" ]]; then
 	        m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
 	fi
@@ -314,6 +318,9 @@ PYTHON_MAJOR_VERSION=$($PYTHON_BIN -c 'import sys; print(sys.version_info[0])' 2
 if [[ "$PYTHON_MAJOR_VERSION" != "3" ]]; then
 	m_exit "$APP_NAME v$APP_VERSION requires Python 3, but the detected version is Python $PYTHON_MAJOR_VERSION ($PYTHON_BIN)"
 fi
+
+# Check gnuplot command
+require_binary GNUPLOT_BIN gnuplot
 
 #Define the JPMS options exclusive to Java 9+
 if [[ "$JAVA_MAJOR_VER" -le 8 ]]; then

@@ -17,7 +17,7 @@ function plot_dat_file_lines() {
 	then
 	TICS_INTERVAL=30
 	fi
-	echo gnuplot -e "\"input_files='$DAT_FILES';output_file='$PLOT_FILE'; \
+	echo $GNUPLOT_BIN -e "\"input_files='$DAT_FILES';output_file='$PLOT_FILE'; \
 	tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 	label_y='$YLABEL'; format_y='$YFORMAT'; \
 	palette_file='$PALETTE_FILE'; \
