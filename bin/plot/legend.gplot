@@ -15,7 +15,7 @@ set yrange [-10:-9]
 
 set title "Legend" noenhanced
 
-set key horiz center top
+set key horiz center top noenhanced
 
 set output legend_file
 
