@@ -11,7 +11,13 @@ for INPUT_FILE in $(find "${OPROFILELOGDIR}" -name "oprofile" | sort -u); do
 	fi
 done
 
-FIRST_FILE="${OPROFILEINPUTFILES%% *}"
+# Extrae el primer elemento ignorando espacios previos de forma nativa
+read -r FIRST_FILE _ <<< "$OPROFILEINPUTFILES"
+
+if [[ -z "$FIRST_FILE" || ! -f "$FIRST_FILE" ]]; then
+	exit 0
+fi
+
 NUM_LINES=$(wc -l < "$FIRST_FILE")
 OUTPUT_NODE_SUM_FILE="${OPROFILELOGDIR}/sum.csv"
 

@@ -76,7 +76,7 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 
 	for FRAMEWORK in $FRAMEWORKS; do
 		LINE=$(grep -E "^${CLUSTER_SIZE},${FRAMEWORK}," <<< "$ED2P_SUMMARY")
-		ENERGIES=$(cut -f 4 -d "," <<< "$LINE")`
+		ENERGIES=$(cut -f 4 -d "," <<< "$LINE")
 
 		median $ENERGIES
 		maxmin $ENERGIES
