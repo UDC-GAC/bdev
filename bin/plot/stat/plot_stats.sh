@@ -211,3 +211,17 @@ for NET_NAME in "${!NET_DAT_FILES[@]}"; do
 	plot_dat_file_lines
 	plot_dat_file_stacked
 done
+
+chmod +x "$GRAPHS_SCRIPT"
+
+if [[ ! -f "$REPORT_GEN_GRAPHS_FILE" ]]; then
+	echo "$SCRIPT_HEADER" > "$REPORT_GEN_GRAPHS_FILE"
+	chmod +x "$REPORT_GEN_GRAPHS_FILE"
+fi
+
+echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> "$REPORT_GEN_GRAPHS_FILE"
+
+if [[ "$STAT_GEN_PLOTS" == "true" ]]; then
+	m_echo "Generating dool plots for all nodes"
+	"$GRAPHS_SCRIPT"
+fi

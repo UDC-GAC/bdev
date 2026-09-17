@@ -151,17 +151,16 @@ plot_dat_file_lines
 FILE_PREFIX=${RAPL_AVG_DIR}/rapl_power
 plot_dat_file_lines
 
-chmod +x ${GRAPHS_SCRIPT}
+chmod +x "$GRAPHS_SCRIPT"
 
-if [[ ! -f ${REPORT_GEN_GRAPHS_FILE} ]]
-then
-	echo "$SCRIPT_HEADER" > ${REPORT_GEN_GRAPHS_FILE}
-	chmod +x ${REPORT_GEN_GRAPHS_FILE}
+if [[ ! -f "$REPORT_GEN_GRAPHS_FILE" ]]; then
+	echo "$SCRIPT_HEADER" > "$REPORT_GEN_GRAPHS_FILE"
+	chmod +x "$REPORT_GEN_GRAPHS_FILE"
 fi
 
-echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> ${REPORT_GEN_GRAPHS_FILE}
+echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> "$REPORT_GEN_GRAPHS_FILE"
 
-if [[ $RAPL_GEN_PLOTS == "true" ]]; then
+if [[ "$RAPL_GEN_PLOTS" == "true" ]]; then
 	m_echo "Generating RAPL plots for all nodes"
-	${GRAPHS_SCRIPT}
+	"$GRAPHS_SCRIPT"
 fi
