@@ -1,13 +1,14 @@
 #!/bin/bash
 
+[[ "$GNUPLOT_BIN" == "null" ]] && m_echo "Generating Oprofile plots"
+
 OPROFILE_SUMMARY_FILE=$OPROFILE_PLOT_DIR/summary.csv
 
-BENCHMARK_INPUT_FILES=`find $FRAMEWORK_REPORT_DIR -wholename */${BENCHMARK}_*/sum.csv`
+BENCHMARK_INPUT_FILES=$(find $FRAMEWORK_REPORT_DIR -wholename */${BENCHMARK}_*/sum.csv)
 
 for BENCHMARK_INPUT_FILE in $BENCHMARK_INPUT_FILES; do
 	sed "s/^/${CLUSTER_SIZE},${FRAMEWORK},${BENCHMARK},/" "$BENCHMARK_INPUT_FILE" >> "$OPROFILE_SUMMARY_FILE"
 done
-
 
 EVENTS=$(cut -f 4 -d "," "$OPROFILE_SUMMARY_FILE" | sort -u)
 CLUSTERS=$(echo $CLUSTER_SIZES | wc -w)
@@ -17,8 +18,6 @@ BOX_SIZE=$(op "$STEP / $COLS")
 MINX=$(op_int "-1 ")
 MAXX=$(op_int "$CLUSTERS ")
 YLABEL="Counter value"
-
-
 DAT_HEADER="cluster_size"
 
 for FRAMEWORK in $FRAMEWORKS; do
@@ -68,4 +67,3 @@ for EVENT in $EVENTS; do
 			minx='$MINX';maxx='$MAXX'" $OPROFILE_PLOT_HOME/graph.gplot
 	fi
 done
-
