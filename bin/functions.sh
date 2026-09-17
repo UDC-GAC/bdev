@@ -951,17 +951,20 @@ function begin_report() {
 	REPORT="$REPORT \t SSH \t\t\t\t\t $SSH_CMD \n"
 	REPORT="$REPORT \t JVM \t\t\t\t\t $BDEV_JAVA_HOME \n"
 	REPORT="$REPORT \t Python \t\t\t\t $PYTHON_BIN \n"
-	if [[ -n $ETHERNET_INTERFACE ]]; then
+	if [[ "$GNUPLOT_BIN" != "null" ]]; then
+		REPORT="$REPORT \t Gnuplot \t\t\t\t $GNUPLOT_BIN \n"
+	fi
+	if [[ -n "$ETHERNET_INTERFACE" ]]; then
 		REPORT="$REPORT \t Ethernet interface  \t\t\t $ETHERNET_INTERFACE \n"
 	else
 		REPORT="$REPORT \t Ethernet interface  \t\t\t Not specified \n"
 	fi
-	if [[ -n $IPOIB_INTERFACE ]]; then
+	if [[ -n "$IPOIB_INTERFACE" ]]; then
 		REPORT="$REPORT \t IPoIB interface  \t\t\t $IPOIB_INTERFACE \n"
 	else
 		REPORT="$REPORT \t IPoIB interface  \t\t\t Not specified \n"
 	fi
-	if [[ -n $RDMA_INTERFACE ]]; then
+	if [[ -n "$RDMA_INTERFACE" ]]; then
 		REPORT="$REPORT \t RDMA interface  \t\t\t $RDMA_INTERFACE \n"
 	else
 		REPORT="$REPORT \t RDMA interface  \t\t\t Not specified \n"
