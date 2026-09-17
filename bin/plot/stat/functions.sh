@@ -1,8 +1,6 @@
 #!/bin/bash
 
 function get_index() {
-	# echo "$1"
-	# echo "${2}"
 	SEARCH_WORD=$1
 	IFS=',' read -a ARRAY <<< "${2}"
 
@@ -20,11 +18,6 @@ function get_index() {
 		INDEX=$(( $INDEX + 1 ))
 	}
 	echo $FOUND_INDEXES
-	# for ((i = 0; i < ${#ARRAY[@]}; i++))
-	# do
-	# 	WORD="${ARRAY[$i]}"
-	# 	echo $WORD
-	# done
 }
 
 export -f get_index
@@ -98,11 +91,6 @@ function avg_file_rows() {
 }
 
 export -f avg_file_rows
-
-# function avg_file_cols() {
-# }
-
-# export -f avg_file_cols
 
 function sum_dat_file() {
 	TAG_INDEXES=`get_index "$TAG" "$HEADER"`

@@ -169,7 +169,6 @@ avg_dat_file
 plot_dat_file_lines
 plot_dat_file_stacked
 
-
 INPUT_DAT_FILES=$LOAD_DAT_FILES
 FILE_PREFIX=$STAT_AVG_DIR/load_stat
 YLABEL=$LOAD_YLABEL
@@ -227,8 +226,7 @@ done
 
 chmod +x ${GRAPHS_SCRIPT}
 
-if [[ ! -f ${REPORT_GEN_GRAPHS_FILE} ]]
-then
+if [[ ! -f ${REPORT_GEN_GRAPHS_FILE} ]]; then
 	echo "$SCRIPT_HEADER" > ${REPORT_GEN_GRAPHS_FILE}
 	chmod +x ${REPORT_GEN_GRAPHS_FILE}
 fi
