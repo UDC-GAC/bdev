@@ -1,5 +1,84 @@
 #!/bin/bash
 
+function get_column_data() {
+	# Un solo comando: extrae la columna $1 desde la fila 2 hasta MIN_ROWS
+	awk -F',' -v col="$1" -v max="$MIN_ROWS" 'NR > 1 && NR <= max { print $col }' "$2"
+}
+
+function get_min_rows() {
+	unset MIN_ROWS
+	for f in $TARGET_DAT_FILES; do
+		local ROWS=$(wc -l < "$f")
+		if [[ -z "$MIN_ROWS" || $ROWS -lt $MIN_ROWS ]]; then
+			MIN_ROWS=$ROWS
+		fi
+	done
+}
+
+export -f get_min_rows
+
+function op_dat_file() {
+	AWK_COMMAND=$1
+	
+	TARGET_DAT_FILES=""
+	for INPUT_FILE in $INPUT_DAT_FILES; do
+		local dir="${INPUT_FILE%/*}"	# Equivalente a dirname
+		local node="${dir##*/}"		# Equivalente a basename
+		if [[ "$node" != "node-0" && -f "$INPUT_FILE" ]]; then
+			TARGET_DAT_FILES="${TARGET_DAT_FILES:+$TARGET_DAT_FILES }$INPUT_FILE"
+		fi
+	done
+
+	[[ -z "$TARGET_DAT_FILES" ]] && return 0
+
+	OUTPUT_SUM_FILE=${FILE_PREFIX}.csv
+	get_min_rows
+
+	FIRST_DAT_FILE="${TARGET_DAT_FILES%% *}"
+	# Aseguramos el separador por comas para contar columnas fiablemente
+	NCOLS=$(awk -F',' '{print NF; exit}' "$FIRST_DAT_FILE")
+	HEADER=$(head -n 1 "$FIRST_DAT_FILE")
+	OUTPUT_FILE_CONTENT=$(get_column_data 1 "$FIRST_DAT_FILE")
+	local COL=2
+
+	while (( COL <= NCOLS )); do
+		local ALL_COLUMNS=""
+		for f in $TARGET_DAT_FILES; do
+			local col_data
+			col_data=$(get_column_data $COL "$f")
+			if [[ -z "$ALL_COLUMNS" ]]; then
+				ALL_COLUMNS="$col_data"
+			else
+				ALL_COLUMNS=$(paste -d " " <(echo "$ALL_COLUMNS") <(echo "$col_data"))
+			fi
+		done
+
+		local NEW_COLUMN
+		NEW_COLUMN=$(awk "$AWK_COMMAND" <<< "$ALL_COLUMNS")
+		OUTPUT_FILE_CONTENT=$(paste -d "," <(echo "$OUTPUT_FILE_CONTENT") <(echo "$NEW_COLUMN"))
+		((COL++))
+	done
+
+	echo "$HEADER" > "$OUTPUT_SUM_FILE"
+	echo "$OUTPUT_FILE_CONTENT" >> "$OUTPUT_SUM_FILE"
+}
+
+export -f op_dat_file
+
+function sum_dat_file() {
+	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
+
+	if [[ "$VALID_WORKLOAD_RUNTIME" == false ]]; then
+		return 0
+	fi
+    
+	awk -F ',' "\$1 <= $WORKLOAD_RUNTIME {for(i=2;i<=NF;i++)sum+=\$i; next} END {print sum}" <(echo "$OUTPUT_FILE_CONTENT") > $OUTPUT_TOT_SUM_FILE
+}
+
+function avg_dat_file() {
+	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print (NF>0 ? x/NF : 0)}'
+}
+
 function plot_dat_file_lines() {
 	# Evitamos que ls falle con error si la métrica no existe en ese nodo
 	DAT_FILES=$(ls ${FILE_PREFIX}*.csv 2>/dev/null)
@@ -32,77 +111,3 @@ function plot_dat_file_lines() {
 	palette_file='$PALETTE_FILE'; \
 	cols='$COLS'\"" $RAPL_PLOT_HOME/lines_graph.gplot >> $GRAPHS_SCRIPT
 }
-export -f plot_dat_file_lines
-
-function get_min_rows() {
-	unset MIN_ROWS
-	for f in $TARGET_DAT_FILES; do
-		# wc -l < fichero devuelve solo el número sin forks de cut
-		local ROWS=$(wc -l < "$f")
-		if [[ -z "$MIN_ROWS" || $ROWS -lt $MIN_ROWS ]]; then
-			MIN_ROWS=$ROWS
-		fi
-	done
-}
-export -f get_min_rows
-
-function get_row() {
-	# 1 solo comando: extrae la columna $1 desde la fila 2 hasta MIN_ROWS
-	awk -F',' -v col="$1" -v max="$MIN_ROWS" 'NR > 1 && NR <= max { print $col }' "$2"
-}
-export -f get_row
-
-function op_dat_file() {
-	AWK_COMMAND=$1
-	
-	TARGET_DAT_FILES=""
-	for INPUT_FILE in $(echo $INPUT_DAT_FILES | xargs -n1 | sort -u); do
-		if [[ $(basename "$(dirname "$INPUT_FILE")") != "node-0" ]]; then
-			TARGET_DAT_FILES="${TARGET_DAT_FILES:+$TARGET_DAT_FILES }$INPUT_FILE"
-		fi
-	done
-
-	OUTPUT_SUM_FILE=${FILE_PREFIX}.csv
-	get_min_rows
-
-	FIRST_DAT_FILE="${TARGET_DAT_FILES%% *}"
-	# Aseguramos el separador por comas para contar columnas fiablemente
-	NCOLS=$(awk -F',' '{print NF; exit}' "$FIRST_DAT_FILE")
-
-	HEADER=$(head -n 1 "$FIRST_DAT_FILE")
-	OUTPUT_FILE_CONTENT=$(get_row 1 "$FIRST_DAT_FILE")
-
-	COL=2
-	while [ "$COL" -le "$NCOLS" ]; do
-		unset ALL_COLUMNS
-		for f in $TARGET_DAT_FILES; do
-			ALL_COLUMNS=$(paste -d " " <(echo "$ALL_COLUMNS") <(get_row $COL "$f"))
-		done
-
-		NEW_COLUMN=$(awk "$AWK_COMMAND" <<< "$ALL_COLUMNS")
-		OUTPUT_FILE_CONTENT=$(paste -d "," <(echo "$OUTPUT_FILE_CONTENT") <(echo "$NEW_COLUMN"))
-		COL=$((COL + 1))
-	done
-
-	echo "$HEADER" > "$OUTPUT_SUM_FILE"
-	echo "$OUTPUT_FILE_CONTENT" >> "$OUTPUT_SUM_FILE"
-}
-export -f op_dat_file
-
-function sum_dat_file() {
-	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x}'
-
-	if [[ "$VALID_WORKLOAD_RUNTIME" == false ]]; then
-		return 0
-	fi
-    
-	awk -F ',' "\$1 <= $WORKLOAD_RUNTIME {for(i=2;i<=NF;i++)sum+=\$i; next} END {print sum}" <(echo "$OUTPUT_FILE_CONTENT") > $OUTPUT_TOT_SUM_FILE
-}
-export -f sum_dat_file
-
-
-function avg_dat_file() {
-	op_dat_file '{x=0;for(i=1;i<=NF;i++)x+=$i;print x/NF}'
-}
-export -f avg_dat_file
-

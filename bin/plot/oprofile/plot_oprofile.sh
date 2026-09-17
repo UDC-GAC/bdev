@@ -24,7 +24,7 @@ OUTPUT_NODE_SUM_FILE="${OPROFILELOGDIR}/sum.csv"
 rm -f $OUTPUT_NODE_SUM_FILE
 
 for ((i = 1; i <= NUM_LINES; i++)); do
-	ROW_FIRST_FILE=$(get_row $i "$FIRST_FILE")
+	ROW_FIRST_FILE=$(get_line $i "$FIRST_FILE")
 	[[ -z "$ROW_FIRST_FILE" ]] && continue
 	
 	EVENT="${ROW_FIRST_FILE%%,*}"
@@ -34,7 +34,7 @@ for ((i = 1; i <= NUM_LINES; i++)); do
 	PERCENT_SUM="0"
 
 	for f in $OPROFILEINPUTFILES; do
-		ROW=$(get_row $i "$f")
+		ROW=$(get_line $i "$f")
 		IFS=',' read -r _ VALUE PERCENT <<< "$ROW"
 		VALUE_SUM=$(op_int "$VALUE + $VALUE_SUM")
 		PERCENT_SUM=$(op "$PERCENT + $PERCENT_SUM")
