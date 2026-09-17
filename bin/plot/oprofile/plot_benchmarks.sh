@@ -18,8 +18,8 @@ BOX_SIZE=$(op "$STEP / $COLS")
 MINX=$(op_int "-1 ")
 MAXX=$(op_int "$CLUSTERS ")
 YLABEL="Counter value"
-DAT_HEADER="cluster_size"
 
+DAT_HEADER="cluster_size"
 for FRAMEWORK in $FRAMEWORKS; do
 	DAT_HEADER="$DAT_HEADER ${FRAMEWORK} ${FRAMEWORK}_MIN ${FRAMEWORK}_MAX"
 done
