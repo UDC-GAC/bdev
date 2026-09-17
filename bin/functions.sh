@@ -1036,7 +1036,7 @@ function begin_report() {
 	REPORT="$REPORT \t Flink local dirs  \t\t\t $FLINK_LOCAL_DIRS \n"
 	REPORT="$REPORT \n Benchmarks: \n"
 	
-	printf "%s\n" "$REPORT" > "$REPORT_FILE"
+	echo -e "$REPORT" > "$REPORT_FILE"
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME (seconds)' >> $REPORT_FILE
 
 	if [[ "$ENABLE_RUNTIME_PLOTS" == "true" ]]; then
