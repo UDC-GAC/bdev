@@ -1,59 +1,49 @@
 #!/bin/bash
 
-RAPL_ENERGY_SUMMARY_FILE=$RAPL_PLOT_DIR/energy_summary.csv
-RAPL_ED2P_SUMMARY_FILE=$RAPL_PLOT_DIR/ed2p_summary.csv
+RAPL_ENERGY_SUMMARY_FILE="$RAPL_PLOT_DIR/energy_summary.csv"
+RAPL_ED2P_SUMMARY_FILE="$RAPL_PLOT_DIR/ed2p_summary.csv"
 
-BENCHMARK_INPUT_DIRS=`find $FRAMEWORK_REPORT_DIR -wholename */${BENCHMARK}_*/rapl_records/avg`
+BENCHMARK_INPUT_DIRS=$(find "$FRAMEWORK_REPORT_DIR" -wholename "*/${BENCHMARK}_*/rapl_records/avg")
 
-for BENCHMARK_INPUT_DIR in $BENCHMARK_INPUT_DIRS
-do
-	cat $BENCHMARK_INPUT_DIR/energy_total | sed "s/^/${CLUSTER_SIZE},${FRAMEWORK},${BENCHMARK},/" >> $RAPL_ENERGY_SUMMARY_FILE
-	cat $BENCHMARK_INPUT_DIR/ed2p | sed "s/^/${CLUSTER_SIZE},${FRAMEWORK},${BENCHMARK},/" >> $RAPL_ED2P_SUMMARY_FILE
+for BENCHMARK_INPUT_DIR in $BENCHMARK_INPUT_DIRS; do
+	sed "s/^/${CLUSTER_SIZE},${FRAMEWORK},${BENCHMARK},/" "$BENCHMARK_INPUT_DIR/energy_total" >> "$RAPL_ENERGY_SUMMARY_FILE"
+	sed "s/^/${CLUSTER_SIZE},${FRAMEWORK},${BENCHMARK},/" "$BENCHMARK_INPUT_DIR/ed2p" >> "$RAPL_ED2P_SUMMARY_FILE"
 done
 
-CLUSTERS=`echo $CLUSTER_SIZES | wc -w`
+CLUSTERS=$(echo $CLUSTER_SIZES | wc -w)
 STEP=0.9
-COLS=`echo $FRAMEWORKS | wc -w`
-BOX_SIZE=`op "$STEP / $COLS"`
-MINX=`op_int "-1 "`
-MAXX=`op_int "$CLUSTERS "`
+COLS=$(echo $FRAMEWORKS | wc -w)
+BOX_SIZE=$(op "$STEP / $COLS")
+MINX=$(op_int "-1 ")
+MAXX=$(op_int "$CLUSTERS ")
 YLABEL_ENERGY="Energy (J)"
 YLABEL_ED2P="ED2P"
 
 DAT_HEADER="cluster_size"
-
-for FRAMEWORK in $FRAMEWORKS
-do
+for FRAMEWORK in $FRAMEWORKS; do
 	DAT_HEADER="$DAT_HEADER ${FRAMEWORK} ${FRAMEWORK}_MIN ${FRAMEWORK}_MAX"
 done
 
-RAPL_OUTPUT_DIR=$RAPL_PLOT_DIR/${BENCHMARK}
+RAPL_OUTPUT_DIR="$RAPL_PLOT_DIR/${BENCHMARK}"
+[[ -d "$RAPL_OUTPUT_DIR" ]] || mkdir -p "$RAPL_OUTPUT_DIR"
 
-if [[ ! -d $RAPL_OUTPUT_DIR ]]
-then
-	mkdir -p $RAPL_OUTPUT_DIR
-fi
-
-ENERGY_OUTPUT_FILE=${RAPL_OUTPUT_DIR}/energy.dat
-ENERGY_PLOT_FILE=${RAPL_OUTPUT_DIR}/energy.eps
+ENERGY_OUTPUT_FILE="${RAPL_OUTPUT_DIR}/energy.dat"
+ENERGY_PLOT_FILE="${RAPL_OUTPUT_DIR}/energy.eps"
 TITLE_TAG="$BENCHMARK_TAG Energy consumption (J)"
-echo "$DAT_HEADER" > $ENERGY_OUTPUT_FILE
-ENERGY_SUMMARY=`cat $RAPL_ENERGY_SUMMARY_FILE | grep ",${BENCHMARK},"`
+echo "$DAT_HEADER" > "$ENERGY_OUTPUT_FILE"
+ENERGY_SUMMARY=$(grep ",${BENCHMARK}," "$RAPL_ENERGY_SUMMARY_FILE")
 
-for CLUSTER_SIZE in $CLUSTER_SIZES
-do
+for CLUSTER_SIZE in $CLUSTER_SIZES; do
 	OUTPUTLINE=""
 
-	for FRAMEWORK in $FRAMEWORKS
-	do
-		LINE=`echo "$ENERGY_SUMMARY" | grep -E "^${CLUSTER_SIZE},${FRAMEWORK},"`
-		ENERGIES=`echo "$LINE" | cut -f 4 -d ","`
+	for FRAMEWORK in $FRAMEWORKS; do
+		LINE=$(grep -E "^${CLUSTER_SIZE},${FRAMEWORK}," <<< "$ENERGY_SUMMARY")
+		ENERGIES=$(cut -f 4 -d "," <<< "$LINE")
 
 		median $ENERGIES
 		maxmin $ENERGIES
 
-		if [[ $COUNT -eq 0 ]]
-		then
+		if [[ $COUNT -eq 0 ]]; then
 			MEDIAN="?"
 			MAX="?"
 			MIN="?"
@@ -61,10 +51,9 @@ do
 
 		OUTPUTLINE="$OUTPUTLINE $MEDIAN $MIN $MAX"
 	done
-	if [[ -n `echo "$OUTPUTLINE" | tr -d "?" | tr -d " "` ]]
-	then
-		OUTPUTLINE="$CLUSTER_SIZE$OUTPUTLINE"
-		echo "$OUTPUTLINE" >> $ENERGY_OUTPUT_FILE
+
+	if [[ -n $(tr -d '? ' <<< "$OUTPUTLINE") ]]; then
+		echo "${CLUSTER_SIZE}${OUTPUTLINE}" >> "$ENERGY_OUTPUT_FILE"
 	fi
 done
 
@@ -76,26 +65,23 @@ $GNUPLOT_BIN -e "input_file='$ENERGY_OUTPUT_FILE';output_file='$ENERGY_PLOT_FILE
 	minx='$MINX';maxx='$MAXX'" $RAPL_PLOT_HOME/graph_energy.gplot 
 
 
-ED2P_OUTPUT_FILE=${RAPL_OUTPUT_DIR}/ed2p.dat
-ED2P_PLOT_FILE=${RAPL_OUTPUT_DIR}/ed2p.eps
+ED2P_OUTPUT_FILE="${RAPL_OUTPUT_DIR}/ed2p.dat"
+ED2P_PLOT_FILE="${RAPL_OUTPUT_DIR}/ed2p.eps"
 TITLE_TAG="$BENCHMARK_TAG ED2P"
-echo "$DAT_HEADER" > $ED2P_OUTPUT_FILE
-ED2P_SUMMARY=`cat $RAPL_ED2P_SUMMARY_FILE | grep ",${BENCHMARK},"`
+echo "$DAT_HEADER" > "$ED2P_OUTPUT_FILE"
+ED2P_SUMMARY=$(grep ",${BENCHMARK}," "$RAPL_ED2P_SUMMARY_FILE")
 
-for CLUSTER_SIZE in $CLUSTER_SIZES
-do
+for CLUSTER_SIZE in $CLUSTER_SIZES; do
 	OUTPUTLINE=""
 
-	for FRAMEWORK in $FRAMEWORKS
-	do
-		LINE=`echo "$ED2P_SUMMARY" | grep -E "^${CLUSTER_SIZE},${FRAMEWORK},"`
-		ENERGIES=`echo "$LINE" | cut -f 4 -d ","`
+	for FRAMEWORK in $FRAMEWORKS; do
+		LINE=$(grep -E "^${CLUSTER_SIZE},${FRAMEWORK}," <<< "$ED2P_SUMMARY")
+		ENERGIES=$(cut -f 4 -d "," <<< "$LINE")`
 
 		median $ENERGIES
 		maxmin $ENERGIES
 
-		if [[ $COUNT -eq 0 ]]
-		then
+		if [[ $COUNT -eq 0 ]]; then
 			MEDIAN="?"
 			MAX="?"
 			MIN="?"
@@ -103,10 +89,9 @@ do
 
 		OUTPUTLINE="$OUTPUTLINE $MEDIAN $MIN $MAX"
 	done
-	if [[ -n `echo "$OUTPUTLINE" | tr -d "?" | tr -d " "` ]]
-	then
-		OUTPUTLINE="$CLUSTER_SIZE$OUTPUTLINE"
-		echo "$OUTPUTLINE" >> $ED2P_OUTPUT_FILE
+
+	if [[ -n $(tr -d '? ' <<< "$OUTPUTLINE") ]]; then
+		echo "${CLUSTER_SIZE}${OUTPUTLINE}" >> "$ED2P_OUTPUT_FILE"
 	fi
 done
 

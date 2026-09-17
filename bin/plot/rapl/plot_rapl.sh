@@ -3,12 +3,12 @@
 . $RAPL_PLOT_HOME/functions.sh
 . $RAPL_PLOT_HOME/constants.sh
 
-cd ${RAPLLOGDIR}
+cd "${RAPLLOGDIR}"
 
-GRAPHS_SCRIPT=${RAPLLOGDIR}/gen_plots.sh
-echo "$SCRIPT_HEADER" > ${GRAPHS_SCRIPT}
+GRAPHS_SCRIPT="${RAPLLOGDIR}/gen_plots.sh"
+echo "$SCRIPT_HEADER" > "${GRAPHS_SCRIPT}"
 
-RAPLNODEDIRS=`find -name "node-*"`
+RAPLNODEDIRS=$(find . -maxdepth 1 -type d -name "node-*")
 
 unset ENERGY_PACKAGE_FILES
 unset ENERGY_DRAM_FILES
@@ -23,8 +23,7 @@ unset POWER_PP1_FILES
 unset POWER_UNCORE_FILES
 unset VALID_WORKLOAD_RUNTIME
 
-for RAPLNODEDIR in $RAPLNODEDIRS
-do
+for RAPLNODEDIR in $RAPLNODEDIRS; do
 	YLABEL="Energy (J)"
 	YFORMAT=""
 	FILE_PREFIX=${RAPLNODEDIR}/rapl_energy_joules_package
@@ -68,8 +67,8 @@ done
 
 
 RAPL_AVG_DIR=./avg
-rm -rf $RAPL_AVG_DIR
-mkdir -p $RAPL_AVG_DIR
+rm -rf "$RAPL_AVG_DIR"
+mkdir -p "$RAPL_AVG_DIR"
 
 export VALID_WORKLOAD_RUNTIME=true
 
@@ -111,10 +110,10 @@ FILE_PREFIX=$RAPL_AVG_DIR/rapl_energy_joules
 plot_dat_file_lines
 
 if [[ "$VALID_WORKLOAD_RUNTIME" == true ]]; then
-	TOTAL_PACKAGE_ENERGY=$(cat "$TOTAL_PACKAGE_ENERGY_FILE")
+	TOTAL_PACKAGE_ENERGY=$(< "$TOTAL_PACKAGE_ENERGY_FILE")
 	
 	if [[ -f "$TOTAL_DRAM_ENERGY_FILE" ]]; then
-		TOTAL_DRAM_ENERGY=$(cat "$TOTAL_DRAM_ENERGY_FILE")
+		TOTAL_DRAM_ENERGY=$(< "$TOTAL_DRAM_ENERGY_FILE")
 		TOTAL_ENERGY=$(op "$TOTAL_PACKAGE_ENERGY + $TOTAL_DRAM_ENERGY")
 	else
 		TOTAL_ENERGY=$TOTAL_PACKAGE_ENERGY
@@ -122,8 +121,8 @@ if [[ "$VALID_WORKLOAD_RUNTIME" == true ]]; then
 	
 	ED2P=$(op "$WORKLOAD_RUNTIME ^ 2 * $TOTAL_ENERGY")
 	
-	echo $TOTAL_ENERGY > $RAPL_AVG_DIR/energy_total
-	echo $ED2P > $RAPL_AVG_DIR/ed2p
+	echo "$TOTAL_ENERGY" > "$RAPL_AVG_DIR/energy_total"
+	echo "$ED2P" > "$RAPL_AVG_DIR/ed2p"
 fi
 
 YLABEL="Power (W)"
@@ -151,17 +150,16 @@ plot_dat_file_lines
 FILE_PREFIX=${RAPL_AVG_DIR}/rapl_power
 plot_dat_file_lines
 
-chmod +x ${GRAPHS_SCRIPT}
+chmod +x "$GRAPHS_SCRIPT"
 
-if [[ ! -f ${REPORT_GEN_GRAPHS_FILE} ]]
-then
-	echo "$SCRIPT_HEADER" > ${REPORT_GEN_GRAPHS_FILE}
-	chmod +x ${REPORT_GEN_GRAPHS_FILE}
+if [[ ! -f "$REPORT_GEN_GRAPHS_FILE" ]]; then
+	echo "$SCRIPT_HEADER" > "$REPORT_GEN_GRAPHS_FILE"
+	chmod +x "$REPORT_GEN_GRAPHS_FILE"
 fi
 
-echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> ${REPORT_GEN_GRAPHS_FILE}
+echo ".${GRAPHS_SCRIPT#${REPORT_DIR}}" >> "$REPORT_GEN_GRAPHS_FILE"
 
-if [[ $RAPL_GEN_PLOTS == "true" ]]; then
+if [[ "$RAPL_GEN_PLOTS" == "true" ]]; then
 	m_echo "Generating RAPL plots for all nodes"
-	${GRAPHS_SCRIPT}
+	"$GRAPHS_SCRIPT"
 fi
