@@ -31,6 +31,8 @@ BDEv 4.X.X - 2026-10-XX
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
 
+		- Optimize and modernize plot generation scripts
+
 		- Remove OUTPUT_DIR from bdev-conf file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
 
 		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
