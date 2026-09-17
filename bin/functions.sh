@@ -869,28 +869,28 @@ function write_report() {
 	printf " %-5s \t %-25s \t %-20s \t %-10s" $CLUSTER_SIZE $FRAMEWORK $BENCHMARK $RUNTIMES >> $REPORT_FILE
 	printf "\n" >> $REPORT_FILE
 
-	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
+	if [[ "$ENABLE_RUNTIME_PLOTS" == "true" ]]; then
 		m_echo "Generating performance plots"
 		if [[ ! -d "$PLOT_DIR" ]]; then
-			mkdir -p $PLOT_DIR
+			mkdir -p "$PLOT_DIR"
 		fi
-		bash $PLOT_HOME/plot_benchmarks.sh >> $PLOT_DIR/log 2>&1
+		bash "$PLOT_HOME/plot_benchmarks.sh" >> "$PLOT_DIR/log" 2>&1
 	fi
 
-	if [[ $ENABLE_RAPL == "true" ]]; then
+	if [[ "$ENABLE_RAPL" == "true" ]]; then
 		m_echo "Generating RAPL plots"
 		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
-			mkdir -p $RAPL_PLOT_DIR
+			mkdir -p "$RAPL_PLOT_DIR"
 		fi
-		bash $RAPL_PLOT_HOME/plot_benchmarks.sh >> $RAPL_PLOT_DIR/log 2>&1
+		bash "$RAPL_PLOT_HOME/plot_benchmarks.sh" >> "$RAPL_PLOT_DIR/log" 2>&1
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]; then
+	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 		m_echo "Generating Oprofile plots"
 		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
-			mkdir -p $OPROFILE_PLOT_DIR
+			mkdir -p "$OPROFILE_PLOT_DIR"
 		fi
-		bash $OPROFILE_PLOT_HOME/plot_benchmarks.sh >> $OPROFILE_PLOT_DIR/log 2>&1
+		bash "$OPROFILE_PLOT_HOME/plot_benchmarks.sh" >> "$OPROFILE_PLOT_DIR/log" 2>&1
 	fi
 }
 
@@ -1086,58 +1086,57 @@ function start_benchmark() {
 	CURRENT_TIME=$(timestamp)
 	START_TOTAL_TIME=$(($START_TOTAL_TIME+$CURRENT_TIME))
 
-	if [[ $ENABLE_ILO == "true" ]]; then
+	if [[ "$ENABLE_ILO" == "true" ]]; then
 		m_echo "Starting ilo monitors"
-		bash $ILO_HOME/start_ilo_monitor.sh
-		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
+		bash "$ILO_HOME/start_ilo_monitor.sh"
+		WAIT_SECONDS="$MONITOR_DELAY_SECONDS"
 	fi
-	if [[ $ENABLE_STAT == "true" ]]; then
+	if [[ "$ENABLE_STAT" == "true" ]]; then
 		m_echo "Starting dool monitors"
-		bash $STAT_HOME/start_stat_monitor.sh
-		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
+		bash "$STAT_HOME/start_stat_monitor.sh"
+		WAIT_SECONDS="$MONITOR_DELAY_SECONDS"
 	fi
-	if [[ $ENABLE_RAPL == "true" ]]; then
+	if [[ "$ENABLE_RAPL" == "true" ]]; then
 		m_echo "Starting rapl monitors"
-		bash $RAPL_HOME/start_rapl_monitor.sh
-		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
+		bash "$RAPL_HOME/start_rapl_monitor.sh"
+		WAIT_SECONDS="$MONITOR_DELAY_SECONDS"
 	fi
-	if [[ $ENABLE_OPROFILE == "true" ]]; then
+	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 		m_echo "Starting oprofile monitors"
-		bash $OPROFILE_HOME/start_oprofile_monitor.sh
-		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
+		bash "$OPROFILE_HOME/start_oprofile_monitor.sh"
+		WAIT_SECONDS="$MONITOR_DELAY_SECONDS"
 	fi
-    	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+    	if [[ "$ENABLE_BDWATCHDOG" == "true" ]]; then
 		m_echo "Starting bdwatchdog monitors"
-		if [[ $BDWATCHDOG_ATOP == "true" ]]; then
+		if [[ "$BDWATCHDOG_ATOP" == "true" ]]; then
 			m_echo "Starting atop daemons"
-			bash $BDWATCHDOG_HOME/start_atop_monitor.sh
+			bash "BDWATCHDOG_HOME/start_atop_monitor.sh"
 		fi
-		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
+		if [[ "$BDWATCHDOG_TURBOSTAT" == "true" ]]; then
 			m_echo "Starting turbostat daemons"
-			bash $BDWATCHDOG_HOME/start_turbostat_monitor.sh
+			bash "$BDWATCHDOG_HOME/start_turbostat_monitor.sh"
 		fi
-		if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
+		if [[ "$BDWATCHDOG_NETHOGS" == "true" ]]; then
 			m_echo "Starting nethogs daemons"
-			bash $BDWATCHDOG_HOME/start_nethogs_monitor.sh
+			bash "$BDWATCHDOG_HOME/start_nethogs_monitor.sh"
 		fi
-		WAIT_SECONDS=$MONITOR_DELAY_SECONDS
+		WAIT_SECONDS="$MONITOR_DELAY_SECONDS"
 	fi
 
-	if [[ $WAIT_SECONDS -gt 0 ]]; then
+	if [[ "$WAIT_SECONDS" -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
-		sleep $WAIT_SECONDS
+		sleep "$WAIT_SECONDS"
 	fi
 
-	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
-		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-			### MARK start of workload
-			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py start "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
-		fi
+	if [[ "$ENABLE_BDWATCHDOG" == "true" && "$BDWATCHDOG_TIMESTAMPING" == "true" ]]; then
+		### MARK start of workload
+		"$PYTHON_BIN" "$BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py" \
+			start "$EXPERIMENT_NAME" "${BENCHMARK}_${i}" --username "$BDWATCHDOG_USERNAME" | \
+			"$PYTHON_BIN" "$BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py"
 	fi
 
 	unset BENCHMARK_FAILED
-	CURRENT_TIME=`timestamp`
+	CURRENT_TIME=$(timestamp)
 	START_TIME=$(($START_TIME+$CURRENT_TIME))
 }
 
@@ -1148,51 +1147,50 @@ function end_benchmark() {
 	local code="${1:-${exit_code:-0}}"
 	END_TIME=$(($END_TIME+$CURRENT_TIME))
 
-	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
-		if [[ $BDWATCHDOG_TIMESTAMPING == "true" ]]; then
-			### MARK end of workload
-			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py end "$EXPERIMENT_NAME" "$BENCHMARK"_"$i" --username $BDWATCHDOG_USERNAME | \
-			${PYTHON_BIN} $BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py
-		fi
+	if [[ "$ENABLE_BDWATCHDOG" == "true" && "$BDWATCHDOG_TIMESTAMPING" == "true" ]]; then
+		### MARK end of workload
+		"$PYTHON_BIN" "$BDWATCHDOG_TIMESTAMPING_SERVICE/timestamping/signal_test.py" \
+			end "$EXPERIMENT_NAME" "${BENCHMARK}_${i}" --username "$BDWATCHDOG_USERNAME" | \
+			"$PYTHON_BIN" "$BDWATCHDOG_TIMESTAMPING_SERVICE/mongodb/mongodb_agent.py"
 	fi
 
 	m_echo "Finished ${BENCHMARK^}"
 
-	if [[ $WAIT_SECONDS -gt 0 ]]; then
+	if [[ "$WAIT_SECONDS" -gt 0 ]]; then
 		m_echo "Waiting $WAIT_SECONDS seconds"
-       		sleep $WAIT_SECONDS
+       		sleep "$WAIT_SECONDS"
     	fi
 
-	if [[ $ENABLE_ILO == "true" ]]; then
+	if [[ "$ENABLE_ILO" == "true" ]]; then
 		m_echo "Stopping ilo monitors"
-		bash $ILO_HOME/stop_ilo_monitor.sh
+		bash "$ILO_HOME/stop_ilo_monitor.sh"
 	fi
-	if [[ $ENABLE_OPROFILE == "true" ]]; then
+	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 		m_echo "Stopping oprofile monitors"
-		bash $OPROFILE_HOME/stop_oprofile_monitor.sh
+		bash "$OPROFILE_HOME/stop_oprofile_monitor.sh"
 	fi
 	if [[ $ENABLE_RAPL == "true" ]]; then
 		m_echo "Stopping rapl monitors"
 		bash $RAPL_HOME/stop_rapl_monitor.sh
 	fi
-	if [[ $ENABLE_STAT == "true" ]]; then
+	if [[ "$ENABLE_STAT" == "true" ]]; then
 		m_echo "Stopping dool monitors"
-		bash $STAT_HOME/stop_stat_monitor.sh
+		bash "$STAT_HOME/stop_stat_monitor.sh"
 	fi
 
-	if [[ $ENABLE_BDWATCHDOG == "true" ]]; then
+	if [[ "$ENABLE_BDWATCHDOG" == "true" ]]; then
 		m_echo "Stopping bdwatchdog monitors"
-		if [[ $BDWATCHDOG_ATOP == "true" ]]; then
+		if [[ "$BDWATCHDOG_ATOP" == "true" ]]; then
 			m_echo "Stopping atop"
-			bash $BDWATCHDOG_HOME/stop_atop_monitor.sh
+			bash "$BDWATCHDOG_HOME/stop_atop_monitor.sh"
 		fi
-		if [[ $BDWATCHDOG_TURBOSTAT == "true" ]]; then
+		if [[ "$BDWATCHDOG_TURBOSTAT" == "true" ]]; then
 			m_echo "Stopping turbostat"
-			bash $BDWATCHDOG_HOME/stop_turbostat_monitor.sh
+			bash "$BDWATCHDOG_HOME/stop_turbostat_monitor.sh"
 		fi
-		if [[ $BDWATCHDOG_NETHOGS == "true" ]]; then
+		if [[ "$BDWATCHDOG_NETHOGS" == "true" ]]; then
 			m_echo "Stopping nethogs"
-			bash $BDWATCHDOG_HOME/stop_nethogs_monitor.sh
+			bash "$BDWATCHDOG_HOME/stop_nethogs_monitor.sh"
 		fi
 	fi
 
@@ -1223,19 +1221,19 @@ function end_benchmark() {
 		bash -c "$BENCHMARK_CLEANUP"
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]; then
+	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 		m_echo "Generating data for Oprofile"
-		bash $OPROFILE_PLOT_HOME/plot_oprofile.sh >> $OPROFILELOGDIR/log 2>&1
+		bash "$OPROFILE_PLOT_HOME/plot_oprofile.sh" >> "$OPROFILELOGDIR/log" 2>&1
 	fi
 	
-	if [[ $ENABLE_RAPL == "true" ]]; then
+	if [[ "$ENABLE_RAPL" == "true" ]]; then
 		m_echo "Generating data for RAPL"
-		bash $RAPL_PLOT_HOME/plot_rapl.sh >> $RAPLLOGDIR/log 2>&1
+		bash "$RAPL_PLOT_HOME/plot_rapl.sh" >> "$RAPLLOGDIR/log" 2>&1
 	fi
 	
-	if [[ $ENABLE_STAT == "true" ]]; then
+	if [[ "$ENABLE_STAT" == "true" ]]; then
 		m_echo "Generating data for dool"
-		bash $STAT_PLOT_HOME/plot_stats.sh >> $STATLOGDIR/log 2>&1
+		bash "$STAT_PLOT_HOME/plot_stats.sh" >> "$STATLOGDIR/log" 2>&1
 	fi
 	
 	save_runtime

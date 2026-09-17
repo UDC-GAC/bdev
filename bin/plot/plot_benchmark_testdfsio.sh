@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 FILES=`find $REPORT_DIR -wholename */testdfsio_*/output`
 
@@ -31,13 +30,13 @@ done
 YLABEL="Throughput (MB/s)"
 
 BENCHMARK_TAG="TestDFSIO Write Throughput"
-REPORT_CONTENTS=`echo -e "$TESTDFSIO_WRITE_CONTENTS"`
-DAT_FILE=$PLOT_DIR/${BENCHMARK}_write.dat
-PLOT_FILE=$PLOT_DIR/${BENCHMARK}_write.eps
-. $PLOT_HOME/gen_plot.sh
+REPORT_CONTENTS=$(echo -e "$TESTDFSIO_WRITE_CONTENTS")
+DAT_FILE="$PLOT_DIR/${BENCHMARK}_write.dat"
+PLOT_FILE="$PLOT_DIR/${BENCHMARK}_write.eps"
+. "$PLOT_HOME/gen_plot.sh"
 
 BENCHMARK_TAG="TestDFSIO Read Throughput"
-REPORT_CONTENTS=`echo -e "$TESTDFSIO_READ_CONTENTS"`
-DAT_FILE=$PLOT_DIR/${BENCHMARK}_read.dat
-PLOT_FILE=$PLOT_DIR/${BENCHMARK}_read.eps
-. $PLOT_HOME/gen_plot.sh
+REPORT_CONTENTS=$(echo -e "$TESTDFSIO_READ_CONTENTS")
+DAT_FILE="$PLOT_DIR/${BENCHMARK}_read.dat"
+PLOT_FILE="$PLOT_DIR/${BENCHMARK}_read.eps"
+. "$PLOT_HOME/gen_plot.sh"
