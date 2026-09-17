@@ -317,7 +317,7 @@ if [[ "$PYTHON_MAJOR_VERSION" != "3" ]]; then
 fi
 
 # Check gnuplot command
-require_binary GNUPLOT_BIN gnuplot
+require_binary --warn GNUPLOT_BIN gnuplot
 
 #Define the JPMS options exclusive to Java 9+
 if [[ "$JAVA_MAJOR_VER" -le 8 ]]; then
