@@ -32,7 +32,6 @@ function get_index() {
 	done
 	echo $found
 }
-export -f get_index
 
 function get_value() {
 	local num="$1"
@@ -44,7 +43,6 @@ function get_value() {
 		print $col
 	}' <<< "$string"
 }
-export -f get_value
 
 function ini_dat_file() {
 	DAT_FILE="${FILE_PREFIX}.dat"
@@ -54,7 +52,6 @@ function ini_dat_file() {
 	echo "$EPOCH_HEADER" > "$DAT_FILE"
 	echo "$EPOCHS" >> "$DAT_FILE"
 }
-export -f ini_dat_file
 
 function gen_dat_file() {
 	local tag_indexes
@@ -108,22 +105,18 @@ function gen_dat_file() {
 	mv "$TMP_DAT_FILE" "$DAT_FILE"
 	rm -f "$tmp_cols"
 }
-export -f gen_dat_file
 
 function sum_files() {
 	paste -d " " "$1" "$2" | awk '{printf("%.4f\n", ($1 + $2))}' > "$3"
 }
-export -f sum_files
 
 function div_file() {
 	awk -v div="$2" '{printf("%.4f\n", ($1 / div))}' "$1" > "$3"
 }
-export -f div_file
 
 function avg_file_rows() {
-	awk '{s=0; for(i=1; i<=NF; i++) s+=$i; printf("%.4f\n", s/NF)}' "$1" > "$2"
+	awk '{s=0; for(i=1; i<=NF; i++) s+=$i; printf("%.4f\n", NF>0 ? s/NF : 0)}' "$1" > "$2"
 }
-export -f avg_file_rows
 
 function sum_dat_file() {
 	local tag_indexes
@@ -168,14 +161,14 @@ function sum_dat_file() {
 	mv "$TMP_DAT_FILE" "$DAT_FILE"
 	rm -f "$tmp_sum"
 }
-export -f sum_dat_file
 
 function avg_dat_file() {
 	local -a target_files=()
 	local input_file dir
-	for input_file in $(echo "$INPUT_DAT_FILES" | xargs -n1 | sort -u); do
+	for input_file in $INPUT_DAT_FILES; do
+		[[ -f "$input_file" ]] || continue
 		dir=$(basename "$(dirname "$input_file")")
-		if [[ "$dir" != "node-0" && -f "$input_file" ]]; then
+		if [[ "$dir" != "node-0" ]]; then
 			target_files+=("$input_file")
 		fi
 	done
@@ -188,7 +181,6 @@ function avg_dat_file() {
 	AVG_DAT_FILE="${FILE_PREFIX}_avg.dat"
 	SUM_DAT_FILE="${FILE_PREFIX}_sum.dat"
 
-	# Agregación matricial completa en una sola pasada con awk
 	awk -F',' -v OFS=',' \
 	    -v dat_file="$DAT_FILE" \
 	    -v avg_file="$AVG_DAT_FILE" \
@@ -208,18 +200,19 @@ function avg_dat_file() {
 		if (r > max_r) max_r = r;
 		for (c = 1; c <= NF; c++) {
 			sum_cell[r, c] += $c;
+			count_cell[r, c]++;
 		}
 	}
 	END {
-		nfiles++; # Incluir primer archivo
-
-		# 1. Generar DAT_FILE (promedio por celda de todos los nodos)
+		# 1. Generar DAT_FILE (promedio dividiendo entre nodos activos en cada fila)
 		for (c = 1; c <= ncols; c++) {
 			printf "%s%s", headers[c], (c == ncols ? ORS : OFS) > dat_file;
 		}
 		for (r = 1; r <= max_r; r++) {
 			for (c = 1; c <= ncols; c++) {
+				cnt = count_cell[r, c];
 				avg_val = sum_cell[r, c] / nfiles;
+				avg_val = (cnt > 0) ? (sum_cell[r, c] / cnt) : 0;
 				printf "%.4f%s", avg_val, (c == ncols ? ORS : OFS) > dat_file;
 				if (headers[c] != epoch_hdr) {
 					col_sum[c] += avg_val;
@@ -227,7 +220,7 @@ function avg_dat_file() {
 			}
 		}
 
-		# 2. Generar AVG_DAT_FILE y SUM_DAT_FILE (cabecera)
+		# 2. Generar AVG_DAT_FILE y SUM_DAT_FILE (cabeceras)
 		first = 1;
 		for (c = 1; c <= ncols; c++) {
 			if (headers[c] == epoch_hdr) continue;
@@ -251,7 +244,6 @@ function avg_dat_file() {
 		printf ORS > sum_file;
 	}' "${target_files[@]}"
 }
-export -f avg_dat_file
 
 function plot_dat_file_lines() {
 	PLOT_FILE="${FILE_PREFIX}.eps"
@@ -269,7 +261,6 @@ function plot_dat_file_lines() {
 		palette_file='$PALETTE_FILE'; \
 		cols='$COLS'\"" "$STAT_PLOT_HOME/lines_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-export -f plot_dat_file_lines
 
 function plot_dat_file_boxes() {
 	PLOT_FILE="${FILE_PREFIX}.eps"
@@ -287,7 +278,6 @@ function plot_dat_file_boxes() {
 		palette_file='$PALETTE_FILE'; \
 		cols='$COLS'\"" "$STAT_PLOT_HOME/boxes_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-export -f plot_dat_file_boxes
 
 function plot_dat_file_stacked() {
 	STOCKED_PLOT_FILE="${FILE_PREFIX}_stacked.eps"
@@ -305,4 +295,3 @@ function plot_dat_file_stacked() {
 		palette_file='$PALETTE_FILE'; \
 		cols='$COLS'; \"" "$STAT_PLOT_HOME/stacked_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-export -f plot_dat_file_stacked
