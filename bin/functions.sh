@@ -1036,41 +1036,41 @@ function begin_report() {
 	REPORT="$REPORT \t Flink local dirs  \t\t\t $FLINK_LOCAL_DIRS \n"
 	REPORT="$REPORT \n Benchmarks: \n"
 	
-	echo -e "$REPORT" > $REPORT_FILE
+	printf "%s\n" "$REPORT" > "$REPORT_FILE"
 	printf " %-5s \t %-25s \t %-20s \t %-10s\n" 'NODES' 'FRAMEWORK' 'BENCHMARK' 'RUNTIME (seconds)' >> $REPORT_FILE
 
-	if [[ $ENABLE_RUNTIME_PLOTS == "true" ]]; then
+	if [[ "$ENABLE_RUNTIME_PLOTS" == "true" ]]; then
 		if [[ ! -d "$PLOT_DIR" ]]; then
 			mkdir -p $PLOT_DIR
 		fi
-		bash $PLOT_HOME/plot_legend.sh $PLOT_DIR >> $PLOT_DIR/log 2>&1
+		bash $PLOT_HOME/plot_legend.sh "$PLOT_DIR" >> $PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_RAPL == "true" ]]; then
+	if [[ "$ENABLE_RAPL" == "true" ]]; then
 		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
-			mkdir -p $RAPL_PLOT_DIR
+			mkdir -p "$RAPL_PLOT_DIR"
 		fi
-		bash $PLOT_HOME/plot_legend.sh $RAPL_PLOT_DIR >> $RAPL_PLOT_DIR/log 2>&1
+		bash $PLOT_HOME/plot_legend.sh "$RAPL_PLOT_DIR" >> $RAPL_PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_OPROFILE == "true" ]]; then
+	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
 		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
-			mkdir -p $OPROFILE_PLOT_DIR
+			mkdir -p "$OPROFILE_PLOT_DIR"
 		fi
-		bash $PLOT_HOME/plot_legend.sh $OPROFILE_PLOT_DIR >> $OPROFILE_PLOT_DIR/log 2>&1
+		bash $PLOT_HOME/plot_legend.sh "$OPROFILE_PLOT_DIR" >> $OPROFILE_PLOT_DIR/log 2>&1
 	fi
 
-	if [[ $ENABLE_ILO == "true" ]]; then
+	if [[ "$ENABLE_ILO" == "true" ]]; then
         	if [[ ! -d "$ILO_PLOT_DIR" ]]; then
-        	        mkdir -p $ILO_PLOT_DIR
+        	        mkdir -p "$ILO_PLOT_DIR"
 	        fi
 
-        	file=$(basename ${ILO_POWER_SCRIPT_TEMPLATE})
-	        ilo_script_content="$(cat ${ILO_POWER_SCRIPT_TEMPLATE})"
+        	file=$(basename "$ILO_POWER_SCRIPT_TEMPLATE")
+	        ilo_script_content=$(<"$ILO_POWER_SCRIPT_TEMPLATE")
         	ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/adminname/$ILO_USERNAME/g")
 	        ilo_script_content=$(echo -e "${ilo_script_content}" | sed "s/password/$ILO_PASSWD/g")
-        	echo "${ilo_script_content}" > ${ILO_PLOT_DIR}/${file}
-	        export ILO_POWER_SCRIPT=${ILO_PLOT_DIR}/${file}
+        	printf "%s\n" "$ilo_script_content" > "$ILO_PLOT_DIR/$file"
+	        export ILO_POWER_SCRIPT="$ILO_PLOT_DIR/$file"
 	fi
 }
 
@@ -1369,6 +1369,7 @@ export -f get_interactive_shell
 function cleanup_data() {
     local disk_space_check="false"
     local mkdirs="false"
+    local custom_nodes=()
 
     for arg in "$@"; do
         case "$arg" in
@@ -1377,6 +1378,9 @@ function cleanup_data() {
                 ;;
             --make-dirs|-m)
                 mkdirs="true"
+                ;;
+            *)
+                [[ -n "$arg" ]] && custom_nodes+=("$arg")
                 ;;
         esac
     done
@@ -1387,8 +1391,8 @@ function cleanup_data() {
         m_echo "Performing data cleanup"
     fi
 
-    # Deduplicate nodes in case the master is also a worker (or use nodes passed as arguments)
-    local target_nodes="${*:-$MASTERNODE $WORKERNODES}"
+    # Deduplicate nodes in case the master is also a worker (or use custom nodes if passed)
+    local target_nodes="${custom_nodes[*]:-$MASTERNODE $WORKERNODES}"
     local unique_nodes
     unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
 
