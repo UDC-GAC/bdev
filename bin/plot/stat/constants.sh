@@ -4,25 +4,25 @@ EPOCH_HEADER='Epoch'
 PALETTE_FILE="$STAT_PLOT_HOME/palette.plt"
 export SCRIPT_HEADER='#!/bin/bash
 dir=`dirname $0`
-cd $dir 
+cd $dir
 '
 
 CPU_TAG='"total cpu usage"'
 CPU_DIC="( ['\"usr\"']='User' ['\"sys\"']='System' ['\"wai\"']='Wait I/O' )"
 CPU_NVALUES=6
-CPU_YLABEL="CPU utilization (%)"
+CPU_YLABEL="CPU usage (%)"
 CPU_YFORMAT="percent"
 
 LOAD_TAG='"load avg"'
 LOAD_DIC="( ['\"1m\"']='Load' )"
 LOAD_NVALUES=3
-LOAD_YLABEL="CPU Load (avg #procs)"
+LOAD_YLABEL="CPU load (avg #procs)"
 LOAD_YFORMAT=""
 
 MEM_TAG='"memory usage"'
 MEM_DIC="( ['\"used\"']='Used' ['\"cach\"']='Cached' )"
 MEM_NVALUES=4
-MEM_YLABEL="Memory utilization"
+MEM_YLABEL="Memory usage"
 MEM_YFORMAT="bytes"
 MEM_PALETTE_FILE=$STAT_PLOT_HOME/palette_mem.plt
 
@@ -37,17 +37,17 @@ DSK_EXP='"dsk/*"'
 #DSK_DIC='( ["\\\"dsk/${DSK_NAME}:read\\\""]="Read" ["\\\"dsk/${DSK_NAME}:writ\\\""]="Write" )'
 DSK_DIC="( ['\"read\"']='Read' ['\"writ\"']='Write' )"
 DSK_NVALUES=2
-DSK_YLABEL="Disk traffic"
+DSK_YLABEL="Disk I/O"
 DSK_YFORMAT="bytes"
 
 #DSK_UTIL_DIC='( ["\\\"${DSK_NAME}:util\\\""]="Util" )'
 DSK_UTIL_DIC="( ['\"util\"']='Util' )"
 DSK_UTIL_NVALUES=1
-DSK_UTIL_YLABEL="Disk utilization (%)"
+DSK_UTIL_YLABEL="Disk usage (%)"
 DSK_UTIL_YFORMAT="percent"
 
 NET_EXP='"net/*"'
 NET_DIC="( ['\"recv\"']='Recv' ['\"send\"']='Send' )"
 NET_NVALUES=2
-NET_YLABEL="Network traffic"
+NET_YLABEL="Network I/O"
 NET_YFORMAT="bytes"
