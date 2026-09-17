@@ -319,6 +319,10 @@ fi
 # Check gnuplot command
 require_binary --warn GNUPLOT_BIN gnuplot
 
+if [[ "$GNUPLOT_BIN" == "null" ]]; then
+	m_exit "Plot generation will be disabled because gnuplot was not found"
+fi
+
 #Define the JPMS options exclusive to Java 9+
 if [[ "$JAVA_MAJOR_VER" -le 8 ]]; then
 	export JAVA_JPMS_OPTS=""
