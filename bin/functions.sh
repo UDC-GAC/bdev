@@ -870,7 +870,6 @@ function write_report() {
 	printf "\n" >> $REPORT_FILE
 
 	if [[ "$ENABLE_RUNTIME_PLOTS" == "true" ]]; then
-		m_echo "Generating performance plots"
 		if [[ ! -d "$PLOT_DIR" ]]; then
 			mkdir -p "$PLOT_DIR"
 		fi
@@ -878,7 +877,6 @@ function write_report() {
 	fi
 
 	if [[ "$ENABLE_RAPL" == "true" ]]; then
-		m_echo "Generating RAPL plots"
 		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p "$RAPL_PLOT_DIR"
 		fi
@@ -886,7 +884,6 @@ function write_report() {
 	fi
 
 	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
-		m_echo "Generating Oprofile plots"
 		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p "$OPROFILE_PLOT_DIR"
 		fi
