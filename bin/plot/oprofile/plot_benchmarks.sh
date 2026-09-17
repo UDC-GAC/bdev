@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ "$GNUPLOT_BIN" == "null" ]] && m_echo "Generating Oprofile plots"
+[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating Oprofile plots"
 
 OPROFILE_SUMMARY_FILE=$OPROFILE_PLOT_DIR/summary.csv
 
