@@ -13,7 +13,7 @@ for NODE in $UNIQUE_NODES; do
 	nohup $SSH_CMD $NODE "export OPROFILELOGFILE=${OPROFILENODEDIR}/oprofile; \
 		export OPROFILE_BIN=${OPROFILE_BIN}; \
 		export OPROFILE_EVENTS=${OPROFILE_EVENTS}; \
-		bash $OPROFILE_HOME/oprofile_monitor.sh" > ${OPROFILENODEDIR}/oprofile.out 2>&1 &
+		bash ${OPROFILE_HOME}/oprofile_monitor.sh" > ${OPROFILENODEDIR}/oprofile.out 2>&1 &
 	
 	NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
 done

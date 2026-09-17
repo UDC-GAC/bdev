@@ -16,7 +16,7 @@ for NODE in $UNIQUE_NODES; do
 		export RAPL_HOME=${RAPL_HOME}; \
 		export RAPL_COMMAND_NAME=${RAPL_COMMAND_NAME}; \
 		export RAPL_SECONDS_INTERVAL=${RAPL_SECONDS_INTERVAL}; \
-		bash $RAPL_HOME/rapl_monitor.sh" > ${RAPLNODEDIR}/rapl.out 2>&1 &
+		bash ${RAPL_HOME}/rapl_monitor.sh" > ${RAPLNODEDIR}/rapl.out 2>&1 &
 	
 	NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
 done
