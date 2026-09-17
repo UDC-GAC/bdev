@@ -59,11 +59,13 @@ for EVENT in $EVENTS; do
 		fi
 	done
 
-	$GNUPLOT_BIN -e "input_file='$EVENT_OUTPUT_FILE';output_file='$EVENT_PLOT_FILE'; \
-		palette_file='$PLOT_HOME/palette.plt'; \
-		box_size='$BOX_SIZE'; \
-		cols='$COLS'; label_y='$YLABEL'; label_xtics='$CLUSTER_SIZES'; \
-		title_tag='$TITLE_TAG'; \
-		minx='$MINX';maxx='$MAXX'" $OPROFILE_PLOT_HOME/graph.gplot 
+	if [[ "$GNUPLOT_BIN" != "null" ]]; then
+		$GNUPLOT_BIN -e "input_file='$EVENT_OUTPUT_FILE';output_file='$EVENT_PLOT_FILE'; \
+			palette_file='$PLOT_HOME/palette.plt'; \
+			box_size='$BOX_SIZE'; \
+			cols='$COLS'; label_y='$YLABEL'; label_xtics='$CLUSTER_SIZES'; \
+			title_tag='$TITLE_TAG'; \
+			minx='$MINX';maxx='$MAXX'" $OPROFILE_PLOT_HOME/graph.gplot
+	fi
 done
 

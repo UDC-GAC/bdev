@@ -57,12 +57,14 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 	fi
 done
 
-$GNUPLOT_BIN -e "input_file='$ENERGY_OUTPUT_FILE';output_file='$ENERGY_PLOT_FILE'; \
-	palette_file='$PLOT_HOME/palette.plt'; \
-	box_size='$BOX_SIZE'; \
-	cols='$COLS'; label_y='$YLABEL_ENERGY'; label_xtics='$CLUSTER_SIZES'; \
-	title_tag='$TITLE_TAG'; \
-	minx='$MINX';maxx='$MAXX'" $RAPL_PLOT_HOME/graph_energy.gplot 
+if [[ "$GNUPLOT_BIN" != "null" ]]; then
+	$GNUPLOT_BIN -e "input_file='$ENERGY_OUTPUT_FILE';output_file='$ENERGY_PLOT_FILE'; \
+		palette_file='$PLOT_HOME/palette.plt'; \
+		box_size='$BOX_SIZE'; \
+		cols='$COLS'; label_y='$YLABEL_ENERGY'; label_xtics='$CLUSTER_SIZES'; \
+		title_tag='$TITLE_TAG'; \
+		minx='$MINX';maxx='$MAXX'" $RAPL_PLOT_HOME/graph_energy.gplot
+fi
 
 
 ED2P_OUTPUT_FILE="${RAPL_OUTPUT_DIR}/ed2p.dat"
@@ -95,9 +97,11 @@ for CLUSTER_SIZE in $CLUSTER_SIZES; do
 	fi
 done
 
-$GNUPLOT_BIN -e "input_file='$ED2P_OUTPUT_FILE';output_file='$ED2P_PLOT_FILE'; \
-	palette_file='$PLOT_HOME/palette.plt'; \
-	box_size='$BOX_SIZE'; \
-	cols='$COLS'; label_y='$YLABEL_ED2P'; label_xtics='$CLUSTER_SIZES'; \
-	title_tag='$TITLE_TAG'; \
-	minx='$MINX';maxx='$MAXX'" $RAPL_PLOT_HOME/graph_ed2p.gplot 
+if [[ "$GNUPLOT_BIN" != "null" ]]; then
+	$GNUPLOT_BIN -e "input_file='$ED2P_OUTPUT_FILE';output_file='$ED2P_PLOT_FILE'; \
+		palette_file='$PLOT_HOME/palette.plt'; \
+		box_size='$BOX_SIZE'; \
+		cols='$COLS'; label_y='$YLABEL_ED2P'; label_xtics='$CLUSTER_SIZES'; \
+		title_tag='$TITLE_TAG'; \
+		minx='$MINX';maxx='$MAXX'" $RAPL_PLOT_HOME/graph_ed2p.gplot
+fi

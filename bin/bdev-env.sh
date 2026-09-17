@@ -320,7 +320,10 @@ fi
 require_binary --warn GNUPLOT_BIN gnuplot
 
 if [[ "$GNUPLOT_BIN" == "null" ]]; then
-	m_exit "Plot generation will be disabled because gnuplot was not found"
+	m_warn "Plot generation will be disabled because gnuplot was not found"
+	ENABLE_RUNTIME_PLOTS="false"
+	STAT_GEN_PLOTS="false"
+	RAPL_GEN_PLOTS="false"
 fi
 
 #Define the JPMS options exclusive to Java 9+

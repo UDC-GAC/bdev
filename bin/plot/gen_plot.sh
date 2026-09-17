@@ -50,5 +50,7 @@ cols='${COLS}'; label_y='${YLABEL}'; label_xtics='${CLUSTER_SIZES}'; \
 benchmark_tag='${BENCHMARK_TAG}'; \
 minx='${MINX}'; maxx='${MAXX}'"
 
-echo "${GNUPLOT_BIN} -e \"${GNUPLOT_ARGS}\" \"${PLOT_HOME}/graph.gplot\""
-$GNUPLOT_BIN -e "${GNUPLOT_ARGS}" "${PLOT_HOME}/graph.gplot"
+if [[ "$GNUPLOT_BIN" != "null" ]]; then
+	echo "${GNUPLOT_BIN} -e \"${GNUPLOT_ARGS}\" \"${PLOT_HOME}/graph.gplot\""
+	$GNUPLOT_BIN -e "${GNUPLOT_ARGS}" "${PLOT_HOME}/graph.gplot"
+fi

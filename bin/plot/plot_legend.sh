@@ -24,5 +24,7 @@ COLS=$(echo $FRAMEWORKS | wc -w)
 
 GNUPLOT_ARGS="input_file='${DAT_LEGEND_FILE}'; legend_file='${PLOT_LEGEND_FILE}'; palette_file='${PLOT_HOME}/palette.plt'; cols='${COLS}'"
 
-echo "${GNUPLOT_BIN} -e \"${GNUPLOT_ARGS}\" \"${PLOT_HOME}/legend.gplot\""
-$GNUPLOT_BIN -e "${GNUPLOT_ARGS}" "${PLOT_HOME}/legend.gplot"
+if [[ "$GNUPLOT_BIN" != "null" ]]; then
+	echo "${GNUPLOT_BIN} -e \"${GNUPLOT_ARGS}\" \"${PLOT_HOME}/legend.gplot\""
+	$GNUPLOT_BIN -e "${GNUPLOT_ARGS}" "${PLOT_HOME}/legend.gplot"
+fi
