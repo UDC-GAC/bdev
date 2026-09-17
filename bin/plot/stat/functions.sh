@@ -1,292 +1,308 @@
 #!/bin/bash
 
 function get_index() {
-	SEARCH_WORD=$1
-	IFS=',' read -a ARRAY <<< "${2}"
+	local search_word="$1"
+	local search_clean="${search_word//\"/}"
+	local search_dev
+	if [[ "$search_clean" == *:* ]]; then
+		search_dev="${search_clean#*:}"
+	else
+		search_dev="$search_clean"
+	fi
 
-	INDEX=1
-	FOUND_INDEXES=""
-	for WORD in "${ARRAY[@]}"
-	{
-		WORD_DEV=`echo $WORD | cut -f 2 -d ":" | tr -d "\""`
-		SEARCH_WORD_DEV=`echo $SEARCH_WORD | cut -f 2 -d ":" | tr -d "\""`
-		#echo "$WORD $SEARCH_WORD $WORD_DEV $SEARCH_WORD_DEV" 1>&2
-		if [[  $WORD == $SEARCH_WORD || $WORD_DEV == $SEARCH_WORD_DEV ]]
-		then
-			FOUND_INDEXES="$FOUND_INDEXES $INDEX"
+	local -a array
+	IFS=',' read -r -a array <<< "$2"
+
+	local index=1
+	local found=""
+	for word in "${array[@]}"; do
+		local word_clean="${word//\"/}"
+		local word_dev
+		if [[ "$word_clean" == *:* ]]; then
+			word_dev="${word_clean#*:}"
+		else
+			word_dev="$word_clean"
 		fi
-		INDEX=$(( $INDEX + 1 ))
-	}
-	echo $FOUND_INDEXES
-}
 
+		# Sin comillas en $search_word y $search_dev para respetar el globbing de "dsk/* y "net/*
+		if [[ $word == $search_word || $word_dev == $search_dev ]]; then
+			found="$found $index"
+		fi
+		((index++))
+	done
+	echo $found
+}
 export -f get_index
 
 function get_value() {
-	NUM=$1
-	STRING=$2
-	echo "$STRING" \
-	|  tr -s " " | sed -e 's/^[ \t]*//' \
-	| cut -d "," -f $NUM
+	local num="$1"
+	local string="$2"
+	# Reemplazo de echo | tr | sed | cut por un único awk en memoria
+	awk -F',' -v col="$num" '{
+		sub(/^[ \t]+/, "", $0);
+		gsub(/ +/, " ", $0);
+		print $col
+	}' <<< "$string"
 }
-
 export -f get_value
 
-
 function ini_dat_file() {
-	DAT_FILE=${FILE_PREFIX}.dat
-	TMP_DAT_FILE=${FILE_PREFIX}.tmp
-	SUM_FILE=${FILE_PREFIX}_sum.dat
-	TMP_SUM_FILE=${FILE_PREFIX}_sum.tmp
-	echo "$EPOCH_HEADER" > $DAT_FILE
-	echo "$EPOCHS" >> $DAT_FILE
+	DAT_FILE="${FILE_PREFIX}.dat"
+	TMP_DAT_FILE="${FILE_PREFIX}.tmp"
+	SUM_FILE="${FILE_PREFIX}_sum.dat"
+	TMP_SUM_FILE="${FILE_PREFIX}_sum.tmp"
+	echo "$EPOCH_HEADER" > "$DAT_FILE"
+	echo "$EPOCHS" >> "$DAT_FILE"
 }
-
 export -f ini_dat_file
 
 function gen_dat_file() {
-	TAG_INDEXES=`get_index "$TAG" "$HEADER"`
-	for FIRST_INDEX in "$TAG_INDEXES"
-	do
-		LAST_INDEX=$(( $FIRST_INDEX + $NVALUES - 1 ))
-		TAG_SUBHEADER=`echo "$SUBHEADER" | cut -d "," -f $FIRST_INDEX-$LAST_INDEX`
+	local tag_indexes
+	tag_indexes=$(get_index "$TAG" "$HEADER")
 
-		for SUB_TAG in ${!SUB_TAGS[@]}
-		do
-			TMP_FILE=$STATNODEDIR/$(echo ${SUB_TAG}.tmp | tr "/:" "_")
-			SUB_TAG_INDEX=`get_index "$SUB_TAG" "$TAG_SUBHEADER"`
-			if [[ -z $SUB_TAG_INDEX ]]
-			then
-				echo "Not found subtag ${SUB_TAG} of tag ${TAG} in $TAG_SUBHEADER"
-				continue;
+	local -a col_indices=()
+	local -a col_headers=()
+
+	# Recolección de índices en memoria: cero accesos a disco
+	for first_index in $tag_indexes; do
+		local last_index=$(( first_index + NVALUES - 1 ))
+		local tag_subheader
+		tag_subheader=$(cut -d "," -f "${first_index}-${last_index}" <<< "$SUBHEADER")
+
+		for sub_tag in "${!SUB_TAGS[@]}"; do
+			local sub_tag_index
+			sub_tag_index=$(get_index "$sub_tag" "$tag_subheader")
+			if [[ -z "$sub_tag_index" ]]; then
+				echo "Not found subtag ${sub_tag} of tag ${TAG} in $tag_subheader" >&2
+				continue
 			fi
-			TAG_SUB_INDEX=$(( $FIRST_INDEX + $SUB_TAG_INDEX - 1 ))
-			echo "${SUB_TAGS[$SUB_TAG]}" > $TMP_FILE
-			echo "$STAT_CONTENTS" | cut -d "," -f $TAG_SUB_INDEX >> $TMP_FILE
-			paste -d "," $DAT_FILE $TMP_FILE > $TMP_DAT_FILE
-			mv $TMP_DAT_FILE $DAT_FILE
-			rm $TMP_FILE
+			for s_idx in $sub_tag_index; do
+				col_indices+=( $(( first_index + s_idx - 1 )) )
+				col_headers+=( "${SUB_TAGS[$sub_tag]}" )
+			done
 		done
 	done
-}
 
+	if [[ ${#col_indices[@]} -eq 0 ]]; then
+		return
+	fi
+
+	local cut_fields new_header
+	cut_fields=$(IFS=','; echo "${col_indices[*]}")
+	new_header=$(IFS=','; echo "${col_headers[*]}")
+
+	# Extracción de todas las columnas de una sola vez y un único paste sobre DAT_FILE
+	local tmp_cols="${DAT_FILE}.newcols.tmp"
+	awk -F',' -v OFS=',' -v cols="$cut_fields" -v hdr="$new_header" '
+		BEGIN {
+			print hdr;
+			n = split(cols, c, ",");
+		}
+		{
+			for (i = 1; i <= n; i++) {
+				printf "%s%s", $(c[i]), (i == n ? ORS : OFS);
+			}
+		}' <<< "$STAT_CONTENTS" > "$tmp_cols"
+
+	paste -d "," "$DAT_FILE" "$tmp_cols" > "$TMP_DAT_FILE"
+	mv "$TMP_DAT_FILE" "$DAT_FILE"
+	rm -f "$tmp_cols"
+}
 export -f gen_dat_file
 
 function sum_files() {
-	touch $1
-	touch $2
-	paste -d " " $1 $2 | awk '{printf( "%f\n", ($1 + $2))}' > $3
+	paste -d " " "$1" "$2" | awk '{printf("%.4f\n", ($1 + $2))}' > "$3"
 }
-
 export -f sum_files
 
 function div_file() {
-	cat $1 | awk "{printf(\"%f\n\", (\$1 / $2) )}" > $3
+	awk -v div="$2" '{printf("%.4f\n", ($1 / div))}' "$1" > "$3"
 }
-
 export -f div_file
 
 function avg_file_rows() {
-	cat $1 | awk '{s=0; for(i=1; i<=NF; i++){s+=$i}; s/=NF; printf("%f\n", s)}' > $2
+	awk '{s=0; for(i=1; i<=NF; i++) s+=$i; printf("%.4f\n", s/NF)}' "$1" > "$2"
 }
-
 export -f avg_file_rows
 
 function sum_dat_file() {
-	TAG_INDEXES=`get_index "$TAG" "$HEADER"`
-	TMP_FILES=""
-	for FIRST_INDEX in "$TAG_INDEXES"
-	do
-		LAST_INDEX=$(( $FIRST_INDEX + $NVALUES - 1 ))
-		TAG_SUBHEADER=`echo "$SUBHEADER" | cut -d "," -f $FIRST_INDEX-$LAST_INDEX`
+	local tag_indexes
+	tag_indexes=$(get_index "$TAG" "$HEADER")
 
-		for SUB_TAG in ${!SUB_TAGS[@]}
-		do
-			TMP_FILE=$STATNODEDIR/${SUB_TAG}.tmp
-			SUB_TAG_INDEX=`get_index "$SUB_TAG" "$TAG_SUBHEADER"`
-			TAG_SUB_INDEX=$(( $FIRST_INDEX + $SUB_TAG_INDEX - 1 ))
-			echo "$STAT_CONTENTS" | cut -d "," -f $TAG_SUB_INDEX > $TMP_FILE
-			TMP_FILES="$TMP_FILES $TMP_FILE"
+	local -a col_indices=()
+	for first_index in $tag_indexes; do
+		local last_index=$(( first_index + NVALUES - 1 ))
+		local tag_subheader
+		tag_subheader=$(cut -d "," -f "${first_index}-${last_index}" <<< "$SUBHEADER")
+
+		for sub_tag in "${!SUB_TAGS[@]}"; do
+			local sub_tag_index
+			sub_tag_index=$(get_index "$sub_tag" "$tag_subheader")
+			for s_idx in $sub_tag_index; do
+				col_indices+=( $(( first_index + s_idx - 1 )) )
+			done
 		done
 	done
-	rm -f $SUM_FILE
-	for TMP_FILE in $TMP_FILES
-	do
-		if [[ ! -f "$SUM_FILE" ]]
-		then
-			cat $TMP_FILE > $SUM_FILE
-			continue
-		fi
-		paste -d " " $SUM_FILE $TMP_FILE | awk '{print ($1 + $2)}' > $TMP_SUM_FILE
-		mv $TMP_SUM_FILE $SUM_FILE
-	done
-	echo "$SUM_TAG" > $TMP_SUM_FILE
-	cat $SUM_FILE >> $TMP_SUM_FILE
-	mv $TMP_SUM_FILE $SUM_FILE
 
-	paste -d "," $DAT_FILE $SUM_FILE > $TMP_DAT_FILE
-	mv $TMP_DAT_FILE $DAT_FILE
-	rm $TMP_FILES $SUM_FILE
+	if [[ ${#col_indices[@]} -eq 0 ]]; then
+		return
+	fi
+
+	local cut_fields
+	cut_fields=$(IFS=','; echo "${col_indices[*]}")
+
+	# Suma horizontal fila por fila en streaming sin crear archivos intermedios
+	local tmp_sum="${DAT_FILE}.sumcol.tmp"
+	awk -F',' -v cols="$cut_fields" -v sum_tag="$SUM_TAG" '
+		BEGIN {
+			n = split(cols, c, ",");
+			print sum_tag;
+		}
+		{
+			s = 0;
+			for (i = 1; i <= n; i++) s += $(c[i]);
+			printf "%.4f\n", s;
+		}' <<< "$STAT_CONTENTS" > "$tmp_sum"
+
+	paste -d "," "$DAT_FILE" "$tmp_sum" > "$TMP_DAT_FILE"
+	mv "$TMP_DAT_FILE" "$DAT_FILE"
+	rm -f "$tmp_sum"
 }
-
 export -f sum_dat_file
 
 function avg_dat_file() {
-	TARGET_DAT_FILES=""
-	for INPUT_FILE in  $( echo $INPUT_DAT_FILES | xargs -n1 | sort -u | xargs )
-	do
-		if [[ ! $( basename $(dirname $INPUT_FILE ) ) == "node-0" ]]
-		then
-			TARGET_DAT_FILES="$TARGET_DAT_FILES $INPUT_FILE"
+	local -a target_files=()
+	local input_file dir
+	for input_file in $(echo "$INPUT_DAT_FILES" | xargs -n1 | sort -u); do
+		dir=$(basename "$(dirname "$input_file")")
+		if [[ "$dir" != "node-0" && -f "$input_file" ]]; then
+			target_files+=("$input_file")
 		fi
 	done
-	# echo $TARGET_DAT_FILES
-	DAT_FILE=${FILE_PREFIX}.dat
-	SUM_DAT_FILE=${FILE_PREFIX}_sum.dat
-	TMP_SUM_DAT_FILE=${FILE_PREFIX}_sum.tmp
-	AVG_DAT_FILE=${FILE_PREFIX}_avg.dat
-	TMP_AVG_DAT_FILE=${FILE_PREFIX}_avg.tmp
-	TMP_DAT_FILE=${FILE_PREFIX}_tmp.tmp
 
-	FIRST_FILE=`echo $TARGET_DAT_FILES | cut -d " " -f 1`
-	FIRST_HEAD=`cat $FIRST_FILE | head -n 1`
+	if [[ ${#target_files[@]} -eq 0 ]]; then
+		return
+	fi
 
-	NFILES=$(( `echo $TARGET_DAT_FILES | wc -w` ))
-	NCOLS=$(( `echo $FIRST_HEAD | grep -o "," | wc -l` + 1 ))
+	DAT_FILE="${FILE_PREFIX}.dat"
+	AVG_DAT_FILE="${FILE_PREFIX}_avg.dat"
+	SUM_DAT_FILE="${FILE_PREFIX}_sum.dat"
 
-	COL=1
-	while [ "$COL" -le "$NCOLS" ]
-	do
-		TMP_FILE=${FILE_PREFIX}_${COL}.tmp
-		JOIN_FILE=${FILE_PREFIX}_${COL}_join.tmp
-		TMP_JOIN_FILE=${FILE_PREFIX}_${COL}_tmp_join.tmp
-		AVG_FILE=${FILE_PREFIX}_${COL}_avg.tmp
-		TMP_AVG_FILE=${FILE_PREFIX}_${COL}_tmp_avg.tmp
-		AVG_AVG_FILE=${FILE_PREFIX}_${COL}_avg_avg.tmp
-		SUM_AVG_FILE=${FILE_PREFIX}_${COL}_avg_sum.tmp
+	# Agregación matricial completa en una sola pasada con awk
+	awk -F',' -v OFS=',' \
+	    -v dat_file="$DAT_FILE" \
+	    -v avg_file="$AVG_DAT_FILE" \
+	    -v sum_file="$SUM_DAT_FILE" \
+	    -v epoch_hdr="$EPOCH_HEADER" '
+	NR == FNR && FNR == 1 {
+		ncols = NF;
+		for (c = 1; c <= NF; c++) headers[c] = $c;
+		next;
+	}
+	FNR == 1 {
+		nfiles++;
+		next;
+	}
+	{
+		r = FNR - 1;
+		if (r > max_r) max_r = r;
+		for (c = 1; c <= NF; c++) {
+			sum_cell[r, c] += $c;
+		}
+	}
+	END {
+		nfiles++; # Incluir primer archivo
 
-		touch $JOIN_FILE
-		COL_TAG=`head -n 1 $FIRST_FILE | cut -d "," -f $COL`
-		for F in $TARGET_DAT_FILES
-		do
-			tail -n+2 $F | cut -d "," -f $COL > $TMP_FILE
-			paste -d " " $JOIN_FILE $TMP_FILE > $TMP_JOIN_FILE
-			mv $TMP_JOIN_FILE $JOIN_FILE
-		done
+		# 1. Generar DAT_FILE (promedio por celda de todos los nodos)
+		for (c = 1; c <= ncols; c++) {
+			printf "%s%s", headers[c], (c == ncols ? ORS : OFS) > dat_file;
+		}
+		for (r = 1; r <= max_r; r++) {
+			for (c = 1; c <= ncols; c++) {
+				avg_val = sum_cell[r, c] / nfiles;
+				printf "%.4f%s", avg_val, (c == ncols ? ORS : OFS) > dat_file;
+				if (headers[c] != epoch_hdr) {
+					col_sum[c] += avg_val;
+				}
+			}
+		}
 
-		avg_file_rows $JOIN_FILE $TMP_AVG_FILE
+		# 2. Generar AVG_DAT_FILE y SUM_DAT_FILE (cabecera)
+		first = 1;
+		for (c = 1; c <= ncols; c++) {
+			if (headers[c] == epoch_hdr) continue;
+			printf "%s%s", (first ? "" : OFS), headers[c] > avg_file;
+			printf "%s%s", (first ? "" : OFS), headers[c] > sum_file;
+			first = 0;
+		}
+		printf ORS > avg_file;
+		printf ORS > sum_file;
 
-		COL=$((COL + 1))
-		echo "$COL_TAG" > $AVG_FILE
-		cat $TMP_AVG_FILE >> $AVG_FILE
-
-
-		if [[ ! -f $DAT_FILE ]]
-		then
-			mv $AVG_FILE $DAT_FILE
-		else
-			paste -d "," $DAT_FILE $AVG_FILE > $TMP_DAT_FILE
-			mv $TMP_DAT_FILE $DAT_FILE
-		fi
-
-		AVG_VALUES=`cat $TMP_AVG_FILE`
-		
-		rm -f $TMP_FILE $JOIN_FILE $TMP_JOIN_FILE $AVG_FILE $TMP_AVG_FILE 
-
-		if [[ "$COL_TAG" == "$EPOCH_HEADER" ]]
-		then
-			continue
-		fi
-
-		avg $AVG_VALUES
-		echo "$COL_TAG" > $AVG_AVG_FILE
-		echo $AVG >> $AVG_AVG_FILE
-
-		if [[ ! -f $AVG_DAT_FILE ]]
-		then
-			mv $AVG_AVG_FILE $AVG_DAT_FILE
-		else
-			paste -d "," $AVG_DAT_FILE $AVG_AVG_FILE > $TMP_AVG_DAT_FILE
-			mv $TMP_AVG_DAT_FILE $AVG_DAT_FILE
-		fi
-
-		echo "$COL_TAG" > $SUM_AVG_FILE
-		echo $SUM >> $SUM_AVG_FILE
-		if [[ ! -f $SUM_DAT_FILE ]]
-		then
-			mv $SUM_AVG_FILE $SUM_DAT_FILE
-		else
-			paste -d "," $SUM_DAT_FILE $SUM_AVG_FILE > $TMP_SUM_DAT_FILE
-			mv $TMP_SUM_DAT_FILE $SUM_DAT_FILE
-		fi
-		rm -f $AVG_AVG_FILE $SUM_AVG_FILE
-	done
+		# 3. Generar AVG_DAT_FILE y SUM_DAT_FILE (valores agregados de columna)
+		first = 1;
+		for (c = 1; c <= ncols; c++) {
+			if (headers[c] == epoch_hdr) continue;
+			c_avg = (max_r > 0) ? (col_sum[c] / max_r) : 0;
+			printf "%s%.4f", (first ? "" : OFS), c_avg > avg_file;
+			printf "%s%.4f", (first ? "" : OFS), col_sum[c] > sum_file;
+			first = 0;
+		}
+		printf ORS > avg_file;
+		printf ORS > sum_file;
+	}' "${target_files[@]}"
 }
-
 export -f avg_dat_file
 
 function plot_dat_file_lines() {
-	PLOT_FILE=${FILE_PREFIX}.eps
-	DAT_HEAD=`head -n 1 $DAT_FILE`
-	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
-	MAX_EPOCH=`tail -n 1 $DAT_FILE | cut -d "," -f 1`
-	# echo $MAX_EPOCH
-	TICS_INTERVAL=`op_int $MAX_EPOCH / 300 \* 60`
-	if [[ "x$TICS_INTERVAL" == "x0" ]]
-	then
+	PLOT_FILE="${FILE_PREFIX}.eps"
+	DAT_HEAD=$(head -n 1 "$DAT_FILE")
+	local commas="${DAT_HEAD//[^,]/}"
+	COLS=${#commas}
+	MAX_EPOCH=$(tail -n 1 "$DAT_FILE" | cut -d "," -f 1)
+	TICS_INTERVAL=$(op_int $MAX_EPOCH / 300 \* 60)
+	if [[ -z "$TICS_INTERVAL" || "$TICS_INTERVAL" == "0" ]]; then
 		TICS_INTERVAL=30
 	fi
 	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \
-		cols='$COLS'\"" $STAT_PLOT_HOME/lines_graph.gplot >> $GRAPHS_SCRIPT
+		cols='$COLS'\"" "$STAT_PLOT_HOME/lines_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-
 export -f plot_dat_file_lines
 
 function plot_dat_file_boxes() {
-	PLOT_FILE=${FILE_PREFIX}.eps
-	DAT_HEAD=`head -n 1 $DAT_FILE`
-	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
-	MAX_EPOCH=`tail -n 1 $DAT_FILE | cut -d "," -f 1`
-	# echo $MAX_EPOCH
-	TICS_INTERVAL=`op_int $MAX_EPOCH / 300 \* 60`
-	if [[ "x$TICS_INTERVAL" == "x0" ]]
-	then
+	PLOT_FILE="${FILE_PREFIX}.eps"
+	DAT_HEAD=$(head -n 1 "$DAT_FILE")
+	local commas="${DAT_HEAD//[^,]/}"
+	COLS=${#commas}
+	MAX_EPOCH=$(tail -n 1 "$DAT_FILE" | cut -d "," -f 1)
+	TICS_INTERVAL=$(op_int $MAX_EPOCH / 300 \* 60)
+	if [[ -z "$TICS_INTERVAL" || "$TICS_INTERVAL" == "0" ]]; then
 		TICS_INTERVAL=30
 	fi
 	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \
-		cols='$COLS'\"" $STAT_PLOT_HOME/boxes_graph.gplot >> $GRAPHS_SCRIPT
+		cols='$COLS'\"" "$STAT_PLOT_HOME/boxes_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-
 export -f plot_dat_file_boxes
 
 function plot_dat_file_stacked() {
-	STOCKED_PLOT_FILE=${FILE_PREFIX}_stacked.eps
-	# if [[ -z $STATIC_COLS ]]
-	# then
-	# 	STATIC_COLS=0
-	# fi
-	DAT_HEAD=`head -n 1 $DAT_FILE`
-	COLS=`echo $DAT_HEAD | grep -o "," | wc -l`
-	# STOCKED_COLS=$(( $COLS - $STATIC_COLS ))
-	MAX_EPOCH=`tail -n 1 $DAT_FILE | cut -d "," -f 1`
-	# echo $MAX_EPOCH
-	TICS_INTERVAL=`op_int $MAX_EPOCH / 300 \* 60`
-	if [[ "x$TICS_INTERVAL" == "x0" ]]
-	then
+	STOCKED_PLOT_FILE="${FILE_PREFIX}_stacked.eps"
+	DAT_HEAD=$(head -n 1 "$DAT_FILE")
+	local commas="${DAT_HEAD//[^,]/}"
+	COLS=${#commas}
+	MAX_EPOCH=$(tail -n 1 "$DAT_FILE" | cut -d "," -f 1)
+	TICS_INTERVAL=$(op_int $MAX_EPOCH / 300 \* 60)
+	if [[ -z "$TICS_INTERVAL" || "$TICS_INTERVAL" == "0" ]]; then
 		TICS_INTERVAL=30
 	fi
 	echo $GNUPLOT_BIN -e "\"input_file='$DAT_FILE';output_file='$STOCKED_PLOT_FILE'; \
 		tic_interval=$TICS_INTERVAL; max_x='$MAX_EPOCH'; \
 		label_y='$YLABEL'; format_y='$YFORMAT'; \
 		palette_file='$PALETTE_FILE'; \
-		cols='$COLS'; \"" $STAT_PLOT_HOME/stacked_graph.gplot >> $GRAPHS_SCRIPT
+		cols='$COLS'; \"" "$STAT_PLOT_HOME/stacked_graph.gplot" >> "$GRAPHS_SCRIPT"
 }
-
 export -f plot_dat_file_stacked
-
