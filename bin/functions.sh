@@ -1225,17 +1225,17 @@ function end_benchmark() {
 	fi
 
 	if [[ "$ENABLE_OPROFILE" == "true" ]]; then
-		m_echo "Generating data for Oprofile"
+		m_echo "Generating data files for Oprofile"
 		bash "$OPROFILE_PLOT_HOME/plot_oprofile.sh" >> "$OPROFILELOGDIR/log" 2>&1
 	fi
 	
 	if [[ "$ENABLE_RAPL" == "true" ]]; then
-		m_echo "Generating data for RAPL"
+		m_echo "Generating data files for RAPL"
 		bash "$RAPL_PLOT_HOME/plot_rapl.sh" >> "$RAPLLOGDIR/log" 2>&1
 	fi
 	
 	if [[ "$ENABLE_STAT" == "true" ]]; then
-		m_echo "Generating data for dool"
+		m_echo "Generating data files for dool"
 		bash "$STAT_PLOT_HOME/plot_stats.sh" >> "$STATLOGDIR/log" 2>&1
 	fi
 	
