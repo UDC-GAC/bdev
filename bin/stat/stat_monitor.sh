@@ -9,6 +9,7 @@ DISKS=$(lsblk -dn -a -b -o NAME,TYPE,SIZE,RM --pairs |
             print substr($0, RSTART+6, RLENGTH-7)
         }
     ' |
+    sort |
     paste -sd, -)
 
 echo "Detected disks in $HOSTNAME: ${DISKS}" >&2
