@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating RAPL plots"
+
 RAPL_ENERGY_SUMMARY_FILE="$RAPL_PLOT_DIR/energy_summary.csv"
 RAPL_ED2P_SUMMARY_FILE="$RAPL_PLOT_DIR/ed2p_summary.csv"
 
