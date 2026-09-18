@@ -13,3 +13,5 @@ cleanup_data
 [[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 
 m_stop_message
+
+exit 0

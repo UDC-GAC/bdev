@@ -52,6 +52,7 @@ function m_exit() {
 		[[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 	fi
 
+	m_echo "Finishing.."
 	exit 1
 }
 
@@ -553,7 +554,7 @@ function probe_and_network_discovery() {
                 m_error "Shared storage pre-flight check failed on node: $node"
                 m_error "Directory '$REPORT_DIR' is not mounted or accessible on this node" >&2
                 rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp" 2>/dev/null || true
-                m_exit "The report directory must be shared across all nodes at the exact same path (e.g., via NFS/Lustre)"
+                m_exit "The report directory must be shared across all cluster nodes at the exact same path (e.g., via NFS/Lustre)"
             fi
 
             m_error "SSH pre-flight check failed on node: $node"
@@ -628,11 +629,6 @@ function probe_and_network_discovery() {
         fi
     done
 
-    # Remove temporary directories
-    rm -rf "$probe_tmp_dir" 2>/dev/null || true
-    for dir in "${dirs_to_check[@]}"; do
-        rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
-    done
             
     # Enable cleanup on exit
     export CLEANUP_ON_EXIT="true"
@@ -653,15 +649,19 @@ function probe_and_network_discovery() {
             done
 
             if [[ ${#dir_failed_nodes[@]} -gt 0 ]]; then
-                rm -f "$eth_tmp" "$ib_tmp"
+                rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp" 2>/dev/null || true
                 m_error "Storage verification failed for '$check_dir' on nodes: ${dir_failed_nodes[*]}"
                 m_exit "Directory '$check_dir' is not shared or writable across all cluster nodes"
             fi
 
             m_echo "Storage verified and writable across all nodes ($check_dir)"
+            rm -f "$check_dir"/.bdev_probe_* 2>/dev/null || true
         done
     fi
-    
+
+    # Remove temporary directory
+    rm -rf "$probe_tmp_dir" 2>/dev/null || true
+
     # Consolidate Ethernet with graceful degradation
     if [[ -n "$eth_iface" ]]; then
         if [[ $eth_failed -ne 0 || ${#eth_out_nodes[@]} -eq 0 ]]; then
