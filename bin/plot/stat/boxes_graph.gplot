@@ -25,8 +25,11 @@ set xrange ["0":max_x]
 set xlabel "Time (min:sec)"
 
 if (exists("format_y")) \
-	if (format_y eq 'bytes') set format y "%.0s %cB"; \
-	else if (format_y eq 'percent') set yrange [0:110]
+	if (format_y eq 'bytes') { \
+		set format y "%.0s %cB"; \
+		set yrange [0 : 1024 < *]; \
+	} \
+	else if (format_y eq 'percent') set yrange [0:105]
 
 if (exists("label_y")) set ylabel label_y noenhanced
 
