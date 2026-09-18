@@ -4,12 +4,23 @@
 
 ETH_IFACE="${1:-}"
 IB_IFACE="${2:-}"
+CHECK_SHARED_DIRS="${3:-}"
+NODE_ID="${4:-}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Preventive cleaning of existing processes
 if [[ -f "$SCRIPT_DIR/kill-process.sh" ]]; then
     "$SCRIPT_DIR/kill-process.sh" || true
+fi
+
+# Active shared storage check across all target directories
+if [[ -n "$CHECK_SHARED_DIRS" && -n "$NODE_ID" ]]; then
+    for dir in $CHECK_SHARED_DIRS; do
+        if [[ -d "$dir" ]]; then
+            echo "$NODE_ID" > "$dir/.bdev_probe_${NODE_ID}" 2>/dev/null || true
+        fi
+    done
 fi
 
 # IP extraction

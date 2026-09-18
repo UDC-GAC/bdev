@@ -485,11 +485,30 @@ function probe_and_network_discovery() {
     local ib_resolution_warning=0
     local eth_out_nodes=()
     local ib_out_nodes=()
+    local -a dirs_to_check=()
 
     [[ -n "$eth_iface" ]] && > "$eth_tmp"
     [[ -n "$ib_iface" ]]  && > "$ib_tmp"
 
+    if [[ -n "${REPORT_DIR:-}" ]]; then
+        dirs_to_check+=("$REPORT_DIR")
+    fi
+    
+    if [[ "${STORAGE_BACKEND,,}" == "shared_fs" && -n "${SHARED_STORAGE_DIR:-}" ]]; then
+        if [[ "$SHARED_STORAGE_DIR" != "$REPORT_DIR" ]]; then
+            dirs_to_check+=("$SHARED_STORAGE_DIR")
+        fi
+    fi
+    
+    # Prepare folders and purge previous tokens from the master
+    for dir in "${dirs_to_check[@]}"; do
+        mkdir -p "$dir" 2>/dev/null || true
+        rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
+    done
+
+    local dirs_param="${dirs_to_check[*]}"
     m_echo "Performing SSH checks, process cleanup and network discovery for all nodes"
+    
     for node in $nodes; do
         local ssh_output
         local exit_code
@@ -504,7 +523,7 @@ function probe_and_network_discovery() {
              export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
              export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
              export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
-             '$BDEV_BIN_DIR/helpers/probe_node.sh' '$eth_iface' '$ib_iface'" 2>&1)
+             '$BDEV_BIN_DIR/helpers/probe_node.sh' '$eth_iface' '$ib_iface' '$dirs_param' '$node'" 2>&1)
 
         # Abort on critical failure when SSH fails        
         exit_code=$?
@@ -514,6 +533,9 @@ function probe_and_network_discovery() {
             m_error "Exit code: $exit_code" >&2
             m_error "Details: $ssh_output" >&2
             rm -f "$eth_tmp" "$ib_tmp"
+            for dir in "${dirs_to_check[@]}"; do
+                rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
+            done
             m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
         fi
 
@@ -584,6 +606,31 @@ function probe_and_network_discovery() {
         fi
     done
 
+    # Active shared storage validation
+    if [[ ${#dirs_to_check[@]} -gt 0 ]]; then
+        local -a unique_nodes
+        readarray -t unique_nodes < <(printf '%s\n' $nodes | sort -u)
+
+        for check_dir in "${dirs_to_check[@]}"; do
+            local dir_failed_nodes=()
+
+            for u_node in "${unique_nodes[@]}"; do
+                local probe_file="${check_dir}/.bdev_probe_${u_node}"
+                if [[ ! -f "$probe_file" ]]; then
+                    dir_failed_nodes+=("$u_node")
+                fi
+            done
+
+            if [[ ${#dir_failed_nodes[@]} -gt 0 ]]; then
+                rm -f "$eth_tmp" "$ib_tmp"
+                m_error "Storage verification failed for '$check_dir' on nodes: ${dir_failed_nodes[*]}"
+                m_exit "Directory '$check_dir' is not shared or writable across all cluster nodes"
+            fi
+
+            m_echo "Storage verified and writable across all nodes ($check_dir)"
+        done
+    fi
+    
     # Consolidate Ethernet with graceful degradation
     if [[ -n "$eth_iface" ]]; then
         if [[ $eth_failed -ne 0 || ${#eth_out_nodes[@]} -eq 0 ]]; then
