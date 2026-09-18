@@ -17,7 +17,7 @@ BDEv 4.1.0 - 2026-10-XX
 
 		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
 
-		- Storage backend now can be any supported network/shared filesystem other than NFS, setting STORAGE_BACKEND variable to 'shared_fs' (bdev-conf.sh)
+		- Storage backend can now be any supported network/shared filesystem other than NFS, setting STORAGE_BACKEND variable to 'shared_fs' (bdev-conf.sh)
 
 		- Rename NFS_MOUNT_POINT variable to SHARED_STORAGE_DIR for setting the shared directory when using 'shared_fs' as storage backend (bdev-conf.sh)
 
@@ -35,9 +35,9 @@ BDEv 4.1.0 - 2026-10-XX
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
 
-		- Support for dynamic detection of disks both and network interfaces when monitoring resource usage with dool
+		- Support for dynamic detection of disks and network interfaces when monitoring resource usage with dool
 
-		- Add support for monitoring InfiniBand/RoCE detection with dool
+		- Add support for monitoring InfiniBand/RoCE network traffic using dool
 
 		- Optimize and modernize plot generation scripts
 
