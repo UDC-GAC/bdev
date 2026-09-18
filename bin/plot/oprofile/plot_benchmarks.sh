@@ -1,7 +1,5 @@
 #!/bin/bash
 
-[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating Oprofile plots"
-
 OPROFILE_SUMMARY_FILE=$OPROFILE_PLOT_DIR/summary.csv
 
 BENCHMARK_INPUT_FILES=$(find $FRAMEWORK_REPORT_DIR -wholename */${BENCHMARK}_*/sum.csv)

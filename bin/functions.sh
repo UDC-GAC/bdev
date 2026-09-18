@@ -856,6 +856,7 @@ function write_report() {
 		if [[ ! -d "$PLOT_DIR" ]]; then
 			mkdir -p "$PLOT_DIR"
 		fi
+		[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating performance plots"
 		bash "$PLOT_HOME/plot_benchmarks.sh" >> "$PLOT_DIR/log" 2>&1
 	fi
 
@@ -863,6 +864,7 @@ function write_report() {
 		if [[ ! -d "$RAPL_PLOT_DIR" ]]; then
 			mkdir -p "$RAPL_PLOT_DIR"
 		fi
+		[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating RAPL plots"
 		bash "$RAPL_PLOT_HOME/plot_benchmarks.sh" >> "$RAPL_PLOT_DIR/log" 2>&1
 	fi
 
@@ -870,6 +872,7 @@ function write_report() {
 		if [[ ! -d "$OPROFILE_PLOT_DIR" ]]; then
 			mkdir -p "$OPROFILE_PLOT_DIR"
 		fi
+		[[ "$GNUPLOT_BIN" != "null" ]] && m_echo "Generating Oprofile plots"
 		bash "$OPROFILE_PLOT_HOME/plot_benchmarks.sh" >> "$OPROFILE_PLOT_DIR/log" 2>&1
 	fi
 }
