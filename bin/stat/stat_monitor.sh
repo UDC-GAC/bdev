@@ -126,7 +126,7 @@ fi
 if (( USE_IB )); then
     if IB_INTERFACES=$(
         printf '%s\n' "$ALL_IB_INTERFACES" |
-        awk '$2 == "ACTIVE" { print $1 }' |
+        awk '$NF == "ACTIVE" { print $1 }' |
         sort |
         paste -sd, -
     ); then
@@ -186,7 +186,7 @@ DOOL_CMD+=(
 
 # Print and execute command
 printf 'Running: ' >&2
-printf '%q ' "${DOOL_CMD[@]}" >&2
+printf '%s ' "${DOOL_CMD[@]}" >&2
 printf '\n' >&2
 
 "${DOOL_CMD[@]}"
