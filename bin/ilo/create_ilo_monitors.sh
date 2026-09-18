@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mkdir -p "$POWERLOGDIR"
+export RESOLVEIP_COMMAND="${RESOLVEIP_COMMAND:-getent}"
 
 echo "Creating ilo_monitor in ${MASTERNODE}, storing data on ${POWERLOGDIR}/node-0.pow" >> "${POWERLOGDIR}/log" 2>&1
 bash "${ILO_HOME}/ilo_monitor.sh" "$MASTERNODE" 0 > "${POWERLOGDIR}/node-0.pow" 2>&1 &
