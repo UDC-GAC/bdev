@@ -2,8 +2,8 @@
 
 ## Global configuration parameters
 
-export STORAGE_BACKEND=hdfs		# Supported backends: hdfs, nfs
-export NFS_MOUNT_POINT=""		# Only required if STORAGE_BACKEND=nfs
+export STORAGE_BACKEND=hdfs		# Supported backends: hdfs, shared_fs
+export SHARED_STORAGE_DIR=""		# Only required when STORAGE_BACKEND=shared_fs
 export ENABLE_HOSTNAMES=true		# When set to false, BDEv use IPs instead of hostnames for cluster nodes
 export DEFAULT_TIMEOUT=3600		# Default workload timeout (in seconds)
 export ENABLE_RUNTIME_PLOTS=false	# Generates performance plots with the execution time of workloads

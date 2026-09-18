@@ -90,8 +90,8 @@ if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 	m_warn "BDEV_OUTPUT_DIR not defined, using default directory: $BDEV_OUTPUT_DIR"
 fi
 
-if ! is_nfs "$BDEV_OUTPUT_DIR"; then
-	m_warn "BDEV_OUTPUT_DIR is not a shared directory mounted using NFS, which will likely cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
+if ! is_shared_directory "$BDEV_OUTPUT_DIR"; then
+	m_warn "BDEV_OUTPUT_DIR does not appear to be a network/shared filesystem, which will likely cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
 fi
 
 if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
@@ -147,20 +147,20 @@ if [[ -z "$STORAGE_BACKEND" ]]; then
 	m_warn "STORAGE_BACKEND is not defined or is empty. Setting it to \"hdfs\""
 fi
 
-if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
-	if [[ -n "$NFS_MOUNT_POINT" ]]; then
-	        m_exit "NFS_MOUNT_POINT is empty"	
+if [[ "${STORAGE_BACKEND,,}" == "shared_fs" ]]; then
+	if [[ -z "$SHARED_STORAGE_DIR" ]]; then
+	        m_exit "STORAGE_BACKEND is set to 'shared_fs' but SHARED_STORAGE_DIR is not defined"	
 	fi
 	
-	if [[ ! -d "$NFS_MOUNT_POINT" ]]; then
-	        m_exit "NFS_MOUNT_POINT does not exist or is not a directory: $NFS_MOUNT_POINT"
+	if [[ ! -d "$SHARED_STORAGE_DIR" ]]; then
+	        m_exit "SHARED_STORAGE_DIR does not exist or is not a directory: $SHARED_STORAGE_DIR"
 	fi
     
-	if ! is_nfs "$NFS_MOUNT_POINT"; then
-	        m_exit "NFS_MOUNT_POINT is not a shared directory mounted using NFS: $NFS_MOUNT_POINT"
+	if ! is_shared_directory "$SHARED_STORAGE_DIR"; then
+		m_warn "SHARED_STORAGE_DIR does not appear to be a network/shared filesystem, which will likely cause issues for multi-node executions: $SHARED_STORAGE_DIR"
 	fi
 
-	export NFS_MOUNT_POINT=$(cd "$NFS_MOUNT_POINT" && pwd)
+	export SHARED_STORAGE_DIR=$(cd "$SHARED_STORAGE_DIR" && pwd)
 fi
 
 if [[ -z "${TMP_DIR:-}" ]]; then

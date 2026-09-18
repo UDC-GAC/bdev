@@ -7,8 +7,8 @@ function get_storage_uri_prefix() {
         hdfs)
             echo "hdfs://${MASTERNODE}:${HDFS_PORT}"
             ;;
-        nfs)
-            echo "file:${NFS_MOUNT_POINT}"
+        shared_fs)
+            echo "file:${SHARED_STORAGE_DIR}"
             ;;
         *)
             m_exit "Storage backend not supported: $STORAGE_BACKEND"
@@ -28,7 +28,7 @@ function storage_mkdir() {
         hdfs)
            "${HDFS_CMD[@]}" -mkdir -p "${target_dir}"
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local clean_path="${target_dir#file://}"
             clean_path="${clean_path#file:}"
@@ -63,7 +63,7 @@ function storage_ls() {
             # We leave the $recursive variable without quotes so that bash can evaluate whether to inject the flag or not
             "${HDFS_CMD[@]}" -ls $recursive "${target_path}"
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local clean_path="${target_path#file://}"
             clean_path="${clean_path#file:}"
@@ -88,7 +88,7 @@ function storage_copy_from_local() {
         hdfs)
             "${HDFS_CMD[@]}" -put "${local_file}" "${target_dir}"
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local local_clean_path="${local_file#file://}"
             local_clean_path="${local_clean_path#file:}"
@@ -115,7 +115,7 @@ function storage_copy_to_local() {
         hdfs)
             "${HDFS_CMD[@]}" -get "${remote_file}" "${local_dir}"
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local remote_clean_path="${remote_file#file://}"
             remote_clean_path="${remote_clean_path#file:}"
@@ -143,7 +143,7 @@ function storage_dir_exists() {
             "${HDFS_CMD[@]}" -test -d "${target_path}" 2>/dev/null
             return $?
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local clean_path="${target_path#file://}"
             clean_path="${clean_path#file:}"
@@ -183,13 +183,13 @@ function storage_rm() {
             # We leave the $recursive variable without quotes so that bash can evaluate whether to inject the flag or not inject anything (empty)
             "${HDFS_CMD[@]}" -rm $recursive -skipTrash "${target_path}" 2>/dev/null
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local clean_path="${target_path#file://}"
             clean_path="${clean_path#file:}"
             
-            if [[ -z "${clean_path}" ]] || [[ "${clean_path}" == "/" ]] || [[ "${clean_path}" == "${NFS_MOUNT_POINT}" ]]; then
-                m_exit "storage_rm: Blocked attempt to delete NFS root"
+            if [[ -z "${clean_path}" ]] || [[ "${clean_path}" == "/" ]] || [[ "${clean_path}" == "${SHARED_STORAGE_DIR}" ]]; then
+                m_exit "storage_rm: Blocked attempt to delete shared_fs root"
             fi
             
             if [[ -n "$recursive" ]]; then
@@ -228,7 +228,7 @@ function storage_chmod() {
         hdfs)
             "${HDFS_CMD[@]}" -chmod $recursive "${mode}" "${target_path}"
             ;;
-        nfs)
+        shared_fs)
             # Remove 'file://' or 'file:' prefix if it exists in the input variable
             local clean_path="${target_path#file://}"
             clean_path="${clean_path#file:}"

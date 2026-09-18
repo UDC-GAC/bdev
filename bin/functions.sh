@@ -68,8 +68,8 @@ function m_start_message() {
 	m_echo "Benchmark executions: $NUM_EXECUTIONS"
 	m_echo "Cluster sizes ($NUM_CLUSTERS): $CLUSTER_SIZES"
 	m_echo "Storage backend: $STORAGE_BACKEND"
-	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
-		m_echo "NFS mount point: $NFS_MOUNT_POINT"
+	if [[ "${STORAGE_BACKEND,,}" == "shared_fs" ]]; then
+		m_echo "Shared storage directory: $SHARED_STORAGE_DIR"
 	fi
 	m_echo "JVM: $BDEV_JAVA_HOME"
 	m_echo "Python: $PYTHON_BIN"
@@ -83,23 +83,6 @@ function m_stop_message() {
 }
 
 export -f m_stop_message
-
-function op() {
-	local res
-	res=$(printf '%s\n' "scale=4; ($*)/1" | bc)
-	# Add the initial 0 if the result is less than 1 (positive or negative)
-	[[ $res == .* ]] && res="0$res"
-	[[ $res == -.* ]] && res="-0${res#-}"
-	printf '%s\n' "$res"
-}
-
-export -f op
-
-function op_int() {
-	printf '%s\n' "scale=0; ($*)/1" | bc
-}
-
-export -f op_int
 
 function timestamp() {
     printf '%s\n' "$(( $(date +%s%N) / 1000000 ))"
@@ -906,8 +889,8 @@ function begin_report() {
 		REPORT="$REPORT \t Frameworks  \t\t\t\t $FRAMEWORKS \n"
 	fi
 	REPORT="$REPORT \t Storage backend  \t\t\t $STORAGE_BACKEND \n"
-	if [[ "${STORAGE_BACKEND,,}" == "nfs" ]]; then
-		REPORT="$REPORT \t NFS mount point  \t\t\t $NFS_MOUNT_POINT \n"
+	if [[ "${STORAGE_BACKEND,,}" == "shared_fs" ]]; then
+		REPORT="$REPORT \t Shared storage directory \t\t $SHARED_STORAGE_DIR \n"
 	fi
 	REPORT="$REPORT \t Cluster nodes  \t\t\t $MASTERNODE $WORKERNODES \n"
 	REPORT="$REPORT \t Cluster sizes  \t\t\t $CLUSTER_SIZES \n"
@@ -1273,19 +1256,40 @@ function save_runtime() {
 
 export -f save_runtime
 
-function is_nfs() {
+function is_shared_directory() {
     local target_path="$1"
 
-    if [[ -z "$target_path" ]]; then
-        return 2
-    fi
+    [[ -z "$target_path" || ! -d "$target_path" ]] && return 2
     
-    # findmnt will return 0 if it finds it, and 1 if it doesn't
-    findmnt -T "$target_path" -n -t nfs,nfs4 >/dev/null 2>&1
-    return $?
+    local net_fs="nfs,nfs4,cifs,smb3,lustre,gpfs,mmfs,beegfs,ceph,glusterfs,ocfs2,fuse.sshfs"
+    
+    # Is it mounted on the master node as a client of a network filesystem?
+    if findmnt -T "$target_path" -n -t "$net_fs" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    # Is the master the NFS server exporting this path? 
+    # Resolve symbolic links to compare with the export table    local real_target
+    real_target=$(readlink -f "$target_path" 2>/dev/null || echo "$target_path")
+
+    # Check if exportfs is available in the PATH
+    if command -v exportfs >/dev/null 2>&1; then
+        if exportfs -v 2>/dev/null | grep -qE "^${real_target}\b"; then
+            return 0
+        fi
+    fi
+
+    # Direct check of the NFS kernel table
+    if [[ -r /proc/fs/nfs/exports ]]; then
+        if grep -qE "^${real_target}\b" /proc/fs/nfs/exports 2>/dev/null; then
+            return 0
+        fi
+    fi
+
+    return 1
 }
 
-export -f is_nfs
+export -f is_shared_directory
 
 function require_binary() {
     local behavior="exit"
@@ -1619,6 +1623,20 @@ function inject_custom_dependencies() {
 
 export -f inject_custom_dependencies
 
+function op() {
+	local res
+	res=$(printf '%s\n' "scale=4; ($*)/1" | bc)
+	printf '%.4f\n' "$res"
+}
+
+export -f op
+
+function op_int() {
+	printf '%s\n' "scale=0; ($*)/1" | bc
+}
+
+export -f op_int
+
 function sum() {
     SUM=0
     local -a values=($*)
@@ -1658,6 +1676,7 @@ function avg() {
     COUNT=0
     local -a valid=()
     local val
+
     for val in $*; do
         if [[ "$val" != "FAILED" && "$val" != "TIMEOUT" ]]; then
             valid+=("$val")
@@ -1681,7 +1700,7 @@ scale=4
 s = 0 + $expr
 print s, " ", (s == 0), " "
 if (s != 0) {
-    scale=2
+    scale=4
     print s / $COUNT
 }
 EOF
@@ -1689,6 +1708,8 @@ EOF
 
     if [[ "$is_zero" -eq 1 ]]; then
         unset AVG
+   	else
+        AVG=$(printf '%.4f' "$AVG")
     fi
 }
 

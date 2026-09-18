@@ -45,7 +45,7 @@ if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
 	fi
 else
 	export HADOOP_DEFAULT_FS="file:///"
-	export YARN_APP_STAGING_DIR=file:${NFS_MOUNT_POINT}/tmp/hadoop-yarn/staging
+	export YARN_APP_STAGING_DIR=file:${SHARED_STORAGE_DIR}/tmp/hadoop-yarn/staging
 fi
 
 # Hadoop
