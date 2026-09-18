@@ -25,6 +25,10 @@ BDEv 4.1.0 - 2026-10-XX
 
 		- Parallelize cross-node SSH pre-flight checks, network discovery, and cleanup routines to significantly reduce cluster initialization times
 
+		- Parallelize lifecycle management (start/stop) for all monitoring agents via concurrent SSH execution
+
+		- Optimize Hadoop and YARN service startup by parallelizing independent HDFS, YARN, and auxiliary history daemon deployments
+
 		- Add sanity checks for required configuration files
 
 		- Remove all custom scripts and the 'daemons' directory, keeping the original scripts bundled with the frameworks untouched
