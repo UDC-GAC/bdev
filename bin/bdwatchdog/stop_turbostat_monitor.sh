@@ -1,3 +1,3 @@
 #!/bin/bash
 
-parallel_ssh ". '${BDW_LOG_DIR}/config.sh'; '${PYTHON_BIN}' '${BDWATCHDOG_DAEMONS_DIR}/turbostat.py' stop" "${BDW_LOG_DIR}/turbostat_log"
+parallel_ssh ". '${BDW_LOG_DIR}/config.sh'; '${PYTHON_BIN}' '${BDWATCHDOG_DAEMONS_DIR}/turbostat.py' stop" "${BDW_LOG_DIR}/turbostat_log" "Stopping turbostat monitor"
