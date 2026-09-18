@@ -2,9 +2,9 @@
 
 OCOUNT_ARGS="-s -b -f ${OPROFILELOGFILE}"
 
-if [[ ${OPROFILE_EVENTS} != "" ]]; then
+if [[ "${OPROFILE_EVENTS}" != "" ]]; then
 	echo "Monitoring events: ${OPROFILE_EVENTS}"
 	OCOUNT_ARGS="$OCOUNT_ARGS -e ${OPROFILE_EVENTS}"
 fi
 
-${OPROFILE_BIN} $OCOUNT_ARGS
+exec "${OPROFILE_BIN}" $OCOUNT_ARGS
