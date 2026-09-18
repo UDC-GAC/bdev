@@ -382,6 +382,8 @@ function parallel_ssh() {
     wait
 }
 
+export -f parallel_ssh
+
 function load_hostfile() {
 	local nodes_source=""
 	local raw_nodes=""
