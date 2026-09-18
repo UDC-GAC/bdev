@@ -49,7 +49,7 @@ if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	WORKERS=$(cat "$WORKERSFILE" 2>/dev/null || true)
 	if [[ -n "$WORKERS" ]]; then
 		kill_java_process "$NODE" "NodeManager"
-	done
+	fi
 
   	kill_java_process "$MASTERNODE" "ResourceManager"
 
