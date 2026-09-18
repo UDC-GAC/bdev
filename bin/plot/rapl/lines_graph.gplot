@@ -19,7 +19,7 @@ set key autotitle columnheader noenhanced
 set yrange [0:*]
 set xrange ["0":max_x]
 
-set xlabel "Time (min:s)"
+set xlabel "Time (min:sec)"
 
 if (exists("format_y")) \
 	if (format_y eq 'bytes') set format y "%.0s %cB"; \
