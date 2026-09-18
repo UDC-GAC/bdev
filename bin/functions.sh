@@ -354,6 +354,34 @@ function generate_framework_config() {
 
 export -f generate_framework_config
 
+function parallel_ssh() {
+    local cmd_payload="$1"
+    local log_file="${2:-/dev/null}"
+    local target_nodes="${3:-$MASTERNODE $WORKERNODES}"
+
+    local unique_nodes
+    unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
+
+    local node_index=0
+    for node in $unique_nodes; do
+        (
+            # Export the current node and its index for use within the command if required
+            export NODE="$node"
+            export NODE_INDEX="$node_index"
+
+            # Evaluate the command to check for references to $NODE or $NODE_INDEX
+            local remote_cmd
+            eval "remote_cmd=\"$cmd_payload\""
+
+            $SSH_CMD "$node" "$remote_cmd"
+        ) >> "$log_file" 2>&1 &
+
+        ((node_index++))
+    done
+
+    wait
+}
+
 function load_hostfile() {
 	local nodes_source=""
 	local raw_nodes=""
