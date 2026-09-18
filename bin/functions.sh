@@ -1629,7 +1629,7 @@ export -f inject_custom_dependencies
 function op() {
 	local res
 	res=$(printf '%s\n' "scale=4; ($*)/1" | bc)
-	printf '%.4f\n' "$res"
+	LC_NUMERIC=C printf '%.4f\n' "$res"
 }
 
 export -f op
