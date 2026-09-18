@@ -51,3 +51,10 @@ NET_DIC="( ['\"recv\"']='Recv' ['\"send\"']='Send' )"
 NET_NVALUES=2
 NET_YLABEL="Network I/O"
 NET_YFORMAT="bytes"
+
+# InfiniBand / RoCE
+IB_EXP='"ib/*"'
+IB_DIC="( ['\"recv\"']='Recv' ['\"send\"']='Send' )"
+IB_NVALUES=2
+IB_YLABEL="InfiniBand/RoCE I/O"
+IB_YFORMAT="bytes"

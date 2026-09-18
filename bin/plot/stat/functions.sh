@@ -3,12 +3,6 @@
 function get_index() {
 	local search_word="$1"
 	local search_clean="${search_word//\"/}"
-	local search_dev
-	if [[ "$search_clean" == *:* ]]; then
-		search_dev="${search_clean#*:}"
-	else
-		search_dev="$search_clean"
-	fi
 
 	local -a array
 	IFS=',' read -r -a array <<< "$2"
@@ -17,15 +11,14 @@ function get_index() {
 	local found=""
 	for word in "${array[@]}"; do
 		local word_clean="${word//\"/}"
-		local word_dev
-		if [[ "$word_clean" == *:* ]]; then
-			word_dev="${word_clean#*:}"
-		else
-			word_dev="$word_clean"
-		fi
+		# Extracción de la submétrica tras el último delimitador (ej. "read", "recv")
+		local word_sub="${word_clean##*:}"
 
-		# Sin comillas en $search_word y $search_dev para respetar el globbing de "dsk/* y "net/*
-		if [[ $word == $search_word || $word_dev == $search_dev ]]; then
+		# Coincidencia exacta o patrón glob (ej. "ib/*", "ib/mlx5_0:1")
+		# Coincidencia de submétrica (ej. "recv" contra "recv" o contra "net/eno1:recv")
+		if [[ $word == $search_word || $word_clean == $search_clean ]]; then
+			found="$found $index"
+		elif [[ "$word_clean" == *:* && $word_sub == $search_clean ]]; then
 			found="$found $index"
 		fi
 		((index++))

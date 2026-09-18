@@ -14,6 +14,7 @@ MEM_DAT_FILES=""
 declare -A DSK_DAT_FILES
 declare -A DSK_UTIL_DAT_FILES
 declare -A NET_DAT_FILES
+declare -A IB_DAT_FILES
 
 # Búsqueda segura evitando word-splitting si hay rutas con espacios
 while IFS= read -r -d '' STATLOGFILE; do
@@ -146,6 +147,30 @@ while IFS= read -r -d '' STATLOGFILE; do
 		plot_dat_file_lines
 		plot_dat_file_stacked
 	done
+	
+	# InfiniBand / RoCE
+	IB_INDEXES=$(get_index "$IB_EXP" "$HEADER")
+
+	for INDEX in $IB_INDEXES; do
+		IB_TAG=$(get_value "$INDEX" "$HEADER")
+		IB_NAME="${IB_TAG##\"ib/}"
+		IB_NAME="${IB_NAME%*\"}"
+
+		# Sanitizar ':' para nombres de archivo (mlx5_0:1 -> mlx5_0_1)
+		IB_FILE_NAME="${IB_NAME//:/_}"
+
+		FILE_PREFIX="$STATNODEDIR/ib_${IB_FILE_NAME}_stat"
+		TAG="$IB_TAG"
+		NVALUES="$IB_NVALUES"
+		YLABEL=$IB_YLABEL
+		YFORMAT=$IB_YFORMAT
+		declare -A SUB_TAGS=$IB_DIC
+		ini_dat_file
+		IB_DAT_FILES["$IB_NAME"]="${IB_DAT_FILES[$IB_NAME]} $DAT_FILE"
+		gen_dat_file
+		plot_dat_file_lines
+		plot_dat_file_stacked
+	done
 done < <(find . -type f -name "stat.csv" -print0)
 
 STAT_AVG_DIR=./avg
@@ -206,6 +231,18 @@ for NET_NAME in "${!NET_DAT_FILES[@]}"; do
 	FILE_PREFIX="$STAT_AVG_DIR/net_${NET_NAME}_stat"
 	YLABEL=$NET_YLABEL
 	YFORMAT=$NET_YFORMAT
+
+	avg_dat_file
+	plot_dat_file_lines
+	plot_dat_file_stacked
+done
+
+for IB_NAME in "${!IB_DAT_FILES[@]}"; do
+	INPUT_DAT_FILES="${IB_DAT_FILES[$IB_NAME]}"
+	IB_FILE_NAME="${IB_NAME//:/_}"
+	FILE_PREFIX="$STAT_AVG_DIR/ib_${IB_FILE_NAME}_stat"
+	YLABEL=$IB_YLABEL
+	YFORMAT=$IB_YFORMAT
 
 	avg_dat_file
 	plot_dat_file_lines
