@@ -48,13 +48,13 @@ kill_java_process() {
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	WORKERS=$(cat "$WORKERSFILE" 2>/dev/null || true)
 	if [[ -n "$WORKERS" ]]; then
-		kill_java_process "$NODE" "NodeManager"
+		kill_java_process "NodeManager" $WORKERS
 	fi
 
-  	kill_java_process "$MASTERNODE" "ResourceManager"
+  	kill_java_process "ResourceManager" "$MASTERNODE"
 
   	if [[ $TIMELINE_SERVER == "true" ]]; then
-		kill_java_process "$MASTERNODE" "ApplicationHistoryServer"
+		kill_java_process "ApplicationHistoryServer" "$MASTERNODE"
 	fi
 else
 	m_echo "Stopping YARN services"
@@ -62,5 +62,5 @@ else
 fi
 
 if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
-	kill_java_process "$MASTERNODE" "JobHistoryServer"
+	kill_java_process "JobHistoryServer" "$MASTERNODE"
 fi
