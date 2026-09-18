@@ -17,4 +17,5 @@ nohup $SSH_CMD "$ILO_MASTER" \
      export ILO_CONFIG_SCRIPT='$ILO_CONFIG_SCRIPT'; \
      export ILO_SECONDS_INTERVAL='$ILO_SECONDS_INTERVAL'; \
      export ILO_BASE_IP='$ILO_BASE_IP'; \
+     export RESOLVEIP_COMMAND='${RESOLVEIP_COMMAND:-getent}'; \
      bash '$ILO_HOME/create_ilo_monitors.sh'" >/dev/null 2>&1 &
