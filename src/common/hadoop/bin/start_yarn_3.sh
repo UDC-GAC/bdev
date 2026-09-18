@@ -31,6 +31,7 @@ fi
     $YARN_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start nodemanager
 ) &
 
+# Auxiliary servers
 if [[ "$TIMELINE_SERVER" == "true" ]]; then
     (
 		#YARN Timeline server
