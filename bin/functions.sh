@@ -1464,23 +1464,40 @@ function cleanup_data() {
     unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
 
     local cleanup_failed_nodes=()
+    local cleanup_tmp_dir
+    cleanup_tmp_dir=$(mktemp -d /tmp/bdev_cleanup_data_XXXXXX)
 
     for node in $unique_nodes; do
-        local node_output
-        local node_status
+        (
+            local node_output
+            local node_status
 
-        node_output=$($SSH_CMD "$node" "export USER='${USER}'; \
-            export TMP_DIR='${TMP_DIR:-}'; \
-            export LOCAL_DIRS='${LOCAL_DIRS:-}'; \
-            export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS:-}'; \
-            export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS:-}'; \
-            export FORCE_WIPE_HDFS='${FORCE_WIPE_HDFS:-}'; \
-            export DISK_SPACE_CHECK='${disk_space_check}'; \
-            export DISK_SPACE_THRESHOLD='${DISK_SPACE_THRESHOLD:-}'; \
-            export MKDIRS='${mkdirs}'; \
-            '$BDEV_BIN_DIR/helpers/clean-data.sh'" 2>&1)
-        
-        node_status=$?
+            node_output=$($SSH_CMD "$node" "export USER='${USER}'; \
+                export TMP_DIR='${TMP_DIR:-}'; \
+                export LOCAL_DIRS='${LOCAL_DIRS:-}'; \
+                export SPARK_LOCAL_DIRS='${SPARK_LOCAL_DIRS:-}'; \
+                export FLINK_LOCAL_DIRS='${FLINK_LOCAL_DIRS:-}'; \
+                export FORCE_WIPE_HDFS='${FORCE_WIPE_HDFS:-}'; \
+                export DISK_SPACE_CHECK='${disk_space_check}'; \
+                export DISK_SPACE_THRESHOLD='${DISK_SPACE_THRESHOLD:-}'; \
+                export MKDIRS='${mkdirs}'; \
+                '$BDEV_BIN_DIR/helpers/clean-data.sh'" 2>&1)
+            node_status=$?
+
+            echo "$node_status" > "$cleanup_tmp_dir/${node}.status"
+            echo "$node_output" > "$cleanup_tmp_dir/${node}.out"
+        ) &
+    done
+
+    # Wait for all concurrent processes to finish
+    wait
+
+    for node in $unique_nodes; do
+        local node_status
+        local node_output
+        node_status=$(cat "$cleanup_tmp_dir/${node}.status" 2>/dev/null || echo 1)
+        node_output=$(cat "$cleanup_tmp_dir/${node}.out" 2>/dev/null || echo "")
+
         if [[ $node_status -ne 0 ]]; then
             m_error "Data cleanup failed on $node (exit code $node_status)"
             if [[ -n "$node_output" ]]; then
@@ -1493,6 +1510,9 @@ function cleanup_data() {
             echo "$node_output"
         fi
     done
+
+    # Cleaning up the local temporary directory
+    rm -rf "$cleanup_tmp_dir"
 
     if [[ ${#cleanup_failed_nodes[@]} -gt 0 ]]; then
         m_error "Data cleanup failed on nodes: ${cleanup_failed_nodes[*]}"
@@ -1513,22 +1533,38 @@ function cleanup_process() {
     unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
 
     local cleanup_pids_failed_nodes=()
+    local cleanup_tmp_dir
+    cleanup_tmp_dir=$(mktemp -d /tmp/bdev_cleanup_proc_XXXXXX)
 
     for node in $unique_nodes; do
-        local node_output
-        local node_status
+        (
+            local remote_out
+            local remote_code
+            remote_out=$($SSH_CMD "$node" "export USER='${USER}'; \
+                export JPS='${JPS}'; \
+                export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME:-}'; \
+                export PYTHON_BIN='${PYTHON_BIN:-}'; \
+                export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
+                export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
+                export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
+                export RAPL_TOOL_BIN='${RAPL_TOOL_BIN:-}'; \
+                '$BDEV_BIN_DIR/helpers/kill-process.sh'" 2>&1)
+            remote_code=$?
 
-        node_output=$($SSH_CMD "$node" "export USER='${USER}'; \
-            export JPS='${JPS}'; \
-            export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME:-}'; \
-            export PYTHON_BIN='${PYTHON_BIN:-}'; \
-            export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
-            export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
-            export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
-            export RAPL_TOOL_BIN='${RAPL_TOOL_BIN:-}'; \
-            '$BDEV_BIN_DIR/helpers/kill-process.sh'" 2>&1)
-        
-        node_status=$?
+            echo "$remote_code" > "$cleanup_tmp_dir/${node}.status"
+            echo "$remote_out" > "$cleanup_tmp_dir/${node}.out"
+        ) &
+    done
+
+    # Wait for all concurrent processes to finish
+    wait
+
+    for node in $unique_nodes; do
+        local node_status
+        local node_output
+        node_status=$(cat "$cleanup_tmp_dir/${node}.status" 2>/dev/null || echo 1)
+        node_output=$(cat "$cleanup_tmp_dir/${node}.out" 2>/dev/null || echo "")
+
         if [[ $node_status -ne 0 ]]; then
             m_warn "Process cleanup failed on $node (exit code $node_status)"
             if [[ -n "$node_output" ]]; then
@@ -1541,6 +1577,9 @@ function cleanup_process() {
             echo "$node_output"
         fi
     done
+
+    # Cleaning up the local temporary directory
+    rm -rf "$cleanup_tmp_dir"
 
     if [[ ${#cleanup_pids_failed_nodes[@]} -gt 0 ]]; then
         m_warn "Process cleanup finished with warnings on nodes: ${cleanup_pids_failed_nodes[*]}"
