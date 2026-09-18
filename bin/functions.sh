@@ -507,50 +507,59 @@ function probe_and_network_discovery() {
     done
 
     local dirs_param="${dirs_to_check[*]}"
+    local probe_tmp_dir
+    probe_tmp_dir=$(mktemp -d /tmp/bdev_probe_XXXXXX)
     m_echo "Performing SSH checks, process cleanup and network discovery for all nodes"
+    
+    for node in $nodes; do
+        (
+            local remote_out
+            local remote_code
+            # Execute the remote script via SSH
+            remote_out=$($SSH_CMD "$node" \
+                "export USER='${USER}'; \
+                 export JPS='${JPS}'; \
+                 export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}'; \
+                 export PYTHON_BIN='${PYTHON_BIN}'; \
+                 export IP_COMMAND='${IP_COMMAND}'; \
+                 export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
+                 export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
+                 export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
+                 '$BDEV_BIN_DIR/helpers/probe_node.sh' '$eth_iface' '$ib_iface' '$dirs_param' '$node'" 2>&1)
+            remote_code=$?
+
+            echo "$remote_code" > "$probe_tmp_dir/${node}.status"
+            echo "$remote_out" > "$probe_tmp_dir/${node}.out"
+        ) &
+    done
+
+    # Wait for all nodes to finish
+    wait
     
     for node in $nodes; do
         local ssh_output
         local exit_code
 
-	# Execute the remote script via SSH
-	ssh_output=$($SSH_CMD "$node" \
-            "export USER='${USER}'; \
-             export JPS='${JPS}'; \
-             export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}'; \
-             export PYTHON_BIN='${PYTHON_BIN}'; \
-             export IP_COMMAND='${IP_COMMAND}'; \
-             export ENABLE_OPROFILE='${ENABLE_OPROFILE:-}'; \
-             export ENABLE_RAPL='${ENABLE_RAPL:-}'; \
-             export OPROFILE_BIN='${OPROFILE_BIN:-}'; \
-             '$BDEV_BIN_DIR/helpers/probe_node.sh' '$eth_iface' '$ib_iface' '$dirs_param' '$node'" 2>&1)
+        exit_code=$(cat "$probe_tmp_dir/${node}.status" 2>/dev/null || echo 1)
+        ssh_output=$(cat "$probe_tmp_dir/${node}.out" 2>/dev/null || echo "")
 
-        # Abort on critical failure when SSH fails        
-        exit_code=$?
+        # Abort on critical failure when SSH fails
         if [[ $exit_code -ne 0 ]]; then
             m_error "SSH pre-flight check failed on node: $node"
-            m_error "Command executed: $SSH_CMD $node"
             m_error "Exit code: $exit_code" >&2
             m_error "Details: $ssh_output" >&2
-            rm -f "$eth_tmp" "$ib_tmp"
-            for dir in "${dirs_to_check[@]}"; do
-                rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
-            done
+            rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp"
+            for dir in "${dirs_to_check[@]}"; do rm -f "$dir"/.bdev_probe_* 2>/dev/null || true; done
             m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
         fi
-
-	# Enable cleanup on exit
-	export CLEANUP_ON_EXIT="true"
-	
+ 
         # Separate kill-process.sh logs from the IP line
         local net_line
         local cleanup_logs
         net_line=$(grep '^__BDEV_NET__:' <<< "$ssh_output" || true)
         cleanup_logs=$(grep -v '^__BDEV_NET__:' <<< "$ssh_output" || true)
         
-        if [[ -n "$cleanup_logs" ]]; then
-            echo "$cleanup_logs"
-        fi
+        [[ -n "$cleanup_logs" ]] && echo "$cleanup_logs"
 
         local eth_ip ib_ip
         IFS=':' read -r _ eth_ip ib_ip <<< "$net_line"
@@ -605,6 +614,12 @@ function probe_and_network_discovery() {
             fi
         fi
     done
+
+    # Remove temporary directory
+    rm -rf "$probe_tmp_dir"
+    
+    # Enable cleanup on exit
+    export CLEANUP_ON_EXIT="true"
 
     # Active shared storage validation
     if [[ ${#dirs_to_check[@]} -gt 0 ]]; then
