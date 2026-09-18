@@ -1,6 +1,6 @@
 #!/bin/bash
 
-YLABEL="Time (s)"
+YLABEL="Runtime (seconds)"
 BENCHMARK_TAG="${BENCHMARK^} execution times"
 REPORT_CONTENTS=$(grep " ${BENCHMARK} " "$REPORT_FILE" | tr -s $'\t')
 DAT_FILE="$PLOT_DIR/${BENCHMARK}.dat"
