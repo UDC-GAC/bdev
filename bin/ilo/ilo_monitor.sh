@@ -7,11 +7,12 @@ fi
 
 TARGET_NODE="$1"
 NODE_NUMBER="${2:-0}"
+RESOLVE_CMD="${RESOLVEIP_COMMAND:-getent}"
 
 # Resolve the IP if a hostname is provided, ensuring the last octet is always numeric
 NODE_IP="$TARGET_NODE"
 if [[ ! "$TARGET_NODE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    RESOLVED_IP=$(getent ahostsv4 "$TARGET_NODE" 2>/dev/null | awk '{print $1; exit}')
+    RESOLVED_IP=$($RESOLVE_CMD hosts "$TARGET_NODE" 2>/dev/null | awk '{print $1; exit}')
     [[ -n "$RESOLVED_IP" ]] && NODE_IP="$RESOLVED_IP"
 fi
 
