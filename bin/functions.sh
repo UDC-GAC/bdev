@@ -52,7 +52,7 @@ function m_exit() {
 		[[ -d "$REPORT_DIR" ]] && cleanup_report "$REPORT_DIR"
 	fi
 
-	m_echo "Finishing"
+	m_echo "Finished"
 	exit 1
 }
 
