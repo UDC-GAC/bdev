@@ -1,17 +1,17 @@
 #!/bin/bash
 
-export NODE_NUMBER=1
-for NODE in $WORKERNODES
-do
-	echo "Creating ilo_monitor to ${NODE}, storing data on ${POWERLOGDIR}/node-${NODE_NUMBER}.pow" \
-		>> ${POWERLOGDIR}/log 2>&1
-	bash $ILO_HOME/ilo_monitor.sh $NODE > ${POWERLOGDIR}/node-${NODE_NUMBER}.pow &
-	
-	export NODE_NUMBER=$(( $NODE_NUMBER + 1 ))
+mkdir -p "$POWERLOGDIR"
+
+echo "Creating ilo_monitor in ${MASTERNODE}, storing data on ${POWERLOGDIR}/node-0.pow" >> "${POWERLOGDIR}/log" 2>&1
+bash "${ILO_HOME}/ilo_monitor.sh" "$MASTERNODE" 0 > "${POWERLOGDIR}/node-0.pow" 2>&1 &
+
+node_number=1
+for node in $WORKERNODES; do
+    # Deduplicate nodes
+    [[ "$node" == "$MASTERNODE" ]] && continue
+
+    echo "Creating ilo_monitor in ${node}, storing data on ${POWERLOGDIR}/node-${node_number}.pow" >> "${POWERLOGDIR}/log" 2>&1
+    bash "${ILO_HOME}/ilo_monitor.sh" "$node" "$node_number" > "${POWERLOGDIR}/node-${node_number}.pow" 2>&1 &
+    
+    ((node_number++))
 done
-
-export NODE_NUMBER=0
-echo "Creating ilo_monitor to ${MASTERNODE}, storing data on ${POWERLOGDIR}/node-${NODE_NUMBER}.pow" \
-	>> ${POWERLOGDIR}/log 2>&1
-bash $ILO_HOME/ilo_monitor.sh $MASTERNODE > ${POWERLOGDIR}/node-${NODE_NUMBER}.pow
-
