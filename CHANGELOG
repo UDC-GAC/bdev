@@ -35,7 +35,9 @@ BDEv 4.1.0 - 2026-10-XX
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
 
-		- Support for dynamic detention of disks and network interfaces when monitoring resource usage with dool
+		- Support for dynamic detection of disks both and network interfaces when monitoring resource usage with dool
+
+		- Add support for monitoring InfiniBand/RoCE detection with dool
 
 		- Optimize and modernize plot generation scripts
 
