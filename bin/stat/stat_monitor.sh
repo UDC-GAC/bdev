@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Performing dynamic detection of disks and network interfaces in $HOSTNAME:" >&2
+echo "Performing dynamic detection of disks and network interfaces in $HOSTNAME" >&2
 
 USE_DISKS=1
 USE_INTERFACES=1
@@ -185,7 +185,7 @@ DOOL_CMD+=(
 )
 
 # Print and execute command
-printf 'Running: ' >&2
+printf '\nRunning: ' >&2
 printf '%s ' "${DOOL_CMD[@]}" >&2
 printf '\n' >&2
 
