@@ -45,6 +45,8 @@ kill_java_process() {
     rm -rf "$kill_tmp_dir"
 }
 
+m_echo "Stopping YARN services"
+
 if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 	WORKERS=$(cat "$WORKERSFILE" 2>/dev/null || true)
 	if [[ -n "$WORKERS" ]]; then
@@ -57,7 +59,6 @@ if [[ -v FINISH_YARN_FORCE && "$FINISH_YARN_FORCE" == "true" ]]; then
 		kill_java_process "ApplicationHistoryServer" "$MASTERNODE"
 	fi
 else
-	m_echo "Stopping YARN services"
 	"${HADOOP_HOME}/sbin/stop-yarn.sh" --config "${HADOOP_CONF_DIR}"
 fi
 
