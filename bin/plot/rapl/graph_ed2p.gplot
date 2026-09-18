@@ -24,7 +24,7 @@ bs = box_size + 0
 unset xtics 
 set grid noxtics front
 
-set xtics nomirror format " " offset bs/2
+set xtics nomirror scale 0 format " " offset bs/2
 
 do for [ii=1:words(label_xtics)] { set xtics add ( word(label_xtics,ii) ii-1 ) }
 
