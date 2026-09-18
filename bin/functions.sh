@@ -517,7 +517,11 @@ function probe_and_network_discovery() {
             local remote_code
             # Execute the remote script via SSH
             remote_out=$($SSH_CMD "$node" \
-                "export USER='${USER}'; \
+                "if [[ ! -f '$BDEV_BIN_DIR/helpers/probe_node.sh' ]]; then
+                     echo '__BDEV_ERR_DIR_NOT_SHARED__'
+                     exit 127
+                 fi
+                 export USER='${USER}'; \
                  export JPS='${JPS}'; \
                  export DOOL_COMMAND_NAME='${DOOL_COMMAND_NAME}'; \
                  export PYTHON_BIN='${PYTHON_BIN}'; \
@@ -545,11 +549,20 @@ function probe_and_network_discovery() {
 
         # Abort on critical failure when SSH fails
         if [[ $exit_code -ne 0 ]]; then
+            if grep -q '__BDEV_ERR_DIR_NOT_SHARED__' <<< "$ssh_output"; then
+                m_error "Shared storage pre-flight check failed on node: $node"
+                m_error "Directory '$REPORT_DIR' is not mounted or accessible on this node" >&2
+                rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp" 2>/dev/null || true
+                m_exit "The report directory must be shared across all nodes at the exact same path (e.g., via NFS/Lustre)"
+            fi
+
             m_error "SSH pre-flight check failed on node: $node"
             m_error "Exit code: $exit_code" >&2
-            m_error "Details: $ssh_output" >&2
-            rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp"
-            for dir in "${dirs_to_check[@]}"; do rm -f "$dir"/.bdev_probe_* 2>/dev/null || true; done
+            m_error "Details: $ssh_output" >&2    
+            rm -rf "$probe_tmp_dir" "$eth_tmp" "$ib_tmp" 2>/dev/null || true
+            for dir in "${dirs_to_check[@]}"; do
+                rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
+            done
             m_exit "Please check the hostfile, BDEV_SSH_OPTS in system-conf.sh and verify that passwordless SSH is properly configured"
         fi
  
@@ -615,9 +628,12 @@ function probe_and_network_discovery() {
         fi
     done
 
-    # Remove temporary directory
-    rm -rf "$probe_tmp_dir"
-    
+    # Remove temporary directories
+    rm -rf "$probe_tmp_dir" 2>/dev/null || true
+    for dir in "${dirs_to_check[@]}"; do
+        rm -f "$dir"/.bdev_probe_* 2>/dev/null || true
+    done
+            
     # Enable cleanup on exit
     export CLEANUP_ON_EXIT="true"
 
