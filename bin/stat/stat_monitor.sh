@@ -104,7 +104,7 @@ if ALL_IB_INTERFACES=$(
             [[ -d "$PORT" ]] || continue
 
             PORT_NUMBER=$(basename "$PORT")
-            STATE=$(cat "$PORT/state" 2>/dev/null) || exit 1
+            STATE=$(cat "$PORT/state" 2>/dev/null) || continue
 
             printf "%s:%s %s\n" "$DEVICE_NAME" "$PORT_NUMBER" "$STATE"
         done
@@ -189,4 +189,4 @@ printf '\nRunning: ' >&2
 printf '%s ' "${DOOL_CMD[@]}" >&2
 printf '\n' >&2
 
-"${DOOL_CMD[@]}"
+exec "${DOOL_CMD[@]}"
