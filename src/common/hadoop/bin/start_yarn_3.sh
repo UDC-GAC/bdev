@@ -1,39 +1,51 @@
 #!/bin/bash
 
+# HDFS
 if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-	if [[ $FORCE_FORMAT_HDFS == "true" ]]; then
-		#Format HDFS
-		HDFS_FORMAT_LOG=$FRAMEWORK_REPORT_DIR/hdfs-format.log
-		m_echo "Formatting HDFS, logging to $HDFS_FORMAT_LOG"
-		$HDFS_CONFIG "$HADOOP_CONF_DIR" namenode -format -force -clusterID CID-bdev > "$HDFS_FORMAT_LOG" 2>&1
-	fi
+    (
+        if [[ "$FORCE_FORMAT_HDFS" == "true" ]]; then
+			#Format HDFS
+            HDFS_FORMAT_LOG="$FRAMEWORK_REPORT_DIR/hdfs-format.log"
+            m_echo "Formatting HDFS, logging to $HDFS_FORMAT_LOG"
+            $HDFS_CONFIG "$HADOOP_CONF_DIR" namenode -format -force -clusterID CID-bdev > "$HDFS_FORMAT_LOG" 2>&1
+        fi
 
-	#Namenode and Secondary NameNode (optional)
-	m_echo "Starting NameNode and DataNodes"
-	$HDFS_CONFIG "$HADOOP_CONF_DIR" --daemon start namenode
+        m_echo "Starting NameNode and DataNodes"
+        $HDFS_CONFIG "$HADOOP_CONF_DIR" --daemon start namenode
 
-	if [[ $SECONDARY_NAMENODE == "true" ]]; then
-		#Secondary NameNode
-		$HDFS_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start secondarynamenode
-	fi
+        if [[ "$SECONDARY_NAMENODE" == "true" ]]; then
+			#Secondary NameNode
+            $HDFS_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start secondarynamenode &
+        fi
 
-	#Datanodes
-	$HDFS_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start datanode
+        #Datanodes
+        $HDFS_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start datanode
+    ) &
 fi
 
-#Resourcemanager & Nodemanagers
-m_echo "Starting Resourcemanager and Nodemanagers"
-$YARN_CONFIG "$HADOOP_CONF_DIR" --daemon start resourcemanager
-$YARN_CONFIG "$HADOOP_CONF_DIR"  --workers --daemon start nodemanager
+# YARN
+(
+	#Resourcemanager & Nodemanagers
+    m_echo "Starting ResourceManager and NodeManagers"
+    $YARN_CONFIG "$HADOOP_CONF_DIR" --daemon start resourcemanager
+    $YARN_CONFIG "$HADOOP_CONF_DIR" --workers --daemon start nodemanager
+) &
 
-if [[ $TIMELINE_SERVER == "true" ]]; then
-	#YARN Timeline server
-	m_echo "Starting YARN Timeline server"
-	$YARN_CONFIG "$HADOOP_CONF_DIR" --daemon start timelineserver
+if [[ "$TIMELINE_SERVER" == "true" ]]; then
+    (
+		#YARN Timeline server
+        m_echo "Starting YARN Timeline server"
+        $YARN_CONFIG "$HADOOP_CONF_DIR" --daemon start timelineserver
+    ) &
 fi
 
-if [[ $MR_JOBHISTORY_SERVER == "true" ]]; then
-	#MapReduce history server
-	m_echo "Starting MapReduce history server"
-	"$HADOOP_HOME/bin/mapred" --config "$HADOOP_CONF_DIR" --daemon start historyserver
+if [[ "$MR_JOBHISTORY_SERVER" == "true" ]]; then
+    (
+		#MapReduce history server
+        m_echo "Starting MapReduce history server"
+        "$HADOOP_HOME/bin/mapred" --config "$HADOOP_CONF_DIR" --daemon start historyserver
+    ) &
 fi
+
+# Wait for all components to complete their deployment
+wait
