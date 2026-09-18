@@ -28,7 +28,8 @@ if (exists("format_y")) {
     if (format_y eq 'bytes') {
         set format y "%.0s %cB"
         set yrange [0 : 1024 < *]
-    } else if (format_y eq 'percent') {
+    }
+    if (format_y eq 'percent') {
         set yrange [0:105]
     }
 }
