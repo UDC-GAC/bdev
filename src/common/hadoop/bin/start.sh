@@ -18,12 +18,13 @@ else
 	"$COMMON_HADOOP_DIR/bin/start_yarn_2.sh"
 fi
 
-sleep 2
+if [[ "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
+	sleep 2
+	SAFEMODE_STATUS=$($HADOOP_HOME/bin/hdfs dfsadmin -safemode get 2>/dev/null)
 
-SAFEMODE_STATUS=$($HADOOP_HOME/bin/hdfs dfsadmin -safemode get 2>/dev/null)
-
-if [[ "$SAFEMODE_STATUS" == *"ON"* ]]; then
-	m_echo "HDFS is in Safe Mode. Waiting for DataNodes..."
-	"$HADOOP_HOME/bin/hdfs" dfsadmin -safemode wait >/dev/null 2>&1
-	m_echo "HDFS has exited the Safe Mode and is ready for writing"
+	if [[ "$SAFEMODE_STATUS" == *"ON"* ]]; then
+		m_echo "HDFS is in Safe Mode. Waiting for DataNodes..."
+		"$HADOOP_HOME/bin/hdfs" dfsadmin -safemode wait >/dev/null 2>&1
+		m_echo "HDFS has exited the Safe Mode and is ready for writing"
+	fi
 fi

@@ -18,6 +18,4 @@ generate_framework_config \
     "$WORKERSFILE"
 
 # Hadoop
-if [[ "${RESOURCE_MANAGER:-standalone}" == "yarn" || "${STORAGE_BACKEND,,}" == "hdfs" ]]; then
-	. "$COMMON_HADOOP_DIR/bin/gen-config.sh"
-fi
+. "$COMMON_HADOOP_DIR/bin/gen-config.sh"
