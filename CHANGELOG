@@ -11,15 +11,19 @@ BDEv 4.1.0 - 2026-10-XX
 	NEW FEATURES		
 		- Implement non-intrusive dependency isolation via per-framework runtime directories (symlink/copy model) to preserve read-only distributions
 
-		- Scripts and dependencies are now deployed into the shared report directory for self-contained execution, decoupling remote workers from the master's local storage
+		- Deploy execution scripts and runtime dependencies into the shared report directory for self-contained execution, decoupling remote workers from the master's local storage
 
 		- Add per-framework and exit cleanup routines to purge temporary auxiliary tools and runtime files from the report directory
 
 		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
 
-		- Storage backend can now be any supported network/shared filesystem other than NFS, setting STORAGE_BACKEND variable to 'shared_fs' (bdev-conf.sh)
+		- Generalize storage backend support beyond NFS to any POSIX-compliant shared filesystem (Lustre, GPFS, CephFS, BeeGFS) via STORAGE_BACKEND='shared_fs' (bdev-conf.sh)
 
-		- Rename NFS_MOUNT_POINT variable to SHARED_STORAGE_DIR for setting the shared directory when using 'shared_fs' as storage backend (bdev-conf.sh)
+		- Rename NFS_MOUNT_POINT configuration variable to SHARED_STORAGE_DIR when using 'shared_fs' as the storage backend (bdev-conf.sh)
+
+		- Add active canary-file pre-flight checks to verify shared storage accessibility and write permissions across all cluster nodes
+
+		- Parallelize cross-node SSH pre-flight checks, network discovery, and cleanup routines to significantly reduce cluster initialization times
 
 		- Add sanity checks for required configuration files
 
@@ -31,23 +35,23 @@ BDEv 4.1.0 - 2026-10-XX
 
 		- Add pre-flight SSH check to validate connection options and ensure passwordless access
 		
-		- Unify environment files for Spark, Flink and Hadoop frameworks into parameterized scripts that support both Standalone/YARN resource managers to remove code duplication
+		- Unify environment files for Spark, Flink and Hadoop frameworks into parameterized scripts that support both Standalone and YARN resource managers to eliminate code duplication
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
 
-		- Support for dynamic detection of disks and network interfaces when monitoring resource usage with dool
+		- Add dynamic detection of disks and network interfaces on cluster nodes when monitoring resource usage with dool
 
 		- Add support for monitoring InfiniBand/RoCE network traffic using dool
 
 		- Optimize and modernize plot generation scripts
 
-		- Remove OUTPUT_DIR from bdev-conf.sh file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
+		- Remove OUTPUT_DIR from bdev-conf.sh and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
 
-		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
+		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directory
 		
-		- Rename third-party directory for more intuitive name ('tools') to store the auxiliary tools integrated into the BDEv distribution
+		- Rename third-party directory to 'tools' for better clarity in storing auxiliary tools integrated into the BDEv distribution
 
-		- Refactor base directories for better organization
+		- Refactor base directories for better project organization
 
 		- Minor changes and bug fixes
  
