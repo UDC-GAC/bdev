@@ -357,7 +357,8 @@ export -f generate_framework_config
 function parallel_ssh() {
     local cmd_payload="$1"
     local log_file="${2:-/dev/null}"
-    local target_nodes="${3:-$MASTERNODE $WORKERNODES}"
+    local action_msg="${3:-}"
+    local target_nodes="${4:-$MASTERNODE $WORKERNODES}"
 
     local unique_nodes
     unique_nodes=$(printf '%s\n' $target_nodes | sort -u)
@@ -365,9 +366,14 @@ function parallel_ssh() {
     local node_index=0
     for node in $unique_nodes; do
         (
-            # Export the current node and its index for use within the command if required
+		    # Export the current node and its index for use within the command if required
             export NODE="$node"
             export NODE_INDEX="$node_index"
+
+            # Log the message before SSH
+            if [[ -n "$action_msg" ]]; then
+                echo "${action_msg} in ${node}"
+            fi
 
             # Evaluate the command to check for references to $NODE or $NODE_INDEX
             local remote_cmd
