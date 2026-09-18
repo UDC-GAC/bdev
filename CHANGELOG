@@ -3,7 +3,7 @@ BDEv Changelog
 This file briefly describes the main changes for each version of
 the Big Data Evaluator (BDEv) software package.
 
-BDEv 4.X.X - 2026-10-XX
+BDEv 4.1.0 - 2026-10-XX
 -----------------------
 	This is a minor release focused on runtime portability, non-intrusive dependency isolation, and cluster orchestration robustness.
 	The core highlight of this release is that BDEv now treats framework distributions as strictly immutable (supporting read-only mounts or identical local copies) and only requires the report directory to be shared with write permissions across the cluster nodes. To support this model, this release introduces self-contained runtime staging within the report directory, dynamic JAR injection, custom launchers for remote workers, and automated artifact cleanup routines to ensure experimental reproducibility while minimizing shared storage footprints.
@@ -16,7 +16,11 @@ BDEv 4.X.X - 2026-10-XX
 		- Add per-framework and exit cleanup routines to purge temporary auxiliary tools and runtime files from the report directory
 
 		- Add support for custom JAR injection via environment variables and a drop-in directory layout (lib/extra/{common,hadoop,spark,flink})
-		
+
+		- Storage backend now can be any supported network/shared filesystem other than NFS, setting STORAGE_BACKEND variable to 'shared_fs' (bdev-conf.sh)
+
+		- Rename NFS_MOUNT_POINT variable to SHARED_STORAGE_DIR for setting the shared directory when using 'shared_fs' as storage backend (bdev-conf.sh)
+
 		- Add sanity checks for required configuration files
 
 		- Remove all custom scripts and the 'daemons' directory, keeping the original scripts bundled with the frameworks untouched
@@ -31,9 +35,11 @@ BDEv 4.X.X - 2026-10-XX
 
 		- Improve hostfile parsing, validation of network interfaces and related helper network scripts
 
+		- Support for dynamic detention of disks and network interfaces when monitoring resource usage with dool
+
 		- Optimize and modernize plot generation scripts
 
-		- Remove OUTPUT_DIR from bdev-conf file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
+		- Remove OUTPUT_DIR from bdev-conf.sh file and replace it with BDEV_OUTPUT_DIR environment variable and default fallback
 
 		- Rename BDEV_EXPERIMENT_DIR environment variable to BDEV_CONF_DIR for defining the configuration directoy
 		
