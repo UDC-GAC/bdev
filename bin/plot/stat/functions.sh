@@ -111,7 +111,11 @@ function sum_files() {
 }
 
 function div_file() {
-	awk -v div="$2" '{printf("%.4f\n", ($1 / div))}' "$1" > "$3"
+	awk -v div="$2" '
+		NF > 0 {
+			printf("%.4f\n", (div != 0 ? $1 / div : 0))
+		}
+	' "$1" > "$3"
 }
 
 function avg_file_rows() {
@@ -192,7 +196,6 @@ function avg_dat_file() {
 		next;
 	}
 	FNR == 1 {
-		nfiles++;
 		next;
 	}
 	{
@@ -211,7 +214,6 @@ function avg_dat_file() {
 		for (r = 1; r <= max_r; r++) {
 			for (c = 1; c <= ncols; c++) {
 				cnt = count_cell[r, c];
-				avg_val = sum_cell[r, c] / nfiles;
 				avg_val = (cnt > 0) ? (sum_cell[r, c] / cnt) : 0;
 				printf "%.4f%s", avg_val, (c == ncols ? ORS : OFS) > dat_file;
 				if (headers[c] != epoch_hdr) {
