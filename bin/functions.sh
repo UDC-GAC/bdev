@@ -366,7 +366,7 @@ function load_hostfile() {
 		raw_nodes=$(awk '{print $1}' "$BDEV_HOSTFILE")
 	elif [[ "$SLURM_ENV" == "true" ]]; then
 		if [[ -z "${SLURM_JOB_NODELIST:-}" ]]; then
-			m_exit "Running under Slurm, but SLURM_JOB_NODELIST is empty"
+			m_exit "Running under Slurm, but SLURM_JOB_NODELIST is not defined"
 	        fi
         
 	        nodes_source="Slurm allocation (\$SLURM_JOB_NODELIST='$SLURM_JOB_NODELIST')"

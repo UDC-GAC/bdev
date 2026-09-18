@@ -91,7 +91,7 @@ if [[ "$PRINT_OUTPUT_DIR_WARNING" == "true" ]]; then
 fi
 
 if ! is_shared_directory "$BDEV_OUTPUT_DIR"; then
-	m_warn "BDEV_OUTPUT_DIR does not appear to be a network/shared filesystem, which will likely cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
+	m_warn "BDEV_OUTPUT_DIR does not appear to be a network/shared filesystem, which will cause issues for multi-node executions: $BDEV_OUTPUT_DIR"
 fi
 
 if [[ "$PRINT_CONF_DIR_WARNING" == "true" ]]; then
@@ -104,6 +104,10 @@ fi
 
 if [[ ! -d "$BDEV_FRAMEWORKS_DIR" ]]; then
 	m_exit "BDEV_FRAMEWORKS_DIR does not exist or is not a directory: $BDEV_FRAMEWORKS_DIR"
+fi
+
+if ! is_shared_directory "$BDEV_FRAMEWORKS_DIR"; then
+	m_warn "BDEV_FRAMEWORKS_DIR does not appear to be a network/shared filesystem, which will cause issues for multi-node executions: $BDEV_FRAMEWORKS_DIR"
 fi
 
 export BDEV_CONF_DIR=$(cd "$BDEV_CONF_DIR" && pwd)
@@ -144,7 +148,7 @@ fi
 # Storage backend
 if [[ -z "$STORAGE_BACKEND" ]]; then
 	export STORAGE_BACKEND=hdfs
-	m_warn "STORAGE_BACKEND is not defined or is empty. Setting it to \"hdfs\""
+	m_warn "STORAGE_BACKEND is not defined. Setting it to hdfs"
 fi
 
 if [[ "${STORAGE_BACKEND,,}" == "shared_fs" ]]; then
@@ -157,14 +161,14 @@ if [[ "${STORAGE_BACKEND,,}" == "shared_fs" ]]; then
 	fi
     
 	if ! is_shared_directory "$SHARED_STORAGE_DIR"; then
-		m_warn "SHARED_STORAGE_DIR does not appear to be a network/shared filesystem, which will likely cause issues for multi-node executions: $SHARED_STORAGE_DIR"
+		m_warn "SHARED_STORAGE_DIR does not appear to be a network/shared filesystem, which will cause issues for multi-node executions: $SHARED_STORAGE_DIR"
 	fi
 
 	export SHARED_STORAGE_DIR=$(cd "$SHARED_STORAGE_DIR" && pwd)
 fi
 
 if [[ -z "${TMP_DIR:-}" ]]; then
-	m_warn "TMP_DIR is not defined or is empty. Setting it to /tmp"
+	m_warn "TMP_DIR is not defined. Setting it to /tmp"
 	export TMP_DIR=/tmp
 fi
 
@@ -173,7 +177,7 @@ export TMP_DIR="${TMP_DIR}/${USER}/${APP_NAME}"
 
 if [[ -z "${LOCAL_DIRS:-}" ]]; then
 	export LOCAL_DIRS="$TMP_DIR"
-	m_warn "LOCAL_DIRS is not defined or is empty. Setting it to $TMP_DIR"
+	m_warn "LOCAL_DIRS is not defined. Setting it to $TMP_DIR"
 else
 	LOCAL_DIRS="${LOCAL_DIRS//,/ }"
 	LOCAL_DIRS_NEW=""

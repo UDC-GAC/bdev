@@ -82,7 +82,7 @@ fi
 # Hive-specific configuration
 if [[ "$HIVE_WORKLOADS" == "true" ]]; then
 	if [[ -z "$HIVE_HOME" ]]; then
-		m_exit "HIVE_HOME is not defined or is empty"
+		m_exit "HIVE_HOME is not defined"
 	fi
 
 	if [[ ! -d "$HIVE_HOME" ]]; then
