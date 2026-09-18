@@ -443,7 +443,7 @@ export STAT_HOME="$BDEV_BIN_DIR/stat"
 export STAT_PLOT_HOME="$PLOT_HOME/stat"
 export DOOL_HOME="$REPORT_TOOLS_DIR/dool"
 export DOOL_COMMAND="$DOOL_HOME/$DOOL_COMMAND_NAME"
-export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii -D"
+export DOOL_OPTIONS="-T -c -C total --load -ms -d --disk-util -fn --noheaders --noupdate --bytes --ascii"
 
 #RAPL
 export RAPL_HOME="$BDEV_BIN_DIR/rapl"
